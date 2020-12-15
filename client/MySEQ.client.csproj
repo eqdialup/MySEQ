@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{874224EA-A207-4C8A-8BB4-76F473680C8F}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ApplicationIcon>.\App.ico</ApplicationIcon>
+    <AssemblyName>MySEQ</AssemblyName>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>myseq</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>2.4.1.0</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\Program Files %28x86%29\MySEQ\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\Program Files %28x86%29\MySEQ\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="speechlib">
+      <HintPath>.\speechlib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap">
+      <Name>System.Runtime.Serialization.Formatters.Soap</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.5.0.15095, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EQCommunications.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EQData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EQMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmAddMapText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAddMapText.Designer.cs">
+      <DependentUpon>frmAddMapText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmDialogBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDialogBox.Designer.cs">
+      <DependentUpon>frmDialogBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ListViewPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogLib.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MapCon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MapPane.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MobsTimer.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Structures.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UtilSocket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="Resources\EnvelopeHS.png" />
+    <None Include="app.manifest" />
+    <None Include="Resources\ShrinkSpaceHS.PNG" />
+    <None Include="Resources\ExpandSpaceHS.png" />
+    <None Include="Resources\File.ico" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Resources\RefreshArrow.png" />
+    <None Include="Resources\DF.bmp" />
+    <None Include="Resources\ShowGridlines.png" />
+    <None Include="Resources\SearchWeb.bmp" />
+    <None Include="Resources\toolbar.bmp" />
+    <None Include="Resources\Zoom_Out.PNG" />
+    <None Include="Resources\Zoom_In.PNG" />
+    <None Include="Resources\options.bmp" />
+    <None Include="Resources\Increase.bmp" />
+    <None Include="Resources\Decrease.bmp" />
+    <None Include="Resources\RedDelete.png" />
+    <None Include="Resources\BlackX.bmp" />
+    <None Include="Resources\ZoomOut.png" />
+    <None Include="Resources\ZoomIn.png" />
+    <None Include="Resources\PlayHS.png" />
+    <None Include="Resources\openfolderHS.png" />
+    <EmbeddedResource Include="AboutDlg.resx">
+      <DependentUpon>AboutDlg.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App.ico" />
+    <EmbeddedResource Include="frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAddMapText.resx">
+      <DependentUpon>frmAddMapText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDialogBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmDialogBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmOptions.resx">
+      <DependentUpon>frmOptions.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ListViewPanel.resx">
+      <DependentUpon>ListViewPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapCon.resx">
+      <DependentUpon>MapCon.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapPane.resx">
+      <DependentUpon>MapPane.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="ClientReleaseNotes.htm">
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

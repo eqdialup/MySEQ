@@ -1,0 +1,74 @@
+Unknown0
+Warrior
+Cleric
+Paladin
+Ranger
+Shadow Knight
+Druid
+Monk
+Bard
+Rogue
+Shaman
+Necromancer
+Wizard
+Magician
+Enchanter
+Beastlord
+Berserker
+Unknown17
+Unknown18
+Unknown19
+Warrior GM
+Cleric GM
+Paladin GM
+Ranger GM
+ShadowKnight GM
+Druid GM
+Monk GM
+Bard GM
+Rogue GM
+Shaman GM
+Necromancer GM
+Wizard GM
+Magician GM
+Enchanter GM
+Beastlord GM
+Berserker GM
+Unknown36
+Unknown37
+Unknown38
+Unknown39
+Banker
+Shopkeeper
+Unknown42
+Unknown43
+Unknown44
+Unknown45
+Unknown46
+Unknown47
+Unknown48
+Unknown49
+Unknown50
+Unknown51
+Unknown52
+Unknown53
+Unknown54
+Unknown55
+Unknown56
+Unknown57
+Unknown58
+Unknown59
+LDoN Recruiter
+LDoN Merchant
+LDoN Object
+Tribute Master
+Guild Tribute Master
+Unknown65
+Guild Banker
+DoN Merchant (Norrath's Keepers)
+DoN Merchant (Dark Reign)
+Unknown69
+Unknown70
+Mercenary Liaison
+Unknown71
+Loyalty Liaison

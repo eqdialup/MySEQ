@@ -1,0 +1,380 @@
+<?xml version='1.0' encoding='windows-1252'?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<Product Name='MySEQ Open 2.3.1' Id='*'
+
+			 UpgradeCode='407b55a0-0618-11de-bf43-0002a5d5c51b' Language='1033'
+
+			 Codepage='1252' Version='2.3.1' Manufacturer='ShowEQ Project'>
+
+
+		<Package Id="*" Keywords='Installer'
+
+			Description="MySEQ Open Installer"
+
+			Comments='MySEQ Open is under GNU Public License v2.0' Manufacturer='MySEQ Open at SourceForge.net'
+
+			InstallerVersion='100' Languages='1033' Compressed="yes" SummaryCodepage='1252' />
+
+        	<Condition Message="You need to be an administrator to install this product."> Privileged </Condition>
+
+		<Condition Message='This setup requires the .NET Framework 2.0 or higher.'>
+
+			<![CDATA[MsiNetAssemblySupport >= "2.0.50727"]]>
+
+		</Condition>
+
+		<Media Id='1' Cabinet='myseq.cab' EmbedCab='yes' DiskPrompt="x" CompressionLevel="high" />
+
+		<Property Id='DiskPrompt' Value="MySEQ Installation" />
+
+		<Property Id='ARPURLINFOABOUT' Value="http://www.showeq.net/forums/index.php" />
+
+		<Property Id='ARPHELPLINK' Value="http://www.showeq.net" />
+
+		<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+		<WixVariable Id="WixUIBannerBmp" Value="bannerbmp.bmp" />
+
+		<WixVariable Id="WixUIDialogBmp" Value="dialogbmp.bmp" />
+
+    <Property Id="EXISTINGINSTALLDIR" Secure="yes">
+      <RegistrySearch Id="Locate_EXISTINGINSTALLDIR" Root="HKCU" Key="Software\ShowEQ Project\MySEQ" Name="InstallDir" Type="raw" />
+    </Property>
+
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+
+			<Directory Id='ProgramFilesFolder'>
+            <Directory Id="MyAppFolder" Name="MySEQ">
+                <Directory Id='INSTALLDIR' />
+            </Directory>
+      </Directory>
+
+			<Directory Id="ProgramMenuFolder" Name="Programs">
+
+				<Directory Id="ProgramMenuDir" Name='MySEQ'/>
+
+			</Directory>
+
+			<Directory Id="DesktopFolder" Name="Desktop" />
+
+		</Directory>
+
+		<DirectoryRef Id="ProgramMenuDir">
+
+			<Component Id='UninstallShortcut' Guid="3CEB416A-F97A-4A8F-8271-92C694979C19">
+
+				<Shortcut Id="UninstallProduct"
+
+						  Name="Uninstall MySEQ Open"
+
+						  Target="[System64Folder]msiexec.exe"
+
+						  Arguments="/x [ProductCode]"
+
+						  Description="Uninstalls MySEQ Open" />
+
+				<RemoveFolder Id="ProgramMenuDir" On="uninstall"/>
+
+        <RegistryKey Id="MySEQRegRoot"
+                     Action="createAndRemoveOnUninstall"
+                     Key="Software\ShowEQ Project\MySEQ"
+                     Root="HKCU">
+          <RegistryValue Id="MySEQInstallDir" Type="string" Name="InstallDir" Value="[INSTALLDIR]" />
+        </RegistryKey>
+
+      </Component>
+
+			<Component Id="ClientShortcut" Guid="95AEEDDD-9C35-498E-927C-36D031B36E5C">
+
+				<Shortcut Id="startmenuMySEQ"
+
+						  Name="MySEQ Client"
+
+						  Target="[INSTALLDIR]MySEQ.exe" 
+
+						  WorkingDirectory='INSTALLDIR'
+
+						  Icon="MySEQIcon"
+
+						  IconIndex="0" />
+
+				<RegistryValue Root="HKCU" Key="Software\ShowEQ Project\MySEQ" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+
+			</Component>
+
+			<Component Id="ServerShortcut" Guid="DA936C66-EDF5-4FB5-8013-512D2CE8E948">
+
+				<Shortcut Id="startmenuMySEQSrv"
+
+						  Name="MySEQ Server"
+
+						  Target="[INSTALLDIR]server.exe"
+
+						  WorkingDirectory='INSTALLDIR'
+
+						  Icon="MySEQIcon"
+
+						  IconIndex="0" />
+
+				<RegistryValue Root="HKCU" Key="Software\ShowEQ Project\MySEQ" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+
+			</Component>
+
+			<Component Id="DebugServerShortcut" Guid="7ED212C0-7347-4797-AC51-31C73B58DD22">
+
+				<Shortcut Id="startmenuMySEQSrvDebug"
+
+						  Name="MySEQ Server (debug)"
+
+						  Target="[INSTALLDIR]server.exe"
+
+						  Arguments="debug" 
+
+						  WorkingDirectory='INSTALLDIR'
+
+						  Icon="MySEQIcon"
+
+						  IconIndex="0" />
+
+				<RegistryValue Root="HKCU" Key="Software\ShowEQ Project\MySEQ" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+
+			</Component>
+
+		</DirectoryRef>
+
+		<DirectoryRef Id="DesktopFolder">
+
+			<Component Id="DesktopClientShortcut" Guid="FE432205-D1B0-4561-8681-C73CCBBEB17F">
+
+				<Shortcut Id="desktopMySEQ"
+
+						  Name="MySEQ Client"
+
+						  Target="[INSTALLDIR]MySEQ.exe"
+
+						  WorkingDirectory='INSTALLDIR'
+
+						  Icon="MySEQIcon"
+
+						  IconIndex="0" />
+
+				<RegistryValue Root="HKCU" Key="Software\ShowEQ Project\MySEQ" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+
+			</Component>
+
+		</DirectoryRef>
+
+		<DirectoryRef Id="INSTALLDIR">
+
+			<Component Id='ClientExe' Guid="*">
+
+				<File Id='MySEQ.exe' Name='MySEQ.exe' DiskId='1' Source='client/MySEQ.exe' KeyPath="yes" Checksum="yes" />
+        <RemoveFile Id='positions' On='uninstall' Name='positions.xml'  />
+
+			</Component>
+
+			<Component Id='ServerExe' Guid="*">
+
+				<File Id='myseqsrv.exe' Name='server.exe' DiskId='1' Source='server/server.exe' KeyPath="yes" Checksum="yes" />
+
+			</Component>
+
+			<Component Id='SupportLibs' Guid="FE24F611-9201-4105-80A3-80ABF81E6FEE">
+
+				<File Id='DockingDLL' Name='WeifenLuo.WinFormsUI.Docking.dll' DiskId='1' Source='client/WeifenLuo.WinFormsUI.Docking.dll' Vital='yes' />
+
+				<File Id='SpeechDLL' Name='speechlib.dll' DiskId='1' Source='client/speechlib.dll' Vital='yes' />
+
+			</Component>
+
+			<Component Id='ServerIni' Guid="*">
+
+				<File Id='server.ini' Name='myseqserver.ini' DiskId='1' Source='server/myseqserver.ini' Vital='yes' />
+
+      </Component>
+
+      <Component Id='ConfigIni' Guid="*">
+
+        <File Id='config' Name='config.ini' DiskId='1' Source='server/config.ini' Vital='yes' />
+
+      </Component>
+
+			<Component Id='GPL' Guid="3C728561-40A6-4869-9FEB-088587DA249F">
+
+        <File Id="gpl3txt" Name="gpl-3.0.txt" DiskId="1" Source="server/gpl-3.0.txt" Vital="no" />
+        
+        <File Id='mittxt' Name='license.txt' DiskId='1' Source='client/license.txt' Vital='no' />
+
+      </Component>
+
+			<Directory Id='MapDir' Name='maps'>
+
+				<Component Id='MapDir' Guid="54031736-0B1F-4A28-83F1-78735F426583">
+
+          <CreateFolder Directory='MapDir' ></CreateFolder>
+					
+          <File Id='mapconvert.vbs' Name='mapconvert.vbs' DiskId='1' Source='client/mapconvert.vbs' Vital='yes' />
+
+          <RemoveFolder Id='MapDirRemoveFolder' Directory='MapDir' On='uninstall'/>
+
+				</Component>
+
+			</Directory>
+
+			<Directory Id='ConfigDir' Name='cfg'>
+
+				<Component Id='ConfigDir' Guid="56BF026A-F5DE-4CF8-A75A-4DFBD4C2DDFE">
+          
+          <CreateFolder Directory='ConfigDir' ></CreateFolder>
+
+					<File Id='classes' Name='Classes.txt' DiskId='1' Source='client/cfg/Classes.txt' Vital='yes' />
+
+					<File Id='races' Name='Races.txt' DiskId='1' Source='client/cfg/Races.txt' Vital='yes' />
+
+					<File Id='body' Name='BodyTypes.txt' DiskId='1' Source='client/cfg/BodyTypes.txt' Vital='yes' />
+
+					<File Id='rgb' Name='RGB.txt' DiskId='1' Source='client/cfg/RGB.txt' Vital='yes' />
+
+					<File Id='items' Name='GroundItems.ini' DiskId='1' Source='client/cfg/GroundItems.ini' Vital='yes' />
+
+          <File Id='zones' Name='Zones.ini' DiskId='1' Source='client/cfg/Zones.ini' Vital='yes' />
+
+				</Component>
+
+			</Directory>
+
+
+			<Directory Id='LogDir' Name='logs'>
+
+				<Component Id='LogDir' Guid="5BEC5E08-98F6-44CB-9F08-0106F7743368">
+
+          <CreateFolder Directory='LogDir' ></CreateFolder>
+          
+					<RemoveFolder Id="LogDirFolderRemove" Directory='LogDir' On='uninstall'/>
+
+				</Component>
+
+			</Directory>
+
+			<Directory Id='TimerDir' Name='timers'>
+
+				<Component Id='TimerDir' Guid="02868414-00CE-475F-85C1-35B0B7FD3925">
+
+          <CreateFolder Directory='TimerDir' ></CreateFolder>
+          
+					<RemoveFolder Id="TimerDirFolderRemove" Directory="TimerDir" On='uninstall'/>
+
+				</Component>
+
+			</Directory>
+
+			<Directory Id='FilterDir' Name='filters'>
+
+				<Component Id='FilterDir' Guid="59455C12-FD60-4651-8D94-4F09AE02C423">
+
+          <CreateFolder Directory='FilterDir' ></CreateFolder>
+          
+					<RemoveFolder Id="FilterDirFolderRemove" Directory="FilterDir" On='uninstall'/>
+
+				</Component>
+
+			</Directory>
+
+		</DirectoryRef>
+
+
+    <Feature Id='Complete'
+
+				 Title='MySEQ Open' 
+
+				 Description='The complete package.'
+
+                 Display='expand'
+
+				 AllowAdvertise='no' 
+
+				 Level='1' 
+
+				 ConfigurableDirectory='INSTALLDIR'>
+
+      <Feature Id='MainClient'
+
+					 Title='MySEQ Client'
+
+					 Description='Client files'
+
+					 AllowAdvertise='no'
+
+					 Level='1'>
+
+        <ComponentRef Id='ClientExe' />
+
+        <ComponentRef Id='SupportLibs' />
+
+        <ComponentRef Id='MapDir' />
+
+        <ComponentRef Id='ConfigDir' />
+
+        <ComponentRef Id='LogDir' />
+
+        <ComponentRef Id='TimerDir' />
+
+        <ComponentRef Id='FilterDir' />
+
+        <ComponentRef Id='ClientShortcut' />
+
+        <ComponentRef Id='DesktopClientShortcut' />
+
+      </Feature>
+
+      <Feature Id='MainServer'
+
+					 Title='MySEQ Server'
+
+					 Description='Server Files'
+
+					 AllowAdvertise='no'
+
+					 Level='1'>
+
+
+        <ComponentRef Id='ServerExe' />
+
+        <ComponentRef Id='ServerIni' />
+
+        <ComponentRef Id='ConfigIni' />
+
+        <ComponentRef Id='ServerShortcut' />
+
+        <ComponentRef Id='DebugServerShortcut' />
+
+      </Feature>
+
+			<ComponentRef Id='UninstallShortcut' />
+
+			<ComponentRef Id='GPL' />
+
+		</Feature>
+    <MajorUpgrade DowngradeErrorMessage="A newer version of MySEQ Open is already installed." />
+    
+    <CustomAction Id="Set_INSTALLDIR" Execute="firstSequence" Property="INSTALLDIR" Value="[EXISTINGINSTALLDIR]" />
+    
+    <InstallExecuteSequence>
+      <Custom Action="Set_INSTALLDIR" After="FileCost"><![CDATA[NOT Installed AND (NOT INSTALLDIR) AND EXISTINGINSTALLDIR]]></Custom>
+    </InstallExecuteSequence>
+    
+    <InstallUISequence>
+      <Custom Action="Set_INSTALLDIR" After="FileCost"><![CDATA[NOT Installed AND (NOT INSTALLDIR) AND EXISTINGINSTALLDIR]]></Custom>
+    </InstallUISequence>
+    
+    <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR' />
+
+    <UIRef Id="WixUI_InstallDir" />
+
+    <Icon Id="MySEQIcon" SourceFile="client/App.ico" />
+
+	</Product>
+
+</Wix>

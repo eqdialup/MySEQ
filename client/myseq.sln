@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "myseq", "myseq.csproj", "{874224EA-A207-4C8A-8BB4-76F473680C8F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug.ActiveCfg = Debug|.NET
+		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug.Build.0 = Debug|.NET
+		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Release.ActiveCfg = Release|.NET
+		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# This crunchmaps script is used to crunch together contents stored across multiple map files.
+#
+# Sony releases their map files with map points and labels all in one file. This is nice,
+# and the way that MySEQ reads it. However, eq.mapfiend.net has better map files, imo.
+# These contain more labels and for some zones, more map information. However, the map
+# points and the labels are in separate files. The result is that if you desire to use
+# the mapfiend versions, MySEQ never displays any labels. Of course we could add a fix
+# to the client to read both files, but another alternative is to crunch the mapfiend
+# files into one file.
+#
+# To set this up, extract all the mapfiend maps into a folder called maps.fiend. Next,
+# extract all the Sony maps to a folder called maps.sony. We will generate a folder
+# called maps, which will contain the crunched versions from maps.fiend. If a map exists
+# in maps.sony that is not in maps at the end, then that Sony file will be copied into
+# maps as well.
+
+#set -o xtrace
+
+if [ ! -d maps.fiend ]; then
+    echo "Error: Could not locate maps.fiend folder."
+    exit 1
+fi
+if [ ! -d maps.sony ]; then
+    echo "Error: Could not locate maps.sony folder."
+    exit 1
+fi
+if [ -d maps ]; then
+    echo "Warning: maps folder already exists. Backing up to maps.old"
+    if [ -d maps.old ]; then
+        rm -rf maps.old
+    fi
+    mv maps maps.old
+fi
+
+mkdir maps
+
+fmap_cnt=0
+fmaps=`cd maps.fiend && find -name "*_1.txt"`
+
+for map in $fmaps; do
+    map=`basename $map .txt | sed 's/_1//'`
+    echo Crunching maps/$map.txt
+    cat maps.fiend/$map*.txt > maps/$map.txt
+    let fmap_cnt+=1
+done
+
+smap_cnt=0
+smaps=`cd maps.sony && find | grep -v _1 | grep -v _2 | grep -v _3`
+
+for map in $smaps; do
+    if ( [ -f maps.sony/$map ] && [ ! -f maps/$map ] ); then
+        echo "Adding Sony map: $map"
+        cp maps.sony/$map maps/$map
+        let smap_cnt+=1
+    fi
+done
+
+echo "Crunched $fmap_cnt maps from maps.fiend"
+echo "Copied   $smap_cnt maps from maps.sony"
+
+echo "Cleaning up end of line characters"
+cd maps
+unix2dos *
+cd ..
+
+echo "Creating zipfile..."
+zip -r maps.`date +%F`.zip maps
+
+echo "Complete."

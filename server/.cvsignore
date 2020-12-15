@@ -1,0 +1,7 @@
+*.exe
+*.resources
+positions.xml
+prefs.xml
+filters
+maps
+timers

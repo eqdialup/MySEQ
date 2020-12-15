@@ -1,0 +1,488 @@
+<html>
+
+	<head>
+
+		<title>MySeq Server Release Notes</title>
+
+	</head>
+
+	<body text="#000000" link="#0000ff" vlink="#ff0000" bgcolor="#ffffff" alink="#800080">
+
+		
+
+        <h1 align="center"><u>MySEQ Server Release Notes</u></h1>
+
+        <center><font><a href=http://www.showeq.net/forums/forumdisplay.php?s=&f=60>Visit Forums</a></font></center>
+
+    <h2>Release Version 2.4.1.0 by EqMule</h2>
+    <p>Dated 08 Feb 2014</p>
+
+    <ol>
+      <li>Fixed a buffer overflow in extractToBuffer which would cause the client to display spawns on some machines but not others.</li>
+      <li>Added level 105 support in a previous update but didnt make a note of it, so here it is.</li>
+      <li>Added concolors by level in a previous update but didnt make a note of it, so here it is.</li>
+    </ol>
+
+    <h2>Release Version 2.3.1</h2>
+    <p>Dated 14 March 2013</p>
+
+    <ol>
+      <li>Fixed some of the secondary offset scanning code so it will handle searching for different data type patterns.</li>
+      <li>Added a debug command, sfu (should have used stfu as it would be funnier), to search for an unsigned int in CharInfo struct, that should point to your character.  I added this so I can search for items in primary and secondary, based on their ID.  Needs more testing probably.</li>
+      <li>Added more secondary offset patterns provided by Fireblade.  Thanks.</li>
+      <li>Updated offsets to EQLive dated 3-13-2013</li>
+      <li>The secondary offset finder will now use the CharInfo offset based on search patterns in config.ini first.  If it does not get a match, then it will use what is in the myseqserver.ini file.</li>
+    </ol>
+
+    <h2>Release Version 2.3.0</h2>
+    <p>Dated 11 February 2013</p>
+
+    <ol>
+      <li>Added some optimizations to server code.  The server code is not very cpu intensive already, but this saved 20-40% when testing.</li>
+      <li>Fixed a bug where that would cause the client/server to get out of sync.</li>
+      <li>Changed how server/client interact when switching characters between multiple EQ sessions.  This requires both the client and server to be updated to 2.3.0 or higher to work correctly.  This fixes an issue that caused the client/server connection to be lost while switching characters.</li>
+      <li>Improved the detection for a running eqgame.exe process.  This should require less stopping and restarting the client connection to maintain a MySEQ session operating.</li>
+    </ol>
+    
+    <h2>Release Version 2.2.13</h2>
+    <p>Dated 24 January 2013</p>
+
+    <ol>
+      <li>They /system32 folder will be checked for notepad.exe when using the Edit Offsets button.  This helps the button work on newer versions of Windows Server.  I normally run EQ on Windows Server 2008 R2, so now the button works.  Yea!!!</li>
+      <li>Updated Offsets to EQLive dated 1/16/2013</li>
+      <li>Added 2 more patterns to secondary offset finder.  Thanks Fireblade.</li>
+    </ol>
+    
+    <h2>Release Version 2.2.12</h2>
+    <p>Dated 14 December 2012</p>
+
+    <ol>
+      <li>Added framework for finding secondary offsets.  The patterns and masks are not set up to work yet.</li>
+      <li>Changed the primary offset finder output text.  Maybe it will be less confusing.  Maybe not.</li>
+      <li>Updated offsets to EQLive dated 12/12/2012.  Thanks Fireblade.</li>
+      <li>Reverted the Items offset finder patterns and mask to prior to the last big changes.  So it is back to working with what is currently on live.</li>
+      <li>Moved sending target info after spawns, so on initial startup with a running client that has a target.  The target id has something to match.  Otherwise targeting only works after retargeting.</li>
+    </ol>
+    
+    <h2>Release Version 2.2.9</h2>
+    <p>Dated 10 November 2012</p>
+
+    <ol>
+      <li>Updated offset finder patterns.  Thanks Fireblade.</li>
+      <li>Updated offsets to EQLive dated 11/9/2012</li>
+	  <li>Updated some of debug mode code.  It still needs more work.</li>
+    </ol>
+
+    <h2>Release Version 2.2.8</h2>
+    <p>Dated 09 November 2012</p>
+
+    <ol>
+      <li>Updated server to support ASLR.</li>
+      <li>Updated offsets to EQLive dated 11/7/2012</li>
+    </ol>
+
+    <h2>Release Version 2.2.7</h2>
+    <p>Dated 26 October 2012</p>
+
+    <ol>
+      <li>Moved the 8 bit config settings into the myseqserver.ini file, since it is exe specific.</li>
+      <li>Updated offsets to EQLive dated 10/12/2012</li>
+    </ol>
+    
+    <h2>Release Version 2.2.6</h2>
+    <p>Dated 27 September 2012</p>
+
+    <ol>
+      <li>Added the ability for the offset finder to write offsets that have changed to the ini file.</li>
+      <li>Updated offsets to EQLive dated 9/27/2012</li>
+    </ol>
+    
+    <h2>Release Version 2.2.5</h2>
+    <p>Dated 21 September 2012</p>
+
+    <ol>
+      <li>Hovering over the minimized system tray icon will now display the server version.</li>
+      <li>Starting the server with the port unavailable will no longer increment the port number and continue.</li>
+      <li>If you try to start two sessions of the server on the same listening port, it will now give you an error message when it does not find the port available.  That session of the server will exit, rather than start up on the next port number.</li>
+      <li>Improved the client <-> server connection behavior.  If the client and server are connected and eqgame.exe is not running, it will now properly identify the process when it is started.</li>
+      <li>Added sending over the OwnerID in the spawn structures.  This is used to identify pets easier.</li>
+      <li>Updated offsets to EQLive dated 9/19/2012</li>
+    </ol>
+
+
+    <h2>Release Version 2.2.4</h2>
+    <p>Dated 30 August 2012</p>
+
+    <ol>
+      <li>Single left clicking the minimized system tray icon will no longer restore the server.  This is to help prevent accidently restoring the server when running EQ in windowed mode.</li>
+      <li>Double left clicking the minimized system tray icon will now restore the server to being visible.</li>
+      <li>Server config parameters will be stored in config.ini.  This is separate from the offsets ini file.</li>
+      <li>Added option to start up the server minimized.  This option is accessible on the pull down menu from the minimized system tray icon.  It can also by edited directly using the StartMinimized parameter in the config.ini file.</li>
+      <li>Added a setting in config.ini to use an 8 bit race value in memory.  This is enabled by setting EightBitRace=1 in config.ini.  Very old clients would use this.  Think old trilogy client, for those wanting to know who would have a use for it.  This also sets the material parameters to be a 16 bit value in memory.</li>
+      <li>Fixed some issues with the server when switching between multiple eqgame.exe sessions.</li>
+    </ol>
+    
+        <h2>Release Version 2.2.3</h2>
+	<p>Dated 28 July 2012</p>
+
+	<ol>
+	    <li>Updated myseqserver.ini offsets to EQLive release dated 7-18-2012</li>
+	    <li>Single left clicking the minimized system tray icon will no longer restore the server.  This is to help prevent accidently restoring the server when running EQ in windowed mode.</li>
+	    <li>Double left clicking the minimized system tray icon will now restore the server to being visible.</li>
+	    <li>Server config parameters will be stored in config.ini.  This is separate from the offsets ini file.</li>
+	    <li>Added option to start up the server minimized.  This option is accessible on the pull down menu from the minimized system tray icon.  It can also by edited directly using the StartMinimized parameter in the config.ini file.</li>
+		<li>Moved the Smart Offset Finder search patterns and masks into the config.ini.</li>
+ 	</ol>
+
+    <h2>Release Version 2.2.2</h2>
+	<p>Dated 12 July 2012</p>
+
+	<ol>
+		<li>Integrated Carpathian's Smart Offset Finder into the server.  It will only search for primary offsets in the selected eqgame.exe file.</li>
+ 	</ol>
+
+
+        <h2>Release Version 2.2.1</h2>
+
+	<p>Dated 13 March 2012</p>
+
+	<ol>
+		<li>Added a displayed IP address.  The logic to display this may not always show what you expect for your local lan ip address due to possible virtual interfaces.</li>
+                <li>Added a button to display all of your ip addresses in a message box.</li>
+	</ol>
+
+        <h2>Release Version 2.2.0</h2>
+
+	<p>Dated 05 March 2012</p>
+
+	<ol>
+		<li>Changed the server from a console application, to a WIN32 API based application.</li>
+		<li>Added a dialog window to display basic server information.</li>
+		<li>The executable is now server.exe, instead of myseqserver.exe.</li>
+		<li>The MySEQ Open Server will now minimize to the System Tray instead of the Taskbar.</li>
+		<li>The window title caption of the dialog will be the name of the executable.</li>
+		<li>There are now buttons on the dialog to allow editing, and reloading offsets.  The edit function brings up the current ini file in use with notepad.</li>
+		<li>Running in debug, will bring up a console to interact with.</li>
+		<li>Code for minimizing to system tray gracefully borrowed from bobobobo's weblog http://bobobobo.wordpress.com which takes code from http://www.gidforums.com/t-5815.html</li>
+        <li>Changing dialog extended style, so button for dialog shows in taskbar: Code taken from #Winprog FAQ http://winprog.org/faq</li>
+        <li>I think everything is functional.  The old server code will still run fine with this client version.  I might have gotten some coding tips from other places. I tried to give credit where I used large hunks of stuff.</li>
+	</ol>
+
+
+	<h2>Release Version 2.0.0</h2>
+
+	<p>Dated 15 October 2011</p>
+
+	<ol>
+		<li>Updated Version to 2.0.0.</li>
+
+	</ol>
+
+	<h2>Release Version 1.28.1</h2>
+
+	<p>Dated 12 October 2011</p>
+
+	<ol>
+		<li>Cleaned up way localhost ip address is looked up.</li>
+
+	</ol>
+
+	<h2>Release Version 1.28.0</h2>
+
+	<p>Dated 02 October 2011</p>
+
+			<ol>
+		<li>The server will now work with versions that have either single and double pointers to ground spawn item offsets.</li>
+
+		<LI>The myseqserver.exe will now prompt for UAC control to run with appropriate privledges.</LI>
+
+		<li>The IP addresses being listened to by the server, will list out on starting up the server.</li>
+
+	</ol>
+
+
+	<h2>Release Version 1.27.3</h2>
+
+	<p>Dated 14 March 2010</p>
+
+			<ol>
+
+		<LI>Ground Items Offsets updated to a double in-directed pointer.</LI>
+
+		<li>Updated debugger to find ground items based on a double pointer.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.27</h2>
+
+	<p>Dated 18 October 2009</p>
+
+			<ol>
+
+		<LI>Added Primary and Offhand offsets.  This server requires client version 1.27 or higher.</LI>
+
+		<li>This server version is not compatible with older clients.</li>
+
+	</ol>	
+
+	
+
+	<h2>Release Version 1.26</h2>
+
+	<p>Dated 01 August 2009</p>
+
+			<ol>
+
+		<LI>Added -f [filename] option to commandline to allow loading other names of ini files.  This option does not allow to specify complete path, only filename with no spaces.</LI>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.24.1</h2>
+
+	<p>Dated 11 April 2009</p>
+
+			<ol>
+
+		<LI>Changed Index for Cleared Target.</LI>
+
+		<LI>This Server is compatible with Client 1.24.3 and higher.</LI>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.24</h2>
+
+	<p>Dated 9 April 2009</p>
+
+			<ol>
+
+		<LI>Added offsets for sending EQ date & time to client.<BR>
+
+            	New debug command:  sfw mm/dd/yyyy<BR>
+
+			The date is the game date from using /time in game.  This is used to find world offsets.</LI>
+
+            <LI>Updated behavior of target offsets to clear client target when in game target is cleared.</LI>
+
+		<LI>This Server is compatible with Client 1.19.2 and higher.  Only 1.24 client and higher will make use of date & time.</LI>
+
+	</ol>
+
+
+
+	<H2><U>Release Version 1.23   <font>(January 31, 2009)</font></U></H2>
+
+			<ol>
+
+		<LI>Fixed Bug where list of Chars was sending each twice</LI>
+
+		<LI>This Server is compatible with Client 1.19.2 and higher</LI>
+
+	</ol>
+
+        <H2><U>Release Version 1.19.3   <font>(November 8, 2008)</font></U></H2>
+
+			<ol>
+
+            <LI>Added Release 1.20.0 content
+
+		<LI>Added ability to run under Windows Services.<BR>
+
+			- To install as service run "myseqserver -i"<BR>
+
+			- To remove windows service run "myseqserver -d"<BR>
+
+			- To run as windows service copy myseqserver.ini to the System32 folder.<BR>
+
+			- Start and Stop the service using the Service Control Manager (services.msc).</LI>
+
+            <LI>Fixed some issues with timers.</LI>
+
+            <LI>Changed display message slightly.</LI>
+
+	    <LI>This version is compatible with the 1.22 Client.</LI>
+
+            </ol>
+
+
+
+        <H2><U>Release Version 1.20.0   <font>(March 22, 2007)</font></U></H2>
+
+			<ol>
+
+            <LI>Added Beta 1.19.2 content
+
+			<LI>Added in setproc/getproc packets needed for 1.20 client. Requires 1.20.0 client or greater.
+
+            <LI>Fixed some bugs where server could potentially hang and consume CPU during zone changes.
+
+            <LI>Changed display message slightly.
+
+            <LI>Fixed subtle bug where multiple reconnects could cause spawns and ground items to slowly drop from list.
+
+            <LI>Added ground item offset scanner to debugger.
+
+            </ol>
+
+        
+
+        <H2><U>Beta Version 1.19.2   <font>(January 27, 2007)</font></U></H2>
+
+			<ol>
+
+			<LI>Added ground item detection back into server. Requires Beta 1.19.2 client or greater.
+
+            </ol>
+
+		
+
+        <H2><U>Release Version 1.19.1   <font>(February 23, 2006)</font></U></H2>
+
+			<ol>
+
+			<LI>Fixed a bug whereby if the process name was in uppercase, we would not find process.
+
+            <LI>Added 'scan process' debug menu option.
+
+            </ol>
+
+		
+
+        <H2><U>Release Version 1.19.0   <font>(January 22, 2006)</font></U></H2>
+
+			<ol>
+
+			<LI>This server has been completely overhauled. It has been re-written almost entirely in C++.
+
+            <LI>The debug modes were completely overhauled. There is now a command line debug interface for
+
+                assistance in locating new offsets. There are comments in the INI file to assist you with
+
+                the new debug interface.
+
+            <LI>The INI file is completely cleaned out.
+
+            <LI>INI file changes are reloaded with each connection, so you do not need to restart the server.
+
+            <LI>There is an auto-close feature that closes the server once EQ shuts down.
+
+            <LI>These release notes were added back into the server release zipfile.
+
+            <LI>There are more messages displayed for normal mode operation. 
+
+            </ol>
+
+		
+
+        <H2><U>Release Version 1.18.2   <font>(December 16, 2005)</font></U></H2>
+
+			<ol>
+
+			<LI>v1.18.1 required NET v2.0 in order to work.<br>
+
+                This new version is identical to v1.18.1 but without the NET v2.0 requirement.
+
+            </ol>
+
+		
+
+        <H2><U>Release Version 1.18.1   <font>(December 10, 2005)</font></U></H2>
+
+			<ol>
+
+			<LI>v1.18.0 was accidentally shipped with debug enabled, requiring a special debug DLL to work.<br>
+
+                This new version is identical to v1.18.0 but without debug enabled.
+
+            </ol>
+
+		
+
+        
+
+        <H2><U>Release Version 1.18.0   <font>(December 9, 2005)</font></U></H2>
+
+            <ol>
+
+            <LI>Added new schema flag for walking spawnlist in reverse (required for 12/7/05 patch)
+
+            <LI>New offsets for 12/7/2005 update
+
+            <LI>Added GPL messages to source, ini and runtime message
+
+            <LI>Added new schema flag to allow pSelf to be a direct pointer (required for 11/16/05 patch)
+
+            <LI>Removed some unused INI entries
+
+            <LI>Added several new debug modes for help in locating offsets
+
+            </ol>
+
+		
+
+        <H2><U>Release Version 1.17.0   <font>(October 10, 2004)</font></U></H2>
+
+            <ol>
+
+            <LI>Server now corrects problem with reversed X + Y offsets in SpawnInfo<BR>
+
+                - Existing offset files should work without change.<BR>
+
+                - New offset files will have a SchemaVersion=2 line to indicate that the X + Y offsets are NOT reversed...</LI>
+
+            <LI>Made a Major change to how the Client requests data from the server. This will make the process much more flexible.<BR>
+
+                <span STYLE="color:red">However it does mean that the new server will ONLY work with client 1.17.0+</span>
+
+            <LI>Changed the version number to match the client to help indicate which client + server can talk to each other. <BR>
+
+                Note the build number does not need to match only the Major + minor versions i.e. 1.17.*
+
+            </ol>
+
+		
+
+        <H2><U>Release Version 1.12.0   <font>(September 28, 2004)</font></U></H2>
+
+            <ol>
+
+            <LI>Added the ability to select which EQ Process to monitor when multi-boxing.
+
+            </ol>
+
+		    <p>Note: MySeq Client V1.16.2 or better is required to perform this action.</p>
+
+		
+
+        <H2><U>Release Version 1.11.0   <font>(November 26, 2003)</font></U></H2>
+
+			<ol>
+
+			<LI>Changed the version number becuase there had been multiple versions of 
+
+				Server 1.9b which made it difficult to troubleshoot issues.
+
+            </ol>
+
+        
+
+		<H2><U>Release Version 1.9b.0   <font>(October 13, 2003)</font></U></H2>
+
+			<ol>
+
+			<LI>Fixed problem with player level when riding a horse - (Added another level of 
+
+				indirection. CharInfoPtr-&gt;CharInfo Struct.&nbsp; 
+
+				CharInfo.SpawnInfoPtr-&gt;SpawnInfo Struct.)
+
+            </ol>
+
+	</body>
+
+</html>

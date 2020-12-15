@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MySEQ.server.w32", "MySEQ.server.w32.vcxproj", "{F5B28C00-4C1F-40DF-871D-1FBA3BB85305}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MySEQ.server", "MySEQ.server.vcxproj", "{53DD6413-7C07-477F-A036-75AA01380243}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5B28C00-4C1F-40DF-871D-1FBA3BB85305}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F5B28C00-4C1F-40DF-871D-1FBA3BB85305}.Release|Win32.ActiveCfg = Release|Win32
+		{53DD6413-7C07-477F-A036-75AA01380243}.Debug|Win32.ActiveCfg = Debug|Win32
+		{53DD6413-7C07-477F-A036-75AA01380243}.Debug|Win32.Build.0 = Debug|Win32
+		{53DD6413-7C07-477F-A036-75AA01380243}.Release|Win32.ActiveCfg = Release|Win32
+		{53DD6413-7C07-477F-A036-75AA01380243}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

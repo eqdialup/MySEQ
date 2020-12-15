@@ -1,0 +1,1547 @@
+﻿<HTML>
+
+<HEAD>
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+<TITLE>MySeq Client Release Notes</TITLE>
+
+</HEAD>
+
+<BODY TEXT="#000000" LINK="#0000ff" VLINK="#ff0000" BGCOLOR="#ffffff" aLink="#800080">
+
+
+
+<P><!-- saved from url=(0069)http://www.geocities.com/slartibartfast1232000/ClientRleaseNotes.html --></P>
+
+<U><H1 ALIGN="center">MYSEQ Client Release Notes</H1>
+
+</U>
+      <h2>Release version 2.3.0</h2>
+
+      <p>Dated 11 February 2012</p>
+
+      <ol>
+            <li>The positions.xml, which stores the docking windows locations and positions, will now be stored in the application data folder.</li>
+            <li>The prefs.xml and myseq.xml will also be stored in the application data folder now too.</li>
+            <li>Timers will no longer be loaded or saved for certain zones like guild lobby, nexus, poknowledge.</li>
+            <li>The character selection in the pull down menu should now show the correct character checked.</li>
+            <li>Fixed a bug that would cause the character selection menu to not list all the characters available to select.</li>
+            <li>Fixed a bug that would cause the data stream between the client/server to become corrupted when switching characters.</li>
+            <li>Removed the refresh list from the character selection menu as it is updated when the menu is pulled down automatically.</li>
+            <li>Added to the options menu the ability to show the current character name in the application title right after the map name.</li>
+            <li>Changed the way the server/client interact when running multiple clients and switching between them.  This requires using the new server version to work correct.</li>
+            <li>The level override in the options is no longer limited to having a max value of 85.</li>
+            <li>The zone name in the window title will now come from what is looked up in the zones.ini file, when the map is loaded.</li>
+      </ol>
+
+      <h2>Release version 2.2.13</h2>
+
+      <p>Dated 24 January 2012</p>
+
+      <ol>
+            <li>Selecting a Ground Item on the item list will now draw a line to the location, even if it is depth filtered.</li>
+            <li>Using the Mob Search box, will now mark mob respawns on the map too.</li>
+            <li>The corpse alerts settings will now work with the Mob Search Text box.  If you do not want corpses to trigger alerts, then the Mob Search window will behave the same way.</li>
+            <li>Made a few changes to how the mob name history is saved for spawn timers. This preserves the lists better.</li>
+            <li>Added some code to help prevent the data stream from becoming corrupted.  It has to do with processing incomplete packets of data.  Let me know if server/clients lose sync more.  I increased the size of the incomplete buffer.  And at the end of processing a set of packets, I make sure the incompletebuffer is empty.</li>
+            <li>Depth Filtering will be saved on a per zone basis.  The client will remember the last setting for the depth filter being enabled or not for each zone.  These settings are saved in the Application Data folder.</li>
+            <li>Made some improvements on how the client updates while zoning.  This makes the zoning a bit smoother.</li>
+      </ol>
+
+      <h2>Release version 2.2.12</h2>
+
+      <p>Dated 14 December 2012</p>
+
+      <ol>
+            <li>Ground Items list background color now updates with list background color changes.</li>
+            <li>The target window will now adjust size better so the in game date/time are not cut off.</li>
+            <li>The target window will adjust height better when selecting spawn timers.</li>
+	        <li>Timers, Spawns, Players, Ground items, should no longer appear on tooltips while hovering on the map if they are depth filtered.</li>
+            <li>Abbreviated the month in the target window so the minimum width is smaller.</li>
+            <li>Added a new columns to the spawn timer list which will display a countdown of remaining time in seconds until respawn and the zone shortname.</li>
+            <li>Selecting a mob on the map, with the left mouse button while pressing the control key, will now work correctly.</li>
+            <li>Selecting a spawn timer on the map will now update show the selected item on the Spawn Timer List.</li>
+            <li>Using the Control-Mouse Left button over a mob on the map, will now select the corresponding timer on the Spawn Timer List.</li>
+            <li>The spawn timer list will change color as the countdown timer gets closer to zero.</li>
+            <li>Added the ability to Sticky timers.  Right clicking a timer on the Spawn Timer List, will have a check box to Sticky the timer.  A stickied timer will continue to show even after you zone.  No, it won't show the respawn.  I am not a miracle worker.  But you can see it count down from outside the zone.  This is not persistent upon restart.  I might add saving these later.  But for now, they have to be stickied each time you use them like this.</li>
+            <li>Changed the timers so that the Last Spawn Name, is now just Spawn Name.  It will try to keep the name of possible named mobs listed here.  It prefers mobs that start with a capital letter or a #.</li>
+            <li>Made adjustments in client so that upon startup, it will not clear the target, if there was one already.</li>
+      </ol>
+
+      <h2>Release version 2.2.11</h2>
+
+      <p>Dated 22 November 2012</p>
+
+      <ol>
+            <li>Updated Races.txt.</li>
+            <li>Changed zoning some in the client to help work better with timers and appearance of spawns when zoning.</li>
+            <li>Added a cfg/Zones.ini file with the short name and long name of zones.  This text is what will now show in the map pane tab when the zone is found.</li>
+            <li>Significant optimizations were made to the depth filtering code.  CPU savings up to 40% are seen in some cases.</li>
+            <li>Added a + symbol on the map for labels indicating the position where map text location indicates.  This is similar to how the in game maps look.  That way it is a bit easier to see the location the label specifies.</li>
+            <li>If multiple map labels are at the same coordinates, subsequent labels will be shifted up when drawn on the map.</li>
+      </ol>
+
+      <h2>Release version 2.2.10</h2>
+
+      <p>Dated 16 November 2012</p>
+
+      <ol>
+            <li>Closed the corner missing dot on map drawn player corpses.</li>
+            <li>Players drawn on map will now have sharper edges.</li>
+            <li>Purple border around players indicating they are invis will have better edges.</li>
+            <li>The Character Selection list will now be dynamically updated when the File menu is opened.</li>
+            <li>Updated GroundItems.ini.  Added a lot of ornamentations and house items.  There are still plenty missing, but I filled in quite a few holes.</li>
+            <li>Fixed serveral exceptions triggered by files not existing, by checking if they exist first.  Rather than rely on a try::catch</li>
+            <li>Fixed out of range exception associated with the con colors array.</li>
+      </ol>
+      <h2>Release version 2.2.9</h2>
+
+      <p>Dated 14 November 2012</p>
+
+      <ol>
+            <li>Map will readjust better when changing window size or state.</li>
+            <li>Saved Settings will be better preserved when updating to a newer version.</li>
+      </ol>
+
+      <h2>Release version 2.2.7</h2>
+
+      <p>Dated 26 October 2012</p>
+
+      <ol>
+            <li>Readded double buffering of the lists.  This should make that annoying flickering go away again.</li>
+            <li>The Mob Search text box now shows a descriptive faded text.  More typical behavior of search boxes as we expect in windows applications.</li>
+            <li>Mob corpses will now look more symmetric.<li>
+      </ol>
+
+
+      <h2>Release version 2.2.6</h2>
+
+      <p>Dated 27 September 2012</p>
+
+      <ol>
+            <li>Improved handling of manually entering values for zoom and Z depth filtering in tool strip.  Moving the mouse off the text box, will no longer steal focus.  So it will work like we have traditionally come to expect entering values into text boxes in windows applications.</li>
+            <li>Improved handling of Lookup text box in tool bar.  Deleting the text, will work in place of hitting the reset button.</li>
+            <li>Reverted pets/familiars con color changes, except on map.  On map, they show the con color as gray.  Elsewhere, they reflect the real con color.  I am not sure which way I like this.  Any input is desired on this change.</li>
+            <li>LDON Objects will now show as con color gray on the map and lists.</li>
+            <li>Additional CPU optimizations (minor)</li>
+      </ol>
+
+      <h2>Release version 2.2.5</h2>
+
+      <p>Dated 21 September 2012</p>
+
+      <ol>
+        <li>Further reductions in the flicker of the spawn lists.  The flicker should be mostly gone now.</li>
+        <li>Added some optimizations for updating spawns that saves some CPU cycles.</li>
+        <li>Fixed bugs associated with the Server Address list in options.  Only the first two slots were working correctly.  Putting server addresses in the additional slots would not function as predicted.</li>
+        <li>There is now an option in the client to automatically connect to the server upon starting.  The default for this is on.  You can turn it off by unselecting the "Connect on Startup" in the File menu.</li>
+	<li>Changed way pets are identified.  The owner's spawn id is now sent over from the server.  This will require both the server and client to be running at least version 2.2.5.</li>
+	<li>Player pets, familiars, mounts, will now all show in the spawn list as grey, and on the map as grey.  No more running in fear from a player's pet unnecessarily.</li>
+     </ol>
+
+     <h2>Release version 2.2.4</h2>
+
+     <p>Dated 30 August 2012</p>
+
+     <ol>
+       <li>Added new email alerts. Email alerts are only for a zone and not global.  Enable the email alerts by pressing the envelope icon on the toolbar.  When MySEQ is started, it will always turn off the email alerts.  Email alerts will require matching the full text name of the mob, including a # prefix if they have one.</li>
+       <li>The settings for the SMTP server are in the options dialog on the SMTP tab.</li>
+       <li>The email uses .net mail. The secure authentication only uses TLS as that is what's in .Net 2.0.  This should work for emails like gmail and hotmail.</li>
+       <li>Password storage and the connections are very basic.  There is no certificate verification with the smtp server.</li>
+       <li>The use network credentials option, will use the credentials used to log on to your computer (or your network) for the smtp login.</li>
+       <li>If you want to receive the email alert as a text message, there are sms gateways for most wireless networks.  A list of some of them are found here:  http://en.wikipedia.org/wiki/List_of_SMS_gateways</li>
+       <li>Updated Races.txt and Classes.txt.</li>
+       <li>Fixed a bug with matching full text for alerts.  It just flat out was not working.  It should work now.  To match a mob name beginning with #, matching full text, will require having the # in the filters too.</li>
+       <li>Dynamic Alpha filtering of map lines will is now tied to the Depth Filter.  If not enabled, a filtered map line will be completed blank.  Enabled a faded line will be drawn.</li>
+       <li>On the Options->Map tab, there is an option to set the alpha transparency setting of the faded map lines.  A setting of 0 is completely transparent, with 100 being the non-transparent setting.</li>
+     </ol>
+
+     <h2>Release version 2.2.2</h2>
+
+     <p>Dated 12 July 2012</p>
+
+     <ol>
+       <li>Fixed typo in one of the Item Alerts.</li>
+     </ol>
+
+     <h2>Release version 2.2.1</h2>
+
+     <p>Dated 13 March 2012</p>
+
+     <ol>
+       <li>Selected targets will stay visible better in the Spawn List window.  Moving cursor to the map window will no longer automatically lose focus of a previously focused list, i.e. Spawn List.  With auto selection of targets, it will also change the focus to the spawn list when selecting a mob.</li>
+       <li>The Spawn List, Spawn Timer List and Ground Item List are now double buffered.  There should be no more flashing or blinking of the items in the lists.</li>
+       <li>Because of the way Spawn List grid lines get distorted sometimes scrolling, the new default setting for list grid lines is now off.  This is just a more visual tweak, that you only would notice scrolling the lists manually sometimes.</li>
+       <li>Selecting a value for the map zoom from the pull down menu, will now change the map zoom.</li>
+       <li>Uninstalling the client will no longer delete the maps folder if other files are present, such as player installed maps.</li>
+     </ol>
+
+     <h2>Release version 2.2.0</h2>
+
+     <p>Dated 05 March 2012</p>
+
+     <ol>
+       <li>The target window will be smaller and more compact by default.  If you want the larger detailed version, click the small target window option off under the map pulldown menu settings.</li>
+       <li>Flashing skittles will have a more constant flash rate with changes in the update delay settings in the options.</li>
+     </ol>
+  
+     <h2>Release version 2.1.1</h2>
+
+    <p>Dated 05 January 2012</p>
+
+    <ol>
+      <li>Changed appearance for mobs identified using the lookup option in the toolbar.  The is the start of some fancier skittles options.  More to come.
+      <li>Performed some optimizations to reduce CPU utilization by the client.
+      <li>Client window position will be saved better when closing client.
+      </li>
+      
+    </ol>
+
+    <h2>Release version 2.1.0</h2>
+
+    <p>Dated 30 December 2011</p>
+
+    <ol>
+      <li>Updated Docking Library to DockPanel Suite.
+      <li>Added option to hide search box in the list panels.  This will now be hidden by default.
+      <li>Combined the toolbars.  They are no longer moveable, since this caused issues with the docking panels.
+      </li>
+      
+    </ol>
+
+    <h2>Release version 2.0.3</h2>
+
+    <p>Dated 30 November 2011</p>
+
+    <ol>
+      <li>Updated grounditems.ini from ACTORDEF data from 13th floor.
+      <li>Updated races.txt from dbstr_us.txt
+      </li>
+      
+    </ol>
+
+    <h2>Release version 2.0.2</h2>
+
+    <p>Dated 25 November 2011</p>
+
+    <ol>
+      <li>Changed SOE map loading to do all the .txt maps, the same way the client does.  It loads the .txt, _1.txt, _2.txt and _3.txt.  This makes using the client default map folder work better.
+	<li>Alert rings are wider now, so they are more visible on the map.  They are hard to miss now, and very distinct.
+      <li>Re-Added the Lookup text box for the map.  It is on it's own toolbar now and called "Find Mob" now.  Changed the color to blue for the looked up mobs, so it does not match any of the alert filters.  For those that do not know what this is, it is like a temporary highlight, mark mobs, option for the map.  Try it out.  Type the mob name, press enter, tada.  It is a wildcard based match, so pretend there is a * at the beginning and end of the mob name you type.
+      <li>Typing in mob names in the Find Mob box, will now match using spaces.  You no longer have to type the underscore in place of spaces.
+      <li>The map now supports the 3 sizes of map labels setting for SOE maps.  For SEQ maps, the size 2, is the default size.  The small size 1 is 90% of the normal size.  The large size is 110% normal size.
+	<li>Added option to add map text label's to the map.
+            <ul>  
+		<li>Right clicking a mob, will bring up an option to add text where they mob was located when clicked.  Adding text to the SOE map, saves the additional text to the _2.txt file (SOE maps) or .map file (SEQ maps).</li>
+		<li>Right clicking a spawn timer, will allow adding text at that spawn location.  For locations where multiple mobs have spawned, it will search through the list looking for names that start with # or upper case letters.
+            <li>Right clicking a mob name in the Spawn List, will work the same as adding map labels by clicking on mobs.
+            <li>The spawn timer list can also be used to add map labels.
+                <li>Right clicking a region with no mobs, will have the map label added at the current location of the player.
+            </ul>
+      </li>
+      
+    </ol>
+
+    <h2>Release version 2.0.1</h2>
+
+    <p>Dated 16 November 2011</p>
+
+    <ol>
+
+	<li>Mobs and Ground items can now be added directly to zone alert fiters by right clicking them from the map window.  This brings up a context menu, that is different from the normal one in the map window.</li>
+
+      <li>Updated the menus, including re-arranging where some items are located.</li>
+
+	<li>There is now an option to hide the main menu, depth filtering toolbar, and status bar.  Hiding the main menu will also show on the map context menu when it is hidden.  It can be made visible again using the context menu of the map window with the menu bar hidden.</li>
+
+      <li>Holding the control key down, while right clicking a mob on the map, will show that mob's spawn timer information (if it exists) instead of the mob information.</li>
+
+      <li>The options menu will now remember it's previous location, when it is opened again.  If the client is closed maximized, it is now possible to restore it to the normal windowed mode.</li>
+
+    </ol>
+
+    <h2>Release version 2.0.0</h2>
+
+    <p>Dated 15 October 2011</p>
+
+    <ol>
+
+	<li>Added Ground Items List.  Ground Items can now be depth filtered.</li>
+
+	<li>Ground Items will also be able to match alerts.  The cfg\GroundItems.ini is where it ties the description to the ActorDef.  The alerts match the description text string.</li>
+
+	<li>Alert/Filters colors are now clearer on the map.  Hunt=Green, Caution=Yellow, Danger=Red, Rare=White.</li>
+
+    </ol>
+
+    <h2>Release version 1.28.1</h2>
+
+    <p>Dated 12 October 2011</p>
+
+    <ol>
+
+	<li>Distinct and faded colors for Drawing pens will now be precalculated when map loads.  This saves CPU cycles</li>
+
+	<li>All map text distinct colors will also be precalculated.</li>
+
+	<li>Added a Distinct Text option for map text under Depth Filter options.  This allows more visible text like distinct lines.</li>
+
+        <li>Cleaned up some of the depth filtering code to not recalculate pens hardly ever.</li>
+
+        <li>Updated races.txt and bodytypes.txt from showeq.</li>
+
+    </ol>
+
+    <h2>Release version 1.28.0</h2>
+
+    <p>Dated 02 October 2011</p>
+
+    <ol>
+
+	<li>Updated to compile with VS2010.  Updated installer to Wix 3.0.
+
+        <li>Fixed some issues with built in con colors for Titanium/SoDalaya client.</li>
+
+        <li>There is now a check box in options for alerts, to prevent corpses from triggering alert filters</li>
+
+        <li>Alerts on maps will now be depth filtered with the NPCs to which they apply</li>
+
+        <li>If an alert type matches a mob, no more alerts will match it.  Only one match, then it will stop checking that mob against other alerts.</li>
+
+        <li>If Auto Expand is off, the amount of zoom on a map with respect to actual map range will attempted to be maintained when changing zones.</li>
+
+        <li>The range circle can now be reduced to a size of 0 to allow getting rid of it altogether on the map.</li>
+
+        <li>Map text can now be depth filtered.  SEQ format .map files, only have x,y for text so this requires using SOE style maps with x,y,z coordinates for text.</li>
+
+    </ol>
+
+
+
+	<h2>Release Version 1.27.2</h2>
+
+	<p>Dated 6 November 2009</p>
+
+	<ol>
+
+		<li>Fixed bug with spawn timers not saving with SOE or MapFiend maps.</li>
+
+	</ol>
+
+	
+
+	<h2>Release Version 1.27.1</h2>
+
+	<p>Dated 25 October 2009</p>
+
+	<ol>
+
+		<li>Fixed bugs with listview sorts on SpawnID and SpawnTime.</li>
+
+		<li>Split Corpse Filtering to NPC, PC, and My Corpses.  These are on the View menu.</li>
+
+		<li>Added option to display a countdown of timers on the Map->Show menu.  When this is enabled, timers will show remaining seconds on the map when less than 2 minutes remain.</li>
+
+		<li>Moved some of the identification code for pets, familiars, Mercs and Mounts to a location that is called less often in an effort to reduce CPU usage.</li>
+
+	</ol>
+
+	
+
+	<h2>Release Version 1.27.0</h2>
+
+	<p>Dated 18 October 2009</p>
+
+	<ol>
+
+		<li>Fixed minor bugs with voice alerts.</li>
+
+		<li>Fixed bug with alert prefix and suffix being added to Search.</li>
+
+		<li>Hovering mouse on map will now preferentially identify actual NPCs and PCs over pets, mounts and familiars.</li>
+
+		<li>Added Primary and Offhand item listing for spawns.  The client now requires server 1.27 or higher to work due to change in data stream to support this.
+
+			  The items used for the text translation are from the GroundItems.ini.  This is where to add additional items.  The GroundItems.ini was created from
+
+					   the weapons header files in SEQ.</li>
+
+		<li>Changed drawing order on map, so spawn timers will be drawn on top of corpses.</li>
+
+		<li>Moved GroundItems.ini to be loaded into hash table for ground items and primary/offhand lookups.  Updated GroundItems.ini file.</li>
+
+		<li>Added logging option for spawns under the SpawnList menu.  There can be a slight overlap of spawns while zoning
+
+			due to NPC info for new zone being sent earlier than the zone name in the location in memory where the MySEQ server reads the zone.</li>
+
+		<li>This version of client requires 1.27.0 or higher server version.  This client is not compatible with older server versions.</li>
+
+		<li>Fixed bug with pet regex matches for EQEmu servers."
+
+	</ol>
+
+
+
+
+
+	<h2>Release Version 1.26.2</h2>
+
+	<p>Dated 07 September 2009</p>
+
+	<ol>
+
+		<li>Added lookup table for Sin and Cos function calls. This resulted in 20-30% reduction in CPU usage in some cases.</li>
+
+		<li>Fixed so that on EMU servers for mobs having default directions, the lines will no longer show.  Only real direction lines appear now.</li>
+
+		<li>Fixed minor bug with mobs staying on alert after proximity alerts turned off.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.26.1</h2>
+
+	<p>Dated 16 August 2009</p>
+
+	<ol>
+
+		<li>Linked Go-Stop button to auto updated when client disconnects from server.</li>
+
+		<li>Added Map option to show NPC level only above the skittles.</li>
+
+		<li>Added Map option to turn on/off the Auto Expand of Maps when an NPC or PC is outside max map extents.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.26</h2>
+
+	<p>Dated 01 August 2009</p>
+
+	<ol>
+
+		<li>Removed voice selection options due to erroring out with some voices (bugfix).</li>
+
+		<li>Added Filter options for depth filtering, so you can select what is filtered</li>
+
+		<li>Added PVP display option for players on maps similar to SEQ.</li>
+
+		<li>Added PVP level range in options to change settings for range of levels for PVP</li>
+
+		<li>Added ability to display player and npc names on maps.</li>
+
+		<li>Added built in selectable con colors for EQEmu Server client support.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.25.2</h2>
+
+	<p>Dated 7 May 2009</p>
+
+	<ol>
+
+		<li>Fixed bug with MapFiend Maps not loading correctly.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.25.1</h2>
+
+	<p>Dated 24 April 2009</p>
+
+	<ol>
+
+		<li>Minor editorial changes and bug fixes.</li>
+
+	</ol>
+
+
+
+
+
+	<h2>Release Version 1.25</h2>
+
+	<p>Dated 19 April 2009</p>
+
+	<ol>
+
+		<li>More tweaks to improve Spawn Timer accuracy and performance.</li>
+
+		<li>Selecting a Spawn Timer will now identify the mob that last spawned on the map (if it is still alive).
+
+		Even if mob is a roamer, it can be identified by selecting the Spawn Timer on list or map.</li>
+
+		<li>Consolidated view options to a single list.</li>
+
+		<li>Added several optimizations to reduce cpu usage (improvement is very noticable).</li>
+
+		<li>Enhanced Depth Filtering (without dynamic alpha) to better view maps.  Map lines filtered above
+
+		will be faded and dashed.  Lines filtered below will be faded only.  Mobs below will be small dots
+
+		while mobs above will be hollow circles of normal spawn size.  Spawn points above will be normal size but faded.
+
+		Spawn points below will be small size.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.24.3</h2>
+
+	<p>Dated 11 April 2009</p>
+
+	<ol>
+
+		<li>Changed index for cleared target.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.24.2</h2>
+
+	<p>Dated 11 April 2009</p>
+
+	<ol>
+
+		<li>Fixed Spawn Timers - Again</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.24.1</h2>
+
+	<p>Dated 10 April 2009</p>
+
+	<ol>
+
+		<li>Fixed bug with Spawn Information Window not going away when set not to show in options.</li>
+
+		<li>Fixed a bug with Map Resizing when no maps loaded.</li>
+
+		<li>More little tweaks to timers.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.24</h2>
+
+	<p>Dated 9 April 2009</p>
+
+	<ol>
+
+		<li>Made minor changes to improve spawn sizing.</li>
+
+		<li>Maps will now automatically resize on loading ensuring all map text is visible.</li>
+
+		<li>Added support for displaying EQ game date and time.  This requires server 1.24 or higher.</li>
+
+            <li>Spawn Information Window will now clear, when you clear your target in game.  This requires server 1.24 or higher.</li>
+
+            <li>Made several fixes to timers.  After establishing timers for respawns, the
+
+                  timers should be maintained even after zoning.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.23.2</h2>
+
+	<p>Dated 28 February 2009</p>
+
+	<ol>
+
+		<li>Fixed various bugs with menus not updating settings and check marks.</li>
+
+		<li>Add yellow con range setting to ConLevels.ini.  This will be a single setting for level 0.  If the yellow
+
+			range covers three, then the line will read 0=3.  If set up for an EQEmu server, where it uses
+
+			two levels for yellow, it would be 0=2.</li>
+
+		<li>Collect Spawn Trails will now always be off on client startup and zoning.</li>
+
+	</ol>
+
+	
+
+	<h2>Release Version 1.23.1</h2>
+
+	<p>Dated 20 February 2009</p>
+
+	<ol>
+
+		<li>Fixed some bugs in menus not updating all the time.   Added items to menus in more
+
+                convenient locations.  Moved around menus to be more structure oriented.</li>
+
+		<li>Playing a wav file for an alerts is now truely asynchronous.  No more delays waiting for the sound to finish.</li>
+
+		<li>Made improvements to the speech alerts.  They now sound more like actual speech (what a concept).  They are also asynchronous, in 
+
+			  the sense that the map doesn't stop updating when there is speech alerts.</li>
+
+		<li>Added back in the cfg/Conlevels.ini.  It will use it if the file exists, otherwise the built in cons are used.</li>
+
+		<li>Added dialog with filter/alert additions.  This allows you to edit any text as it gets added.</li>
+
+		<li>Changed Spawn Point colors slightly when counting down to spawn.  At 120 Seconds Spawn Point turns yellow.
+
+                At 90 Seconds Spawn Point turns orange.  At 60 Seconds Spawn Point turns Red.  At 30 Seconds, Spawn Point
+
+                starts flashing red.</li>
+
+		<li>Support for Shards of Dalaya:  Included a SoDConLevels.ini and SoDmyseqserver.ini files, for working with Shards of Dalaya.  These do not work with
+
+			  EQLive.  Rename to ConLevels.ini, and put in the cfg folder to have proper SoD con colors.  Rename the other to
+
+					   myseqserver.ini, and use with the server when connecting to SoD to have the proper offsets.</li>
+
+	</ol>
+
+
+
+	<h2>Release Version 1.23</h2>
+
+	<p>Dated 31 January 2009</p>
+
+	<ol>
+
+		<li>Cleaned up Map grid lines.</li>
+
+		<li>Added ability to change color for map grid labels.</li>
+
+		<li>Added more Map Optimizations.</li>
+
+		<li>Improved Pet Identification.</li>
+
+		<li>Changed Spawn Sizing to have less interpolation, making sharper skittles.</li>
+
+		<li>Moved Folder Browser to .Net Framework.</li>
+
+		<li>Fixed bugs with some alert settings being swapped.</li>
+
+		<li>Moved FPS indicator to status bar.</li>
+
+		<li>Fixed bug assocated with filters not always clearing before reloading.</li>
+
+		<li>Updated Con Colors through level 50.</li>
+
+		<li>Fixed a bug when adding Filters/Alerts, if the name contained an apostrophe, it would not match.</li>
+
+	</ol>
+
+<h2>Release Version 1.19.8</h2>
+
+<p>Dated 04 January 2009</p>
+
+<ol>
+
+ <li>Performed Optimizations to lines on
+
+     map loads to speed up map rendering. Minor bug fixes in Depth Filtering. </li>
+
+ <li>Moved line filtering for Depth Filters
+
+     based off variable settings. </li>
+
+ <li>Minor tweaks to dynamic alpha line
+
+     filtering. Fixed inverted z-axis on one of the map line points for SOE
+
+     maps. It was weird, the point at one end of the line had the z-axis
+
+     inverted, and the other did not. I found it when I was doing optimizations
+
+     to connect the dots in map lines.</li>
+
+ <li>Moved mapping to use scale and
+
+     translate transforms. After the transforms and optimizations, map rendering is
+
+     on the order of 6 times faster. The maps optimized and converted to SEQ
+
+     .map format using the mapconvert.vbs (included) will provide the best
+
+     performance. With new optimizations, the converted maps render up to 3
+
+     times faster. On my cheap old test computer (2.6 Ghz P4 laptop) the mapfiend
+
+     Katta Castrum map would render in about 250 milliseconds. This is one of
+
+     the biggest maps. With converting to SEQ .map format with mapconvert vbs,
+
+     this map would render in 100 milliseconds (prior to transforms and
+
+     optimization changes). With the new optimizations the mapfiend map in the native
+
+     SOE format renders in 40 milliseconds. The optimized SEQ .map rendered in
+
+     32 milliseconds. The optimizations take a significant hit when depth
+
+     filtering is turned on, but performance is still improved. There will be a
+
+     few second delay before the Katta Castrum mapfiend map displays due to the
+
+     optimizations. Only for the biggest maps is there any noticeable difference
+
+     in the map loading times.</li>
+
+ <li>Updated all con levels through level 44.</li>
+
+ <li>Added Internet Search Option that is
+
+     clickable from the Spawn List. The default option is to search Allakhazam’s
+
+     for the mob name. There is a setting for this in the options, and it will
+
+     use a formatted string. The default is set to
+
+     &quot;http://everquest.allakhazam.com/search.html?q={0}&quot;. The mob name will be
+
+     entered where the &quot;{0}&quot; is located in the format string. If you change it
+
+     to search differently, then don’t forget to put in the {0}.</li>
+
+</ol>
+
+
+
+<h2>Release Version 1.19.7</h2>
+
+<p>Dated&nbsp;25 December 2008</p>
+
+<ol>
+
+ <li>Cleaned up history of spawn names.  Now it will only keep
+
+     the actual name, and not the extra 01, 02, 03, extra information.  Only
+
+     the base name will be used.  Minor cleanup for timers storing spawn
+
+     information.</li>
+
+ <li>Updated all con levels through level 32.</li>
+
+ <li>Proximity Alerts!!!!!  The range circle around the player
+
+     now functions as a proximity alert for mobs.  If they come in the circle,
+
+     with the alerts turned on it will play a system sound.  The range circle
+
+     size can be changed by dragging the outer circle.  The proximity alert can
+
+     be turned on and off by double clicking inside the range circle.  If the
+
+     hatch inside the circle is visible, then the alerts are turned on.  If the
+
+     hatch is not visible, then alerts are turned off.  If a mob goes inside
+
+     the alert circle it will have a flashing circle around it, unless the mob
+
+     is targeted.  Targeted mobs moving inside the circle,
+
+     will not set off the alert, as it assumes you are already aware that the
+
+     mob exist.</li>
+
+ <li>Minor cleanup on some colors, where better choices could
+
+     be made. </li>
+
+</ol>
+
+
+
+<h2>Release Version 1.19.6</h2>
+
+<p>Dated&nbsp;21 December 2008</p>
+
+<ol>
+
+ <li>Compiled Docking.bmp as embedded
+
+     resource, so no longer needs copied to the client folder. </li>
+
+ <li>Removed the Vistypes.txt, SpawnTypes.txt and
+
+     Conlevels.ini, and built them into the
+
+     client.&nbsp; Used the pattern of the code from ShowEQ
+
+     for the Conlevels so it can be updated easily if
+
+     cons change.&nbsp; Updated all Con's through
+
+     level 28. </li>
+
+ <li>Invisible mobs will now show with a purple border.&nbsp;
+
+     Invisible men types will be a purple skittle, the same as ShowEQ.&nbsp; Mobs or PCs that are invis
+
+     type 2 (stealth) will have a flashing purple border. </li>
+
+ <li>Spawn points will now appear on zoning, for zones where
+
+     the timers have gone through a few spawn cycles of mobs to identify spawn
+
+     locations. </li>
+
+ <li>Added ability to clear the timers/spawns for a zone from
+
+     the menu. </li>
+
+ <li>Updated Spawn Timers Window to be selectable. </li>
+
+ <li>Updated Spawn Information Window to display selected Spawn
+
+     Points/Timers.</li>
+
+</ol>
+
+
+
+<H2>Release Version 1.19.5</H2>
+
+<P>Dated 06 December 2008</P>
+
+<OL>
+
+  <LI>Removed Background drawing options.&nbsp; Windows 
+
+  generally reduces CPU usage of the client enough, that this is no longer needed. 
+
+  Fixed a bug with using map options that was introduced in 1.19.4. 
+
+  <LI>Optimized some checks in drawing alerts to speed up code.  Performed some basic code optimizations for speed, reducing Math 
+
+  function calls, etc.
+
+  <LI>Fixed a bug on first time start up, if you change the address of the 
+
+  ServerIP address used, it will now connect on pressing "Go".  Before, you 
+
+  had to restart, or select the server you wanted from the menu again.
+
+  <LI>Fixed a bug where the spawn timer list window was not clearing all the
+
+  time. There were more issues, when there was not a map loaded, or if the desired map was not found.
+
+  <LI>Added selection menu in Options, for selecting different hatch brush styles for the circle pattern around the player.
+
+  <LI>Added Ability to Change Fonts for Map Text Labels</OL>
+
+
+
+<H2>Release Version 1.19.4</H2>
+
+<P>Dated 05 December 2008</P>
+
+<OL>
+
+
+
+<LI>Moved mapping to .NET 2.0 managed double buffering. 
+
+  Turned on Anti-Aliasing. Moved spawn sizes to floats, so offsets won't be 
+
+  rounded. This helps clean up skittles on map some more. 
+
+  
+
+<LI>Fixed Spawn Timers to save and read properly. 
+
+  
+
+<LI>Updated filters to ShowEQ 5.xx compatibility. Added 
+
+  popup to Spawn Lists so you can add/edit/save/reload alerts. If you have old 
+
+  alerts, they will automatically be converted to 5.xx format and then deleted. 
+
+  
+
+<LI>Cleaned Up Menus some more. 
+
+  
+
+<LI>Some minor updates for voice alerts. There is now an 
+
+  option to select other voices when available. 
+
+  
+
+<LI>Fixed crash on startup that was caused by mouse 
+
+  movement trying to look up mobs, before loading has finished. Usually would 
+
+  happened if you connected to server, immediately after startup. 
+
+  
+
+<LI>Updated the Color Range Circle around the player to 
+
+  be more consistent with ShowEQ. Updated the con colors through level 10. More 
+
+  have changed at the lower levels probably. 
+
+  
+
+<LI>Fixed minor bug when on first time starting up, if 
+
+  you changed folders, the positions.xml and pref.xml would save elsewhere. 
+
+  
+
+<LI>Added ability to identify Mercenaries. They will now 
+
+  appear with a border the same color as players, except still being a round NPC 
+
+  spawn style skittle. Enhanced ability to identify player corpses a little 
+
+  better. It should work for all cases now. Added a small ring around selected 
+
+  mobs, the same way normal ShowEQ does. 
+
+  
+
+<LI>Added from 1.22, so if you exit while minimized or 
+
+  with the window off screen, the windows will be visible when you restart. 
+
+  
+
+<LI>Changed map loading to try and load SEQ .map format 
+
+  files first. If these are optimized, with the "mapconvert.vbs" script 
+
+  included, there is a significant increase in performance due to less lines 
+
+  needed drawn. Just copy this into the folder container your .txt SOE/Mapfiend 
+
+  maps, and run it. It doesn’t do any fancy iteration to make sure it gets rid 
+
+  of extra lines, but will do it sequentially in the file. Then it basically 
+
+  connects the dots, so sequential lines are drawn as longer lines connecting. 
+
+  Added minor changes to map drawing to try and reduce the number of pens 
+
+  destroyed and recreated during map draws. 
+
+<OL>
+
+  
+
+<H2>Release Version 1.19.3</H2>
+
+<P>Dated 8 November 2008</P>
+
+<LI>Removed MQConsole and Radar. 
+
+  
+
+<LI>Updated Con Colors to use the 1.22.x style 
+
+  ConLevels.ini . 
+
+<LI>Fixed Follow Player and Follow Target map options. 
+
+<LI>Cleaned Up Menus. 
+
+<LI>Changed the Force Black Lines options for maps to Force Distinct Lines. It will now always make lines distinct from background.</LI></OL>
+
+
+
+<H2>Release Version 1.19.2</H2>
+
+<P>Dated&nbsp;27 January 2007</P>
+
+<OL>
+
+<LI>Added ground items back into client. Requires 1.19.2 
+
+  server or greater. 
+
+<LI>Added FPS indicator. 
+
+<LI>Fixed bug with zoom/pan not readjusting screen using keyboard or map controls. </LI></OL>
+
+
+
+<H2>Release Version 1.19.0</H2>
+
+<P>Dated&nbsp;1 January 2006</P>
+
+<OL>
+
+<LI>Fixed bug with saving preferences in wrong folder, 
+
+  making it appear that they were not saved. 
+
+  
+
+<LI>Fixed bug with Depth Filter not working when viewing 
+
+  SEQ maps (.map extension). Z-axis values were inverted. 
+
+  
+
+<LI>Added 'Force Black Lines' feature under the Map 
+
+  Settings. Enabling this will render all lines in black, ignoring color 
+
+  information in the map file. Greatly speeds up performance. 
+
+  
+
+<LI>Added 'Dynamic Alpha' feature under Map Settings. 
+
+  This is a special mode of Depth Filter where map lines are drawn with a 
+
+  varying transparency depending how far either endpoint is from the player (in 
+
+  3D space). Lines with the closest endpoint &lt;= 75 are drawn fully. Lines 
+
+  with the closest endpoint = 300 are drawn at about 1/8 transparency (ghosted). 
+
+  All other lines are drawn with varying transparency, with the closer lines 
+
+  being more full, and the farther ones being more transparent. 
+
+  
+
+<LI>Changed normal Depth Filter mode so that map lines 
+
+  that were previously not drawn, are now drawn, but with 1/8 transparency 
+
+  (ghosted). Map lines are ghosted if both endpoints differ from the player's 
+
+  Z-axis value by more than 75. This is a fixed value. The ZNeg and ZPos fields 
+
+  are only used to filter spawns, not map lines. 
+
+  
+
+<LI>Changed map loading order. We will now attempt to 
+
+  load maps like this: 
+
+  
+
+<OL TYPE="a">
+
+
+
+<LI>zonename_1.txt (Sony format, actual game map) 
+
+    
+
+<LI>zonename.txt (Sony format, mapfiend.net map) 
+
+    
+
+<LI>zonename.map (SEQ format, mapfiend.net map) </LI></OL>
+
+
+
+<P>I did this because some of the mapfiend.net maps had incorrect values throughout them, messing up depth filtering. If you want more control over what gets loaded, just remove files from your client/maps folder that are being autoloaded. For example, if you do not want _1.txt maps being loaded, just remove them from client/maps. </P>
+
+<LI>Changed filtering algorithm. The filters have never 
+
+  been shipped officially with version 1.X of MySEQ. Starting with this release, 
+
+  we ship the 6/2005 version 4 list of filters (special thanks to BlueAdept). 
+
+  There are two types of filter files now. The 'base' ones are named 
+
+  'filters_zonename.conf' and are shipped with MySEQ. The 'custom' ones are 
+
+  named 'custom_zonename.conf'. If you have existing filter files, you will need 
+
+  to rename them (to the 'custom' format) for this new version to read them. The 
+
+  global file is now called 'custom_global.conf'. Do not make changes to the 
+
+  base filters, because they may change with new releases. Keep all your changes 
+
+  in the custom filter files. 
+
+  
+
+<LI>There are some new preferences saved, so this will 
+
+  automatically trigger a reset of your preferences file. Sorry.. that's they 
+
+  way it was designed. You will need to re-enter your preferences. 
+
+  
+
+<LI>Cleaned up the About box. We now have working 
+
+  hyperlinks to the forums. 
+
+  
+
+<LI>Changed some stuff with manual opening of a map file. 
+
+  It would not open the proper Alert files. Now it is a lot smarter. 
+
+  
+
+<LI>Improved drawing performance. After adding in the 
+
+  first attempt at the Dynamic Alpha feature, I noticed that the client was 
+
+  using 99% CPU resources to draw a map. The old client used about 55% (on my 
+
+  2.2GHz test machine). In order to normalize things, I reduced the sampling 
+
+  rate from 250msec to 500msec in the client, and obtained the following CPU 
+
+  utilization information: 
+
+  
+
+<LI>Old Client 
+
+  
+
+<TABLE BORDER =1 CELLSPACING=1 WIDTH=345>
+
+<TR><TD WIDTH="44%" VALIGN="center">
+
+<B><P ALIGN="center">Depth Filter</B></P></TD>
+
+<TD WIDTH="56%" VALIGN="center">
+
+<B><P ALIGN="center">CPU Utilization</B></P></TD>
+
+</TR>
+
+<TR><TD WIDTH="44%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="56%" VALIGN="center">
+
+<P ALIGN="center">27%</P></TD>
+
+</TR>
+
+<TR><TD WIDTH="44%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="56%" VALIGN="center">
+
+<P ALIGN="center">10%-27%</P></TD>
+
+</TR>
+
+</TABLE>
+
+
+
+<P>&nbsp;</P>
+
+<P>New Client </P>
+
+<TABLE BORDER =1 CELLSPACING=1 WIDTH=621>
+
+<TR><TD WIDTH="21%" VALIGN="center">
+
+<B><P ALIGN="center">Depth Filter</B></P></TD>
+
+<TD WIDTH="23%" VALIGN="center">
+
+<B><P ALIGN="center">Dynamic Alpha</B></P></TD>
+
+<TD WIDTH="30%" VALIGN="center">
+
+<B><P ALIGN="center">Force Black Lines</B></P></TD>
+
+<TD WIDTH="26%" VALIGN="center">
+
+<B><P ALIGN="center">CPU Utilization</B></P></TD>
+
+</TR>
+
+<TR><TD WIDTH="21%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="23%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="30%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="26%" VALIGN="center">
+
+<P ALIGN="center">29%</P></TD>
+
+</TR>
+
+<TR><TD WIDTH="21%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="23%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="30%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="26%" VALIGN="center">
+
+<P ALIGN="center">19%</P></TD>
+
+</TR>
+
+<TR><TD WIDTH="21%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="23%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="30%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="26%" VALIGN="center">
+
+<P ALIGN="center">29%</P></TD>
+
+</TR>
+
+<TR><TD WIDTH="21%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="23%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="30%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="26%" VALIGN="center">
+
+<P ALIGN="center">20%</P></TD>
+
+</TR>
+
+<TR><TD WIDTH="21%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="23%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="30%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="26%" VALIGN="center">
+
+<P ALIGN="center">39%</P></TD>
+
+</TR>
+
+<TR><TD WIDTH="21%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="23%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="30%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="26%" VALIGN="center">
+
+<P ALIGN="center">20%</P></TD>
+
+</TR>
+
+<TR><TD WIDTH="21%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="23%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="30%" VALIGN="center">
+
+<P ALIGN="center">Off</P></TD>
+
+<TD WIDTH="26%" VALIGN="center">
+
+<P ALIGN="center">43%</P></TD>
+
+</TR>
+
+<TR><TD WIDTH="21%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="23%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="30%" VALIGN="center">
+
+<P ALIGN="center">On</P></TD>
+
+<TD WIDTH="26%" VALIGN="center">
+
+<P ALIGN="center">18%</P></TD>
+
+</TR>
+
+</TABLE>
+
+
+
+<P><BR>
+
+Because the old client filtered lines by not drawing them, the CPU usage actually dropped as more of the map was filtered out. The problem was that in most zones, this left too much of the map unrendered, and the depth filter was pretty useless. In the new client, all lines are drawn, but the ones that were previously filtered are ghosted in (drawn at 1/8 transparency). This is why you see the CPU utilization jump from 29% to 39% with Dynamic Alpha off.<BR>
+
+Also notice that by using the 'Force Black Lines' feature, you can cut the CPU utilization nearly in half. This is a nice option if you are using a slower system that runs the client. </P>
+
+<LI>Added 6/2005 4.xx filters to zip release. Thanks 
+
+  BlueAdept! 
+
+  
+
+<LI>Added missing file, Docking.bmp, to zip release. This 
+
+  caused unhandled exception popup messages on some users' systems. 
+
+  
+
+<LI>Fixed a few typos I came across. </LI></OL>
+
+
+
+<H2>Release Version 1.18.0</H2>
+
+<P>Dated&nbsp;10 December 2005</P>
+
+<OL>
+
+
+
+<LI>It's been awhile since the last update. Minimal 
+
+  changes to the client. 
+
+  
+
+<LI>Reversed priority of loading LoY maps over SEQ maps 
+
+  because the SEQ maps have problems and they also have inverted values, which 
+
+  affects the depth filter. 
+
+  
+
+<LI>Added new Microsoft Visual Express (2005) C# sln/project files to the source tree.<BR>
+
+Also fixed a bug 
+
+  with a missing file. 
+
+  
+
+<LI>Updated the cfg/Races.txt file from the latest 
+
+  Everquest dbstr_us.txt file. 
+
+  
+
+<LI>Updated the server (separate download) to work with 
+
+  the 12/7/05 patch. Added four debug modes to the server to allow for easier 
+
+  offset hunting. 
+
+  
+
+<LI>Changed MyShowEQ in About box to MySEQ Open. 
+
+  
+
+<LI>Added simple Makefile to generate binary releases. 
+
+  
+
+<LI>The new client was built with Microsoft NET v2.0, so you may need to update to NET v2.0 to use it. Previous releases used NET v1.0 and NET v1.1.<BR>
+
+NET v2.0 can be downloaded free <A HREF="http://www.microsoft.com/downloads">here</A>. The server does not use NET, only the client. </LI></OL>
+
+
+
+<H2>Release Version 1.17.0</H2>
+
+<P>Dated&nbsp;19 October 2004</P>
+
+<OL>
+
+
+
+<LI>Changed the way the client requests packets from the 
+
+  server - you will need version 1.17.0+ of the server. (This will enable us to 
+
+  configure separate update frequencies for each packet type) 
+
+  
+
+<LI>Fixed synchronisation of the map context menu. 
+
+  
+
+<LI>Made the border colour of Player Characters 
+
+  configurable. 
+
+  
+
+<LI>Added 42's Radar changes. 
+
+  
+
+<LI>Added 42's "Powesaving mode" - and can now configure options for foreground and background working. </LI></OL>
+
+
+
+<H2>Release Version 1.16.3</H2>
+
+<P>Dated&nbsp;30 September 2004 </P>
+
+<OL>
+
+
+
+<LI>Fixed up spawnInfo so that X contains the X 
+
+  co-ordinate for Player + Spawn packets. (They are still reversed in the packet 
+
+  stream - I will probably release a new server to correct this soon) 
+
+  
+
+<LI>Changed the way "Center on Player" works to restore the original behavior but add in the ability to keep the player or target centered<BR>
+
+"Follow None" = Do not scroll the map<BR>
+
+"Follow Player" = move map to keep player in view<BR>
+
+"Follow target" = move map to keep target in viewtered on screen<BR>
+
+Keep Centered" = The follow target (either 
+
+  player or target) will remain in the same position on the screen, even if this 
+
+  causes most of the map to be off the screen. 
+
+  
+
+<LI>Integrated 42!'s latest changes for doing a quick lookup for spawns by name.</LI></OL>
+
+
+
+<H2>Release Version 1.16.2</H2>
+
+<P>Dated&nbsp;28 September 2004</P>
+
+<OL>
+
+
+
+<LI>Added all missing Con Level Information - please post 
+
+  feedback if any of the con level data is incorrect. 
+
+  
+
+<LI>Fixed the MobInfo panel background color. (Thanks 
+
+  CybMax for spotting it). 
+
+  
+
+<LI>Added the ability to select which character to monitor when multiboxing.<BR>
+
+Note: The list does not refresh automatically - you must click on the refresh menu item. (this is an attempt to keep the overhead of this feature to a minimum).<BR>
+
+Also Note that a new server version is required for this 
+
+  to work... 
+
+  
+
+<LI>Added 42!'s ability to select a point on the map for navigation purposes. Shift Left-click on the map to toggle the selected point.<BR>
+
+(I changed 42's code a little to preserve the 
+
+  default behavior for selecting spawns, also made the line dashed so that it is 
+
+  easy to distinguish from the selected spawn) 
+
+  
+
+<P>&nbsp;</P>
+
+<H2>Release Version 1.16.1</H2>
+
+<P>Dated&nbsp;18 September 2004</P>
+
+<OL>
+
+
+
+<FONT FACE="Verdana, arial" SIZE=2><LI>Updated program to read con level data from an ini 
+
+    file. 
+
+    
+
+<LI>Updated Con Level Information to include level 
+
+    66-70 (using extrapolated data) 
+
+    
+
+<LI>Added new race names for OOW</LI></OL>
+
+                              </LI>
+
+</OL></FONT></LI></OL></BODY>
+
+</HTML>
+
