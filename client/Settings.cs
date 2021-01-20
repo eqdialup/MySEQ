@@ -623,9 +623,14 @@ namespace Structures
 
         // new filters stuff
 
+
         private bool showPlayers = true;
 
         private bool showNPCs = true;
+
+        private bool showLookupText = false;
+
+        private bool showLookupNumber = true;
 
         private bool showCorpses = true;
 
@@ -714,6 +719,11 @@ namespace Structures
         public bool ShowPlayers { get { return showPlayers; } set { showPlayers = value; } }
 
         public bool ShowNPCs { get { return showNPCs; } set { showNPCs = value; } }
+
+        public bool ShowLookupText { get { return showLookupText; } set { showLookupText = value; } }
+
+        public bool ShowLookupNumber { get { return showLookupNumber; } set { showLookupNumber = value; } }
+
 
         public bool ShowCorpses { get { return showCorpses; } set { showCorpses = value; } }
 
@@ -1194,6 +1204,12 @@ namespace Structures
                                     break;
                                 case "showNPCLevels":
                                     ShowNPCLevels = reader.ReadElementContentAsBoolean();
+                                    break;
+                                case "showLookupText":
+                                    ShowLookupText = reader.ReadElementContentAsBoolean();
+                                    break;
+                                case "showLookupNumber":
+                                    ShowLookupNumber = reader.ReadElementContentAsBoolean();
                                     break;
                                 case "autoSelectSpawnList":
                                     AutoSelectSpawnList = reader.ReadElementContentAsBoolean();

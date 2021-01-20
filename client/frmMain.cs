@@ -336,6 +336,8 @@ namespace myseq
         private ToolStripMenuItem mnuShowMounts;
         private ToolStripMenuItem mnuShowFamiliars;
         private ToolStripMenuItem mnuShowPets;
+        private ToolStripMenuItem mnuShowLookupText;
+        private ToolStripMenuItem mnuShowLookupNumber;
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripLabel toolStripLabel1;
@@ -878,6 +880,8 @@ namespace myseq
             this.mnuFilterPlayerCorpses = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFilterGroundItems = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFilterSpawnPoints = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLookupText = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLookupNumber = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuForceDistinct = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuForceDistinctText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -1533,7 +1537,9 @@ namespace myseq
             this.mnuShowMounts,
             this.mnuShowFamiliars,
             this.mnuShowPets,
-            this.mnuShowNPCs});
+            this.mnuShowNPCs,
+            this.mnuShowLookupText,
+            this.mnuShowLookupNumber});
             this.mnuViewMain.Name = "mnuViewMain";
             this.mnuViewMain.Size = new System.Drawing.Size(44, 20);
             this.mnuViewMain.Text = "&View";
@@ -1693,6 +1699,20 @@ namespace myseq
             this.mnuShowNPCs.Size = new System.Drawing.Size(172, 22);
             this.mnuShowNPCs.Text = "NPCs";
             this.mnuShowNPCs.Click += new System.EventHandler(this.mnuShowNPCs_Click);
+            // 
+            // mnuShowLookupText
+            // 
+            this.mnuShowLookupText.Name = "mnuShowLookupText";
+            this.mnuShowLookupText.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowLookupText.Text = "Lookup Text";
+            this.mnuShowLookupText.Click += new System.EventHandler(this.mnuShowLookupText_Click);
+            // 
+            // mnuShowLookupNumber
+            // 
+            this.mnuShowLookupNumber.Name = "mnuShowLookupNumber";
+            this.mnuShowLookupNumber.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowLookupNumber.Text = "Lookup Name/Number";
+            this.mnuShowLookupNumber.Click += new System.EventHandler(this.mnuShowLookupNumber_Click);
             // 
             // mnuMapSettingsMain
             // 
@@ -3783,6 +3803,10 @@ namespace myseq
 
             this.mnuShowPets.Checked = Settings.Instance.ShowPets;
 
+            this.mnuShowLookupText.Checked = Settings.Instance.ShowLookupText;
+
+            this.mnuShowLookupNumber.Checked = Settings.Instance.ShowLookupNumber;
+
             this.mnuShowSpawnPoints.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
             this.mnuShowSpawnPoints2.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
 
@@ -3846,6 +3870,10 @@ namespace myseq
 
             this.mnuShowNPCLevels.Checked = Settings.Instance.ShowNPCLevels;
             this.mnuShowNPCLevels2.Checked = Settings.Instance.ShowNPCLevels;
+
+            this.mnuShowLookupText.Checked = Settings.Instance.ShowLookupText;
+            
+            this.mnuShowLookupNumber.Checked = Settings.Instance.ShowLookupNumber;
 
             this.mnuFilterMapLines.Checked = Settings.Instance.FilterMapLines;
             this.mnuFilterMapLines2.Checked = Settings.Instance.FilterMapLines;
@@ -6040,6 +6068,30 @@ namespace myseq
             mnuShowNPCs.Checked = !mnuShowNPCs.Checked;
 
             Settings.Instance.ShowNPCs = mnuShowNPCs.Checked;
+
+            comm.UpdateHidden();
+
+        }
+
+        private void mnuShowLookupText_Click(object sender, System.EventArgs e)
+
+        {
+
+            mnuShowLookupText.Checked = !mnuShowLookupText.Checked;
+
+            Settings.Instance.ShowLookupText = mnuShowLookupText.Checked;
+
+            comm.UpdateHidden();
+
+        }
+
+        private void mnuShowLookupNumber_Click(object sender, System.EventArgs e)
+
+        {
+
+            mnuShowLookupNumber.Checked = !mnuShowLookupNumber.Checked;
+
+            Settings.Instance.ShowLookupNumber = mnuShowLookupNumber.Checked;
 
             comm.UpdateHidden();
 

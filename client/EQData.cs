@@ -203,6 +203,14 @@ namespace myseq
         private string search3 = "";
         private string search4 = "";
         private string search5 = "";
+        private bool filter0 = false;
+        private bool filter1 = false;
+        private bool filter2 = false;
+        private bool filter3 = false;
+        private bool filter4 = false;
+        private bool filter5 = false;
+        private bool levelCheck = false;
+        private int searchLevel = 0;
 
 
 
@@ -249,11 +257,13 @@ namespace myseq
 
         public void MarkLookups(string name, bool filterMob = false)
         {
+            if (name.Length > 2 && name.Substring(2) == "Mob_Search") { name = name.Substring(0, 2); }
             if (name.Substring(0, 2) == "0:")
             {
                 if (name.Length > 2)
                 {
-                    search0 = name.Substring(3);
+                    search0 = name.Substring(2);
+                    filter0 = filterMob;
                 }
                 else
                 { search0 = ""; }
@@ -262,7 +272,8 @@ namespace myseq
             {
                 if (name.Length > 2)
                 {
-                    search1 = name.Substring(3);
+                    search1 = name.Substring(2);
+                    filter1 = filterMob;
                 }
                 else
                 { search1 = ""; }
@@ -271,7 +282,8 @@ namespace myseq
             {
                 if (name.Length > 2)
                 {
-                    search2 = name.Substring(3);
+                    search2 = name.Substring(2);
+                    filter2 = filterMob;
                 }
                 else
                 { search2 = ""; }
@@ -280,7 +292,8 @@ namespace myseq
             {
                 if (name.Length > 2)
                 {
-                    search3 = name.Substring(3);
+                    search3 = name.Substring(2);
+                    filter3 = filterMob;
                 }
                 else
                 { search3 = ""; }
@@ -289,7 +302,8 @@ namespace myseq
             {
                 if (name.Length > 2)
                 {
-                    search4 = name.Substring(3);
+                    search4 = name.Substring(2);
+                    filter4 = filterMob;
                 }
                 else
                 { search4 = ""; }
@@ -298,7 +312,8 @@ namespace myseq
             {
                 if (name.Length > 2)
                 {
-                    search5 = name.Substring(3);
+                    search5 = name.Substring(2);
+                    filter5 = filterMob;
                 }
                 else
                 { search5 = ""; }
@@ -307,46 +322,131 @@ namespace myseq
             foreach (Structures.SPAWNINFO sp in mobs.Values)
             {
                 sp.isLookup = false;
+                sp.lookupNumber = "";
                 if (search0.Length > 0)
                 {
+                    levelCheck = false;
+                    if (search0.Length > 2 && search0.Substring(0,2).ToUpper() == "L:")
+                    {
+                        int.TryParse(search0.Substring(2), out searchLevel);
+                        if (searchLevel != 0 && (sp.Level == searchLevel))
+                            {
+                            levelCheck = true;
+                        }
+                        
+                    }
                     Regex regEx0 = new Regex(".*" + search0 + ".*", RegexOptions.IgnoreCase);
-                    if (regEx0.Match(sp.Name).Success == true) { sp.isLookup = true; }
+                    if (levelCheck || (regEx0.Match(sp.Name).Success == true))
+                    {
+                        sp.isLookup = true;
+                        sp.lookupNumber = "1";
+                        sp.hidden = false;
+                        if (filter0) { sp.hidden = true; }
+                    }
                 }
                 if (search1.Length > 0)
                 {
+                    levelCheck = false;
+                    if (search1.Length > 2 && search1.Substring(0, 2).ToUpper() == "L:")
+                    {
+                        int.TryParse(search1.Substring(2), out searchLevel);
+                        if (searchLevel != 0 && (sp.Level == searchLevel))
+                        {
+                            levelCheck = true;
+                        }
+
+                    }
                     Regex regEx1 = new Regex(".*" + search1 + ".*", RegexOptions.IgnoreCase);
-                    if (regEx1.Match(sp.Name).Success == true) { sp.isLookup = true; }
+                    if (levelCheck || (regEx1.Match(sp.Name).Success == true))
+                    {
+                        sp.isLookup = true;
+                        sp.lookupNumber = "2";
+                        sp.hidden = false;
+                        if (filter1) { sp.hidden = true; }
+                    }
                 }
                 if (search2.Length > 0)
                 {
+                    levelCheck = false;
+                    if (search2.Length > 2 && search2.Substring(0, 2).ToUpper() == "L:")
+                    {
+                        int.TryParse(search2.Substring(2), out searchLevel);
+                        if (searchLevel != 0 && (sp.Level == searchLevel))
+                        {
+                            levelCheck = true;
+                        }
+
+                    }
                     Regex regEx2 = new Regex(".*" + search2 + ".*", RegexOptions.IgnoreCase);
-                    if (regEx2.Match(sp.Name).Success == true) { sp.isLookup = true; }
+                    if (levelCheck || (regEx2.Match(sp.Name).Success == true))
+                    {
+                        sp.isLookup = true;
+                        sp.lookupNumber = "3";
+                        sp.hidden = false;
+                        if (filter2) { sp.hidden = true; }
+                    }
                 }
                 if (search3.Length > 0)
                 {
+                    levelCheck = false;
+                    if (search3.Length > 2 && search3.Substring(0, 2).ToUpper() == "L:")
+                    {
+                        int.TryParse(search3.Substring(2), out searchLevel);
+                        if (searchLevel != 0 && (sp.Level == searchLevel))
+                        {
+                            levelCheck = true;
+                        }
+
+                    }
                     Regex regEx3 = new Regex(".*" + search3 + ".*", RegexOptions.IgnoreCase);
-                    if (regEx3.Match(sp.Name).Success == true) { sp.isLookup = true; }
+                    if (levelCheck || (regEx3.Match(sp.Name).Success == true))
+                    {
+                        sp.isLookup = true;
+                        sp.lookupNumber = "4";
+                        sp.hidden = false;
+                        if (filter3) { sp.hidden = true; }
+                    }
                 }
                 if (search4.Length > 0)
                 {
+                    levelCheck = false;
+                    if (search4.Length > 2 && search4.Substring(0, 2).ToUpper() == "L:")
+                    {
+                        int.TryParse(search4.Substring(2), out searchLevel);
+                        if (searchLevel != 0 && (sp.Level == searchLevel))
+                        {
+                            levelCheck = true;
+                        }
+
+                    }
                     Regex regEx4 = new Regex(".*" + search4 + ".*", RegexOptions.IgnoreCase);
-                    if (regEx4.Match(sp.Name).Success == true) { sp.isLookup = true; }
+                    if (levelCheck || (regEx4.Match(sp.Name).Success == true))
+                    {
+                        sp.isLookup = true;
+                        sp.lookupNumber = "5";
+                        sp.hidden = false;
+                        if (filter4) { sp.hidden = true; }
+                    }
                 }
                 if (search5.Length > 0)
                 {
-                    Regex regEx5 = new Regex(".*" + search5 + ".*", RegexOptions.IgnoreCase);
-                    if (regEx5.Match(sp.Name).Success == true) { sp.isLookup = true; }
-                }
-                if (sp.isLookup == true)
-                {
-                    if (filterMob)
+                    levelCheck = false;
+                    if (search5.Length > 2 && search5.Substring(0, 2).ToUpper() == "L:")
                     {
-                        sp.hidden = true;
+                        int.TryParse(search5.Substring(2), out searchLevel);
+                        if (searchLevel != 0 && (sp.Level == searchLevel))
+                        {
+                            levelCheck = true;
+                        }
+
                     }
-                    else
+                    Regex regEx5 = new Regex(".*" + search5 + ".*", RegexOptions.IgnoreCase);
+                    if (levelCheck || (regEx5.Match(sp.Name).Success == true))
                     {
                         sp.isLookup = true;
+                        sp.lookupNumber = "6";
                         sp.hidden = false;
+                        if (filter5) { sp.hidden = true; }
                     }
                 }
             }
@@ -2577,6 +2677,10 @@ namespace myseq
             //LogLib.WriteLine("Entering ProcessSpawns()", LogLevel.Trace);
 
             CorpseAlerts = Settings.Instance.CorpseAlerts;
+            if (si.Name.Contains("a_tainted_egg"))
+            {
+                si.Class = 1;
+            }
 
             try
             {
@@ -3076,6 +3180,7 @@ namespace myseq
                 if (!found && si.Name.Length > 0)
                 {
 
+                    // LogLib.WriteLine(String.Format("Spawninfo Name: {0} Type: {1} Class {2} Race {3}",si.Name,si.Type,si.Class,si.Race), LogLevel.Info);
                     bool alert = false;
 
                     // ensure that map is big enough to show all spawns.
@@ -3493,6 +3598,51 @@ namespace myseq
                             if (f1.toolStripLookupBox.Text.Length > 0 && f1.toolStripLookupBox.Text != "Mob Search")
                             {
                                 string matchstring = f1.toolStripLookupBox.Text.ToString();
+                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+
+                                si.isLookup = regEx.Match(matchmobname).Success;
+
+                            }
+
+                            if (f1.toolStripLookupBox1.Text.Length > 0 && f1.toolStripLookupBox1.Text != "Mob Search")
+                            {
+                                string matchstring = f1.toolStripLookupBox1.Text.ToString();
+                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+
+                                si.isLookup = regEx.Match(matchmobname).Success;
+
+                            }
+
+                            if (f1.toolStripLookupBox2.Text.Length > 0 && f1.toolStripLookupBox2.Text != "Mob Search")
+                            {
+                                string matchstring = f1.toolStripLookupBox2.Text.ToString();
+                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+
+                                si.isLookup = regEx.Match(matchmobname).Success;
+
+                            }
+
+                            if (f1.toolStripLookupBox3.Text.Length > 0 && f1.toolStripLookupBox3.Text != "Mob Search")
+                            {
+                                string matchstring = f1.toolStripLookupBox3.Text.ToString();
+                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+
+                                si.isLookup = regEx.Match(matchmobname).Success;
+
+                            }
+
+                            if (f1.toolStripLookupBox4.Text.Length > 0 && f1.toolStripLookupBox4.Text != "Mob Search")
+                            {
+                                string matchstring = f1.toolStripLookupBox.Text.ToString();
+                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+
+                                si.isLookup = regEx.Match(matchmobname).Success;
+
+                            }
+
+                            if(f1.toolStripLookupBox5.Text.Length > 0 && f1.toolStripLookupBox5.Text != "Mob Search")
+                            {
+                                string matchstring = f1.toolStripLookupBox5.Text.ToString();
                                 Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
 
                                 si.isLookup = regEx.Match(matchmobname).Success;

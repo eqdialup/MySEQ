@@ -3050,6 +3050,14 @@ namespace myseq {
 
                             DrawEllipse(whitePen, x - LookupRingOffset, y - LookupRingOffset, LookupRingSize, LookupRingSize);
 
+                            if (Settings.Instance.ShowLookupText)
+                            {
+                                if (Settings.Instance.ShowLookupNumber)
+                                    DrawSpawnNames(textBrush, sp.lookupNumber, sp.X, sp.Y);
+                                else
+                                    DrawSpawnNames(textBrush, sp.Name, sp.X, sp.Y);
+
+                            }
                         }
                         // Draw flashes
 

@@ -541,7 +541,7 @@ void Debugger::examineRawMemory(MemReaderInterface* mr_intf, offset_types ot)
 
 {
 
-	const UINT bufSize=2048;
+	const UINT bufSize=8192;
 
 	char buffer[bufSize], temp[65];
 

@@ -386,8 +386,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	int argc = 0;
 	char** argv = NULL;
 
-	argc = ::__argc;
-	argv = ::__argv;
+	argc = __argc;
+	argv = __argv;
 
 	ReadArgs(argc,argv);
 

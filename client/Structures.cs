@@ -177,6 +177,8 @@ namespace Structures
 
         public bool isLookup = false;
 
+        public string lookupNumber = "";
+
         public bool hidden = false;
 
         public bool filtered = false;
