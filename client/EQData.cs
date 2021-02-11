@@ -3342,6 +3342,7 @@ namespace myseq
 
                         string matchmobname;
 
+
                         if (si.isMerc)
 
                             mobname = FixMobNameToo(si.Name);
@@ -3356,6 +3357,18 @@ namespace myseq
                             matchmobname = mobname;
 
                         string mobnameWithInfo = mobname;
+
+                        string primaryName = "";
+
+                        if (si.Primary > 0)
+
+                            primaryName = itemNumToString(si.Primary);
+
+                        string offhandName = "";
+
+                        if (si.Offhand > 0)
+
+                            offhandName = itemNumToString(si.Offhand);
 
                         string loc = String.Format("{0:f3},{1:f3},{2:f3}", si.Y, si.X, si.Z);
 
@@ -3594,6 +3607,63 @@ namespace myseq
                                     si.isAlert = true;
                                 }
                             }
+
+                            // [Primary]
+                            // Acts like a hunt mob.
+
+                            if (filters.primaryItem.Count > 0 && (!si.isCorpse || CorpseAlerts))
+
+                                if (FindMatches(filters.primaryItem, primaryName, Settings.Instance.NoneOnHunt,
+
+                                    Settings.Instance.TalkOnHunt, "Hunt Mob Primary",
+
+                                    Settings.Instance.PlayOnHunt, Settings.Instance.HuntAudioFile,
+
+                                    Settings.Instance.BeepOnHunt, MatchFullTextH))
+                                {
+
+                                    alert = true;
+
+                                    si.isHunt = true;
+
+                                    if (PrefixStars)
+
+                                        mobnameWithInfo = HuntPrefix + " " + mobnameWithInfo;
+
+                                    if (AffixStars)
+
+                                        mobnameWithInfo += " " + HuntPrefix;
+
+                                }
+
+                            // [Offhand]
+                            // Acts like a hunt mob.
+
+                            if (filters.offhandItem.Count > 0 && (!si.isCorpse || CorpseAlerts))
+
+                                if (FindMatches(filters.offhandItem, offhandName, Settings.Instance.NoneOnHunt,
+
+                                    Settings.Instance.TalkOnHunt, "Hunt Mob",
+
+                                    Settings.Instance.PlayOnHunt, Settings.Instance.HuntAudioFile,
+
+                                    Settings.Instance.BeepOnHunt, MatchFullTextH))
+                                {
+
+                                    alert = true;
+
+                                    si.isHunt = true;
+
+                                    if (PrefixStars)
+
+                                        mobnameWithInfo = HuntPrefix + " " + mobnameWithInfo;
+
+                                    if (AffixStars)
+
+                                        mobnameWithInfo += " " + HuntPrefix;
+
+                                }
+
 
                             si.isLookup = false;
 

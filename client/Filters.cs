@@ -58,6 +58,11 @@ namespace myseq
 
         public ArrayList emailAlert = new ArrayList(); // email alert - not global
 
+        public ArrayList primaryItem = new ArrayList(); // item in primary hand.
+
+        public ArrayList offhandItem = new ArrayList(); // item in offhand hand.
+
+
         public void ClearArrays()
 
         {
@@ -79,6 +84,10 @@ namespace myseq
             this.globalAlert.Clear();
 
             this.emailAlert.Clear();
+
+            this.primaryItem.Clear();
+
+            this.offhandItem.Clear();
 
         }
 
@@ -406,7 +415,15 @@ namespace myseq
 
                             type = 5;
 
-                        else if (type > 0 && type < 6)
+                        else if (inp.StartsWith("<section name=\"primary\">"))
+
+                            type = 6;
+
+                        else if (inp.StartsWith("<section name=\"offhand\">"))
+
+                            type = 7;
+
+                        else if (type > 0 && type < 8)
                         {
 
                             // unknown section headers
@@ -539,6 +556,18 @@ namespace myseq
                                     case 5:
 
                                         AddToAlerts(emailAlert, inputstring);
+
+                                        break;
+
+                                    case 6:
+
+                                        AddToAlerts(primaryItem, inputstring);
+
+                                        break;
+
+                                    case 7:
+
+                                        AddToAlerts(offhandItem, inputstring);
 
                                         break;
 
@@ -771,6 +800,26 @@ namespace myseq
                         }
                     }
                     sw.WriteLine("    </section>");
+
+                    sw.WriteLine("    <section name=\"Primary\">");  // Item In Primary Hand Alerts - zone only
+                    foreach (string str in primaryItem)
+                    {
+                        if (str.Length > 0)
+                        {
+                            sw.WriteLine("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                        }
+                    }
+                    sw.WriteLine("    </section>");
+
+                    sw.WriteLine("    <section name=\"Offhand\">");  // Item In Offhand Hand Alerts - zone only
+                    foreach (string str in offhandItem)
+                    {
+                        if (str.Length > 0)
+                        {
+                            sw.WriteLine("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                        }
+                    }
+                    sw.WriteLine("    </section>");
                 }
                 else
                 {
@@ -897,6 +946,10 @@ namespace myseq
             if (isglobal == false)
             {
                 sw.WriteLine("    <section name=\"Email\">");
+
+                sw.WriteLine("    <section name=\"Primary\">");
+
+                sw.WriteLine("    <section name=\"Offhand\">");
 
                 sw.WriteLine("    </section>");
             }
