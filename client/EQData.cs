@@ -3595,57 +3595,59 @@ namespace myseq
                                 }
                             }
 
-                            if (f1.toolStripLookupBox.Text.Length > 0 && f1.toolStripLookupBox.Text != "Mob Search")
+                            si.isLookup = false;
+
+                                if (f1.toolStripLookupBox.Text.Length > 0 && f1.toolStripLookupBox.Text != "Mob Search")
                             {
                                 string matchstring = f1.toolStripLookupBox.Text.ToString();
                                 Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
 
-                                si.isLookup = regEx.Match(matchmobname).Success;
+                                if (regEx.Match(matchmobname).Success) si.isLookup = true;
 
                             }
 
                             if (f1.toolStripLookupBox1.Text.Length > 0 && f1.toolStripLookupBox1.Text != "Mob Search")
                             {
                                 string matchstring = f1.toolStripLookupBox1.Text.ToString();
-                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+                                Regex regEx1 = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
 
-                                si.isLookup = regEx.Match(matchmobname).Success;
+                                if (regEx1.Match(matchmobname).Success) si.isLookup = true;
 
                             }
 
                             if (f1.toolStripLookupBox2.Text.Length > 0 && f1.toolStripLookupBox2.Text != "Mob Search")
                             {
                                 string matchstring = f1.toolStripLookupBox2.Text.ToString();
-                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+                                Regex regEx2 = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
 
-                                si.isLookup = regEx.Match(matchmobname).Success;
+                                if (regEx2.Match(matchmobname).Success) si.isLookup = true;
 
                             }
 
                             if (f1.toolStripLookupBox3.Text.Length > 0 && f1.toolStripLookupBox3.Text != "Mob Search")
                             {
                                 string matchstring = f1.toolStripLookupBox3.Text.ToString();
-                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+                                Regex regEx3 = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
 
-                                si.isLookup = regEx.Match(matchmobname).Success;
+                                if (regEx3.Match(matchmobname).Success) si.isLookup = true;
 
                             }
 
                             if (f1.toolStripLookupBox4.Text.Length > 0 && f1.toolStripLookupBox4.Text != "Mob Search")
                             {
                                 string matchstring = f1.toolStripLookupBox.Text.ToString();
-                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+                                Regex regEx4 = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
 
-                                si.isLookup = regEx.Match(matchmobname).Success;
+                                if (regEx4.Match(matchmobname).Success) si.isLookup = true;
 
                             }
 
                             if(f1.toolStripLookupBox5.Text.Length > 0 && f1.toolStripLookupBox5.Text != "Mob Search")
                             {
                                 string matchstring = f1.toolStripLookupBox5.Text.ToString();
-                                Regex regEx = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
+                                Regex regEx5 = new Regex(".*" + matchstring + ".*", RegexOptions.IgnoreCase);
 
-                                si.isLookup = regEx.Match(matchmobname).Success;
+                                if (regEx5.Match(matchmobname).Success) si.isLookup = true;
 
                             }
                         }
