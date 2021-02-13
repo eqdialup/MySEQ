@@ -507,6 +507,12 @@ namespace Structures
 
         private bool showGroundItemList = true;
 
+        private bool showLayer1 = false;
+
+        private bool showLayer2 = false;
+
+        private bool showLayer3 = false;
+
 
 
         private string Title = "";
@@ -813,6 +819,11 @@ namespace Structures
 
         public bool ShowGroundItemList { get { return showGroundItemList; } set { showGroundItemList = value; } }
 
+        public bool ShowLayer1 { get { return showLayer1; } set { showLayer1 = value; } }
+        public bool ShowLayer2 { get { return showLayer2; } set { showLayer2 = value; } }
+
+        public bool ShowLayer3 { get { return showLayer3; } set { showLayer3 = value; } }
+
         public bool NoneOnHunt {get{return noneOnHunt;} set{noneOnHunt = value;}}
 
         public bool NoneOnCaution {get{return noneOnCaution;} set{noneOnCaution = value;}}
@@ -1117,6 +1128,15 @@ namespace Structures
                                     break;
                                 case "showPlayerCorpseNames":
                                     ShowPlayerCorpseNames = reader.ReadElementContentAsBoolean();
+                                    break;
+                                case "showLayer1":
+                                    ShowLayer1 = reader.ReadElementContentAsBoolean();
+                                    break;
+                                case "showLayer2":
+                                    ShowLayer2 = reader.ReadElementContentAsBoolean();
+                                    break;
+                                case "showLayer3":
+                                    ShowLayer3 = reader.ReadElementContentAsBoolean();
                                     break;
                                 case "gridInterval":
                                     GridInterval = reader.ReadElementContentAsInt();

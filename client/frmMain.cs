@@ -200,6 +200,9 @@ namespace myseq
         private ToolStripMenuItem mnuSpawnCountdown;
         private ToolStripMenuItem mnuShowSpawnPoints;
         private ToolStripMenuItem mnuShowZoneText;
+        private ToolStripMenuItem mnuShowLayer1;
+        private ToolStripMenuItem mnuShowLayer2;
+        private ToolStripMenuItem mnuShowLayer3;
         private ToolStripMenuItem mnuShowPVP;
         private ToolStripMenuItem mnuShowPVPLevel;
         private ToolStripMenuItem mnuCollectMobTrails;
@@ -276,6 +279,9 @@ namespace myseq
         private ToolStripMenuItem mnuSpawnCountdown2;
         private ToolStripMenuItem mnuShowSpawnPoints2;
         private ToolStripMenuItem mnuShowZoneText2;
+        private ToolStripMenuItem mnuShowLayer21;
+        private ToolStripMenuItem mnuShowLayer22;
+        private ToolStripMenuItem mnuShowLayer23;
         private ToolStripMenuItem mnuShowPVP2;
         private ToolStripMenuItem mnuShowPVPLevel2;
         private ToolStripMenuItem mnuShowTargetInfo2;
@@ -894,6 +900,9 @@ namespace myseq
             this.mnuSpawnCountdown = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowSpawnPoints = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowZoneText = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLayer1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLayer2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLayer3 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPVP = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPVPLevel = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCollectMobTrails = new System.Windows.Forms.ToolStripMenuItem();
@@ -946,6 +955,9 @@ namespace myseq
             this.mnuSpawnCountdown2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowSpawnPoints2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowZoneText2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLayer21 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLayer22 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLayer23 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPVP2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPVPLevel2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowTargetInfo2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -1862,6 +1874,9 @@ namespace myseq
             this.mnuSpawnCountdown,
             this.mnuShowSpawnPoints,
             this.mnuShowZoneText,
+            this.mnuShowLayer1,
+            this.mnuShowLayer2,
+            this.mnuShowLayer3,
             this.mnuShowPVP,
             this.mnuShowPVPLevel});
             this.mnuLabelShow.Name = "mnuLabelShow";
@@ -1930,6 +1945,27 @@ namespace myseq
             this.mnuShowZoneText.Size = new System.Drawing.Size(186, 22);
             this.mnuShowZoneText.Text = "&Zone Text";
             this.mnuShowZoneText.Click += new System.EventHandler(this.mnuShowZoneText_Click);
+            // 
+            // mnuShowLayer1
+            // 
+            this.mnuShowLayer1.Name = "mnuShowLayer1";
+            this.mnuShowLayer1.Size = new System.Drawing.Size(186, 22);
+            this.mnuShowLayer1.Text = "&Show Layer 1";
+            this.mnuShowLayer1.Click += new System.EventHandler(this.mnuShowLayer1_Click);
+            // 
+            // mnuShowLayer2
+            // 
+            this.mnuShowLayer2.Name = "mnuShowLayer2";
+            this.mnuShowLayer2.Size = new System.Drawing.Size(186, 22);
+            this.mnuShowLayer2.Text = "&Show Layer 2";
+            this.mnuShowLayer2.Click += new System.EventHandler(this.mnuShowLayer2_Click);
+            // 
+            // mnuShowLayer3
+            // 
+            this.mnuShowLayer3.Name = "mnuShowLayer23";
+            this.mnuShowLayer3.Size = new System.Drawing.Size(186, 22);
+            this.mnuShowLayer3.Text = "&Show Layer 3";
+            this.mnuShowLayer3.Click += new System.EventHandler(this.mnuShowLayer3_Click);
             // 
             // mnuShowPVP
             // 
@@ -2284,6 +2320,9 @@ namespace myseq
             this.mnuSpawnCountdown2,
             this.mnuShowSpawnPoints2,
             this.mnuShowZoneText2,
+            this.mnuShowLayer21,
+            this.mnuShowLayer22,
+            this.mnuShowLayer23,
             this.mnuShowPVP2,
             this.mnuShowPVPLevel2});
             this.mnuLabelShow2.Name = "mnuLabelShow2";
@@ -2345,6 +2384,27 @@ namespace myseq
             this.mnuShowZoneText2.Size = new System.Drawing.Size(186, 22);
             this.mnuShowZoneText2.Text = "&Zone Text";
             this.mnuShowZoneText2.Click += new System.EventHandler(this.mnuShowZoneText_Click);
+            // 
+            // mnuShowLayer21
+            // 
+            this.mnuShowLayer21.Name = "mnuShowLayer21";
+            this.mnuShowLayer21.Size = new System.Drawing.Size(186, 22);
+            this.mnuShowLayer21.Text = "&Show Layer 1";
+            this.mnuShowLayer21.Click += new System.EventHandler(this.mnuShowLayer1_Click);
+            // 
+            // mnuShowLayer22
+            // 
+            this.mnuShowLayer22.Name = "mnuShowLayer22";
+            this.mnuShowLayer22.Size = new System.Drawing.Size(186, 22);
+            this.mnuShowLayer22.Text = "&Show Layer 2";
+            this.mnuShowLayer22.Click += new System.EventHandler(this.mnuShowLayer2_Click);
+            // 
+            // mnuShowLayer23
+            // 
+            this.mnuShowLayer23.Name = "mnuShowLayer23";
+            this.mnuShowLayer23.Size = new System.Drawing.Size(186, 22);
+            this.mnuShowLayer23.Text = "&Show Layer 3";
+            this.mnuShowLayer23.Click += new System.EventHandler(this.mnuShowLayer3_Click);
             // 
             // mnuShowPVP2
             // 
@@ -3752,7 +3812,12 @@ namespace myseq
 
             this.mnuShowZoneText.Checked = (Settings.Instance.DrawOptions & DrawOptions.ZoneText) != DrawOptions.DrawNone;
             this.mnuShowZoneText2.Checked = (Settings.Instance.DrawOptions & DrawOptions.ZoneText) != DrawOptions.DrawNone;
-
+            this.mnuShowLayer1.Checked = Settings.Instance.ShowLayer1;
+            this.mnuShowLayer21.Checked = Settings.Instance.ShowLayer1;
+            this.mnuShowLayer2.Checked = Settings.Instance.ShowLayer2;
+            this.mnuShowLayer22.Checked = Settings.Instance.ShowLayer2;
+            this.mnuShowLayer3.Checked = Settings.Instance.ShowLayer3;
+            this.mnuShowLayer23.Checked = Settings.Instance.ShowLayer3;
             this.mnuShowListGridLines.Checked = Settings.Instance.ShowListGridLines;
             this.SpawnList.listView.GridLines = Settings.Instance.ShowListGridLines;
             this.SpawnTimerList.listView.GridLines = Settings.Instance.ShowListGridLines;
@@ -4813,25 +4878,33 @@ namespace myseq
                         if (loadmap(f + ".txt"))
                             foundmap = true;
 
+                        if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
+                            foundmap = true;
+
+                        if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
+                            foundmap = true;
+
+                        if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
+                            foundmap = true;
                         // try the _1, _2, _3 sequence if the plain .txt had no map lines
-                        if (eq.GetLinesReadonly().Count == 0)
-                        {
-                            for (int mapnum = 1; mapnum < 4; mapnum++)
-                            {
-                                if (loadmap(string.Format("{0}_{1}.txt", f, mapnum)))
-                                {
-                                    foundmap = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // load labels from the _3.txt file
-                            if (loadmap(string.Format("{0}_3.txt", f)))
-                            {
-                                foundmap = true;
-                            }
-                        }
+                        //if (eq.GetLinesReadonly().Count == 0)
+                        //{
+                        //    for (int mapnum = 1; mapnum < 4; mapnum++)
+                        //    {
+                        //        if (loadmap(string.Format("{0}_{1}.txt", f, mapnum)))
+                        //        {
+                        //            foundmap = true;
+                        //        }
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    // load labels from the _3.txt file
+                        //    if (loadmap(string.Format("{0}_3.txt", f)))
+                        //    {
+                        //        foundmap = true;
+                        //    }
+                        //}
 
                         // use _3.txt file for map labels
                         if (foundmap)
@@ -5518,7 +5591,9 @@ namespace myseq
             mnuShowGridLines.Checked = (Settings.Instance.DrawOptions & DrawOptions.GridLines) != DrawOptions.DrawNone;
 
             mnuShowZoneText.Checked = (Settings.Instance.DrawOptions & DrawOptions.ZoneText) != DrawOptions.DrawNone;
-
+            mnuShowLayer1.Checked = Settings.Instance.ShowLayer1;
+            mnuShowLayer2.Checked = Settings.Instance.ShowLayer2;
+            mnuShowLayer3.Checked = Settings.Instance.ShowLayer3;
             mnuShowSpawnPoints.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
 
             ServerSelection();
@@ -6876,7 +6951,6 @@ namespace myseq
         }
 
 
-
         private void mnuMapReset_Click(object sender, EventArgs e)
 
         {
@@ -6885,6 +6959,106 @@ namespace myseq
 
         }
 
+
+        private void mnuShowLayer1_Click(object sender, EventArgs e)
+
+        {
+            if (sender.Equals(mnuShowLayer1))
+            {
+                mnuShowLayer1.Checked = !mnuShowLayer1.Checked;
+                mnuShowLayer21.Checked = mnuShowLayer1.Checked;
+            }
+            else
+            {
+                mnuShowLayer21.Checked = !mnuShowLayer21.Checked;
+                mnuShowLayer1.Checked = mnuShowLayer21.Checked;
+            }
+
+            Settings.Instance.ShowLayer1 = mnuShowLayer1.Checked;
+
+            string f = Settings.Instance.MapDir + "\\" + eq.shortname;
+            bool foundmap = false;
+            if (loadmap(f + ".txt"))
+                foundmap = true;
+
+            if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
+                foundmap = true;
+
+            if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
+                foundmap = true;
+
+            if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
+                foundmap = true;
+
+        }
+
+
+
+
+        private void mnuShowLayer2_Click(object sender, EventArgs e)
+
+        {
+            if (sender.Equals(mnuShowLayer2))
+            {
+                mnuShowLayer2.Checked = !mnuShowLayer2.Checked;
+                mnuShowLayer22.Checked = mnuShowLayer2.Checked;
+            }
+            else
+            {
+                mnuShowLayer22.Checked = !mnuShowLayer22.Checked;
+                mnuShowLayer2.Checked = mnuShowLayer22.Checked;
+            }
+
+
+            Settings.Instance.ShowLayer2 = mnuShowLayer2.Checked;
+
+            string f = Settings.Instance.MapDir + "\\" + eq.shortname;
+            bool foundmap = false;
+            if (loadmap(f + ".txt"))
+                foundmap = true;
+
+            if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
+                foundmap = true;
+
+            if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
+                foundmap = true;
+
+            if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
+                foundmap = true;
+
+        }
+
+        private void mnuShowLayer3_Click(object sender, EventArgs e)
+
+        {
+            if (sender.Equals(mnuShowLayer3))
+            {
+                mnuShowLayer3.Checked = !mnuShowLayer3.Checked;
+                mnuShowLayer23.Checked = mnuShowLayer3.Checked;
+            }
+            else
+            {
+                mnuShowLayer23.Checked = !mnuShowLayer23.Checked;
+                mnuShowLayer3.Checked = mnuShowLayer23.Checked;
+            }
+
+            Settings.Instance.ShowLayer3 = mnuShowLayer3.Checked;
+
+            string f = Settings.Instance.MapDir + "\\" + eq.shortname;
+            bool foundmap = false;
+            if (loadmap(f + ".txt"))
+                foundmap = true;
+
+            if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
+                foundmap = true;
+
+            if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
+                foundmap = true;
+
+            if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
+                foundmap = true;
+
+        }
 
 
         private void mnuSodTitanium_Click(object sender, EventArgs e)
