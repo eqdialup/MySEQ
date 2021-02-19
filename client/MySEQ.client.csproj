@@ -29,8 +29,9 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>2.4.1.0</ApplicationVersion>
+    <ApplicationVersion>2.5.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -63,13 +64,19 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>CBB269572CAC38310D53B4F7349DDC3A7C735AD2</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>MySEQ.client_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="speechlib">
@@ -174,6 +181,7 @@
     </Compile>
     <Content Include="Resources\EnvelopeHS.png" />
     <None Include="app.manifest" />
+    <None Include="MySEQ.client_TemporaryKey.pfx" />
     <None Include="Resources\ShrinkSpaceHS.PNG" />
     <None Include="Resources\ExpandSpaceHS.png" />
     <None Include="Resources\File.ico" />
