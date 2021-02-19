@@ -44,7 +44,7 @@ namespace myseq {
 
 
 
-			lblVersion.Text = Application.ProductVersion.ToString() + " eqDialup's Personal Build";
+			lblVersion.Text = Application.ProductVersion.ToString() + " eqDialup's Build";
 
 
 
@@ -92,7 +92,7 @@ namespace myseq {
             this.lblInfo1.Name = "lblInfo1";
             this.lblInfo1.Size = new System.Drawing.Size(140, 16);
             this.lblInfo1.TabIndex = 0;
-            this.lblInfo1.Text = "MySEQ Open (2020)";
+            this.lblInfo1.Text = "MySEQ Open (2021)";
             this.lblInfo1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblInfo1.Click += new System.EventHandler(this.lblInfo1_Click);
             // 

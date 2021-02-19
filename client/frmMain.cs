@@ -344,6 +344,7 @@ namespace myseq
         private ToolStripMenuItem mnuShowPets;
         private ToolStripMenuItem mnuShowLookupText;
         private ToolStripMenuItem mnuShowLookupNumber;
+        private ToolStripMenuItem mnuAlwaysOnTop;
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripLabel toolStripLabel1;
@@ -589,6 +590,12 @@ namespace myseq
 
                 GroundItemList.DockState = DockState.DockLeft;
 
+            }
+
+            if (Settings.Instance.AlwaysOnTop)
+            {
+                this.TopMost = true;
+                this.TopLevel = true;
             }
 
             // Add the Columns to the Spawn List Window
@@ -888,6 +895,7 @@ namespace myseq
             this.mnuFilterSpawnPoints = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowLookupText = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowLookupNumber = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuForceDistinct = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuForceDistinctText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -1551,7 +1559,8 @@ namespace myseq
             this.mnuShowPets,
             this.mnuShowNPCs,
             this.mnuShowLookupText,
-            this.mnuShowLookupNumber});
+            this.mnuShowLookupNumber,
+            this.mnuAlwaysOnTop});
             this.mnuViewMain.Name = "mnuViewMain";
             this.mnuViewMain.Size = new System.Drawing.Size(44, 20);
             this.mnuViewMain.Text = "&View";
@@ -1725,6 +1734,13 @@ namespace myseq
             this.mnuShowLookupNumber.Size = new System.Drawing.Size(172, 22);
             this.mnuShowLookupNumber.Text = "Lookup Name/Number";
             this.mnuShowLookupNumber.Click += new System.EventHandler(this.mnuShowLookupNumber_Click);
+            // 
+            // mnuAlwaysOnTop
+            // 
+            this.mnuAlwaysOnTop.Name = "mnuAlwaysOnTop";
+            this.mnuAlwaysOnTop.Size = new System.Drawing.Size(172, 22);
+            this.mnuAlwaysOnTop.Text = "Always On Top";
+            this.mnuAlwaysOnTop.Click += new System.EventHandler(this.mnuAlwaysOnTop_Click);
             // 
             // mnuMapSettingsMain
             // 
@@ -3870,6 +3886,8 @@ namespace myseq
 
             this.mnuShowLookupText.Checked = Settings.Instance.ShowLookupText;
 
+            this.mnuAlwaysOnTop.Checked = Settings.Instance.AlwaysOnTop;
+
             this.mnuShowLookupNumber.Checked = Settings.Instance.ShowLookupNumber;
 
             this.mnuShowSpawnPoints.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
@@ -3937,6 +3955,8 @@ namespace myseq
             this.mnuShowNPCLevels2.Checked = Settings.Instance.ShowNPCLevels;
 
             this.mnuShowLookupText.Checked = Settings.Instance.ShowLookupText;
+
+            this.mnuAlwaysOnTop.Checked = Settings.Instance.AlwaysOnTop;
             
             this.mnuShowLookupNumber.Checked = Settings.Instance.ShowLookupNumber;
 
@@ -6079,8 +6099,9 @@ namespace myseq
         {
 
             AboutDlg ab = new AboutDlg();
-
+            this.TopMost = false;
             ab.ShowDialog();
+            this.TopMost = mnuAlwaysOnTop.Checked;
 
         }
 
@@ -6157,6 +6178,25 @@ namespace myseq
             Settings.Instance.ShowLookupText = mnuShowLookupText.Checked;
 
             comm.UpdateHidden();
+
+        }
+        private void mnuAlwaysOnTop_Click(object sender, System.EventArgs e)
+
+        {
+
+            mnuAlwaysOnTop.Checked = !mnuAlwaysOnTop.Checked;
+
+            Settings.Instance.AlwaysOnTop = mnuAlwaysOnTop.Checked;
+
+            if (mnuAlwaysOnTop.Checked)
+            {
+                this.TopMost = true;
+                this.TopLevel = true;
+            } else
+            {
+                this.TopMost = false;
+            }
+
 
         }
 

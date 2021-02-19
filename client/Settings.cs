@@ -638,6 +638,8 @@ namespace Structures
 
         private bool showLookupNumber = true;
 
+        private bool alwaysOnTop = false;
+
         private bool showCorpses = true;
 
         private bool showPCCorpses = true;
@@ -729,6 +731,8 @@ namespace Structures
         public bool ShowLookupText { get { return showLookupText; } set { showLookupText = value; } }
 
         public bool ShowLookupNumber { get { return showLookupNumber; } set { showLookupNumber = value; } }
+
+        public bool AlwaysOnTop { get { return alwaysOnTop; } set { alwaysOnTop = value; } }
 
 
         public bool ShowCorpses { get { return showCorpses; } set { showCorpses = value; } }

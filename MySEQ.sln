@@ -1,5 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySEQ.client", "client\MySEQ.client.csproj", "{874224EA-A207-4C8A-8BB4-76F473680C8F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MySEQ.server", "server\MySEQ.server.vcxproj", "{B2A33963-4874-4E74-B9F8-36666B4F9BEF}"
@@ -63,5 +65,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {B9705BA4-7FBF-44E1-AB87-51C0043E505A}
 	EndGlobalSection
 EndGlobal
