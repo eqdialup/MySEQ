@@ -478,14 +478,14 @@ namespace myseq
                 if (ListType == 0)
                 {
 
-                    mobname = filterMobName(listView.Items[sel[0]].SubItems[17].Text);
+                    mobname = RegexHelper.FilterMobName(listView.Items[sel[0]].SubItems[17].Text);
                     mobname = mobname.Replace("_", " ");
                     mobname = mobname.Trim();
                     smoblevel = "";
                     smoblevel = listView.Items[sel[0]].SubItems[1].Text;
                     if (smoblevel.Length > 0)
                     {
-                        long Num = 1;
+                        long Num;
                         bool isNum = long.TryParse(smoblevel, out Num);
 
                         if (isNum)
@@ -508,7 +508,7 @@ namespace myseq
                             moblevel = (int)Num;
                         }
                     }
-                    mobname = eq.FixMobNameToo(listView.Items[sel[0]].SubItems[0].Text);
+                    mobname = RegexHelper.FixMobNameMatch(listView.Items[sel[0]].SubItems[0].Text);
                     mobname = mobname.Trim();
                 }
                 else
@@ -574,11 +574,10 @@ namespace myseq
                     if (st != null)
                     {
                         this.mnuStickyTimer.Checked = st.sticky;
-                        string[] names = st.allNames.Split(',');
-                        foreach (string name in names)
+                        foreach (string name in st.allNames.Split(','))
                         {
-                            string bname = Regex.Replace(name.Replace("_", " "), "[0-9]", "").Trim();
-                            if (Regex.IsMatch(bname, "^[A-Z#]"))
+                            var bname = RegexHelper.TrimName(name);
+                            if (RegexHelper.RegexMatch(bname))
                             {
                                 mobname = bname;
                                 this.mnuAddZoneFilter.Text = "'" + mobname + "'";
@@ -636,13 +635,13 @@ namespace myseq
 
         }
 
-        private static string filterMobName(string name)
+        //private static string filterMobName(string name)
 
-        {
+        //{
 
-            return Regex.Replace(name, "^*[^a-zA-Z_ #'`]", "");
+        //    return Regex.Replace(name, "^*[^a-zA-Z_ #'`]", "");
 
-        }
+        //}
 
         private void ListViewPanel_Resize(object sender, EventArgs e) {
 
@@ -684,21 +683,14 @@ namespace myseq
 
         
 
-        public void SearchName(String name)
+        public void SearchName(string name)
 
         {
 
             try {
-
-                Regex regEx = new Regex(".*" + txtSpawnList.Text + ".*", RegexOptions.IgnoreCase);
-
                 foreach (ListViewItem lstItem in listView.Items) {
-
-                    // Compile the regular expression.
-
                     // Match the regular expression pattern against a text string.
-
-                    if (regEx.Match(lstItem.Text).Success) {
+                    if (RegexHelper.GetRegex(txtSpawnList.Text).Match(lstItem.Text).Success) {
 
                         lstItem.EnsureVisible();
 
@@ -1038,24 +1030,17 @@ namespace myseq
 
         }
 
-
-
         private void mnuSearchAllakhazam_Click(object sender, EventArgs e)
-
         {
-
-            string searchname = Regex.Replace(mobname.Replace("_", " "), "[0-9#]", "").Trim();
+            var searchname = RegexHelper.SearchName(mobname);
 
             if (searchname.Length > 0)
 
             {
-
-                string searchURL = String.Format(Settings.Instance.SearchString, searchname);
+                var searchURL = string.Format(Settings.Instance.SearchString, searchname);
 
                 System.Diagnostics.Process.Start(searchURL);
-
             }
-
         }
 
         private void addMapLabelToolStripMenuItem_Click(object sender, EventArgs e)

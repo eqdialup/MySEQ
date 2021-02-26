@@ -40,7 +40,7 @@ namespace myseq {
 
     public class SPAWNTIMER {
 
-        public SPAWNTIMER(SPAWNINFO si, DateTime dt) 
+        public SPAWNTIMER(SPAWNINFO si, DateTime dt)
 
         {
 
@@ -64,7 +64,7 @@ namespace myseq {
 
             this.LastSpawnName = si.Name;
 
-            this.AllNames = Regex.Replace(si.Name.Replace("_", " "), "[0-9]", "").Trim();
+            this.AllNames = RegexHelper.TrimName(si.Name);
 
         }
 
@@ -241,54 +241,31 @@ namespace myseq {
 
             }
 
-            int namecount = 1;            
+            int namecount = 1;
 
-            string[] names = st.AllNames.Split(',');
-
-            foreach (string name in names)
-
+            foreach (var name in st.AllNames.Split(','))
             {
-
-                string bname = Regex.Replace(name.Replace("_", " "), "[0-9]", "").Trim();
-
-                if (AllNames.IndexOf(bname) < 0)
-
+                var bname = RegexHelper.TrimName(name);
+                if (AllNames.IndexOf(bname) < 0 && namecount < 11)
                 {
-
-                    if (namecount < 11)
-
-                    {
-
-                        AllNames += ", " + bname;
-
-                        namecount++;
-
-                    }
-
+                    AllNames += ", " + bname;
+                    namecount++;
                 }
-
             }
 
             // update last spawn name to be what looks like named mobs
-            string[] bnames = AllNames.Split(',');
-            foreach (string tname in bnames)
+            foreach (var tname in AllNames.Split(','))
             {
-                string mname = Regex.Replace(tname.Replace("_", " "), "[0-9]", "").Trim();
-                if (Regex.IsMatch(mname, "^[A-Z#]"))
+                var mname = RegexHelper.TrimName(tname);
+                if (RegexHelper.RegexMatch(mname))
                 {
-                    this.LastSpawnName = mname;
+                    LastSpawnName = mname;
                     break;
                 }
             }
 
             listNeedsUpdate = true;
-
-            
-
-            LogLib.WriteLine("  New: "+GetAsString(),LogLevel.Debug);
-
-            
-
+            LogLib.WriteLine($"  New: {GetAsString()}", LogLevel.Debug);
         }
 
         
@@ -370,7 +347,7 @@ namespace myseq {
 
                 foreach (string name in names)
                 {
-                    string namet = Regex.Replace(name.Replace("_", " "), "[0-9]", "").Trim();
+                    var namet = RegexHelper.TrimName(name);
 
                     if (namecount == 0)
                     {
@@ -434,7 +411,7 @@ namespace myseq {
 
                 foreach (string name in names)
                 {
-                    string namet = Regex.Replace(name.Replace("_", " "), "[0-9]", "").Trim();
+                    var namet = RegexHelper.TrimName(name);
 
                     if (namecount == 0)
                     {
@@ -499,7 +476,7 @@ namespace myseq {
 
                 foreach (string name in names)
                 {
-                    string namet = Regex.Replace(name.Replace("_", " "), "[0-9]", "").Trim();
+                    var namet = RegexHelper.TrimName(name);
 
                     if (namecount == 0)
                     {
@@ -573,11 +550,9 @@ namespace myseq {
                 if (this.LastSpawnName.Length > 0)
                 {
                     // See if mob name starts with capital letter or #
-                    if (!Regex.IsMatch(this.LastSpawnName, "^[A-Z#]"))
+                    if (!RegexHelper.RegexMatch(LastSpawnName))
                     {
-
                         this.LastSpawnName = name;
-
                     }
                 }
                 else
@@ -598,38 +573,16 @@ namespace myseq {
 
                 // put name at beginning of list of AllNames
 
-                
-
-                string namet = Regex.Replace(name.Replace("_", " "), "[0-9]", "");      
-
-                string newnames = namet;
-
-                int namecount = 1;
-
-                string[] names = AllNames.Split(',');
-
-                foreach (string tname in names)
-
+                var newnames = RegexHelper.TrimName(name);
+                var namecount = 1;
+                foreach (var tname in AllNames.Split(','))
                 {
-
-                    string bname = Regex.Replace(tname.Replace("_", " "), "[0-9]", "").Trim();
-
-                    if (newnames.IndexOf(bname) < 0)
-
+                    var bname = RegexHelper.TrimName(tname);
+                    if (newnames.IndexOf(bname) < 0 && namecount < 12)
                     {
-
-                        if (namecount < 12)
-
-                        {
-
-                            newnames += ", " + bname;
-
-                            namecount++;
-
-                        }
-
+                        newnames += ", " + bname;
+                        namecount++;
                     }
-
                 }
 
                 AllNames = newnames;
@@ -728,11 +681,11 @@ namespace myseq {
 
             {
 
-                itmSpawnTimerList = new ListViewItem(EQData.FixMobName(this.LastSpawnName));
+                itmSpawnTimerList = new ListViewItem(RegexHelper.FixMobName(this.LastSpawnName));
 
                 isInList = false;
 
-                listNeedsUpdate = true;               
+                listNeedsUpdate = true;
 
                 
 

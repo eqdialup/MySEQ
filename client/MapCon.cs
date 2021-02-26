@@ -839,7 +839,7 @@ namespace myseq {
 
                 if ((sp != null) && (sp.Name.Length > 0))
                 {
-                    f1.alertAddmobname = filterMobName(sp.Name);
+                    f1.alertAddmobname = RegexHelper.FilterMobName(sp.Name);
                     f1.alertAddmobname = f1.alertAddmobname.Replace("_", " ");
                     f1.alertAddmobname = f1.alertAddmobname.TrimEnd(' ');
                     f1.alertX = sp.X;
@@ -864,13 +864,12 @@ namespace myseq {
                         SPAWNTIMER st = eq.FindTimer(5.0f, x, y);
                         if (st != null)
                         {
-                            string[] names = st.allNames.Split(',');
-                            foreach (string name in names)
+                            foreach (string name in st.allNames.Split(','))
                             {
-                                string bname = Regex.Replace(name.Replace("_", " "), "[0-9]", "").Trim();
+                                string bname = RegexHelper.TrimName(name);
                                 if (bname.Length > 0 && f1.alertAddmobname.Length == 0)
                                     f1.alertAddmobname = bname;
-                                if (Regex.IsMatch(bname, "^[A-Z#]"))
+                                if (RegexHelper.RegexMatch(bname))
                                 {
                                     f1.alertAddmobname = bname;
                                     break;
@@ -890,7 +889,7 @@ namespace myseq {
 
                             if ((sp != null) && (sp.Name.Length > 0))
                             {
-                                f1.alertAddmobname = filterMobName(sp.Name);
+                                f1.alertAddmobname = RegexHelper.FilterMobName(sp.Name);
                                 f1.alertAddmobname = f1.alertAddmobname.Replace("_", " ");
                                 f1.alertAddmobname = f1.alertAddmobname.TrimEnd(' ');
                                 f1.alertX = sp.X;
@@ -913,12 +912,12 @@ namespace myseq {
 
         }
 
-        private static string filterMobName(string name)
-        {
+        //private static string filterMobName(string name)
+        //{
 
-            return Regex.Replace(name, "^*[^a-zA-Z_ #'`]", "");
+        //    return Regex.Replace(name, "^*[^a-zA-Z_ #'`]", "");
 
-        }
+        //}
 
         public static string FixMobName(string name)
         {
@@ -2007,7 +2006,7 @@ namespace myseq {
 
                     foreach (string name in names)
                     {
-                        string namet = Regex.Replace(name.Replace("_", " "), "[0-9]", "").Trim();
+                        var namet = RegexHelper.TrimName(name);
 
                         if (namecount == 0)
                         {
@@ -2076,7 +2075,7 @@ namespace myseq {
 
                     foreach (string name in names)
                     {
-                        string namet = Regex.Replace(name.Replace("_", " "), "[0-9]", "").Trim();
+                        var namet = RegexHelper.TrimName(name);
 
                         if (namecount == 0)
                         {
@@ -2145,7 +2144,7 @@ namespace myseq {
 
                     foreach (string name in names)
                     {
-                        string namet = Regex.Replace(name.Replace("_", " "), "[0-9]", "").Trim();
+                        var namet = RegexHelper.TrimName(name);
 
                         if (namecount == 0)
                         {

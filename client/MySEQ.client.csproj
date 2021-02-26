@@ -13,8 +13,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>myseq</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>myseq.frmMain</StartupObject>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -70,7 +69,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>CBB269572CAC38310D53B4F7349DDC3A7C735AD2</ManifestCertificateThumbprint>
@@ -170,6 +169,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RegexHelper.cs" />
     <Compile Include="Settings.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -179,9 +179,7 @@
     <Compile Include="UtilSocket.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="Resources\EnvelopeHS.png" />
     <None Include="app.manifest" />
-    <None Include="MySEQ.client_TemporaryKey.pfx" />
     <None Include="Resources\ShrinkSpaceHS.PNG" />
     <None Include="Resources\ExpandSpaceHS.png" />
     <None Include="Resources\File.ico" />

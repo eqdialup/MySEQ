@@ -1,20 +1,12 @@
 using System;
 
-using System.IO;
-
 using System.Text;
-
-using System.Text.RegularExpressions;
 
 using System.Drawing;
 
 using System.Windows.Forms;
 
 using System.Runtime.InteropServices;
-
-using System.Runtime.Serialization.Formatters.Soap;
-
-
 
 namespace Structures
 
@@ -315,73 +307,6 @@ namespace Structures
 
     }
 
-    #endregion
-
-
-
-    #region RegexHelper
-
-    /// <summary>
-
-    /// This class contains a limited set of pre-compiled Regex expressions
-
-    /// to be used for various filtering capabilities (until such time as we
-
-    /// get enough information from the server not to need them anymore)
-
-    /// 
-
-    /// The need for it's own class is because we're re-using the same expressions
-
-    /// over and over and it's not efficient to re-instantiate them for every
-
-    /// spawn packet.
-
-    /// </summary>
-
-    public class RegexHelper
-
-    {
-
-        public bool IsMount(string mobName)
-
-        {
-
-            if (mobName.IndexOf("s_Mount") > 0)
-
-                return true;
-
-            return false;
-
-        }
-
-        public bool IsFamiliar(string mobName)
-
-        {
-
-            if (mobName.IndexOf("`s_fami") > 0)
-
-                return true;
-
-            return false;
-
-        }
-
-        public bool IsMerc(string mobName)
-
-        {
-
-            if (mobName.IndexOf("'s Merc") > 0)
-
-                return true;
-
-            return false;
-
-        }
-
-    }
-
-    #endregion
-
+#endregion
 }
 

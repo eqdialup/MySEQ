@@ -6,12 +6,6 @@ using SpeechLib;
 
 using System.Net.Mail;
 
-using System.Data;
-
-using System.Text;
-
-using System.Media;
-
 using System.Drawing;
 
 using System.Threading;
@@ -23,8 +17,6 @@ using System.Globalization;
 using System.Windows.Forms;
 
 using System.ComponentModel;
-
-using System.Drawing.Drawing2D;
 
 using System.Text.RegularExpressions;
 
@@ -2895,9 +2887,9 @@ namespace myseq
                         if ((si.Name.Length > 0) && (string.Compare(mob.Name, si.Name) != 0))
                         {
 
-                            string newname = FixMobName(si.Name);
+                            string newname = RegexHelper.FixMobName(si.Name);
 
-                            string oldname = FixMobName(mob.Name);
+                            string oldname = RegexHelper.FixMobName(mob.Name);
 
                             // use replace so that we dont loose the alert prefixes.
 
@@ -3053,7 +3045,7 @@ namespace myseq
                                 {
                                     mob.isPet = false;
                                 }
-                                li.SubItems[6].Text = FixMobName(owner.Name);
+                                li.SubItems[6].Text = RegexHelper.FixMobName(owner.Name);
                             }
                             else
                             {
@@ -3302,13 +3294,13 @@ namespace myseq
                             if ((si.Lastname != null) && (si.Lastname.Length > 0))
                             {
 
-                                if (reh.IsMerc(si.Lastname))
+                                if (RegexHelper.IsMerc(si.Lastname))
 
                                     si.isMerc = true;
 
                             }
 
-                            else if (reh.IsMount(si.Name)) // Mounts
+                            else if (RegexHelper.IsMount(si.Name)) // Mounts
                             {
 
                                 si.isMount = true;
@@ -3317,7 +3309,7 @@ namespace myseq
 
                             }
 
-                            else if (reh.IsFamiliar(si.Name))
+                            else if (RegexHelper.IsFamiliar(si.Name))
                             {
                                 // reset these, if match a familiar
                                 si.isPet = false;
@@ -3345,13 +3337,13 @@ namespace myseq
 
                         if (si.isMerc)
 
-                            mobname = FixMobNameToo(si.Name);
+                            mobname = RegexHelper.FixMobNameMatch(si.Name);
 
                         else
 
-                            mobname = FixMobName(si.Name);
+                            mobname = RegexHelper.FixMobName(si.Name);
 
-                        matchmobname = FixMobNameMatch(mobname);
+                        matchmobname = RegexHelper.FixMobNameMatch(mobname);
 
                         if (matchmobname.Length < 2)
                             matchmobname = mobname;
@@ -3753,7 +3745,7 @@ namespace myseq
                             if (mobs.ContainsKey(si.OwnerID))
                             {
                                 SPAWNINFO owner = (SPAWNINFO)mobs[si.OwnerID];
-                                item1.SubItems.Add(FixMobName(owner.Name));
+                                item1.SubItems.Add(RegexHelper.FixMobName(owner.Name));
                             }
                             else
                             {
@@ -3795,7 +3787,7 @@ namespace myseq
 
                         item1.SubItems.Add(sd.ToString("#.000"));
 
-                        item1.SubItems.Add(FixMobName(si.Name));
+                        item1.SubItems.Add(RegexHelper.FixMobName(si.Name));
 
 
                         if (si.Type == 2 || si.Type == 3 || si.isLDONObject)
@@ -3962,7 +3954,7 @@ namespace myseq
                         matched = true;
                 }
 
-                else if (isSubstring(mobname, str))
+                else if (RegexHelper.IsSubstring(mobname, str))
                 {
 
                     matched = true;
@@ -3982,7 +3974,7 @@ namespace myseq
 
                                 Talker T = new Talker();
 
-                                T.speakText = TalkDescr + ", " + FixMobNameToSpeak(t) + ", is up.";
+                                T.speakText = TalkDescr + ", " + RegexHelper.FixMobNameMatch(t) + ", is up.";
 
                                 ThreadStart threadDelegate = new ThreadStart(T.SpeakText);
 
@@ -4037,7 +4029,7 @@ namespace myseq
                                 }
 
                                 mailMessage.Subject = "MySEQ Spawn Alert";
-                                mailMessage.Body = FixMobNameToSpeak(t) + " Spawned at " + DateTime.Now.ToShortTimeString() + " " + DateTime.Now.ToShortDateString();
+                                mailMessage.Body = RegexHelper.FixMobNameMatch(t) + " Spawned at " + DateTime.Now.ToShortTimeString() + " " + DateTime.Now.ToShortDateString();
                                 //MessageBox.Show(mailMessage.Subject + "\r\n" + mailMessage.Body);
                                 SmtpClient smtpClient = new SmtpClient(SMTPSettings.Instance.SmtpServer, SMTPSettings.Instance.SmtpPort);
                                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
@@ -4232,44 +4224,6 @@ namespace myseq
 
         }
 
-        public static string FixMobName(string name)
-        {
-
-            // if first char is "_" dont replace
-
-            if (name.IndexOf("_") == 0)
-
-                return name;
-
-            else
-
-                return name.Replace("_", " ");
-
-        }
-
-        public string FixMobNameToo(string name)
-        {
-
-            return Regex.Replace(name, "^*[^a-zA-Z ]", "");
-
-        }
-
-        public string FixMobNameMatch(string name)
-        {
-
-            return Regex.Replace(name, "^*[^a-zA-Z #]", "");
-
-        }
-
-        public string FixMobNameToSpeak(string name)
-        {
-
-            return Regex.Replace(name, "^*[^a-zA-Z ]", "");
-
-        }
-
-
-
         public string classNumToString(int num)
         {
 
@@ -4437,23 +4391,6 @@ namespace myseq
             }
 
         }
-
-
-
-        private bool isSubstring(string toSearch, string forSearch)
-        {
-
-            // Compile the regular expression.
-
-            Regex regEx = new Regex(".*" + forSearch + ".*", RegexOptions.IgnoreCase);
-
-            // Match the regular expression pattern against a text string.
-
-            return regEx.Match(toSearch).Success;
-
-        }
-
-
 
         public void LoadSpawnInfo()
         {

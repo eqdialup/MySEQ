@@ -7484,14 +7484,14 @@ namespace myseq
 
         private void mnuSearchAllakhazam_Click(object sender, EventArgs e)
         {
-            string searchname = Regex.Replace(alertAddmobname.Replace("_", " "), "[0-9#]", "").Trim();
+            var searchname = RegexHelper.SearchName(alertAddmobname);
 
             if (searchname.Length > 0)
             {
 
-                string searchURL = String.Format(Settings.Instance.SearchString, searchname);
+                var searchURL = string.Format(Settings.Instance.SearchString, searchname);
 
-                System.Diagnostics.Process.Start(searchURL);
+                Process.Start(searchURL);
 
             }
         }
