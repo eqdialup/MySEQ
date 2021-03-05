@@ -87,6 +87,7 @@ namespace Structures
 
                 m_isPlayer = true;
 
+            Guild = BitConverter.ToInt32(b, 100 + offset);
         }
 
 
@@ -138,6 +139,8 @@ namespace Structures
         public int Primary = 0;
 
         public int Offhand = 0;
+
+        public int Guild = 0;
 
         public byte Gender = 0;
 

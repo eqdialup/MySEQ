@@ -415,6 +415,8 @@ namespace Structures
 
         private bool showNPCNames = false;
 
+        private bool showPCGuild = false;
+
         private bool showNPCCorpseNames = false;
 
         private bool showPlayerCorpseNames = false;
@@ -939,6 +941,8 @@ namespace Structures
         public bool ShowNPCCorpseNames { get { return showNPCCorpseNames; } set { showNPCCorpseNames = value; } }
 
         public bool ShowPlayerCorpseNames { get { return showPlayerCorpseNames; } set { showPlayerCorpseNames = value; } }
+
+        public bool ShowPCGuild { get { return showPCGuild; } set { showPCGuild = value; } }
 
         public int SplitterLoc { get { return splitterLoc; } set { splitterLoc = value; } }
 

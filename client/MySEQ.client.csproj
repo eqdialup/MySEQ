@@ -179,7 +179,6 @@
     <Compile Include="UtilSocket.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="Resources\EnvelopeHS.png" />
     <None Include="app.manifest" />
     <None Include="MySEQ.client_TemporaryKey.pfx" />
     <None Include="Resources\ShrinkSpaceHS.PNG" />

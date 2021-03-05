@@ -478,7 +478,7 @@ namespace myseq
                 if (ListType == 0)
                 {
 
-                    mobname = filterMobName(listView.Items[sel[0]].SubItems[17].Text);
+                    mobname = filterMobName(listView.Items[sel[0]].SubItems[18].Text);
                     mobname = mobname.Replace("_", " ");
                     mobname = mobname.Trim();
                     smoblevel = "";
@@ -1152,7 +1152,9 @@ namespace myseq
 
                 (Column == 8) ||    // Type
 
-                (Column == 9))      // Invis
+                (Column == 9) ||    // Invis
+
+                (Column == 17))     // Guild
 
                 res = string.Compare(sa.SubItems[Column].Text, sb.SubItems[Column].Text);
 
@@ -1166,6 +1168,7 @@ namespace myseq
 
                 (Column == 16))     // Distance
 
+                
             {
 
                 float fa = float.Parse(sa.SubItems[Column].Text);

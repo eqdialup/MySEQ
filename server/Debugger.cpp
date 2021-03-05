@@ -112,28 +112,31 @@ void Debugger::printMenu()
 
 	cout << "  sso) set a secondary offset (index/name) (hex value)" << endl;
 
-	cout << "   ez) examine data using pZone (et) pTarget (ew) pWorld" << endl;
+	cout << "  clr) clear the screen" << endl;
+
+	cout << "   ez) examine data using pZone (et)" << endl;
 
 	cout << "   es) examine raw data using pSelf" << endl;
 
-//	cout << "   et) examine raw data using pTarget" << endl;
+	cout << "   et) examine raw data using pTarget" << endl;
 
-//	cout << "   ew) examine raw data using pWorld" << endl;
+	cout << "   ew) examine raw data using pWorld" << endl;
 
 	cout << "   fz) find zonename using pZone (zonename)" << endl;
 
-	cout << "   ft) find spawnname using pTarget (fs) pSelf (spawnname)" << endl;
+	cout << "   ft) find spawnname using pTarget" << endl;
 
-//	cout << "   fs) find spawnname using pSelf (spawnname)" << endl;
+	cout << "   fs) find spawnname using pSelf (spawnname)" << endl;
 
 	cout << "   ps) display spawn info using pSelf (pt) pTarget" << endl;
 
-//	cout << "   pt) display spawn info using pTarget" << endl;
+	cout << "   pt) display spawn info using pTarget" << endl;
 
 	cout << "   sp) scan process names (process name)" << endl;
 
 	cout << "  sft) scan for float using pTarget (sfs) pSelf (X,Y,Z)" << endl;
-//	cout << "  sfs) scan for floating point using pSelf (X,Y,Z)" << endl;
+
+	cout << "  sfs) scan for floating point using pSelf (X,Y,Z)" << endl;
 
 	cout << "  sfa) scan for floating point using Address (X,Y,Z,Address)" << endl;
 
@@ -145,11 +148,11 @@ void Debugger::printMenu()
 
 	cout << "   ws) walk the spawnlist (reverse) using pSelf (wt) pTarget" << endl;
 
-//	cout << "   wt) walk the spawnlist (reverse) using pTarget" << endl;
+	cout << "   wt) walk the spawnlist (reverse) using pTarget" << endl;
 
 	cout << "   vs) walk the spawnlist (forward) using pSelf (vt) pTarget" << endl;
 
-//	cout << "   vt) walk the spawnlist (forward) using pTarget" << endl;
+	cout << "   vt) walk the spawnlist (forward) using pTarget" << endl;
 	
 	cout << "    x) exit debugger" << endl;
 
@@ -278,6 +281,11 @@ void Debugger::enterDebugLoop(MemReaderInterface* mr_intf, IniReaderInterface* i
 		else if (userInput.compare(0, 2, "vt") == 0)
 
 			walkSpawnList(mr_intf, OT_target, false);
+
+
+		else if (userInput.compare(0, 3, "clr") == 0)
+
+		system("cls");
 
 		else if (userInput.compare(0, 1, "x") == 0)
 
@@ -541,7 +549,9 @@ void Debugger::examineRawMemory(MemReaderInterface* mr_intf, offset_types ot)
 
 {
 
-	const UINT bufSize=8192;
+	const UINT bufSize = 8192;
+
+	UINT displaySize = 2048;
 
 	char buffer[bufSize], temp[65];
 
@@ -549,11 +559,9 @@ void Debugger::examineRawMemory(MemReaderInterface* mr_intf, offset_types ot)
 
 	int r,c;
 
-	
-
 	memset(buffer, 0, bufSize);
 
-	
+	if (ot == OT_self || ot == OT_target) displaySize = 8192;
 
 	// pZone is a direct pointer. All others are indirect.
 
@@ -567,7 +575,7 @@ void Debugger::examineRawMemory(MemReaderInterface* mr_intf, offset_types ot)
 
 	
 
-	cout << " Display Raw Memory from 0x" << (pMem + 0x400000 - (UINT)mr_intf->getCurrentBaseAddress()) << " to 0x" << (pMem + bufSize  + 0x400000 - (UINT)mr_intf->getCurrentBaseAddress()) << endl;
+	cout << " Display Raw Memory from 0x" << (pMem + 0x400000 - (UINT)mr_intf->getCurrentBaseAddress()) << " to 0x" << (pMem + displaySize  + 0x400000 - (UINT)mr_intf->getCurrentBaseAddress()) << endl;
 
 	
 
@@ -577,7 +585,7 @@ void Debugger::examineRawMemory(MemReaderInterface* mr_intf, offset_types ot)
 
 	{
 
-		if (!(mr_intf->extractToBuffer(pMem, buffer, bufSize)))
+		if (!(mr_intf->extractToBuffer(pMem, buffer, displaySize)))
 
 		{
 
@@ -603,7 +611,7 @@ void Debugger::examineRawMemory(MemReaderInterface* mr_intf, offset_types ot)
 
 	// Display the data
 
-	for (r=0; r<bufSize/16; r++)
+	for (r=0; r<displaySize/16; r++)
 
 	{
 

@@ -486,10 +486,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	} else if (!services) {
 
 		cout << "========================" << endl <<
-				"  MySEQServer v2.4.1.0  " << endl <<
+				"  MySEQServer v2.5.1.0  " << endl <<
 				"========================" << endl << endl <<
 				"This software is covered under the GNU Public License (GPL)" << endl <<
-				"Copyright MySEQ Project 2003-2013" << endl << endl;
+				"Copyright MySEQ Project 2003-2021" << endl << endl;
 	}
 
 	// Debug priviledges allow us to peek inside the EQ process.

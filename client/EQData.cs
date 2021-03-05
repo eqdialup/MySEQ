@@ -130,6 +130,9 @@ namespace myseq
 
         public Hashtable itemList = new Hashtable();
 
+        // Guild List by ID and Description loaded from file
+
+        public Hashtable guildList = new Hashtable();
 
 
         // Mobs / Filters
@@ -1024,6 +1027,10 @@ namespace myseq
             itemList.Clear();
 
             ReadItemList(Path.Combine(Settings.Instance.CfgDir, "GroundItems.ini"));
+
+            guildList.Clear();
+
+            ReadGuildList(Path.Combine(Settings.Instance.CfgDir, "Guilds.txt"));
 
             ColorChart.Initialise(Path.Combine(Settings.Instance.CfgDir, "RGB.txt"));
 
@@ -2080,6 +2087,97 @@ namespace myseq
 
         }
 
+        private void ReadGuildList(string filePath)
+        {
+
+            string tok = "";
+
+            string line = "";
+
+            IFormatProvider NumFormat = new CultureInfo("en-US");
+
+            if (!File.Exists(filePath))
+            {
+
+                // we did not find the Guild file
+
+                LogLib.WriteLine("Guild file not found", LogLevel.Warning);
+
+                return;
+
+            }
+
+
+
+            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+            StreamReader sr = new StreamReader(fs);
+
+
+
+            do
+            {
+
+                line = sr.ReadLine();
+
+                if (line != null)
+                {
+
+                    line = line.Trim();
+
+                    if (line.Length > 0 && (!line.StartsWith("[") && !line.StartsWith("#")))
+                    {
+
+                        ListItem thisitem = new ListItem();
+
+                        if ((tok = getnexttoken(ref line, '=')) != null)
+                        {
+
+                            thisitem.ActorDef = tok.ToUpper();
+
+                            if ((tok = getnexttoken(ref line, ',')) != null)
+                            {
+
+                                thisitem.Name = tok;
+
+                                if ((tok = getnexttoken(ref thisitem.ActorDef, '_')) != null)
+                                {
+
+                                    thisitem.ID = int.Parse(tok, NumFormat);
+
+                                    // We got this far, so we have a valid item to add
+
+                                    if (!guildList.ContainsKey(thisitem.ID))
+                                    {
+
+                                        try { guildList.Add(thisitem.ID, thisitem); }
+
+                                        catch (Exception ex) { LogLib.WriteLine("Error adding " + thisitem.ID + " to Guilds hashtable: ", ex); }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            } while (line != null);
+
+
+
+            sr.Close();
+
+            fs.Close();
+
+
+            return;
+
+        }
 
         public string GetItemDescription(string ActorDef)
         {
@@ -2112,6 +2210,36 @@ namespace myseq
             return ActorDef;
         }
 
+        public string GetGuildDescription(string ActorDef)
+        {
+
+            // Get description from list made using Guildlist.txt
+
+            string tok = "";
+
+            // I know - ## NEEDS CLEANUP
+
+            string temp = ActorDef;
+
+            if ((tok = getnexttoken(ref temp, '_')) != null)
+            {
+
+                IFormatProvider NumFormat = new CultureInfo("en-US");
+
+                int lookupid = int.Parse(tok, NumFormat);
+
+                // We got this far, so we have a valid item to add
+
+                if (guildList.ContainsKey(lookupid))
+                {
+
+                    ListItem lis = (ListItem)guildList[lookupid];
+
+                    return lis.Name.ToString();
+                }
+            }
+            return ActorDef;
+        }
 
         private string ArrayIndextoStr(string[] source, int index)
         {
@@ -3071,6 +3199,21 @@ namespace myseq
 
                         }
 
+                        if (mob.Guild != si.Guild)
+                        {
+
+                            mob.Guild = si.Guild;
+
+                            if (si.Guild > 0)
+
+                                li.SubItems[17].Text = guildNumToString(si.Guild);
+
+                            else
+
+                                li.SubItems[17].Text = "";
+
+                        }
+
                         mob.refresh = 0;
 
                     } // end refresh > 10
@@ -3784,7 +3927,6 @@ namespace myseq
                         item1.SubItems.Add(si.Z.ToString("#.000"));
 
 
-
                         float sd = (float)Math.Sqrt((si.X - playerinfo.X) * (si.X - playerinfo.X) +
 
                             (si.Y - playerinfo.Y) * (si.Y - playerinfo.Y) +
@@ -3794,6 +3936,8 @@ namespace myseq
 
 
                         item1.SubItems.Add(sd.ToString("#.000"));
+
+                        item1.SubItems.Add(guildNumToString(si.Guild));
 
                         item1.SubItems.Add(FixMobName(si.Name));
 
@@ -4300,6 +4444,27 @@ namespace myseq
 
         }
 
+        public string guildNumToString(int num)
+        {
+
+            if (guildList.ContainsKey(num))
+            {
+
+                ListItem lis = (ListItem)guildList[num];
+
+                return lis.Name.ToString();
+
+            }
+
+            else
+            {
+                if (num == 0) return "";
+
+                return num.ToString();
+
+            }
+
+        }
 
 
         public string raceNumtoString(int num)

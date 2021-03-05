@@ -424,7 +424,7 @@ namespace myseq
 
             int offset = 0;
 
-            const int SIZE_OF_PACKET = 100;
+            const int SIZE_OF_PACKET = 104;
 
             try {
 

@@ -197,6 +197,7 @@ namespace myseq
         private ToolStripMenuItem mnuShowNPCCorpseNames;
         private ToolStripMenuItem mnuShowPCNames;
         private ToolStripMenuItem mnuShowPlayerCorpseNames;
+        private ToolStripMenuItem mnuShowPCGuild;
         private ToolStripMenuItem mnuSpawnCountdown;
         private ToolStripMenuItem mnuShowSpawnPoints;
         private ToolStripMenuItem mnuShowZoneText;
@@ -276,6 +277,7 @@ namespace myseq
         private ToolStripMenuItem mnuShowNPCCorpseNames2;
         private ToolStripMenuItem mnuShowPCNames2;
         private ToolStripMenuItem mnuShowPlayerCorpseNames2;
+        private ToolStripMenuItem mnuShowPCGuild2;
         private ToolStripMenuItem mnuSpawnCountdown2;
         private ToolStripMenuItem mnuShowSpawnPoints2;
         private ToolStripMenuItem mnuShowZoneText2;
@@ -634,7 +636,9 @@ namespace myseq
 
             SpawnList.ColumnsAdd("Distance", Settings.Instance.c14w, HorizontalAlignment.Left);
 
- 
+            SpawnList.ColumnsAdd("Guild", Settings.Instance.c14w, HorizontalAlignment.Left);
+
+
             // Set the Font, Size, Style for the Spawn List Window
 
             try {SpawnList.listView.Font = new Font(Settings.Instance.ListFontName, Settings.Instance.ListFontSize, Settings.Instance.ListFontStyle);}
@@ -905,6 +909,7 @@ namespace myseq
             this.mnuShowNPCCorpseNames = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPCNames = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPlayerCorpseNames = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowPCGuild = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSpawnCountdown = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowSpawnPoints = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowZoneText = new System.Windows.Forms.ToolStripMenuItem();
@@ -960,6 +965,7 @@ namespace myseq
             this.mnuShowNPCCorpseNames2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPCNames2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPlayerCorpseNames2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowPCGuild2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSpawnCountdown2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowSpawnPoints2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowZoneText2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -1887,6 +1893,7 @@ namespace myseq
             this.mnuShowNPCCorpseNames,
             this.mnuShowPCNames,
             this.mnuShowPlayerCorpseNames,
+            this.mnuShowPCGuild,
             this.mnuSpawnCountdown,
             this.mnuShowSpawnPoints,
             this.mnuShowZoneText,
@@ -1938,6 +1945,14 @@ namespace myseq
             this.mnuShowPlayerCorpseNames.Text = "Player Corpse &Names";
             this.mnuShowPlayerCorpseNames.ToolTipText = "Show Player Corpse Names on map.";
             this.mnuShowPlayerCorpseNames.Click += new System.EventHandler(this.mnuShowPlayerCorpseNames_Click);
+            // 
+            // mnuShowPCGuild
+            // 
+            this.mnuShowPCGuild.Name = "mnuShowPCGuild";
+            this.mnuShowPCGuild.Size = new System.Drawing.Size(186, 22);
+            this.mnuShowPCGuild.Text = "&Player Guild";
+            this.mnuShowPCGuild.ToolTipText = "Show Player Guild on map.";
+            this.mnuShowPCGuild.Click += new System.EventHandler(this.mnuShowPCGuild_Click);
             // 
             // mnuSpawnCountdown
             // 
@@ -2333,6 +2348,7 @@ namespace myseq
             this.mnuShowNPCCorpseNames2,
             this.mnuShowPCNames2,
             this.mnuShowPlayerCorpseNames2,
+            this.mnuShowPCGuild2,
             this.mnuSpawnCountdown2,
             this.mnuShowSpawnPoints2,
             this.mnuShowZoneText2,
@@ -2379,6 +2395,13 @@ namespace myseq
             this.mnuShowPlayerCorpseNames2.Size = new System.Drawing.Size(186, 22);
             this.mnuShowPlayerCorpseNames2.Text = "Player Corpse &Names";
             this.mnuShowPlayerCorpseNames2.Click += new System.EventHandler(this.mnuShowPlayerCorpseNames_Click);
+            // 
+            // mnuShowPCGuild2
+            // 
+            this.mnuShowPCGuild2.Name = "mnuShowPCGuild2";
+            this.mnuShowPCGuild2.Size = new System.Drawing.Size(186, 22);
+            this.mnuShowPCGuild2.Text = "&Player Guild";
+            this.mnuShowPCGuild2.Click += new System.EventHandler(this.mnuShowPCGuild_Click);
             // 
             // mnuSpawnCountdown2
             // 
@@ -3936,6 +3959,9 @@ namespace myseq
 
             this.mnuShowNPCNames.Checked = Settings.Instance.ShowNPCNames;
             this.mnuShowNPCNames2.Checked = Settings.Instance.ShowNPCNames;
+
+            this.mnuShowPCGuild.Checked = Settings.Instance.ShowPCGuild;
+            this.mnuShowPCGuild2.Checked = Settings.Instance.ShowPCGuild;
 
             this.mnuSaveSpawnLog.Checked = Settings.Instance.SaveSpawnLogs;
 
@@ -7222,6 +7248,17 @@ namespace myseq
 
             mnuShowPlayerCorpseNames.Checked = Settings.Instance.ShowPlayerCorpseNames;
             mnuShowPlayerCorpseNames2.Checked = Settings.Instance.ShowPlayerCorpseNames;
+
+        }
+        
+        private void mnuShowPCGuild_Click(object sender, EventArgs e)
+
+        {
+
+            Settings.Instance.ShowPCGuild = !Settings.Instance.ShowPCGuild;
+
+            mnuShowPCGuild.Checked = Settings.Instance.ShowPCGuild;
+            mnuShowPCGuild2.Checked = Settings.Instance.ShowPCGuild;
 
         }
 
