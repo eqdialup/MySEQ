@@ -13,9 +13,8 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>myseq</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <StartupObject>myseq.frmMain</StartupObject>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
@@ -45,6 +44,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -59,6 +59,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -70,13 +71,16 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>CBB269572CAC38310D53B4F7349DDC3A7C735AD2</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>MySEQ.client_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="speechlib">
@@ -128,12 +132,6 @@
     <Compile Include="Filters.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="frmLogin.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmLogin.Designer.cs">
-      <DependentUpon>frmLogin.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmAddMapText.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -152,6 +150,7 @@
     <Compile Include="frmOptions.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="IniFile.cs" />
     <Compile Include="ListViewPanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,23 +163,27 @@
     <Compile Include="MapPane.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MobsTimer.cs" />
+    <Compile Include="MobsTimers.cs" />
+    <Compile Include="PrettyNames.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RegexHelper.cs" />
     <Compile Include="Settings.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SPAWNINFO.cs" />
+    <Compile Include="SPAWNTIMER.cs" />
     <Compile Include="Structures.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Talker.cs" />
     <Compile Include="UtilSocket.cs">
       <SubType>Code</SubType>
     </Compile>
     <None Include="app.manifest" />
-    <None Include="MySEQ.client_TemporaryKey.pfx" />
     <None Include="Resources\ShrinkSpaceHS.PNG" />
     <None Include="Resources\ExpandSpaceHS.png" />
     <None Include="Resources\File.ico" />
@@ -206,9 +209,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="App.ico" />
-    <EmbeddedResource Include="frmLogin.resx">
-      <DependentUpon>frmLogin.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmAddMapText.resx">
       <DependentUpon>frmAddMapText.cs</DependentUpon>
     </EmbeddedResource>

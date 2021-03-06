@@ -1,11 +1,5 @@
 using System;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Soap;
 
 namespace Structures
 {
@@ -15,15 +9,13 @@ namespace Structures
         Warning = 2,        // Used for les
         Info = 3,           // Used for information ("Loaded map XYZ")
         Debug = 4,          // Used for debug stuff, not too often though
-        DebugHeavy = 5,     // Used for debug stuff which creates loads of data
-        Trace = 9,          // Used specifically for "Entering XYZ"..."Exiting XYZ", generates absolutely crazy amounts of data
         //
         Default = Error,        // Used when WriteLine is called without a level
         DefaultMaxLevel = Error // Starting log level
     };
-    
+
     #region LogLib class
-    public class LogLib
+    public static class LogLib
     {
         public static LogLevel maxLogLevel;
 
@@ -40,8 +32,8 @@ namespace Structures
             {
                 try
                 {
-                    WriteLine(msg + ex.Message + "\n" + ex.StackTrace, LogLevel.Error);
-                }            
+                    WriteLine($"{msg}{ex.Message}\n{ex.StackTrace}", LogLevel.Error);
+                }
                 catch { /* How does one log an error if the logging function is the one erroring? */ }
             }
         }
@@ -53,13 +45,13 @@ namespace Structures
                 try
                 {
                     string logpath = Settings.Instance.LogDir;
-                    string logfile = String.Format("{0}.txt", DateTime.Now.ToString("MM-dd-yyyy"));
-                    
+                    string logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";
+
                     if (!Directory.Exists(logpath)) Directory.CreateDirectory(logpath);
-                    
+
                     FileStream fs = new FileStream(Path.Combine(logpath, logfile),FileMode.Append,FileAccess.Write,FileShare.ReadWrite);
                     StreamWriter outLog = new StreamWriter(fs);
-                    outLog.WriteLine(String.Format("[{2}] {0} - {1}", DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.ff"), msg, (int)logLevel));
+                    outLog.WriteLine($"[{(int)logLevel}] {DateTime.Now:MM/dd/yyyy HH:mm:ss.ff} - {msg}");
                     outLog.Close();
                     fs.Close();
                 }
