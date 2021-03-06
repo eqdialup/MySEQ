@@ -1,60 +1,28 @@
+using Structures;
 using System;
-
-using System.IO;
-
-using SpeechLib;
-
-using System.Data;
-
-using System.Text;
-
+using System.Collections;
 using System.Drawing;
 
-using System.Collections;
-
-using System.Globalization;
-
-using System.Windows.Forms;
-
-using System.ComponentModel;
-
-using System.Drawing.Drawing2D;
-
-using System.Text.RegularExpressions;
-
-using System.Runtime.InteropServices;
-
-
-
-using Structures;
-
-
-
-namespace myseq {
-
-
-
+namespace myseq
+{
     // Does the map loading etc.
 
     public class EQMap
 
     {
+        private MapCon mapCon;
 
-        private MapCon mapCon = null;              // TODO: replace with a notification mechanism
+        private ListViewPanel SpawnList;
 
-        private ListViewPanel SpawnList = null;
+        private ListViewPanel SpawnTimerList;
 
-        private ListViewPanel SpawnTimerList = null;
+        private ListViewPanel GroundItemList;
 
-        private ListViewPanel GroundItemList = null;
+        private bool initialized;
 
-        private bool initialized = false;
+        public MapPane mapPane;
 
-        public MapPane mapPane = null;             // TODO: replace with a notification mechanism
-
-        public EQData eq = null;
-
-        
+        public EQData eq;
 
         // Events
 
@@ -62,27 +30,14 @@ namespace myseq {
 
         public event ExitMapHandler ExitMap; // Fires when the map is unloaded
 
-
-
         public delegate void EnterMapHandler(EQMap Map);
 
         public event EnterMapHandler EnterMap; // Fires when the map is loaded
 
-
-
-        protected void OnExitMap()        
+        protected void OnExitMap()
 
         {
-
-            LogLib.WriteLine("Entering OnExitMap",LogLevel.Trace);
-
-            if (ExitMap!=null)
-
-            {
-
-                ExitMap(this);
-
-            }
+            ExitMap?.Invoke(this);
 
             if (mapCon != null)
             {
@@ -90,7 +45,7 @@ namespace myseq {
 
                 mapCon.lblMobInfo.Text = "Spawn Information Window";
 
-                mapCon.lblMobInfo.BackColor = System.Drawing.Color.White;
+                mapCon.lblMobInfo.BackColor = Color.White;
 
                 mapCon.lblMobInfo.Visible = true;
 
@@ -101,38 +56,16 @@ namespace myseq {
                 eq.SpawnY = -1.0f;
             }
 
-            LogLib.WriteLine("Exiting OnExitMap",LogLevel.Trace);
-
         }
 
-        
-
-        protected void OnEnterMap()        
-
+        protected void OnEnterMap()
         {
-
-            LogLib.WriteLine("Entering OnEnterMap",LogLevel.Trace);
-
-            
-
-            if (EnterMap!=null)
-
-            {
-
-                EnterMap(this);
-
-            }
-
-            LogLib.WriteLine("Exiting OnEnterMap",LogLevel.Trace);
-
+            EnterMap?.Invoke(this);
         }
-
-        
 
         public void SetComponents(MapCon mapCon,ListViewPanel SpawnList,ListViewPanel SpawnTimerList,ListViewPanel GroundItemList,MapPane mapPane,EQData eq)
 
         {
-
             this.mapCon=mapCon;
 
             this.SpawnList=SpawnList;
@@ -144,7 +77,6 @@ namespace myseq {
             this.eq=eq;
 
             initialized = true;
-
         }
 
         public void NewMap()
@@ -152,16 +84,11 @@ namespace myseq {
             OnEnterMap();
         }
 
-    
-
-        public void ClearMap() 
+        public void ClearMap()
 
         {
 
-            LogLib.WriteLine("Entering EQMap.ClearMap()", LogLevel.Trace);
-
-            try {                           
-
+            try {
                 if (!initialized) { throw new Exception("EQMapManager not initialized yet"); }
 
                 eq.Clear();
@@ -175,8 +102,12 @@ namespace myseq {
                 SpawnTimerList.listView.Items.Clear();
 
                 if (eq.mobsTimers.mobsTimer2.Count > 0)
+                {
                     foreach (SPAWNTIMER st in eq.mobsTimers.mobsTimer2.Values)
+                    {
                         st.itmSpawnTimerList = null;
+                    }
+                }
 
                 GroundItemList.listView.Items.Clear();
 
@@ -185,24 +116,14 @@ namespace myseq {
                 GroundItemList.listView.EndUpdate();
 
                 eq.mobsTimers.ResetTimers();
-
             }
-
             catch (Exception ex) {LogLib.WriteLine("Error with ClearMap:", ex);}
-
-            LogLib.WriteLine("Exiting EQMap.ClearMap()", LogLevel.Trace);
-
         }
 
-
-
-        public void loadDummyMap(string mapname) 
+        public void loadDummyMap(string mapname)
 
         {
-
-            LogLib.WriteLine("Entering EQMap.loadDummyMap()", LogLevel.Trace);
-
-            OnExitMap();           
+            OnExitMap();
 
             ClearMap();
 
@@ -213,71 +134,44 @@ namespace myseq {
             eq.shortname = mapname;
 
             if (mapPane != null)
-                mapPane.scale.Value = 100M;            
+                mapPane.scale.Value = 100M;
 
-            //if (mapCon != null)
-            //    mapCon.scale = 1.0f;
-            //eq.NewZone = true;
             OnEnterMap();
-
-            LogLib.WriteLine("Exiting EQMap.loadDummyMap()", LogLevel.Trace);
-
         }
-
-
 
         public bool loadMap(string filename) {
 
-            LogLib.WriteLine("Entering EQMap.loadMap(filename='"+filename+"')", LogLevel.Trace);
-
             eq.mobsTimers.ResetTimers();
-
-
 
             OnExitMap();
 
             ClearMap();
 
-
-
             eq.ClearMapStructures();
 
             mapCon.SetDistinctPens();
 
-            bool rc = eq.loadMapInternal(filename);
+            bool rc = eq.LoadMapInternal(filename);
 
             if (rc)
             {
-
-                eq.OptimizeMap();
+                OptimizeMap();
 
                 eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
-
-                //eq.NewZone = true;
                 OnEnterMap();
             }
-            
 
-            LogLib.WriteLine("Exiting EQMap.loadMap(), rc="+rc, LogLevel.Trace);
 
             return rc;
-
         }
 
-
-
-        public bool loadLoYMap(string filename, bool resetmap) 
+        public bool loadLoYMap(string filename, bool resetmap)
 
         {
 
-            LogLib.WriteLine("Entering EQMap.loadLoYMap(filename='"+filename+"')", LogLevel.Trace);
-
-
-
-            if (resetmap == true)
+            if (resetmap)
 
             {
-
                 eq.mobsTimers.ResetTimers();
 
                 OnExitMap();
@@ -287,30 +181,219 @@ namespace myseq {
                 eq.ClearMapStructures();
 
                 mapCon.SetDistinctPens();
-
             }
 
-            bool rc = eq.loadLoYMapInternal(filename);
+            bool rc = eq.LoadLoYMapInternal(filename);
 
             if (rc)
             {
-
-                eq.OptimizeMap();
+                OptimizeMap();
 
                 eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
 
-                //eq.NewZone = true;
                 OnEnterMap();
             }
 
-
-
-            LogLib.WriteLine("Exiting EQMap.loadLoYMap(), rc="+rc, LogLevel.Trace);
-
             return rc;
-
         }
 
-    }
+        public void OptimizeMap()
+        {
+            if (eq.lines == null)
+                return;
 
+            ArrayList linesToRemove = new ArrayList();
+            MapLine lastline = null;
+            float prod;
+            var pointsdrop = 0;
+
+            foreach (MapLine line in eq.lines)
+            {
+                MapLine thisline = line;
+                if (thisline != null && lastline != null)
+                {
+                    var thiscount = thisline.aPoints.Count;
+                    MapPoint thispoint = (MapPoint)thisline.aPoints[0];
+
+                    MapPoint thisnext = (MapPoint)thisline.aPoints[1];
+
+                    Pen thisColor = thisline.color;
+                    var lastcount = lastline.aPoints.Count;
+                    MapPoint lastpoint = (MapPoint)lastline.aPoints[lastcount - 1];
+                    MapPoint lastprev = (MapPoint)lastline.aPoints[lastcount - 2];
+                    Pen lastColor = lastline.color;
+
+                    int droppoint;
+                    if (lastpoint.x == thispoint.x && lastpoint.y == thispoint.y && lastpoint.z == thispoint.z && thisColor.Color == lastColor.Color)
+                    {
+                        droppoint = 0;
+
+                        // Take Dot Product to see if lines have 0 degrees between angle
+
+                        // Basic Dot Product, where varies from -1 at 180 degrees to 1 at 0 degrees
+
+                        if ((thiscount > 1) && (lastcount > 1))
+                        {
+                            prod = CalcDotProduct(lastprev.x, lastprev.y, lastprev.z, thispoint.x, thispoint.y, thispoint.z, thisnext.x, thisnext.y, thisnext.z);
+
+                            if (prod > 0.9999f)
+                            {
+                                pointsdrop++;
+
+                                droppoint = 1;
+                            }
+                        }
+
+                        // Second Line Starts at End of First Line
+
+                        lastline.linePoints = new PointF[thiscount + lastcount - 1 - droppoint];
+
+                        for (int p = 0; p < (lastcount - droppoint); p++)
+                        {
+                            MapPoint tmp = (MapPoint)lastline.aPoints[p];
+
+                            lastline.linePoints[p] = new PointF(tmp.x, tmp.y);
+                        }
+
+                        if (droppoint == 1)
+                            lastline.aPoints.RemoveAt(lastcount - 1);
+
+                        for (int p = 1; p < thiscount; p++)
+                        {
+                            MapPoint tmp = (MapPoint)thisline.aPoints[p];
+
+                            lastline.linePoints[p + lastcount - 1 - droppoint] = new PointF(tmp.x, tmp.y);
+
+                            MapPoint temp = new MapPoint
+                            {
+                                x = tmp.x,
+
+                                y = tmp.y,
+
+                                z = tmp.z
+                            };
+
+                            lastline.aPoints.Add(temp);
+                        }
+
+                        linesToRemove.Add(thisline);
+
+                        thisline = lastline;
+                    }
+                    else
+                    {
+                        droppoint = 0;
+
+                        thispoint = (MapPoint)thisline.aPoints[thiscount - 1];
+
+                        MapPoint thisprev = (MapPoint)thisline.aPoints[thiscount - 2];
+                        lastpoint = (MapPoint)lastline.aPoints[0];
+
+                        MapPoint lastnext = (MapPoint)lastline.aPoints[1];
+
+                        if (lastpoint.x == thispoint.x && lastpoint.y == thispoint.y && lastpoint.z == thispoint.z && thisColor.Color == lastColor.Color)
+                        {
+                            prod = CalcDotProduct(thisprev.x, thisprev.y, thisprev.z, thispoint.x, thispoint.y, thispoint.z, lastnext.x, lastnext.y, lastnext.z);
+
+                            if (prod > 0.9999f)
+                            {
+                                pointsdrop++;
+
+                                droppoint = 1;
+
+                                // look here
+
+                            }
+
+                            // Second Line is at beginning of first line
+
+                            lastline.linePoints = new PointF[thiscount + lastcount - 1 - droppoint];
+
+                            if (droppoint == 1)
+                                lastline.aPoints.RemoveAt(0);
+
+                            for (int p = 0; p < (thiscount - 1); p++)
+                            {
+                                MapPoint tmp = (MapPoint)thisline.aPoints[p];
+
+                                MapPoint temp = new MapPoint
+                                {
+                                    x = tmp.x,
+
+                                    y = tmp.y,
+
+                                    z = tmp.z
+                                };
+
+                                lastline.aPoints.Insert(p, temp);
+                            }
+
+                            thiscount = lastline.aPoints.Count;
+
+                            for (int p = 0; p < thiscount; p++)
+                            {
+                                MapPoint tmp = (MapPoint)lastline.aPoints[p];
+
+                                lastline.linePoints[p] = new PointF(tmp.x, tmp.y);
+                            }
+
+                            linesToRemove.Add(thisline);
+
+                            thisline = lastline;
+                        }
+                    }
+                }
+
+                lastline = thisline;
+            }
+
+            foreach (MapLine lineToRemove in linesToRemove) eq.lines.Remove(lineToRemove);
+            foreach (MapLine line in eq.lines)
+            {
+                line.maxZ = line.minZ = line.Point(0).z;
+                for (int j = 1; j < line.aPoints.Count; j++)
+                {
+                    if (line.minZ > line.Point(j).z)
+                        line.minZ = line.Point(j).z;
+                    if (line.maxZ < line.Point(j).z)
+                        line.maxZ = line.Point(j).z;
+                }
+            }
+            // Put in offsets for use when drawing text on map, for duplicate text at same location
+            int index = 0;
+            foreach (MapText tex1 in eq.texts)
+            {
+                int index2 = 0;
+                foreach (MapText tex2 in eq.texts)
+                {
+                    if (index2 > index && tex1.x == tex2.x && tex1.y == tex2.y && tex1.z == tex2.z && tex1.text != tex2.text)
+                    {
+                        tex2.offset = tex1.offset + (int)(2.0f * Settings.Instance.MapLabelFontSize);
+                    }
+                    index2++;
+                }
+                index++;
+            }
+        }
+
+        public float CalcDotProduct(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
+        {
+            double lenV1;
+
+            double lenV2;
+
+            double lenV3;
+
+            if ((x1 == x2 && y1 == y2 && z1 == z2) || (x2 == x3 && y2 == y3 && z2 == z3))
+                return 1.0f;
+
+            lenV1 = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)) + ((z2 - z1) * (z2 - z1)));
+
+            lenV2 = Math.Sqrt(((x3 - x2) * (x3 - x2)) + ((y3 - y2) * (y3 - y2)) + ((z3 - z2) * (z3 - z2)));
+
+            lenV3 = Math.Sqrt(((x3 - x1) * (x3 - x1)) + ((y3 - y1) * (y3 - y1)) + ((z3 - z1) * (z3 - z1)));
+
+            return (float)(lenV3 / (lenV1 + lenV2));
+        }
+    }
 }

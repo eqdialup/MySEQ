@@ -1,52 +1,24 @@
-using System;
-
-using SpeechLib;
-
-using System.IO;
-
-using System.Net;
-
-using System.Drawing;
-
-using System.Reflection;
-
-using System.Collections;
-
-using System.Collections.Generic;
-
-using System.Diagnostics;
-
-using System.Windows.Forms;
-
-using System.ComponentModel;
-
-using WeifenLuo.WinFormsUI.Docking;
-
-using System.Text.RegularExpressions;
-
-using System.Runtime.InteropServices;
-
-
-
 // Class Files
 
-using SocketSystem;
-
 using Structures;
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
-
-
-namespace myseq 
+namespace myseq
 
 {
-
     [Serializable]
 
-    public class frmMain : System.Windows.Forms.Form    
+    public class frmMain : Form
 
     {
-
-        public string Version = "";     
+        public string Version = "";
 
         public Filters filters = new Filters();
 
@@ -60,15 +32,15 @@ namespace myseq
 
         private Point addTextFormLocation = new Point(0, 0);
 
-        public myseq.MapCon mapCon;
+        public MapCon mapCon;
 
-        public myseq.MapPane mapPane = new MapPane();        
+        public MapPane mapPane = new MapPane();
 
-        public myseq.ListViewPanel SpawnList = new ListViewPanel(0);
+        public ListViewPanel SpawnList = new ListViewPanel(0);
 
-        public myseq.ListViewPanel SpawnTimerList = new ListViewPanel(1);
+        public ListViewPanel SpawnTimerList = new ListViewPanel(1);
 
-        public myseq.ListViewPanel GroundItemList = new ListViewPanel(2);
+        public ListViewPanel GroundItemList = new ListViewPanel(2);
 
         private EQData eq;
 
@@ -76,15 +48,9 @@ namespace myseq
 
         private EQMap map;
 
-        public RegexHelper reHelper = new RegexHelper();
-
-
-
         public DrawOptions DrawOpts=DrawOptions.DrawNormal;
 
-
-
-        public System.Collections.ArrayList colProcesses = new ArrayList();
+        public ArrayList colProcesses = new ArrayList();
 
         public ProcessInfo CurrentProcess = new ProcessInfo(0,"");
 
@@ -92,39 +58,39 @@ namespace myseq
 
         #region System Components
 
-        private System.Windows.Forms.MenuStrip mnuMainMenu;
+        private MenuStrip mnuMainMenu;
 
-        private System.Windows.Forms.StatusStrip statusBarStrip;
+        private StatusStrip statusBarStrip;
 
-        private System.Windows.Forms.Timer timPackets;
+        private Timer timPackets;
 
         private System.Timers.Timer timDelayAlerts;
 
         private System.Timers.Timer timProcessTimers;
 
-        private System.ComponentModel.IContainer components;
+        private IContainer components;
 
-        public  System.Windows.Forms.ColorDialog colorPicker;
+        public ColorDialog colorPicker;
 
-        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private OpenFileDialog openFileDialog;
 
-        private System.Windows.Forms.FontDialog fontDialog1;
+        private FontDialog fontDialog1;
 
-        private System.Windows.Forms.ContextMenuStrip mnuContext;
+        private ContextMenuStrip mnuContext;
 
-        private System.Windows.Forms.ContextMenuStrip mnuContextAddFilter;
+        private ContextMenuStrip mnuContextAddFilter;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuMobName;
+        private ToolStripMenuItem mnuMobName;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuAddHuntFilter;
+        private ToolStripMenuItem mnuAddHuntFilter;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuAddCautionFilter;
+        private ToolStripMenuItem mnuAddCautionFilter;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuAddDangerFilter;
+        private ToolStripMenuItem mnuAddDangerFilter;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuAddAlertFilter;
+        private ToolStripMenuItem mnuAddAlertFilter;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuAddMapLabel;
+        private ToolStripMenuItem mnuAddMapLabel;
 
         public string alertAddmobname = "";
         public float alertX = 0.0f;
@@ -133,23 +99,21 @@ namespace myseq
 
         public string mapnameWithLabels = "";
 
-        private System.Windows.Forms.ToolStripMenuItem mnuSearchAllakhazam;
+        private ToolStripMenuItem mnuSearchAllakhazam;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuShowListNPCs;
+        private ToolStripMenuItem mnuShowListNPCs;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuShowListCorpses;
+        private ToolStripMenuItem mnuShowListCorpses;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuShowListPlayers;
+        private ToolStripMenuItem mnuShowListPlayers;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuShowListInvis;
+        private ToolStripMenuItem mnuShowListInvis;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuShowListMounts;
+        private ToolStripMenuItem mnuShowListMounts;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuShowListFamiliars;
+        private ToolStripMenuItem mnuShowListFamiliars;
 
-        private System.Windows.Forms.ToolStripMenuItem mnuShowListPets;
-
-        
+        private ToolStripMenuItem mnuShowListPets;
 
         private ToolStripMenuItem mnuFileMain;
         private ToolStripMenuItem mnuConnect;
@@ -160,7 +124,6 @@ namespace myseq
         private ToolStripMenuItem mnuSavePrefs;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem mnuExit;
-        private ToolStripMenuItem menuItem5;
         private ToolStripMenuItem mnuEditMain;
         private ToolStripMenuItem mnuReloadAlerts;
         private ToolStripSeparator toolStripSeparator4;
@@ -228,7 +191,7 @@ namespace myseq
         private ToolStripMenuItem mnuMapReset;
         private ToolStripMenuItem mnuHelpMain;
         private ToolStripMenuItem mnuAbout;
-        
+
         private ToolStripSeparator toolStripSeparator11;
         private ToolStripSeparator toolStripSeparator12;
         private ToolStripSeparator toolStripSeparator13;
@@ -379,7 +342,6 @@ namespace myseq
         private ToolStripMenuItem mnuShowListSearchBox;
         private ToolStripMenuItem mnuSmallTargetInfo;
         private ToolStripMenuItem mnuSmallTargetInfo2;
-        private ToolStripButton toolStripEmailAlerts;
         private ToolStripSeparator toolStripSeparator19;
         private ToolStripMenuItem addZoneEmailAlertFilterToolStripMenuItem;
         private ToolStripMenuItem mnuAutoConnect;
@@ -397,10 +359,9 @@ namespace myseq
         bool bFilter4 = false;
         bool bFilter5 = false;
 
-        public void StopListening() 
+        public void StopListening()
 
         {
-
             // Stop the Timer
 
             timPackets.Stop();
@@ -409,34 +370,30 @@ namespace myseq
 
             comm.StopListening();
 
-            
-
             mapPane.cmdCommand.Text = "GO";
 
-            this.mnuConnect.Text = "&Connect";
+            mnuConnect.Text = "&Connect";
 
-            this.mnuConnect.Image = global::myseq.Properties.Resources.PlayHS;
+            mnuConnect.Image = Properties.Resources.PlayHS;
 
-            this.toolStripStartStop.Text = "Go";
-            this.toolStripStartStop.ToolTipText = "Connect to Server";
-            this.toolStripStartStop.Image = global::myseq.Properties.Resources.PlayHS;
+            toolStripStartStop.Text = "Go";
+            toolStripStartStop.ToolTipText = "Connect to Server";
+            toolStripStartStop.Image = Properties.Resources.PlayHS;
 
             bIsRunning = false;
 
             toolStripServerAddress.Text = "";
-
         }
 
-        public frmMain()         
+        public frmMain()
 
         {
-
             // This shuts up the error messages when running under a debugger
 
-            Control.CheckForIllegalCrossThreadCalls = false;
+            CheckForIllegalCrossThreadCalls = false;
 
             m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
-        
+
             eq = new EQData();
 
             comm = new EQCommunications(eq,this);
@@ -447,9 +404,9 @@ namespace myseq
 
             LogLib.maxLogLevel = LogLevel.DefaultMaxLevel;
 
-            String myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
+            string myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
 
-            String newFile = Path.Combine(myPath, "prefs.xml");
+            string newFile = Path.Combine(myPath, "prefs.xml");
 
             if (File.Exists(newFile))
                 LoadPrefs(newFile);
@@ -457,62 +414,57 @@ namespace myseq
                 LoadPrefs("prefs.xml");
 
             LogLib.WriteLine("MySEQ Open Version: " + Version);
-            
+
            // Version = Application.ProductVersion.ToString().Substring(0, Application.ProductVersion.Length - 2);
 
             LogLib.WriteLine("Loaded Prefs.Xml");
 
-            String newSMTPFile = Path.Combine(myPath, "myseq.xml");
+            //string newSMTPFile = Path.Combine(myPath, "myseq.xml");
 
-            if (File.Exists(newSMTPFile))
-                SMTPSettings.Instance.Load(newSMTPFile);
-            else
-                SMTPSettings.Instance.Load("myseq.xml");
+            //if (File.Exists(newSMTPFile))
+            //    SmtpSettings.Instance.Load(newSMTPFile);
+            //else
+            //    SmtpSettings.Instance.Load("myseq.xml");
 
             mapCon = mapPane.mapCon;
-            
+
             // Set Map Window Options
-            mapPane.DockAreas = ((DockAreas)(DockAreas.Document));
+            mapPane.DockAreas = DockAreas.Document;
             mapPane.CloseButtonVisible = false;
             mapPane.TabText = "map_pane";
-            
+
             LogLib.WriteLine("Creating SpawnList Window");
 
             // Set Spawn List Window Options
             SpawnList.HideOnClose = true;
             SpawnList.TabText = "Spawn List";
 
-            this.SpawnList.VisibleChanged += new System.EventHandler(SpawnList_VisibleChanged);
+            SpawnList.VisibleChanged += new EventHandler(SpawnList_VisibleChanged);
 
             LogLib.WriteLine("Creating SpawnTimerList Window");
 
             // Set Spawn Timer Window Options
             SpawnTimerList.HideOnClose = true;
             SpawnTimerList.TabText = "Spawn Timer List";
-            this.SpawnTimerList.VisibleChanged += new System.EventHandler(SpawnTimerList_VisibleChanged);
-            
+            SpawnTimerList.VisibleChanged += new EventHandler(SpawnTimerList_VisibleChanged);
+
             LogLib.WriteLine("Creating GroundItemList Window");
 
             // Set Ground Item Window Options
-            this.GroundItemList.HideOnClose = true;
-            this.GroundItemList.TabText = "Ground Items";
-            
-            this.GroundItemList.VisibleChanged += new System.EventHandler(GroundItemList_VisibleChanged);
+            GroundItemList.HideOnClose = true;
+            GroundItemList.TabText = "Ground Items";
 
-            
-            // [42!] Make all the components known to each other
-
-            // TODO: use this to remove all the implicit interdependencies between the comps ("Parent"...)
+            GroundItemList.VisibleChanged += new EventHandler(GroundItemList_VisibleChanged);
 
             mapCon.SetComponents(this,mapPane,eq,map);
 
             mapPane.SetComponents(this,eq);
 
-            SpawnList.SetComponents(eq,mapCon,mapPane,filters,this);
+            SpawnList.SetComponents(eq,mapCon,filters,this);
 
-            SpawnTimerList.SetComponents(eq, mapCon, mapPane, filters, this);
+            SpawnTimerList.SetComponents(eq, mapCon, filters, this);
 
-            GroundItemList.SetComponents(eq, mapCon, mapPane, filters, this);
+            GroundItemList.SetComponents(eq, mapCon, filters, this);
 
             map.SetComponents(mapCon,SpawnList,SpawnTimerList,GroundItemList,mapPane,eq);
 
@@ -520,10 +472,10 @@ namespace myseq
 
             LogLib.WriteLine("Loading Position.Xml");
 
-            String configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "positions.xml");
+            string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "positions.xml");
 
             // This in the application data folder.
-            String newConfigFile = Path.Combine(myPath, "positions.xml");
+            string newConfigFile = Path.Combine(myPath, "positions.xml");
 
             if (File.Exists(configFile))
             {
@@ -531,7 +483,6 @@ namespace myseq
                 {
                     dockPanel.LoadFromXml(configFile, m_deserializeDockContent);
                 }
-
                 catch (Exception ex)
                 {
                     LogLib.WriteLine("Error loading config from positions.xml: ", ex);
@@ -548,7 +499,6 @@ namespace myseq
                     SpawnTimerList.DockState = DockState.DockLeft;
 
                     GroundItemList.DockState = DockState.DockLeft;
-
                 }
             }
             else if (File.Exists(newConfigFile))
@@ -557,7 +507,6 @@ namespace myseq
                 {
                     dockPanel.LoadFromXml(newConfigFile, m_deserializeDockContent);
                 }
-
                 catch (Exception ex)
                 {
                     LogLib.WriteLine("Error loading config from AppData positions.xml: ", ex);
@@ -574,7 +523,6 @@ namespace myseq
                     SpawnTimerList.DockState = DockState.DockLeft;
 
                     GroundItemList.DockState = DockState.DockLeft;
-
                 }
             }
             else
@@ -591,13 +539,12 @@ namespace myseq
                 SpawnTimerList.DockState = DockState.DockLeft;
 
                 GroundItemList.DockState = DockState.DockLeft;
-
             }
 
             if (Settings.Instance.AlwaysOnTop)
             {
-                this.TopMost = true;
-                this.TopLevel = true;
+                TopMost = true;
+                TopLevel = true;
             }
 
             // Add the Columns to the Spawn List Window
@@ -642,10 +589,7 @@ namespace myseq
             // Set the Font, Size, Style for the Spawn List Window
 
             try {SpawnList.listView.Font = new Font(Settings.Instance.ListFontName, Settings.Instance.ListFontSize, Settings.Instance.ListFontStyle);}
-
             catch (Exception ex) {LogLib.WriteLine("Error setting spawn list font: ", ex);}
-
-            
 
             // Add the Columns to the Spawn Timer Window
 
@@ -671,14 +615,10 @@ namespace myseq
 
             SpawnTimerList.ColumnsAdd("Next Spawn", Settings.Instance.c10w, HorizontalAlignment.Left);
 
-
-
             // Set the Font, Size, Style for the Spawn List Timer Window
 
             try { SpawnTimerList.listView.Font = new Font(Settings.Instance.ListFontName, Settings.Instance.ListFontSize, Settings.Instance.ListFontStyle); }
-
             catch (Exception ex) { LogLib.WriteLine("Error setting spawn timer list font: ", ex); }
-
 
             GroundItemList.ColumnsAdd("Description", Settings.Instance.c1w, HorizontalAlignment.Left);
 
@@ -692,43 +632,30 @@ namespace myseq
 
             GroundItemList.ColumnsAdd("Z", Settings.Instance.c13w, HorizontalAlignment.Left);
 
-           
-
-
             // Set the Font, Size, Style for the Spawn List Window
 
             try { GroundItemList.listView.Font = new Font(Settings.Instance.ListFontName, Settings.Instance.ListFontSize, Settings.Instance.ListFontStyle); }
-
             catch (Exception ex) { LogLib.WriteLine("Error setting ground item list font: ", ex); }
-
-
 
             // Set the Font, Size, Style for the Map Labels
 
-            try { 
+            try {
                 mapCon.drawFont = new Font(Settings.Instance.MapLabelFontName, Settings.Instance.MapLabelFontSize, Settings.Instance.MapLabelFontStyle);
                 mapCon.drawFont1 = new Font(Settings.Instance.MapLabelFontName, Settings.Instance.MapLabelFontSize * 0.9f, Settings.Instance.MapLabelFontStyle);
                 mapCon.drawFont3 = new Font(Settings.Instance.MapLabelFontName, Settings.Instance.MapLabelFontSize * 1.1f, Settings.Instance.MapLabelFontStyle);
             }
-
             catch (Exception ex) { LogLib.WriteLine("Error setting map label font: ", ex); }
-
-
 
             // Set the Font, Size, Style to the Spawn Info Window
 
             try {
-
                 mapCon.lblMobInfo.Font = new Font(Settings.Instance.TargetInfoFontName, Settings.Instance.TargetInfoFontSize, Settings.Instance.TargetInfoFontStyle);
 
                 mapCon.lblGameClock.Font = new Font(Settings.Instance.TargetInfoFontName, Settings.Instance.TargetInfoFontSize, FontStyle.Bold);
-
             }
-
             catch (Exception ex) { LogLib.WriteLine("Error setting Target Info font: ", ex); }
 
             toolStripVersion.Text = Version;
-
 
             mapCon.SetInitialParams();
 
@@ -744,26 +671,19 @@ namespace myseq
 
             SetUpdateSteps();
 
-            this.Text = BaseTitle;
+            Text = BaseTitle;
 
             if (Settings.Instance.AutoConnect)
                 AutoConnect();
-
         }
 
-
-
         /// <summary>
-
         /// Clean up any resources being used.
-
         /// </summary>
-
-        protected override void Dispose( bool disposing )  
+        protected override void Dispose( bool disposing )
 
         {
-
-            if( disposing ) 
+            if( disposing )
 
             {
 
@@ -776,19 +696,14 @@ namespace myseq
             }
 
             base.Dispose( disposing );
-
         }
 
         #region Windows Form Designer generated code
 
         /// <summary>
-
         /// Required method for Designer support - do not modify
-
         /// the contents of this method with the code editor.
-
         /// </summary>
-
         private void InitializeComponent()
 
         {
@@ -842,7 +757,6 @@ namespace myseq
             this.mnuCharRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditMain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuChangeColor = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuGridColor = new System.Windows.Forms.ToolStripMenuItem();
@@ -885,6 +799,9 @@ namespace myseq
             this.mnuShowFamiliars = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPets = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowNPCs = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLookupText = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLookupNumber = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMapSettingsMain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDepthFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -897,9 +814,6 @@ namespace myseq
             this.mnuFilterPlayerCorpses = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFilterGroundItems = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFilterSpawnPoints = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowLookupText = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowLookupNumber = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuForceDistinct = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuForceDistinctText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -1039,25 +953,24 @@ namespace myseq
             this.toolStripZNegUp = new System.Windows.Forms.ToolStripButton();
             this.toolStripZNegDown = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetDepthFilter = new System.Windows.Forms.ToolStripButton();
-            this.toolStripEmailAlerts = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLookupBox = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripCheckLookup = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup = new System.Windows.Forms.ToolStripButton();
             this.toolStripLookupBox1 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripCheckLookup1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLookupBox2 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripCheckLookup2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLookupBox3 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripCheckLookup3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLookupBox4 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripCheckLookup4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLookupBox5 = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripCheckLookup = new System.Windows.Forms.ToolStripButton();
-            this.toolStripCheckLookup1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripCheckLookup2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripCheckLookup3 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripCheckLookup4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripCheckLookup5 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup5 = new System.Windows.Forms.ToolStripButton();
             this.toolStripOptions = new System.Windows.Forms.ToolStripButton();
@@ -1082,7 +995,7 @@ namespace myseq
             this.mnuHelpMain});
             this.mnuMainMenu.Location = new System.Drawing.Point(0, 0);
             this.mnuMainMenu.Name = "mnuMainMenu";
-            this.mnuMainMenu.Size = new System.Drawing.Size(800, 24);
+            this.mnuMainMenu.Size = new System.Drawing.Size(1464, 24);
             this.mnuMainMenu.TabIndex = 0;
             this.mnuMainMenu.Text = "mnuMainMenu";
             // 
@@ -1100,8 +1013,7 @@ namespace myseq
             this.mnuServerSelection,
             this.mnuCharacterSelection,
             this.toolStripSeparator3,
-            this.mnuExit,
-            this.menuItem5});
+            this.mnuExit});
             this.mnuFileMain.Name = "mnuFileMain";
             this.mnuFileMain.Size = new System.Drawing.Size(37, 20);
             this.mnuFileMain.Text = "&File";
@@ -1242,7 +1154,7 @@ namespace myseq
             this.mnuChar1.Checked = true;
             this.mnuChar1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuChar1.Name = "mnuChar1";
-            this.mnuChar1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D1)));
             this.mnuChar1.Size = new System.Drawing.Size(188, 22);
             this.mnuChar1.Text = "Char 1";
@@ -1252,7 +1164,7 @@ namespace myseq
             // mnuChar2
             // 
             this.mnuChar2.Name = "mnuChar2";
-            this.mnuChar2.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar2.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D2)));
             this.mnuChar2.Size = new System.Drawing.Size(188, 22);
             this.mnuChar2.Text = "Char 2";
@@ -1262,7 +1174,7 @@ namespace myseq
             // mnuChar3
             // 
             this.mnuChar3.Name = "mnuChar3";
-            this.mnuChar3.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar3.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D3)));
             this.mnuChar3.Size = new System.Drawing.Size(188, 22);
             this.mnuChar3.Text = "Char 3";
@@ -1272,7 +1184,7 @@ namespace myseq
             // mnuChar4
             // 
             this.mnuChar4.Name = "mnuChar4";
-            this.mnuChar4.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar4.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D4)));
             this.mnuChar4.Size = new System.Drawing.Size(188, 22);
             this.mnuChar4.Text = "Char 4";
@@ -1282,7 +1194,7 @@ namespace myseq
             // mnuChar5
             // 
             this.mnuChar5.Name = "mnuChar5";
-            this.mnuChar5.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar5.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D5)));
             this.mnuChar5.Size = new System.Drawing.Size(188, 22);
             this.mnuChar5.Text = "Char 5";
@@ -1292,7 +1204,7 @@ namespace myseq
             // mnuChar6
             // 
             this.mnuChar6.Name = "mnuChar6";
-            this.mnuChar6.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar6.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D6)));
             this.mnuChar6.Size = new System.Drawing.Size(188, 22);
             this.mnuChar6.Text = "Char 6";
@@ -1302,7 +1214,7 @@ namespace myseq
             // mnuChar7
             // 
             this.mnuChar7.Name = "mnuChar7";
-            this.mnuChar7.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar7.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D7)));
             this.mnuChar7.Size = new System.Drawing.Size(188, 22);
             this.mnuChar7.Text = "Char 7";
@@ -1312,7 +1224,7 @@ namespace myseq
             // mnuChar8
             // 
             this.mnuChar8.Name = "mnuChar8";
-            this.mnuChar8.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar8.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D8)));
             this.mnuChar8.Size = new System.Drawing.Size(188, 22);
             this.mnuChar8.Text = "Char 8";
@@ -1322,7 +1234,7 @@ namespace myseq
             // mnuChar9
             // 
             this.mnuChar9.Name = "mnuChar9";
-            this.mnuChar9.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar9.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D9)));
             this.mnuChar9.Size = new System.Drawing.Size(188, 22);
             this.mnuChar9.Text = "Char 9";
@@ -1332,7 +1244,7 @@ namespace myseq
             // mnuChar10
             // 
             this.mnuChar10.Name = "mnuChar10";
-            this.mnuChar10.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar10.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.D0)));
             this.mnuChar10.Size = new System.Drawing.Size(188, 22);
             this.mnuChar10.Text = "Char 10";
@@ -1342,7 +1254,7 @@ namespace myseq
             // mnuChar11
             // 
             this.mnuChar11.Name = "mnuChar11";
-            this.mnuChar11.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar11.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.B)));
             this.mnuChar11.Size = new System.Drawing.Size(188, 22);
             this.mnuChar11.Text = "Char 11";
@@ -1352,7 +1264,7 @@ namespace myseq
             // mnuChar12
             // 
             this.mnuChar12.Name = "mnuChar12";
-            this.mnuChar12.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuChar12.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.C)));
             this.mnuChar12.Size = new System.Drawing.Size(188, 22);
             this.mnuChar12.Text = "Char 12";
@@ -1385,15 +1297,6 @@ namespace myseq
             this.mnuExit.Size = new System.Drawing.Size(177, 22);
             this.mnuExit.Text = "E&xit";
             this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
-            // 
-            // menuItem5
-            // 
-            this.menuItem5.Enabled = false;
-            this.menuItem5.Name = "menuItem5";
-            this.menuItem5.Size = new System.Drawing.Size(177, 22);
-            this.menuItem5.Text = "Add Test";
-            this.menuItem5.Visible = false;
-            this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
             // 
             // mnuEditMain
             // 
@@ -1578,7 +1481,7 @@ namespace myseq
             this.mnuViewStatusBar,
             this.mnuViewDepthFilterBar});
             this.toolbarsToolStripMenuItem.Name = "toolbarsToolStripMenuItem";
-            this.toolbarsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.toolbarsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.toolbarsToolStripMenuItem.Text = "Toolbars";
             // 
             // mnuViewMenuBar
@@ -1608,45 +1511,45 @@ namespace myseq
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(169, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(195, 6);
             // 
             // mnuShowSpawnList
             // 
             this.mnuShowSpawnList.Name = "mnuShowSpawnList";
-            this.mnuShowSpawnList.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowSpawnList.Size = new System.Drawing.Size(198, 22);
             this.mnuShowSpawnList.Text = "Spawn &List";
             this.mnuShowSpawnList.Click += new System.EventHandler(this.mnuShowSpawnList_Click);
             // 
             // mnuShowSpawnListTimer
             // 
             this.mnuShowSpawnListTimer.Name = "mnuShowSpawnListTimer";
-            this.mnuShowSpawnListTimer.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowSpawnListTimer.Size = new System.Drawing.Size(198, 22);
             this.mnuShowSpawnListTimer.Text = "Spawn &Timer List";
             this.mnuShowSpawnListTimer.Click += new System.EventHandler(this.mnuShowSpawnListTimer_Click);
             // 
             // mnuShowGroundItemList
             // 
             this.mnuShowGroundItemList.Name = "mnuShowGroundItemList";
-            this.mnuShowGroundItemList.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowGroundItemList.Size = new System.Drawing.Size(198, 22);
             this.mnuShowGroundItemList.Text = "Ground &Item List";
             this.mnuShowGroundItemList.Click += new System.EventHandler(this.mnuShowGroundItemList_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(169, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(195, 6);
             // 
             // mnuShowListGridLines
             // 
             this.mnuShowListGridLines.Name = "mnuShowListGridLines";
-            this.mnuShowListGridLines.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowListGridLines.Size = new System.Drawing.Size(198, 22);
             this.mnuShowListGridLines.Text = "List &Grid Lines";
             this.mnuShowListGridLines.Click += new System.EventHandler(this.mnuShowListGridLines_Click);
             // 
             // mnuShowListSearchBox
             // 
             this.mnuShowListSearchBox.Name = "mnuShowListSearchBox";
-            this.mnuShowListSearchBox.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowListSearchBox.Size = new System.Drawing.Size(198, 22);
             this.mnuShowListSearchBox.Text = "List Search Box";
             this.mnuShowListSearchBox.Click += new System.EventHandler(this.mnuShowListSearchBox_Click);
             // 
@@ -1655,96 +1558,96 @@ namespace myseq
             this.mnuShowGridLines.Image = ((System.Drawing.Image)(resources.GetObject("mnuShowGridLines.Image")));
             this.mnuShowGridLines.Name = "mnuShowGridLines";
             this.mnuShowGridLines.ShortcutKeys = System.Windows.Forms.Keys.F6;
-            this.mnuShowGridLines.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowGridLines.Size = new System.Drawing.Size(198, 22);
             this.mnuShowGridLines.Text = "Map Grid Lines";
             this.mnuShowGridLines.Click += new System.EventHandler(this.mnuShowGridLines_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(169, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(195, 6);
             // 
             // mnuShowCorpses
             // 
             this.mnuShowCorpses.Name = "mnuShowCorpses";
-            this.mnuShowCorpses.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowCorpses.Size = new System.Drawing.Size(198, 22);
             this.mnuShowCorpses.Text = "NPC Corpses";
             this.mnuShowCorpses.Click += new System.EventHandler(this.mnuShowCorpses_Click);
             // 
             // mnuShowPCCorpses
             // 
             this.mnuShowPCCorpses.Name = "mnuShowPCCorpses";
-            this.mnuShowPCCorpses.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowPCCorpses.Size = new System.Drawing.Size(198, 22);
             this.mnuShowPCCorpses.Text = "PC Corpses";
             this.mnuShowPCCorpses.Click += new System.EventHandler(this.mnuShowPCCorpses_Click);
             // 
             // mnuShowMyCorpse
             // 
             this.mnuShowMyCorpse.Name = "mnuShowMyCorpse";
-            this.mnuShowMyCorpse.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowMyCorpse.Size = new System.Drawing.Size(198, 22);
             this.mnuShowMyCorpse.Text = "My Corpse";
             this.mnuShowMyCorpse.Click += new System.EventHandler(this.mnuShowMyCorpse_Click);
             // 
             // mnuShowPlayers
             // 
             this.mnuShowPlayers.Name = "mnuShowPlayers";
-            this.mnuShowPlayers.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowPlayers.Size = new System.Drawing.Size(198, 22);
             this.mnuShowPlayers.Text = "Players";
             this.mnuShowPlayers.Click += new System.EventHandler(this.mnuShowPlayers_Click);
             // 
             // mnuShowInvis
             // 
             this.mnuShowInvis.Name = "mnuShowInvis";
-            this.mnuShowInvis.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowInvis.Size = new System.Drawing.Size(198, 22);
             this.mnuShowInvis.Text = "Invis Mobs";
             this.mnuShowInvis.Click += new System.EventHandler(this.mnuShowInvis_Click);
             // 
             // mnuShowMounts
             // 
             this.mnuShowMounts.Name = "mnuShowMounts";
-            this.mnuShowMounts.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowMounts.Size = new System.Drawing.Size(198, 22);
             this.mnuShowMounts.Text = "Mounts";
             this.mnuShowMounts.Click += new System.EventHandler(this.mnuShowMounts_Click);
             // 
             // mnuShowFamiliars
             // 
             this.mnuShowFamiliars.Name = "mnuShowFamiliars";
-            this.mnuShowFamiliars.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowFamiliars.Size = new System.Drawing.Size(198, 22);
             this.mnuShowFamiliars.Text = "Familiars";
             this.mnuShowFamiliars.Click += new System.EventHandler(this.mnuShowFamiliars_Click);
             // 
             // mnuShowPets
             // 
             this.mnuShowPets.Name = "mnuShowPets";
-            this.mnuShowPets.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowPets.Size = new System.Drawing.Size(198, 22);
             this.mnuShowPets.Text = "Pets";
             this.mnuShowPets.Click += new System.EventHandler(this.mnuShowPets_Click);
             // 
             // mnuShowNPCs
             // 
             this.mnuShowNPCs.Name = "mnuShowNPCs";
-            this.mnuShowNPCs.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowNPCs.Size = new System.Drawing.Size(198, 22);
             this.mnuShowNPCs.Text = "NPCs";
             this.mnuShowNPCs.Click += new System.EventHandler(this.mnuShowNPCs_Click);
             // 
             // mnuShowLookupText
             // 
             this.mnuShowLookupText.Name = "mnuShowLookupText";
-            this.mnuShowLookupText.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowLookupText.Size = new System.Drawing.Size(198, 22);
             this.mnuShowLookupText.Text = "Lookup Text";
             this.mnuShowLookupText.Click += new System.EventHandler(this.mnuShowLookupText_Click);
             // 
             // mnuShowLookupNumber
             // 
             this.mnuShowLookupNumber.Name = "mnuShowLookupNumber";
-            this.mnuShowLookupNumber.Size = new System.Drawing.Size(172, 22);
+            this.mnuShowLookupNumber.Size = new System.Drawing.Size(198, 22);
             this.mnuShowLookupNumber.Text = "Lookup Name/Number";
             this.mnuShowLookupNumber.Click += new System.EventHandler(this.mnuShowLookupNumber_Click);
             // 
             // mnuAlwaysOnTop
             // 
             this.mnuAlwaysOnTop.Name = "mnuAlwaysOnTop";
-            this.mnuAlwaysOnTop.Size = new System.Drawing.Size(172, 22);
+            this.mnuAlwaysOnTop.Size = new System.Drawing.Size(198, 22);
             this.mnuAlwaysOnTop.Text = "Always On Top";
             this.mnuAlwaysOnTop.Click += new System.EventHandler(this.mnuAlwaysOnTop_Click);
             // 
@@ -1993,7 +1896,7 @@ namespace myseq
             // 
             // mnuShowLayer3
             // 
-            this.mnuShowLayer3.Name = "mnuShowLayer23";
+            this.mnuShowLayer3.Name = "mnuShowLayer3";
             this.mnuShowLayer3.Size = new System.Drawing.Size(186, 22);
             this.mnuShowLayer3.Text = "&Show Layer 3";
             this.mnuShowLayer3.Click += new System.EventHandler(this.mnuShowLayer3_Click);
@@ -2717,15 +2620,15 @@ namespace myseq
             this.toolStripFPS});
             this.statusBarStrip.Location = new System.Drawing.Point(0, 507);
             this.statusBarStrip.Name = "statusBarStrip";
-            this.statusBarStrip.Size = new System.Drawing.Size(800, 22);
+            this.statusBarStrip.Size = new System.Drawing.Size(1464, 22);
             this.statusBarStrip.TabIndex = 0;
             this.statusBarStrip.Text = "statusStrip1";
             // 
             // toolStripMouseLocation
             // 
             this.toolStripMouseLocation.AutoSize = false;
-            this.toolStripMouseLocation.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.toolStripMouseLocation.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripMouseLocation.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMouseLocation.Name = "toolStripMouseLocation";
@@ -2736,8 +2639,8 @@ namespace myseq
             // toolStripDistance
             // 
             this.toolStripDistance.AutoSize = false;
-            this.toolStripDistance.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.toolStripDistance.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripDistance.Name = "toolStripDistance";
             this.toolStripDistance.Size = new System.Drawing.Size(100, 17);
@@ -2745,18 +2648,18 @@ namespace myseq
             // 
             // toolStripSpring
             // 
-            this.toolStripSpring.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.toolStripSpring.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripSpring.Name = "toolStripSpring";
-            this.toolStripSpring.Size = new System.Drawing.Size(291, 17);
+            this.toolStripSpring.Size = new System.Drawing.Size(955, 17);
             this.toolStripSpring.Spring = true;
             // 
             // toolStripVersion
             // 
             this.toolStripVersion.AutoSize = false;
-            this.toolStripVersion.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.toolStripVersion.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripVersion.Name = "toolStripVersion";
             this.toolStripVersion.Size = new System.Drawing.Size(60, 17);
@@ -2764,8 +2667,8 @@ namespace myseq
             // toolStripServerAddress
             // 
             this.toolStripServerAddress.AutoSize = false;
-            this.toolStripServerAddress.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.toolStripServerAddress.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripServerAddress.Name = "toolStripServerAddress";
             this.toolStripServerAddress.Size = new System.Drawing.Size(90, 17);
@@ -2773,16 +2676,16 @@ namespace myseq
             // toolStripCoPStatus
             // 
             this.toolStripCoPStatus.AutoSize = false;
-            this.toolStripCoPStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.toolStripCoPStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripCoPStatus.Name = "toolStripCoPStatus";
             this.toolStripCoPStatus.Size = new System.Drawing.Size(30, 17);
             // 
             // toolStripShortName
             // 
-            this.toolStripShortName.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.toolStripShortName.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripShortName.Name = "toolStripShortName";
             this.toolStripShortName.Size = new System.Drawing.Size(4, 17);
@@ -2790,8 +2693,8 @@ namespace myseq
             // toolStripFPS
             // 
             this.toolStripFPS.AutoSize = false;
-            this.toolStripFPS.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.toolStripFPS.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripFPS.Name = "toolStripFPS";
             this.toolStripFPS.Size = new System.Drawing.Size(60, 17);
@@ -2818,7 +2721,7 @@ namespace myseq
             this.toolStripZNegUp,
             this.toolStripZNegDown,
             this.toolStripResetDepthFilter,
-            this.toolStripEmailAlerts,
+            this.toolStripOptions,
             this.toolStripSeparator19,
             this.toolStripLabel1,
             this.toolStripLookupBox,
@@ -2838,11 +2741,10 @@ namespace myseq
             this.toolStripResetLookup4,
             this.toolStripLookupBox5,
             this.toolStripCheckLookup5,
-            this.toolStripResetLookup5,
-            this.toolStripOptions});
+            this.toolStripResetLookup5});
             this.toolBarStrip.Location = new System.Drawing.Point(0, 24);
             this.toolBarStrip.Name = "toolBarStrip";
-            this.toolBarStrip.Size = new System.Drawing.Size(800, 25);
+            this.toolBarStrip.Size = new System.Drawing.Size(1464, 25);
             this.toolBarStrip.TabIndex = 0;
             this.toolBarStrip.Text = "toolBarStrip";
             // 
@@ -3059,9 +2961,10 @@ namespace myseq
             // 
             // toolStripZPos
             // 
+            this.toolStripZPos.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripZPos.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripZPos.Name = "toolStripZPos";
-            this.toolStripZPos.Size = new System.Drawing.Size(50, 25);
+            this.toolStripZPos.Size = new System.Drawing.Size(40, 25);
             this.toolStripZPos.Text = "75.0";
             this.toolStripZPos.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolStripZPos.ToolTipText = "Enter a value for Z-Pos between 0 and 3500.";
@@ -3102,9 +3005,10 @@ namespace myseq
             // 
             // toolStripZNeg
             // 
+            this.toolStripZNeg.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripZNeg.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripZNeg.Name = "toolStripZNeg";
-            this.toolStripZNeg.Size = new System.Drawing.Size(50, 25);
+            this.toolStripZNeg.Size = new System.Drawing.Size(40, 25);
             this.toolStripZNeg.Text = "75.0";
             this.toolStripZNeg.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolStripZNeg.ToolTipText = "Enter a value for Z-Neg between 0 and 3500.";
@@ -3148,16 +3052,6 @@ namespace myseq
             this.toolStripResetDepthFilter.ToolTipText = "Reset Depth Filter Settings";
             this.toolStripResetDepthFilter.Click += new System.EventHandler(this.toolStripResetDepthFilter_Click);
             // 
-            // toolStripEmailAlerts
-            // 
-            this.toolStripEmailAlerts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripEmailAlerts.Image = ((System.Drawing.Image)(resources.GetObject("toolStripEmailAlerts.Image")));
-            this.toolStripEmailAlerts.ImageTransparentColor = System.Drawing.Color.White;
-            this.toolStripEmailAlerts.Name = "toolStripEmailAlerts";
-            this.toolStripEmailAlerts.Size = new System.Drawing.Size(23, 22);
-            this.toolStripEmailAlerts.Text = "Enable Email Alerts";
-            this.toolStripEmailAlerts.Click += new System.EventHandler(this.toolStripEmailAlerts_Click);
-            // 
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
@@ -3166,210 +3060,216 @@ namespace myseq
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(58, 22);
-            this.toolStripLabel1.Text = "Find Mob";
+            this.toolStripLabel1.Size = new System.Drawing.Size(30, 22);
+            this.toolStripLabel1.Text = "Find";
             this.toolStripLabel1.ToolTipText = "Find and temporarily mark mobs on map.";
             // 
             // toolStripLookupBox
             // 
+            this.toolStripLookupBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox.ForeColor = System.Drawing.SystemColors.GrayText;
             this.toolStripLookupBox.Name = "toolStripLookupBox";
-            this.toolStripLookupBox.Size = new System.Drawing.Size(100, 25);
+            this.toolStripLookupBox.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox.Text = "Mob Search";
             this.toolStripLookupBox.ToolTipText = "Type in mob name and press Enter.";
             this.toolStripLookupBox.Leave += new System.EventHandler(this.toolStripLookupBox_Leave);
             this.toolStripLookupBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox_KeyPress);
             this.toolStripLookupBox.Click += new System.EventHandler(this.toolStripLookupBox_Click);
             // 
+            // toolStripCheckLookup
+            // 
+            this.toolStripCheckLookup.BackColor = System.Drawing.Color.Gray;
+            this.toolStripCheckLookup.Checked = true;
+            this.toolStripCheckLookup.CheckOnClick = true;
+            this.toolStripCheckLookup.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripCheckLookup.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripCheckLookup.Name = "toolStripCheckLookup";
+            this.toolStripCheckLookup.Size = new System.Drawing.Size(23, 22);
+            this.toolStripCheckLookup.Text = "L";
+            this.toolStripCheckLookup.ToolTipText = "Lookup or Filter";
+            this.toolStripCheckLookup.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup_CheckChanged);
+            // 
             // toolStripResetLookup
             // 
             this.toolStripResetLookup.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripResetLookup.Name = "toolStripResetLookup";
-            this.toolStripResetLookup.Size = new System.Drawing.Size(39, 19);
+            this.toolStripResetLookup.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup.Text = "Reset";
             this.toolStripResetLookup.ToolTipText = "Reset Find Mob Search String";
             this.toolStripResetLookup.Click += new System.EventHandler(this.toolStripResetLookup_Click);
             // 
             // toolStripLookupBox1
             // 
+            this.toolStripLookupBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox1.ForeColor = System.Drawing.SystemColors.GrayText;
             this.toolStripLookupBox1.Name = "toolStripLookupBox1";
-            this.toolStripLookupBox1.Size = new System.Drawing.Size(100, 23);
+            this.toolStripLookupBox1.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox1.Text = "Mob Search";
             this.toolStripLookupBox1.ToolTipText = "Type in mob name and press Enter.";
             this.toolStripLookupBox1.Leave += new System.EventHandler(this.toolStripLookupBox1_Leave);
             this.toolStripLookupBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox1_KeyPress);
             this.toolStripLookupBox1.Click += new System.EventHandler(this.toolStripLookupBox1_Click);
             // 
+            // toolStripCheckLookup1
+            // 
+            this.toolStripCheckLookup1.BackColor = System.Drawing.Color.Gray;
+            this.toolStripCheckLookup1.Checked = true;
+            this.toolStripCheckLookup1.CheckOnClick = true;
+            this.toolStripCheckLookup1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripCheckLookup1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripCheckLookup1.Name = "toolStripCheckLookup1";
+            this.toolStripCheckLookup1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripCheckLookup1.Text = "L";
+            this.toolStripCheckLookup1.ToolTipText = "Lookup or Filter";
+            this.toolStripCheckLookup1.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup1_CheckChanged);
+            // 
             // toolStripResetLookup1
             // 
             this.toolStripResetLookup1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripResetLookup1.Name = "toolStripResetLookup1";
-            this.toolStripResetLookup1.Size = new System.Drawing.Size(39, 19);
+            this.toolStripResetLookup1.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup1.Text = "Reset";
             this.toolStripResetLookup1.ToolTipText = "Reset Find Mob Search String";
             this.toolStripResetLookup1.Click += new System.EventHandler(this.toolStripResetLookup1_Click);
             // 
             // toolStripLookupBox2
             // 
+            this.toolStripLookupBox2.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox2.ForeColor = System.Drawing.SystemColors.GrayText;
             this.toolStripLookupBox2.Name = "toolStripLookupBox2";
-            this.toolStripLookupBox2.Size = new System.Drawing.Size(132, 23);
+            this.toolStripLookupBox2.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox2.Text = "Mob Search";
             this.toolStripLookupBox2.ToolTipText = "Type in mob name and press Enter.";
             this.toolStripLookupBox2.Leave += new System.EventHandler(this.toolStripLookupBox2_Leave);
             this.toolStripLookupBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox2_KeyPress);
             this.toolStripLookupBox2.Click += new System.EventHandler(this.toolStripLookupBox2_Click);
             // 
+            // toolStripCheckLookup2
+            // 
+            this.toolStripCheckLookup2.BackColor = System.Drawing.Color.Gray;
+            this.toolStripCheckLookup2.Checked = true;
+            this.toolStripCheckLookup2.CheckOnClick = true;
+            this.toolStripCheckLookup2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripCheckLookup2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripCheckLookup2.Name = "toolStripCheckLookup2";
+            this.toolStripCheckLookup2.Size = new System.Drawing.Size(23, 22);
+            this.toolStripCheckLookup2.Text = "L";
+            this.toolStripCheckLookup2.ToolTipText = "Lookup or Filter";
+            this.toolStripCheckLookup2.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup2_CheckChanged);
+            // 
             // toolStripResetLookup2
             // 
             this.toolStripResetLookup2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripResetLookup2.Name = "toolStripResetLookup2";
-            this.toolStripResetLookup2.Size = new System.Drawing.Size(39, 19);
+            this.toolStripResetLookup2.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup2.Text = "Reset";
             this.toolStripResetLookup2.ToolTipText = "Reset Find Mob Search String";
             this.toolStripResetLookup2.Click += new System.EventHandler(this.toolStripResetLookup2_Click);
             // 
             // toolStripLookupBox3
             // 
+            this.toolStripLookupBox3.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox3.ForeColor = System.Drawing.SystemColors.GrayText;
             this.toolStripLookupBox3.Name = "toolStripLookupBox3";
-            this.toolStripLookupBox3.Size = new System.Drawing.Size(132, 23);
+            this.toolStripLookupBox3.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox3.Text = "Mob Search";
             this.toolStripLookupBox3.ToolTipText = "Type in mob name and press Enter.";
             this.toolStripLookupBox3.Leave += new System.EventHandler(this.toolStripLookupBox3_Leave);
             this.toolStripLookupBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox3_KeyPress);
             this.toolStripLookupBox3.Click += new System.EventHandler(this.toolStripLookupBox3_Click);
             // 
+            // toolStripCheckLookup3
+            // 
+            this.toolStripCheckLookup3.BackColor = System.Drawing.Color.Gray;
+            this.toolStripCheckLookup3.Checked = true;
+            this.toolStripCheckLookup3.CheckOnClick = true;
+            this.toolStripCheckLookup3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripCheckLookup3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripCheckLookup3.Name = "toolStripCheckLookup3";
+            this.toolStripCheckLookup3.Size = new System.Drawing.Size(23, 22);
+            this.toolStripCheckLookup3.Text = "L";
+            this.toolStripCheckLookup3.ToolTipText = "Lookup or Filter";
+            this.toolStripCheckLookup3.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup3_CheckChanged);
+            // 
             // toolStripResetLookup3
             // 
             this.toolStripResetLookup3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripResetLookup3.Name = "toolStripResetLookup3";
-            this.toolStripResetLookup3.Size = new System.Drawing.Size(39, 19);
+            this.toolStripResetLookup3.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup3.Text = "Reset";
             this.toolStripResetLookup3.ToolTipText = "Reset Find Mob Search String";
             this.toolStripResetLookup3.Click += new System.EventHandler(this.toolStripResetLookup3_Click);
             // 
             // toolStripLookupBox4
             // 
+            this.toolStripLookupBox4.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox4.ForeColor = System.Drawing.SystemColors.GrayText;
             this.toolStripLookupBox4.Name = "toolStripLookupBox4";
-            this.toolStripLookupBox4.Size = new System.Drawing.Size(132, 23);
+            this.toolStripLookupBox4.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox4.Text = "Mob Search";
             this.toolStripLookupBox4.ToolTipText = "Type in mob name and press Enter.";
-            this.toolStripLookupBox4.Leave += new System.EventHandler(this.toolStripLookupBox2_Leave);
+            this.toolStripLookupBox4.Leave += new System.EventHandler(this.toolStripLookupBox4_Leave);
             this.toolStripLookupBox4.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox4_KeyPress);
             this.toolStripLookupBox4.Click += new System.EventHandler(this.toolStripLookupBox4_Click);
+            // 
+            // toolStripCheckLookup4
+            // 
+            this.toolStripCheckLookup4.BackColor = System.Drawing.Color.Gray;
+            this.toolStripCheckLookup4.Checked = true;
+            this.toolStripCheckLookup4.CheckOnClick = true;
+            this.toolStripCheckLookup4.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripCheckLookup4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripCheckLookup4.Name = "toolStripCheckLookup4";
+            this.toolStripCheckLookup4.Size = new System.Drawing.Size(23, 22);
+            this.toolStripCheckLookup4.Text = "L";
+            this.toolStripCheckLookup4.ToolTipText = "Lookup or Filter";
+            this.toolStripCheckLookup4.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup4_CheckChanged);
             // 
             // toolStripResetLookup4
             // 
             this.toolStripResetLookup4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup4.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripResetLookup4.Name = "toolStripResetLookup4";
-            this.toolStripResetLookup4.Size = new System.Drawing.Size(39, 19);
+            this.toolStripResetLookup4.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup4.Text = "Reset";
             this.toolStripResetLookup4.ToolTipText = "Reset Find Mob Search String";
             this.toolStripResetLookup4.Click += new System.EventHandler(this.toolStripResetLookup4_Click);
             // 
             // toolStripLookupBox5
             // 
+            this.toolStripLookupBox5.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox5.ForeColor = System.Drawing.SystemColors.GrayText;
             this.toolStripLookupBox5.Name = "toolStripLookupBox5";
-            this.toolStripLookupBox5.Size = new System.Drawing.Size(132, 23);
+            this.toolStripLookupBox5.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox5.Text = "Mob Search";
             this.toolStripLookupBox5.ToolTipText = "Type in mob name and press Enter.";
             this.toolStripLookupBox5.Leave += new System.EventHandler(this.toolStripLookupBox5_Leave);
             this.toolStripLookupBox5.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripTextBox5_KeyPress);
             this.toolStripLookupBox5.Click += new System.EventHandler(this.toolStripLookupBox5_Click);
             // 
-            // toolStripCheckLookup
-            // 
-            this.toolStripCheckLookup.CheckOnClick = true;
-            this.toolStripCheckLookup.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
-            this.toolStripCheckLookup.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup.Name = "toolStripCheckLookup";
-            this.toolStripCheckLookup.Size = new System.Drawing.Size(51, 19);
-            this.toolStripCheckLookup.Text = "L";
-            this.toolStripCheckLookup.ToolTipText = "Lookup or Filter";
-            this.toolStripCheckLookup.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup_CheckChanged);
-            this.toolStripCheckLookup.Checked = true;
-            this.toolStripCheckLookup.BackColor = Color.Gray;
-            // 
-            // toolStripCheckLookup1
-            // 
-            this.toolStripCheckLookup1.CheckOnClick = true;
-            this.toolStripCheckLookup1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
-            this.toolStripCheckLookup1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup1.Name = "toolStripCheckLookup1";
-            this.toolStripCheckLookup1.Size = new System.Drawing.Size(51, 19);
-            this.toolStripCheckLookup1.Text = "L";
-            this.toolStripCheckLookup1.ToolTipText = "Lookup or Filter";
-            this.toolStripCheckLookup1.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup1_CheckChanged);
-            this.toolStripCheckLookup1.Checked = true;
-            this.toolStripCheckLookup1.BackColor = Color.Gray;
-            // 
-            // toolStripCheckLookup2
-            // 
-            this.toolStripCheckLookup2.CheckOnClick = true;
-            this.toolStripCheckLookup2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
-            this.toolStripCheckLookup2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup2.Name = "toolStripCheckLookup2";
-            this.toolStripCheckLookup2.Size = new System.Drawing.Size(51, 19);
-            this.toolStripCheckLookup2.Text = "L";
-            this.toolStripCheckLookup2.ToolTipText = "Lookup or Filter";
-            this.toolStripCheckLookup2.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup2_CheckChanged);
-            this.toolStripCheckLookup2.Checked = true;
-            this.toolStripCheckLookup2.BackColor = Color.Gray;
-            // 
-            // toolStripCheckLookup3
-            // 
-            this.toolStripCheckLookup3.CheckOnClick = true;
-            this.toolStripCheckLookup3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
-            this.toolStripCheckLookup3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup3.Name = "toolStripCheckLookup3";
-            this.toolStripCheckLookup3.Size = new System.Drawing.Size(51, 19);
-            this.toolStripCheckLookup3.Text = "L";
-            this.toolStripCheckLookup3.ToolTipText = "Lookup or Filter";
-            this.toolStripCheckLookup3.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup3_CheckChanged);
-            this.toolStripCheckLookup3.Checked = true;
-            this.toolStripCheckLookup3.BackColor = Color.Gray;
-            // 
-            // toolStripCheckLookup4
-            // 
-            this.toolStripCheckLookup4.CheckOnClick = true;
-            this.toolStripCheckLookup4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
-            this.toolStripCheckLookup4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup4.Name = "toolStripCheckLookup4";
-            this.toolStripCheckLookup4.Size = new System.Drawing.Size(51, 19);
-            this.toolStripCheckLookup4.Text = "L";
-            this.toolStripCheckLookup4.ToolTipText = "Lookup or Filter";
-            this.toolStripCheckLookup4.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup4_CheckChanged);
-            this.toolStripCheckLookup4.Checked = true;
-            this.toolStripCheckLookup4.BackColor = Color.Gray;
-            // 
             // toolStripCheckLookup5
             // 
+            this.toolStripCheckLookup5.BackColor = System.Drawing.Color.Gray;
+            this.toolStripCheckLookup5.Checked = true;
             this.toolStripCheckLookup5.CheckOnClick = true;
-            this.toolStripCheckLookup5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
+            this.toolStripCheckLookup5.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripCheckLookup5.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripCheckLookup5.Name = "toolStripCheckLookup5";
-            this.toolStripCheckLookup5.Size = new System.Drawing.Size(51, 19);
+            this.toolStripCheckLookup5.Size = new System.Drawing.Size(23, 22);
             this.toolStripCheckLookup5.Text = "L";
             this.toolStripCheckLookup5.ToolTipText = "Lookup or Filter";
             this.toolStripCheckLookup5.CheckedChanged += new System.EventHandler(this.toolStripCheckLookup5_CheckChanged);
-            this.toolStripCheckLookup5.Checked = true;
-            this.toolStripCheckLookup5.BackColor = Color.Gray;
             // 
             // toolStripResetLookup5
             // 
             this.toolStripResetLookup5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup5.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripResetLookup5.Name = "toolStripResetLookup5";
-            this.toolStripResetLookup5.Size = new System.Drawing.Size(39, 19);
+            this.toolStripResetLookup5.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup5.Text = "Reset";
             this.toolStripResetLookup5.ToolTipText = "Reset Find Mob Search String";
             this.toolStripResetLookup5.Click += new System.EventHandler(this.toolStripResetLookup5_Click);
@@ -3381,7 +3281,7 @@ namespace myseq
             this.toolStripOptions.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripOptions.Name = "toolStripOptions";
-            this.toolStripOptions.Size = new System.Drawing.Size(23, 20);
+            this.toolStripOptions.Size = new System.Drawing.Size(23, 22);
             this.toolStripOptions.Text = "Options";
             this.toolStripOptions.ToolTipText = "Open Options Dialog";
             this.toolStripOptions.Click += new System.EventHandler(this.mnuOptions_Click);
@@ -3394,7 +3294,7 @@ namespace myseq
             this.dockPanel.DockBackColor = System.Drawing.SystemColors.ControlLight;
             this.dockPanel.Location = new System.Drawing.Point(0, 49);
             this.dockPanel.Name = "dockPanel";
-            this.dockPanel.Size = new System.Drawing.Size(800, 458);
+            this.dockPanel.Size = new System.Drawing.Size(1464, 458);
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -3451,7 +3351,7 @@ namespace myseq
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(800, 529);
+            this.ClientSize = new System.Drawing.Size(1464, 529);
             this.ContextMenuStrip = this.mnuContext;
             this.Controls.Add(this.dockPanel);
             this.Controls.Add(this.toolBarStrip);
@@ -3483,134 +3383,91 @@ namespace myseq
 
         #endregion
 
-
-
         [STAThread]
 
-        static void Main() 
+        static void Main()
 
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             try {Application.Run(new frmMain());}
-
-            catch (Exception e) 
+            catch (Exception e)
 
             {
-
-                string s = "Uncaught exception in Main(): " + e.Message;
+                string s = $"Uncaught exception in Main(): {e.Message}";
 
                 LogLib.WriteLine(s);
 
                 MessageBox.Show(s);
 
                 Application.Exit();
-
             }
-
         }
 
-        
-
-        private void frmMain_Closing(object sender, CancelEventArgs e) 
+        private void frmMain_Closing(object sender, CancelEventArgs e)
 
         {
-
             if (Settings.Instance.SaveOnExit)
             {
-                String mypath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
-                String preFile = Path.Combine(mypath, "prefs.xml");
-                String myseqFile = Path.Combine(mypath, "myseq.xml");
+                string mypath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
+                string preFile = Path.Combine(mypath, "prefs.xml");
+//                string myseqFile = Path.Combine(mypath, "myseq.xml");
 
                 savePrefs(preFile);
-                SMTPSettings.Instance.Save(myseqFile);
+//                SmtpSettings.Instance.Save(myseqFile);
             }
-
         }
 
-
-
-        public void cmdCommand_Click(object sender, System.EventArgs e) 
+        public void cmdCommand_Click(object sender, EventArgs e)
 
         {
-
-            if (!bIsRunning) 
+            if (!bIsRunning)
 
             {
-
                 StartListening();
-
             }
-
-            else 
-
+            else
             {
-
                 StopListening();
-
             }
-
         }
 
         public void NewMap()
         {
-            if (map != null)
-                map.NewMap();
+            map?.NewMap();
         }
 
         public void AutoConnect()
         {
-            if (colProcesses != null)
-                colProcesses.Clear();
+            colProcesses?.Clear();
 
             if (eq.playerinfo != null)
                 eq.playerinfo.Name = "";
 
-            if (mnuIPAddress1.Checked == true)
-
+            if (mnuIPAddress1.Checked)
                 currentIPAddress = Settings.Instance.IPAddress1;
-
-            else if (mnuIPAddress2.Checked == true)
-
+            else if (mnuIPAddress2.Checked)
                 currentIPAddress = Settings.Instance.IPAddress2;
-
-            else if (mnuIPAddress3.Checked == true)
-
+            else if (mnuIPAddress3.Checked)
                 currentIPAddress = Settings.Instance.IPAddress3;
-
-            else if (mnuIPAddress4.Checked == true)
-
+            else if (mnuIPAddress4.Checked)
                 currentIPAddress = Settings.Instance.IPAddress4;
-
-            else if (mnuIPAddress5.Checked == true)
-
+            else if (mnuIPAddress5.Checked)
                 currentIPAddress = Settings.Instance.IPAddress5;
 
-
-
             if (currentIPAddress.Length == 0)
-
                 return;
-
-
 
             // Try to connect to the server         
 
             if (!comm.ConnectToServer(currentIPAddress, Settings.Instance.Port, false))
             {
-
                 return;
-
             }
-
             else
             {
-
                 toolStripServerAddress.Text = currentIPAddress;
-
             }
-
-
 
             // Clear map
 
@@ -3624,80 +3481,54 @@ namespace myseq
 
             mapPane.cmdCommand.Text = "Stop";
 
-            this.mnuConnect.Text = "&Disconnect";
+            mnuConnect.Text = "&Disconnect";
 
-            this.mnuConnect.Image = global::myseq.Properties.Resources.RedDelete;
+            mnuConnect.Image = Properties.Resources.RedDelete;
 
-            this.toolStripStartStop.Text = "Stop";
-            this.toolStripStartStop.ToolTipText = "Disconnect from Server";
-            this.toolStripStartStop.Image = global::myseq.Properties.Resources.RedDelete;
+            toolStripStartStop.Text = "Stop";
+            toolStripStartStop.ToolTipText = "Disconnect from Server";
+            toolStripStartStop.Image = Properties.Resources.RedDelete;
 
             bIsRunning = true;
-
         }
 
-        public void StartListening() 
+        public void StartListening()
 
         {
-            if (colProcesses != null)
-                colProcesses.Clear();
+            colProcesses?.Clear();
 
             if (eq.playerinfo != null)
                 eq.playerinfo.Name = "";
 
-            if (mnuIPAddress1.Checked == true)
-
+            if (mnuIPAddress1.Checked)
                 currentIPAddress = Settings.Instance.IPAddress1;
-
-            else if (mnuIPAddress2.Checked == true)
-
+            else if (mnuIPAddress2.Checked)
                 currentIPAddress = Settings.Instance.IPAddress2;
-
-            else if (mnuIPAddress3.Checked == true)
-
+            else if (mnuIPAddress3.Checked)
                 currentIPAddress = Settings.Instance.IPAddress3;
-
-            else if (mnuIPAddress4.Checked == true)
-
+            else if (mnuIPAddress4.Checked)
                 currentIPAddress = Settings.Instance.IPAddress4;
-
-            else if (mnuIPAddress5.Checked == true)
-
+            else if (mnuIPAddress5.Checked)
                 currentIPAddress = Settings.Instance.IPAddress5;
 
-
-
             if (currentIPAddress.Length == 0)
-
                 return;
-
-
 
             // Try to connect to the server         
 
-            if (!comm.ConnectToServer(currentIPAddress, Settings.Instance.Port)) 
+            if (!comm.ConnectToServer(currentIPAddress, Settings.Instance.Port))
 
             {
-
                 return;
-
             }
-
             else
-
             {
-
                 toolStripServerAddress.Text = currentIPAddress;
-
             }
-
-            
 
             // Clear map
 
             map.ClearMap();
-
-
 
             // Start the timer
 
@@ -3707,105 +3538,60 @@ namespace myseq
 
             mapPane.cmdCommand.Text = "Stop";
 
-            this.mnuConnect.Text = "&Disconnect";
+            mnuConnect.Text = "&Disconnect";
 
-            this.mnuConnect.Image = global::myseq.Properties.Resources.RedDelete;
+            mnuConnect.Image = Properties.Resources.RedDelete;
 
-            this.toolStripStartStop.Text = "Stop";
-            this.toolStripStartStop.ToolTipText = "Disconnect from Server";
-            this.toolStripStartStop.Image = global::myseq.Properties.Resources.RedDelete;
+            toolStripStartStop.Text = "Stop";
+            toolStripStartStop.ToolTipText = "Disconnect from Server";
+            toolStripStartStop.Image = Properties.Resources.RedDelete;
 
             bIsRunning = true;
-
         }
 
         public void SetCharSelection(string player_name)
         {
-            if (player_name == mnuChar1.Text.ToString())
-                mnuChar1.Checked = true;
-            else
-                mnuChar1.Checked = false;
+            mnuChar1.Checked = player_name == mnuChar1.Text;
 
-            if (player_name == mnuChar2.Text.ToString())
-                mnuChar2.Checked = true;
-            else
-                mnuChar2.Checked = false;
+            mnuChar2.Checked = player_name == mnuChar2.Text;
 
-            if (player_name == mnuChar3.Text.ToString())
-                mnuChar3.Checked = true;
-            else
-                mnuChar3.Checked = false;
+            mnuChar3.Checked = player_name == mnuChar3.Text;
 
-            if (player_name == mnuChar4.Text.ToString())
-                mnuChar4.Checked = true;
-            else
-                mnuChar4.Checked = false;
+            mnuChar4.Checked = player_name == mnuChar4.Text;
 
-            if (player_name == mnuChar5.Text.ToString())
-                mnuChar5.Checked = true;
-            else
-                mnuChar5.Checked = false;
+            mnuChar5.Checked = player_name == mnuChar5.Text;
 
-            if (player_name == mnuChar6.Text.ToString())
-                mnuChar6.Checked = true;
-            else
-                mnuChar6.Checked = false;
- 
-            if (player_name == mnuChar7.Text.ToString())
-                mnuChar7.Checked = true;
-            else
-                mnuChar7.Checked = false;
+            mnuChar6.Checked = player_name == mnuChar6.Text;
 
-            if (player_name == mnuChar8.Text.ToString())
-                mnuChar8.Checked = true;
-            else
-                mnuChar8.Checked = false;
+            mnuChar7.Checked = player_name == mnuChar7.Text;
 
-            if (player_name == mnuChar9.Text.ToString())
-                mnuChar9.Checked = true;
-            else
-                mnuChar9.Checked = false;
+            mnuChar8.Checked = player_name == mnuChar8.Text;
 
-            if (player_name == mnuChar10.Text.ToString())
-                mnuChar10.Checked = true;
-            else
-                mnuChar10.Checked = false;
+            mnuChar9.Checked = player_name == mnuChar9.Text;
 
-            if (player_name == mnuChar10.Text.ToString())
-                mnuChar10.Checked = true;
-            else
-                mnuChar10.Checked = false;
+            mnuChar10.Checked = player_name == mnuChar10.Text;
 
-            if (player_name == mnuChar11.Text.ToString())
-                mnuChar11.Checked = true;
-            else
-                mnuChar11.Checked = false;
- 
-            if (player_name == mnuChar12.Text.ToString())
-                mnuChar12.Checked = true;
-            else
-                mnuChar12.Checked = false;
+            mnuChar10.Checked = player_name == mnuChar10.Text;
 
+            mnuChar11.Checked = player_name == mnuChar11.Text;
+
+            mnuChar12.Checked = player_name == mnuChar12.Text;
         }
 
         public void SetTitle()
         {
-            this.Text = BaseTitle;
+            Text = BaseTitle;
 
             if (Settings.Instance.ShowZoneName && eq.longname.Length > 0 && eq.longname != "map_pane")
+                Text += " - " + eq.longname;
 
-                this.Text += " - " + eq.longname; 
-
-            if (Settings.Instance.ShowCharName && eq.playerinfo != null && eq.playerinfo.Name.Length > 1)
-
-                this.Text += " - " + eq.playerinfo.Name;
-
+            if (Settings.Instance.ShowCharName && eq.playerinfo?.Name.Length > 1)
+                Text += " - " + eq.playerinfo.Name;
         }
 
-        public void LoadPrefs(string filename) 
+        public void LoadPrefs(string filename)
 
         {
-
             //SetGridInterval();
 
             Settings.Instance.Load(filename);
@@ -3823,229 +3609,225 @@ namespace myseq
             // restore the normal windows state, if we were closed maximized
             if (Settings.Instance.WindowState == FormWindowState.Maximized)
             {
-                this.Location = Settings.Instance.WindowsLocation;
+                Location = Settings.Instance.WindowsLocation;
                 //this.Size = Settings.Instance.WindowsSize;
-                this.StartPosition = FormStartPosition.Manual;
-                this.WindowState = FormWindowState.Maximized;
+                StartPosition = FormStartPosition.Manual;
+                WindowState = FormWindowState.Maximized;
             }
             else
             {
-                this.WindowState = Settings.Instance.WindowState;
-                this.Size = Settings.Instance.WindowsSize;
-                this.Location = Settings.Instance.WindowsLocation;
-                this.StartPosition = Settings.Instance.WindowsPosition;
+                WindowState = Settings.Instance.WindowState;
+                Size = Settings.Instance.WindowsSize;
+                Location = Settings.Instance.WindowsLocation;
+                StartPosition = Settings.Instance.WindowsPosition;
             }
-            
 
-            if (Settings.Instance.TitleBar.ToString().Length > 0)
-
+            if (Settings.Instance.TitleBar.Length > 0)
                 BaseTitle = Settings.Instance.TitleBar;
 
-            this.mnuShowSpawnList.Checked = Settings.Instance.ShowMobList;
+            mnuShowSpawnList.Checked = Settings.Instance.ShowMobList;
 
-            this.mnuShowSpawnListTimer.Checked = Settings.Instance.ShowMobListTimer;
+            mnuShowSpawnListTimer.Checked = Settings.Instance.ShowMobListTimer;
 
-            this.mnuShowGroundItemList.Checked = Settings.Instance.ShowGroundItemList;
+            mnuShowGroundItemList.Checked = Settings.Instance.ShowGroundItemList;
 
-            this.mnuShowGridLines.Checked = (Settings.Instance.DrawOptions & DrawOptions.GridLines) != DrawOptions.DrawNone;
+            mnuShowGridLines.Checked = (Settings.Instance.DrawOptions & DrawOptions.GridLines) != DrawOptions.DrawNone;
 
-            this.mnuShowZoneText.Checked = (Settings.Instance.DrawOptions & DrawOptions.ZoneText) != DrawOptions.DrawNone;
-            this.mnuShowZoneText2.Checked = (Settings.Instance.DrawOptions & DrawOptions.ZoneText) != DrawOptions.DrawNone;
-            this.mnuShowLayer1.Checked = Settings.Instance.ShowLayer1;
-            this.mnuShowLayer21.Checked = Settings.Instance.ShowLayer1;
-            this.mnuShowLayer2.Checked = Settings.Instance.ShowLayer2;
-            this.mnuShowLayer22.Checked = Settings.Instance.ShowLayer2;
-            this.mnuShowLayer3.Checked = Settings.Instance.ShowLayer3;
-            this.mnuShowLayer23.Checked = Settings.Instance.ShowLayer3;
-            this.mnuShowListGridLines.Checked = Settings.Instance.ShowListGridLines;
-            this.SpawnList.listView.GridLines = Settings.Instance.ShowListGridLines;
-            this.SpawnTimerList.listView.GridLines = Settings.Instance.ShowListGridLines;
-            this.GroundItemList.listView.GridLines = Settings.Instance.ShowListGridLines;
+            mnuShowZoneText.Checked = (Settings.Instance.DrawOptions & DrawOptions.ZoneText) != DrawOptions.DrawNone;
+            mnuShowZoneText2.Checked = (Settings.Instance.DrawOptions & DrawOptions.ZoneText) != DrawOptions.DrawNone;
+            mnuShowLayer1.Checked = Settings.Instance.ShowLayer1;
+            mnuShowLayer21.Checked = Settings.Instance.ShowLayer1;
+            mnuShowLayer2.Checked = Settings.Instance.ShowLayer2;
+            mnuShowLayer22.Checked = Settings.Instance.ShowLayer2;
+            mnuShowLayer3.Checked = Settings.Instance.ShowLayer3;
+            mnuShowLayer23.Checked = Settings.Instance.ShowLayer3;
+            mnuShowListGridLines.Checked = Settings.Instance.ShowListGridLines;
+            SpawnList.listView.GridLines = Settings.Instance.ShowListGridLines;
+            SpawnTimerList.listView.GridLines = Settings.Instance.ShowListGridLines;
+            GroundItemList.listView.GridLines = Settings.Instance.ShowListGridLines;
 
-            this.mnuShowListSearchBox.Checked = Settings.Instance.ShowListSearchBox;
+            mnuShowListSearchBox.Checked = Settings.Instance.ShowListSearchBox;
             if (!Settings.Instance.ShowListSearchBox)
             {
-                this.SpawnList.HideSearchBox();
-                this.SpawnTimerList.HideSearchBox();
-                this.GroundItemList.HideSearchBox();
+                SpawnList.HideSearchBox();
+                SpawnTimerList.HideSearchBox();
+                GroundItemList.HideSearchBox();
             }
 
             SetFollowOption(Settings.Instance.FollowOption);
 
-            this.mnuKeepCentered.Checked = Settings.Instance.KeepCentered;
-            this.mnuKeepCentered2.Checked = Settings.Instance.KeepCentered;
+            mnuKeepCentered.Checked = Settings.Instance.KeepCentered;
+            mnuKeepCentered2.Checked = Settings.Instance.KeepCentered;
 
-            this.mnuShowTargetInfo.Checked = Settings.Instance.ShowTargetInfo;
-            this.mnuShowTargetInfo2.Checked = Settings.Instance.ShowTargetInfo;
+            mnuShowTargetInfo.Checked = Settings.Instance.ShowTargetInfo;
+            mnuShowTargetInfo2.Checked = Settings.Instance.ShowTargetInfo;
 
-            this.mnuSmallTargetInfo.Checked = Settings.Instance.SmallTargetInfo;
-            this.mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
+            mnuSmallTargetInfo.Checked = Settings.Instance.SmallTargetInfo;
+            mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
 
-            this.mnuAutoSelectEQTarget.Checked = Settings.Instance.AutoSelectEQTarget;
-            this.mnuAutoSelectEQTarget2.Checked = Settings.Instance.AutoSelectEQTarget;
+            mnuAutoSelectEQTarget.Checked = Settings.Instance.AutoSelectEQTarget;
+            mnuAutoSelectEQTarget2.Checked = Settings.Instance.AutoSelectEQTarget;
 
-            this.mnuAutoExpand.Checked = Settings.Instance.AutoExpand;
-            this.mnuAutoExpand2.Checked = Settings.Instance.AutoExpand;
+            mnuAutoExpand.Checked = Settings.Instance.AutoExpand;
+            mnuAutoExpand2.Checked = Settings.Instance.AutoExpand;
 
             // new filter stuff
 
-            this.mnuShowNPCs.Checked = Settings.Instance.ShowNPCs;
+            mnuShowNPCs.Checked = Settings.Instance.ShowNPCs;
 
-            this.mnuShowCorpses.Checked = Settings.Instance.ShowCorpses;
+            mnuShowCorpses.Checked = Settings.Instance.ShowCorpses;
 
-            this.mnuShowPCCorpses.Checked = Settings.Instance.ShowPCCorpses;
+            mnuShowPCCorpses.Checked = Settings.Instance.ShowPCCorpses;
 
-            this.mnuShowMyCorpse.Checked = Settings.Instance.ShowMyCorpse;
+            mnuShowMyCorpse.Checked = Settings.Instance.ShowMyCorpse;
 
-            this.mnuShowPlayers.Checked = Settings.Instance.ShowPlayers;
+            mnuShowPlayers.Checked = Settings.Instance.ShowPlayers;
 
-            this.mnuShowInvis.Checked = Settings.Instance.ShowInvis;
+            mnuShowInvis.Checked = Settings.Instance.ShowInvis;
 
-            this.mnuShowMounts.Checked = Settings.Instance.ShowMounts;
+            mnuShowMounts.Checked = Settings.Instance.ShowMounts;
 
-            this.mnuShowFamiliars.Checked = Settings.Instance.ShowFamiliars;
+            mnuShowFamiliars.Checked = Settings.Instance.ShowFamiliars;
 
-            this.mnuShowPets.Checked = Settings.Instance.ShowPets;
+            mnuShowPets.Checked = Settings.Instance.ShowPets;
 
-            this.mnuShowLookupText.Checked = Settings.Instance.ShowLookupText;
+            mnuShowLookupText.Checked = Settings.Instance.ShowLookupText;
 
-            this.mnuAlwaysOnTop.Checked = Settings.Instance.AlwaysOnTop;
+            mnuAlwaysOnTop.Checked = Settings.Instance.AlwaysOnTop;
 
-            this.mnuShowLookupNumber.Checked = Settings.Instance.ShowLookupNumber;
+            mnuShowLookupNumber.Checked = Settings.Instance.ShowLookupNumber;
 
-            this.mnuShowSpawnPoints.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
-            this.mnuShowSpawnPoints2.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
+            mnuShowSpawnPoints.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
+            mnuShowSpawnPoints2.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
 
-            this.mnuDepthFilter.Checked = Settings.Instance.DepthFilter;
-            this.mnuDepthFilter2.Checked = Settings.Instance.DepthFilter;
+            mnuDepthFilter.Checked = Settings.Instance.DepthFilter;
+            mnuDepthFilter2.Checked = Settings.Instance.DepthFilter;
 
             // update the toolbar settings
-            this.toolStripDepthFilterButton.Checked = Settings.Instance.DepthFilter;
-            this.toolStripZNegUp.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZNeg.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZNegDown.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZPosDown.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZOffsetLabel.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZPosUp.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZPos.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZPosLabel.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripResetDepthFilter.Enabled = Settings.Instance.DepthFilter;
+            toolStripDepthFilterButton.Checked = Settings.Instance.DepthFilter;
+            toolStripZNegUp.Enabled = Settings.Instance.DepthFilter;
+            toolStripZNeg.Enabled = Settings.Instance.DepthFilter;
+            toolStripZNegDown.Enabled = Settings.Instance.DepthFilter;
+            toolStripZPosDown.Enabled = Settings.Instance.DepthFilter;
+            toolStripZOffsetLabel.Enabled = Settings.Instance.DepthFilter;
+            toolStripZPosUp.Enabled = Settings.Instance.DepthFilter;
+            toolStripZPos.Enabled = Settings.Instance.DepthFilter;
+            toolStripZPosLabel.Enabled = Settings.Instance.DepthFilter;
+            toolStripResetDepthFilter.Enabled = Settings.Instance.DepthFilter;
 
             if (Settings.Instance.DepthFilter)
-                this.toolStripDepthFilterButton.Image = global::myseq.Properties.Resources.ExpandSpaceHS;
-            
+                toolStripDepthFilterButton.Image = Properties.Resources.ExpandSpaceHS;
 
-            this.mnuDynamicAlpha.Checked = Settings.Instance.UseDynamicAlpha;
-            this.mnuDynamicAlpha2.Checked = Settings.Instance.UseDynamicAlpha;
+            mnuDynamicAlpha.Checked = Settings.Instance.UseDynamicAlpha;
+            mnuDynamicAlpha2.Checked = Settings.Instance.UseDynamicAlpha;
 
-            this.mnuForceDistinct.Checked = Settings.Instance.ForceDistinct;
-            this.mnuForceDistinct2.Checked = Settings.Instance.ForceDistinct;
+            mnuForceDistinct.Checked = Settings.Instance.ForceDistinct;
+            mnuForceDistinct2.Checked = Settings.Instance.ForceDistinct;
 
-            this.mnuForceDistinctText.Checked = Settings.Instance.ForceDistinctText;
-            this.mnuForceDistinctText2.Checked = Settings.Instance.ForceDistinctText;
+            mnuForceDistinctText.Checked = Settings.Instance.ForceDistinctText;
+            mnuForceDistinctText2.Checked = Settings.Instance.ForceDistinctText;
 
-            this.mnuCollectMobTrails.Checked = Settings.Instance.CollectMobTrails;
+            mnuCollectMobTrails.Checked = Settings.Instance.CollectMobTrails;
 
-            this.mnuShowMobTrails.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTrails) != DrawOptions.DrawNone;
+            mnuShowMobTrails.Checked = (Settings.Instance.DrawOptions & DrawOptions.SpawnTrails) != DrawOptions.DrawNone;
 
-            this.mnuConSoD.Checked = Settings.Instance.SoDCon;
+            mnuConSoD.Checked = Settings.Instance.SoDCon;
 
-            this.mnuConDefault.Checked = Settings.Instance.DefaultCon;
+            mnuConDefault.Checked = Settings.Instance.DefaultCon;
 
-            this.mnuConSoF.Checked = Settings.Instance.SoFCon;
+            mnuConSoF.Checked = Settings.Instance.SoFCon;
 
-            this.mnuShowPCNames.Checked = Settings.Instance.ShowPCNames;
-            this.mnuShowPCNames2.Checked = Settings.Instance.ShowPCNames;
+            mnuShowPCNames.Checked = Settings.Instance.ShowPCNames;
+            mnuShowPCNames2.Checked = Settings.Instance.ShowPCNames;
 
-            this.mnuShowNPCNames.Checked = Settings.Instance.ShowNPCNames;
-            this.mnuShowNPCNames2.Checked = Settings.Instance.ShowNPCNames;
+            mnuShowNPCNames.Checked = Settings.Instance.ShowNPCNames;
+            mnuShowNPCNames2.Checked = Settings.Instance.ShowNPCNames;
 
             this.mnuShowPCGuild.Checked = Settings.Instance.ShowPCGuild;
             this.mnuShowPCGuild2.Checked = Settings.Instance.ShowPCGuild;
 
             this.mnuSaveSpawnLog.Checked = Settings.Instance.SaveSpawnLogs;
 
-            this.mnuShowNPCCorpseNames.Checked = Settings.Instance.ShowNPCCorpseNames;
-            this.mnuShowNPCCorpseNames2.Checked = Settings.Instance.ShowNPCCorpseNames;
+            mnuShowNPCCorpseNames.Checked = Settings.Instance.ShowNPCCorpseNames;
+            mnuShowNPCCorpseNames2.Checked = Settings.Instance.ShowNPCCorpseNames;
 
-            this.mnuShowPlayerCorpseNames.Checked = Settings.Instance.ShowPlayerCorpseNames;
-            this.mnuShowPlayerCorpseNames2.Checked = Settings.Instance.ShowPlayerCorpseNames;
+            mnuShowPlayerCorpseNames.Checked = Settings.Instance.ShowPlayerCorpseNames;
+            mnuShowPlayerCorpseNames2.Checked = Settings.Instance.ShowPlayerCorpseNames;
 
-            this.mnuShowPVP.Checked = Settings.Instance.ShowPVP;
-            this.mnuShowPVP2.Checked = Settings.Instance.ShowPVP;
+            mnuShowPVP.Checked = Settings.Instance.ShowPVP;
+            mnuShowPVP2.Checked = Settings.Instance.ShowPVP;
 
-            this.mnuShowPVPLevel.Checked = Settings.Instance.ShowPVPLevel;
-            this.mnuShowPVPLevel2.Checked = Settings.Instance.ShowPVPLevel;
+            mnuShowPVPLevel.Checked = Settings.Instance.ShowPVPLevel;
+            mnuShowPVPLevel2.Checked = Settings.Instance.ShowPVPLevel;
 
-            this.mnuShowNPCLevels.Checked = Settings.Instance.ShowNPCLevels;
-            this.mnuShowNPCLevels2.Checked = Settings.Instance.ShowNPCLevels;
+            mnuShowNPCLevels.Checked = Settings.Instance.ShowNPCLevels;
+            mnuShowNPCLevels2.Checked = Settings.Instance.ShowNPCLevels;
 
-            this.mnuShowLookupText.Checked = Settings.Instance.ShowLookupText;
+            mnuShowLookupText.Checked = Settings.Instance.ShowLookupText;
 
-            this.mnuAlwaysOnTop.Checked = Settings.Instance.AlwaysOnTop;
-            
-            this.mnuShowLookupNumber.Checked = Settings.Instance.ShowLookupNumber;
+            mnuAlwaysOnTop.Checked = Settings.Instance.AlwaysOnTop;
 
-            this.mnuFilterMapLines.Checked = Settings.Instance.FilterMapLines;
-            this.mnuFilterMapLines2.Checked = Settings.Instance.FilterMapLines;
+            mnuShowLookupNumber.Checked = Settings.Instance.ShowLookupNumber;
 
-            this.mnuFilterMapText.Checked = Settings.Instance.FilterMapText;
-            this.mnuFilterMapText2.Checked = Settings.Instance.FilterMapText;
+            mnuFilterMapLines.Checked = Settings.Instance.FilterMapLines;
+            mnuFilterMapLines2.Checked = Settings.Instance.FilterMapLines;
 
-            this.mnuFilterNPCs.Checked = Settings.Instance.FilterNPCs;
-            this.mnuFilterNPCs2.Checked = Settings.Instance.FilterNPCs;
+            mnuFilterMapText.Checked = Settings.Instance.FilterMapText;
+            mnuFilterMapText2.Checked = Settings.Instance.FilterMapText;
 
-            this.mnuFilterPlayers.Checked = Settings.Instance.FilterPlayers;
-            this.mnuFilterPlayers2.Checked = Settings.Instance.FilterPlayers;
+            mnuFilterNPCs.Checked = Settings.Instance.FilterNPCs;
+            mnuFilterNPCs2.Checked = Settings.Instance.FilterNPCs;
 
-            this.mnuFilterSpawnPoints.Checked = Settings.Instance.FilterSpawnPoints;
-            this.mnuFilterSpawnPoints2.Checked = Settings.Instance.FilterSpawnPoints;
+            mnuFilterPlayers.Checked = Settings.Instance.FilterPlayers;
+            mnuFilterPlayers2.Checked = Settings.Instance.FilterPlayers;
 
-            this.mnuFilterPlayerCorpses.Checked = Settings.Instance.FilterPlayerCorpses;
-            this.mnuFilterPlayerCorpses2.Checked = Settings.Instance.FilterPlayerCorpses;
+            mnuFilterSpawnPoints.Checked = Settings.Instance.FilterSpawnPoints;
+            mnuFilterSpawnPoints2.Checked = Settings.Instance.FilterSpawnPoints;
 
-            this.mnuFilterGroundItems.Checked = Settings.Instance.FilterGroundItems;
-            this.mnuFilterGroundItems2.Checked = Settings.Instance.FilterGroundItems;
+            mnuFilterPlayerCorpses.Checked = Settings.Instance.FilterPlayerCorpses;
+            mnuFilterPlayerCorpses2.Checked = Settings.Instance.FilterPlayerCorpses;
 
-            this.mnuFilterNPCCorpses.Checked = Settings.Instance.FilterNPCCorpses;
-            this.mnuFilterNPCCorpses2.Checked = Settings.Instance.FilterNPCCorpses;
+            mnuFilterGroundItems.Checked = Settings.Instance.FilterGroundItems;
+            mnuFilterGroundItems2.Checked = Settings.Instance.FilterGroundItems;
 
-            this.mnuSpawnCountdown.Checked = Settings.Instance.SpawnCountdown;
-            this.mnuSpawnCountdown2.Checked = Settings.Instance.SpawnCountdown;
+            mnuFilterNPCCorpses.Checked = Settings.Instance.FilterNPCCorpses;
+            mnuFilterNPCCorpses2.Checked = Settings.Instance.FilterNPCCorpses;
 
-            this.mnuShowMenuBar.Checked = Settings.Instance.ShowMenuBar;
+            mnuSpawnCountdown.Checked = Settings.Instance.SpawnCountdown;
+            mnuSpawnCountdown2.Checked = Settings.Instance.SpawnCountdown;
 
-            this.mnuViewStatusBar.Checked = Settings.Instance.ShowStatusBar;
+            mnuShowMenuBar.Checked = Settings.Instance.ShowMenuBar;
 
-            this.mnuViewDepthFilterBar.Checked = Settings.Instance.ShowToolBar;
+            mnuViewStatusBar.Checked = Settings.Instance.ShowStatusBar;
+
+            mnuViewDepthFilterBar.Checked = Settings.Instance.ShowToolBar;
 
             if (!Settings.Instance.ShowStatusBar)
-                this.statusBarStrip.Hide();
+                statusBarStrip.Hide();
 
             if (!Settings.Instance.ShowToolBar)
-                this.toolBarStrip.Hide();
-            
-            this.mnuViewMenuBar.Checked = Settings.Instance.ShowMenuBar;
-            
+                toolBarStrip.Hide();
+
+            mnuViewMenuBar.Checked = Settings.Instance.ShowMenuBar;
+
             if (Settings.Instance.ShowMenuBar)
             {
-                this.mnuMainMenu.Show();
+                mnuMainMenu.Show();
             }
             else
             {
-                this.mnuMainMenu.Hide();
+                mnuMainMenu.Hide();
             }
 
             if (Settings.Instance.CurrentIPAddress == 0 && Settings.Instance.IPAddress1.Length > 0)
-
                 Settings.Instance.CurrentIPAddress = 1;
 
             ResetMenu(Settings.Instance.CurrentIPAddress);
 
             ServerSelection();
 
-            this.mnuAutoConnect.Checked = Settings.Instance.AutoConnect;
-            
+            mnuAutoConnect.Checked = Settings.Instance.AutoConnect;
+
             eq.LoadSpawnInfo();
 
             // SpawnList
@@ -4064,107 +3846,64 @@ namespace myseq
 
             LogLib.maxLogLevel = Settings.Instance.MaxLogLevel;
 
-
-
-            if (Settings.Instance.MapDir == string.Empty || !Directory.Exists(Settings.Instance.MapDir))
+            if (Settings.Instance.MapDir?.Length == 0 || !Directory.Exists(Settings.Instance.MapDir))
 
             {
-
-                //MessageBox.Show(String.Format("Map folder not found: {0} Setting to default.", Settings.Instance.MapDir), "Map Folder Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                // Slartibartfast - using .\ fails when the working directory is changed by eg loading a map manually
-
-                //Settings.Instance.MapDir = @".\maps";
-
                 Settings.Instance.MapDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maps");
 
                 if (!Directory.Exists(Settings.Instance.MapDir)) Directory.CreateDirectory(Settings.Instance.MapDir);
-
             }
 
-            if (Settings.Instance.FilterDir == string.Empty || !Directory.Exists(Settings.Instance.FilterDir))
+            if (Settings.Instance.FilterDir?.Length == 0 || !Directory.Exists(Settings.Instance.FilterDir))
 
             {
-
-                //MessageBox.Show(String.Format("Filter folder not found: {0} Setting to default.", Settings.Instance.FilterDir), "Filter Folder Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                // Slartibartfast - using .\ fails when the working directory is changed by eg loading a map manually
-
-                //Settings.Instance.FilterDir = @".\filters";
-
                 Settings.Instance.FilterDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "filters");
 
                 if (!Directory.Exists(Settings.Instance.FilterDir)) Directory.CreateDirectory(Settings.Instance.FilterDir);
-
             }
 
-            if (Settings.Instance.CfgDir == string.Empty || !Directory.Exists(Settings.Instance.CfgDir))
+            if (Settings.Instance.CfgDir?.Length == 0 || !Directory.Exists(Settings.Instance.CfgDir))
 
             {
-
-                //MessageBox.Show(String.Format("Config folder not found: {0} Setting to default.", Settings.Instance.CfgDir), "Config Folder Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                // Slartibartfast - using .\ fails when the working directory is changed by eg loading a map manually
-
-                //Settings.Instance.CfgDir = @".\cfg";
-
                 Settings.Instance.CfgDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cfg");
 
                 if (!Directory.Exists(Settings.Instance.CfgDir)) Directory.CreateDirectory(Settings.Instance.CfgDir);
-
             }
 
-            if (Settings.Instance.LogDir == string.Empty || !Directory.Exists(Settings.Instance.LogDir))
+            if (Settings.Instance.LogDir?.Length == 0 || !Directory.Exists(Settings.Instance.LogDir))
 
             {
-
-                //MessageBox.Show(String.Format("Log folder not found: {0} Setting to default.", Settings.Instance.LogDir), "Log Folder Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                // Slartibartfast - using .\ fails when the working directory is changed by eg loading a map manually
-
-                //Settings.Instance.LogDir = @".\logs";
-
                 Settings.Instance.LogDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
 
                 if (!Directory.Exists(Settings.Instance.LogDir)) Directory.CreateDirectory(Settings.Instance.LogDir);
-
             }
 
-            if (Settings.Instance.TimerDir == string.Empty || !Directory.Exists(Settings.Instance.TimerDir))
+            if (Settings.Instance.TimerDir?.Length == 0 || !Directory.Exists(Settings.Instance.TimerDir))
 
             {
-
-                //MessageBox.Show(String.Format("Spawn Timer folder not found: {0} Setting to default.", Settings.Instance.TimerDir), "Timers Folder Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                // Slartibartfast - using .\ fails when the working directory is changed by eg loading a map manually
-
-                //Settings.Instance.TimerDir = @".\timers";
-
                 Settings.Instance.TimerDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "timers");
 
                 if (!Directory.Exists(Settings.Instance.TimerDir)) Directory.CreateDirectory(Settings.Instance.TimerDir);
-
             }
 
             DrawOpts = Settings.Instance.DrawOptions;
 
             timProcessTimers.Start();
-
         }
 
-        public void savePrefs(string filename) 
+        public void savePrefs(string filename)
 
         {
-            String myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
-            
+            string myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
+
             if (!Directory.Exists(myPath))
                 Directory.CreateDirectory(myPath);
-           
-            String strAppDir = AppDomain.CurrentDomain.BaseDirectory;
 
-            String oldposfile = Path.Combine(strAppDir, "positions.xml");
+            string strAppDir = AppDomain.CurrentDomain.BaseDirectory;
 
-            String strPosFile = Path.Combine(myPath, "positions.xml");
+            string oldposfile = Path.Combine(strAppDir, "positions.xml");
+
+            string strPosFile = Path.Combine(myPath, "positions.xml");
 
             Settings.Instance.c1w = SpawnList.listView.Columns[0].Width;
 
@@ -4194,23 +3933,23 @@ namespace myseq
 
             Settings.Instance.c14w = SpawnList.listView.Columns[13].Width;
 
-            if (this.WindowState == FormWindowState.Minimized)
-                this.WindowState = FormWindowState.Normal;
+            if (WindowState == FormWindowState.Minimized)
+                WindowState = FormWindowState.Normal;
 
-            Settings.Instance.WindowState = this.WindowState;
+            Settings.Instance.WindowState = WindowState;
             Settings.Instance.WindowsPosition = FormStartPosition.Manual;
 
-            if (this.WindowState == FormWindowState.Maximized)
+            if (WindowState == FormWindowState.Maximized)
             {
-                Settings.Instance.WindowsSize = this.RestoreBounds.Size;
-                Settings.Instance.WindowsLocation = this.RestoreBounds.Location;
+                Settings.Instance.WindowsSize = RestoreBounds.Size;
+                Settings.Instance.WindowsLocation = RestoreBounds.Location;
                 Settings.Instance.WindowsPosition = FormStartPosition.Manual;
             }
             else
             {
-                Settings.Instance.WindowsSize = this.Size;
-                Settings.Instance.WindowsLocation = this.Location;
-                Rectangle window_bounds = new Rectangle(this.Location, this.Size);
+                Settings.Instance.WindowsSize = Size;
+                Settings.Instance.WindowsLocation = Location;
+                Rectangle window_bounds = new Rectangle(Location, Size);
                 Rectangle option_bounds = new Rectangle(Settings.Instance.OptionsWindowsLocation, Settings.Instance.OptionsWindowsSize);
                 bool found_onscreen = false;
                 foreach (Screen screen in Screen.AllScreens)
@@ -4249,151 +3988,113 @@ namespace myseq
             // Old positions file - get rid of it, since we saved new one to application data folder
             if (File.Exists(oldposfile))
                 File.Delete(oldposfile);
-
         }
 
-        public bool loadmap(string filename) 
+        public bool loadmap(string filename)
 
         {
-
-            try 
+            try
 
             {
-
-                if (filename.EndsWith(".map")) 
+                if (filename.EndsWith(".map"))
 
                 {
-
-                    if (!map.loadMap(filename)) 
+                    if (!map.loadMap(filename))
 
                     {
-
                         //this.Text = BaseTitle + " ERROR LOADING MAP: " + filename;
 
                         return false;
-
                     }
-
-                } 
-
-                else if (filename.EndsWith(".txt")) 
+                }
+                else if (filename.EndsWith(".txt"))
 
                 {
-
                     if (filename.EndsWith("_1.txt") || filename.EndsWith("_2.txt") || filename.EndsWith("_3.txt"))
 
                     {
-
                         if (!map.loadLoYMap(filename, false))
 
                         {
-
                             return false;
-
                         }
-
                     }
-
                     else
-
                     {
-
                         if (!map.loadLoYMap(filename, true))
 
                         {
-
                             //this.Text = BaseTitle + " ERROR LOADING MAP: " + filename;
 
                             return false;
-
                         }
-
                     }
-
                 }
 
                 SetTitle();
 
                 return true;
-
-            } 
-
-            catch(Exception ex) 
+            }
+            catch(Exception ex)
 
             {
-
-                string msg = String.Format("Failed to load map {0}: {1}", filename, ex.Message);
+                string msg = $"Failed to load map {filename}: {ex.Message}";
 
                 LogLib.WriteLine(msg);
 
                 MessageBox.Show(msg);
 
                 return false;
-
             }
-
         }
 
-        private void frmMain_Move(object sender, EventArgs e) 
+        private void frmMain_Move(object sender, EventArgs e)
 
         {
-
             if (WindowState == FormWindowState.Normal)
 
             {
-
-                Settings.Instance.WindowsLocation = this.Location;
-
+                Settings.Instance.WindowsLocation = Location;
             }
-
         }
 
-        private void frmMain_Resize(object sender, EventArgs e) 
+        private void frmMain_Resize(object sender, EventArgs e)
 
         {
-
             if (WindowState == FormWindowState.Normal)
 
             {
-
-                Settings.Instance.WindowsSize = this.Size;
-
+                Settings.Instance.WindowsSize = Size;
             }
 
-            Settings.Instance.WindowState = this.WindowState;
+            Settings.Instance.WindowState = WindowState;
 
-            if (mapCon != null)
-                mapCon.ReAdjust();
-
+            mapCon?.ReAdjust();
         }
 
-        public void checkMobs() 
+        public void checkMobs()
 
         {
-            
-            eq.checkMobs(SpawnList, GroundItemList);
-
+            eq.CheckMobs(SpawnList, GroundItemList);
         }
 
-        private void timPackets_Tick(object sender, System.EventArgs e) 
+        private void timPackets_Tick(object sender, EventArgs e)
 
         {
-
             DrawOpts = Settings.Instance.DrawOptions;
 
             comm.Tick();
             mapCon.Tick();
-
         }
 
-        private void timDelayPlay_Tick(object sender, System.EventArgs e)
+        private void timDelayPlay_Tick(object sender, EventArgs e)
         {
             // our alert sound/email delay interval has passed.
             eq.EnablePlayAlerts();
             timDelayAlerts.Stop();
         }
 
-        private void timProcessTimers_Tick(object sender, System.EventArgs e)
+        private void timProcessTimers_Tick(object sender, EventArgs e)
         {
             // allow processing timers.
             ProcessSpawnTimer();
@@ -4402,395 +4103,315 @@ namespace myseq
                 mapCon.Invalidate();
         }
 
-        private void SpawnList_VisibleChanged(object sender, System.EventArgs e)
+        private void SpawnList_VisibleChanged(object sender, EventArgs e)
 
         {
-
             Settings.Instance.ShowMobList = SpawnList.Visible;
 
-            this.mnuShowSpawnList.Checked = SpawnList.Visible;
-
+            mnuShowSpawnList.Checked = SpawnList.Visible;
         }
 
-        private void SpawnTimerList_VisibleChanged(object sender, System.EventArgs e)
+        private void SpawnTimerList_VisibleChanged(object sender, EventArgs e)
 
         {
-
             Settings.Instance.ShowMobListTimer = SpawnTimerList.Visible;
 
-            this.mnuShowSpawnListTimer.Checked = SpawnTimerList.Visible;
-
+            mnuShowSpawnListTimer.Checked = SpawnTimerList.Visible;
         }
 
-        private void GroundItemList_VisibleChanged(object sender, System.EventArgs e)
+        private void GroundItemList_VisibleChanged(object sender, EventArgs e)
         {
-
             Settings.Instance.ShowGroundItemList = GroundItemList.Visible;
 
-            this.mnuShowGroundItemList.Checked = GroundItemList.Visible;
-
+            mnuShowGroundItemList.Checked = GroundItemList.Visible;
         }
-
-
 
         #region ProcessProcessInfo
 
-        private void ProcessProcessInfo(SPAWNINFO si) 
+        private void ProcessProcessInfo(SPAWNINFO si)
 
         {
-
             ProcessInfo PI = new ProcessInfo((int)si.SpawnID, si.Name);
 
             if (si.SpawnID==0)
 
             {
-                PI.sCharName = "";
+                PI.SCharName = "";
                 CurrentProcess = PI;
                 if (comm != null)
                     comm.newProcessID = 0;
-
             }
-
             else
-
             {
                 processcount++;
 
                 while (colProcesses.Count > 0 && colProcesses.Count >= processcount) //si.Level)
 
                 {
-
                     colProcesses.Remove(colProcesses[colProcesses.Count-1]);
-
                 }
 
                 colProcesses.Add(PI);
 
-                
-
-                switch (colProcesses.Count) 
+                switch (colProcesses.Count)
 
                 {
-
-                    case 1: 
+                    case 1:
 
                     {
-
                         mnuChar1.Text = si.Name;
 
                         mnuChar1.Visible = true;
 
-                        mnuChar1.Checked = ((CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar1.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
 
-                    case 2: 
+                    case 2:
 
                     {
-
                         mnuChar2.Text = si.Name;
 
                         mnuChar2.Visible = true;
 
-                        mnuChar2.Checked = ((CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar2.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
 
-                    case 3: 
+                    case 3:
 
                     {
-
                         mnuChar3.Text = si.Name;
 
                         mnuChar3.Visible = true;
 
-                        mnuChar3.Checked = ((CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar3.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
 
-                    case 4: 
+                    case 4:
 
                     {
-
                         mnuChar4.Text = si.Name;
 
                         mnuChar4.Visible = true;
 
-                        mnuChar4.Checked = ((CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar4.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
 
-                    case 5: 
+                    case 5:
 
                     {
-
                         mnuChar5.Text = si.Name;
 
                         mnuChar5.Visible = true;
 
-                        mnuChar5.Checked = ((CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar5.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
 
                     case 6:
                     {
-
                         mnuChar6.Text = si.Name;
 
                         mnuChar6.Visible = true;
 
-                        mnuChar6.Checked = ((CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar6.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
 
                     case 7:
                     {
-
                         mnuChar7.Text = si.Name;
 
                         mnuChar7.Visible = true;
 
-                        mnuChar7.Checked = ((CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar7.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
 
                     case 8:
                     {
-
                         mnuChar8.Text = si.Name;
 
                         mnuChar8.Visible = true;
 
-                        mnuChar8.Checked = ((CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar8.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
 
                     case 9:
                     {
-
                         mnuChar9.Text = si.Name;
 
                         mnuChar9.Visible = true;
 
-                        mnuChar9.Checked = ((CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar9.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
 
                     case 10:
                     {
-
                         mnuChar10.Text = si.Name;
 
                         mnuChar10.Visible = true;
 
-                        mnuChar10.Checked = ((CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar10.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
-  
+
                     case 11:
                     {
-
                         mnuChar11.Text = si.Name;
 
                         mnuChar11.Visible = true;
 
-                        mnuChar11.Checked = ((CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar11.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
- 
+
                     case 12:
                     {
-
                         mnuChar12.Text = si.Name;
 
                         mnuChar12.Visible = true;
 
-                        mnuChar12.Checked = ((CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID));
+                        mnuChar12.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
 
                         break;
-
                     }
-                   
-
                 }
 
-                switch (colProcesses.Count) 
+                switch (colProcesses.Count)
 
                 {
-
-                    case 1: 
+                    case 1:
 
                     {
-
                         mnuChar2.Visible = false;
                         mnuChar2.Text = "Char 2";
                         mnuChar2.Checked = false;
 
                         goto case 2;
-
                     }
 
-                    case 2: 
+                    case 2:
 
                     {
-
                         mnuChar3.Visible = false;
                         mnuChar3.Text = "Char 3";
                         mnuChar3.Checked = false;
                         goto case 3;
-
                     }
 
-                    case 3: 
+                    case 3:
 
                     {
-
                         mnuChar4.Visible = false;
                         mnuChar4.Text = "Char 4";
                         mnuChar4.Checked = false;
                         goto case 4;
-
                     }
 
-                    case 4: 
+                    case 4:
 
                     {
-
                         mnuChar5.Visible = false;
                         mnuChar5.Text = "Char 5";
                         mnuChar5.Checked = false;
                         goto case 5;
-
                     }
 
                     case 5:
                     {
-
                         mnuChar6.Visible = false;
                         mnuChar6.Text = "Char 6";
                         mnuChar6.Checked = false;
                         goto case 6;
-
                     }
 
                     case 6:
                     {
-
                         mnuChar7.Visible = false;
                         mnuChar7.Text = "Char 7";
                         mnuChar7.Checked = false;
                         goto case 7;
-
                     }
 
                     case 7:
                     {
-
                         mnuChar8.Visible = false;
                         mnuChar8.Text = "Char 8";
                         mnuChar8.Checked = false;
                         goto case 8;
-
                     }
 
                     case 8:
                     {
-
                         mnuChar9.Visible = false;
                         mnuChar9.Text = "Char 9";
                         mnuChar9.Checked = false;
                         goto case 9;
-
                     }
 
                     case 9:
                     {
-
                         mnuChar10.Visible = false;
                         mnuChar10.Text = "Char 10";
                         mnuChar10.Checked = false;
                         goto case 10;
-
                     }
 
                     case 10:
                     {
-
                         mnuChar11.Visible = false;
                         mnuChar11.Text = "Char 11";
                         mnuChar11.Checked = false;
                         goto case 11;
-
                     }
 
                     case 11:
                     {
-
                         mnuChar12.Visible = false;
                         mnuChar12.Text = "Char 12";
                         mnuChar12.Checked = false;
                         break;
-
                     }
-
 
                     default:
 
                         break;
-
                 }
-
-    
-
-                
-
             }
-
         }
 
         #endregion
 
-
-
         #region ProccessMap
 
-        public void ProcessMap(SPAWNINFO si) 
+        public void ProcessMap(SPAWNINFO si)
 
         {
-
             mapnameWithLabels = "";
 
-            LogLib.WriteLine("Entering ProcessMap()", LogLevel.Trace);
-
-            try 
+            try
 
             {
-
                 LogLib.WriteLine("Short Zone Name: (" + si.Name + ")");
 
-                bool foundmap = false;                
+                bool foundmap = false;
 
                 string f = Settings.Instance.MapDir + "\\";
 
@@ -4799,24 +4420,22 @@ namespace myseq
                 int location = fn.IndexOf("_", 0);
 
                 if (location > 0)
-
                     fn = fn.Substring(0, location);
 
                 LogLib.WriteLine("Using Short Zone Name: (" + fn + ")");
 
                 f += fn;
 
-                toolStripShortName.Text = fn.ToUpper(); 
+                toolStripShortName.Text = fn.ToUpper();
 
                 string newzonename = fn.ToUpper().Trim();
 
                 curZone = newzonename;
 
-                String ZonesFile = Path.Combine(Settings.Instance.CfgDir, "Zones.ini");
+                string ZonesFile = Path.Combine(Settings.Instance.CfgDir, "Zones.ini");
 
                 if (File.Exists(ZonesFile))
                 {
-
                     IniFile Ini = new IniFile(ZonesFile);
 
                     string sIniValue = "";
@@ -4827,41 +4446,36 @@ namespace myseq
                     }
                     else
                     {
-
                         sIniValue = Ini.ReadValue("Zones", curZone, curZone.ToLower());
-                        mapPane.TabText = sIniValue.ToString();
+                        mapPane.TabText = sIniValue;
                     }
                 }
                 else
                 {
-                    if (curZone.Length > 0)
-                        mapPane.TabText = curZone.ToLower();
-                    else
-                        mapPane.TabText = "map_pane";
+                    mapPane.TabText = curZone.Length > 0 ? curZone.ToLower() : "map_pane";
                 }
 
                 // Turn off collecting mob trails anytime load a new map
 
-                this.mnuCollectMobTrails.Checked = false;
+                mnuCollectMobTrails.Checked = false;
 
                 Settings.Instance.CollectMobTrails = false;
-          
+
                 // Start Delay for doing spawn alerts.  This stops sounds and emails.
                 timDelayAlerts.Start();
                 eq.DisablePlayAlerts();
 
-                try 
+                try
 
                 {
                     if (curZone.Length > 0 && curZone != "CLZ" && curZone != "DEFAULT")
                     {
                         // Try loading depth filter settings from file
-                        String myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
+                        string myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
 
-                        String ConfigFile = Path.Combine(myPath, "config.ini");
+                        string ConfigFile = Path.Combine(myPath, "config.ini");
                         if (File.Exists(ConfigFile))
                         {
-
                             IniFile ConIni = new IniFile(ConfigFile);
 
                             string strIniValue = "";
@@ -4871,7 +4485,9 @@ namespace myseq
                             {
                                 if ((strIniValue == "0" && Settings.Instance.DepthFilter) ||
                                 (strIniValue == "1" && !Settings.Instance.DepthFilter))
+                                {
                                     ToggleDepthFilter();
+                                }
                             }
                             else
                             {
@@ -4879,8 +4495,6 @@ namespace myseq
                                 if (Settings.Instance.DepthFilter)
                                     ToggleDepthFilter();
                             }
-
-
                         }
                         else
                         {
@@ -4888,7 +4502,6 @@ namespace myseq
                             if (Settings.Instance.DepthFilter)
                                 ToggleDepthFilter();
                         }
-
                     }
 
                     if (curZone.Length == 0 || curZone == "CLZ" || curZone == "DEFAULT")
@@ -4916,7 +4529,6 @@ namespace myseq
                         foundmap = true;
 
                         mapnameWithLabels = f + ".map";
-
                     } else {
                         eq.Zoning = false;
                         // If it didn't work, try an SOE map
@@ -4932,29 +4544,10 @@ namespace myseq
 
                         if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
                             foundmap = true;
-                        // try the _1, _2, _3 sequence if the plain .txt had no map lines
-                        //if (eq.GetLinesReadonly().Count == 0)
-                        //{
-                        //    for (int mapnum = 1; mapnum < 4; mapnum++)
-                        //    {
-                        //        if (loadmap(string.Format("{0}_{1}.txt", f, mapnum)))
-                        //        {
-                        //            foundmap = true;
-                        //        }
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    // load labels from the _3.txt file
-                        //    if (loadmap(string.Format("{0}_3.txt", f)))
-                        //    {
-                        //        foundmap = true;
-                        //    }
-                        //}
 
                         // use _3.txt file for map labels
                         if (foundmap)
-                            mapnameWithLabels = string.Format("{0}_3.txt", f);
+                            mapnameWithLabels = $"{f}_3.txt";
 
                         //SetTitle();
 
@@ -4963,54 +4556,40 @@ namespace myseq
 
                     if (!foundmap)
                     {
-
-                        //this.Text = BaseTitle + " - Couldn't find a map for the zone: " + si.Name.ToString();
-
                         map.loadDummyMap(fn);
-                        
                     }
-
-                } 
-
-                catch (Exception ex) 
+                }
+                catch (Exception ex)
 
                 {
-
                     LogLib.WriteLine("Error in ProcessMap() Load Map: ", ex);
 
                     map.loadDummyMap(fn);
-
                 }
 
-                eq.longname = mapPane.TabText.ToString();
+                eq.longname = mapPane.TabText;
 
                 filters.ClearArrays();
 
-                filters.loadAlerts(fn);
+                filters.LoadAlerts(fn);
 
                 SetTitle();
 
                 //this.Text = BaseTitle;
 
             }
-
             catch (Exception ex) {LogLib.WriteLine("Error in ProcessMap(): ", ex);}
-
-            LogLib.WriteLine("Exiting ProcessMap()", LogLevel.Trace);
 
         }
 
         #endregion
 
-
         #region ProcessSpawnList
 
-        public void ProcessSpawnList() 
+        public void ProcessSpawnList()
 
         {
-
             eq.ProcessSpawnList(SpawnList);
-
         }
 
         #endregion
@@ -5019,21 +4598,18 @@ namespace myseq
 
         public void ProcessGroundItemList()
         {
-
             eq.ProcessGroundItemList(GroundItemList);
-
         }
 
         #endregion
 
         #region ProcessSpawnTimer
 
-        public void ProcessSpawnTimer() 
+        public void ProcessSpawnTimer()
 
         {
             if (eq.mobsTimers.mobsTimer2.Count > 0)
                 eq.mobsTimers.UpdateList(SpawnTimerList);
-
         }
 
         #endregion
@@ -5054,10 +4630,9 @@ namespace myseq
 
         */
 
-        private void SetGridInterval() 
+        private void SetGridInterval()
 
         {
-
             mnuGridInterval100.Checked = false;
 
             mnuGridInterval250.Checked = false;
@@ -5067,189 +4642,134 @@ namespace myseq
             mnuGridInterval1000.Checked = false;
 
             if (Settings.Instance.GridInterval<=100)
-
                 mnuGridInterval100.Checked = true;
-
             else if (Settings.Instance.GridInterval<=250)
-
                 mnuGridInterval250.Checked = true;
-
             else if (Settings.Instance.GridInterval<=500)
-
                 mnuGridInterval500.Checked = true;
-
             else
-
                 mnuGridInterval1000.Checked = true;
-
         }
 
-        private int GridInterval() 
+        private int GridInterval()
 
         {
-
             if (mnuGridInterval100.Checked)
-
                 return 100;
-
             else if (mnuGridInterval250.Checked)
-
                 return 250;
-
             else if (mnuGridInterval500.Checked)
-
                 return 500;
-
             else
-
                 return 1000;
-
         }
 
-        private void SyncMenuText(ToolStripMenuItem sourceMenu, ToolStripMenuItem targetMenu)
+        //private void SyncMenuText(ToolStripMenuItem sourceMenu, ToolStripMenuItem targetMenu)
 
-        {
-            if (sourceMenu.DropDownItems.Count == targetMenu.DropDownItems.Count)
+        //{
+        //    if (sourceMenu.DropDownItems.Count == targetMenu.DropDownItems.Count)
 
-            {
+        //    {
+        //        IEnumerator sourceEnum = sourceMenu.DropDown.Items.GetEnumerator();
 
-                IEnumerator sourceEnum = sourceMenu.DropDown.Items.GetEnumerator();
+        //        IEnumerator targetEnum = targetMenu.DropDown.Items.GetEnumerator();
 
-                IEnumerator targetEnum = targetMenu.DropDown.Items.GetEnumerator();
+        //        while (sourceEnum.MoveNext())
 
-                while (sourceEnum.MoveNext())
+        //        {
+        //            targetEnum.MoveNext();
 
-                {
+        //            ToolStripMenuItem sMenuItem = (ToolStripMenuItem)sourceEnum.Current;
 
-                    targetEnum.MoveNext();
+        //            ToolStripMenuItem tMenuItem = (ToolStripMenuItem)targetEnum.Current;
 
-                    ToolStripMenuItem sMenuItem = (ToolStripMenuItem)sourceEnum.Current;
+        //            tMenuItem.Text = sMenuItem.Text;
+        //        }
+        //    }
+        //}
 
-                    ToolStripMenuItem tMenuItem = (ToolStripMenuItem)targetEnum.Current;
+        //private void SyncMenu(ToolStripMenuItem sourceMenu, ToolStripMenuItem targetMenu)
 
-                    tMenuItem.Text = sMenuItem.Text;
+        //{
+        //    foreach (ToolStripMenuItem sMenuItem in sourceMenu.DropDownItems)
 
-                }
+        //    {
+        //        foreach(ToolStripMenuItem tMenuItem in targetMenu.DropDownItems)
 
-            }
+        //        {
+        //            if (tMenuItem.Text == sMenuItem.Text && tMenuItem.Text != "")
 
-        }
+        //            {
+        //                if (sMenuItem.Text == "Server Selection" || sMenuItem.Text == "Character Selection")
 
-        private void SyncMenu(ToolStripMenuItem sourceMenu, ToolStripMenuItem targetMenu)
+        //                {
+        //                    SyncMenuText(sMenuItem, tMenuItem);
+        //                }
 
-        {
+        //                if (sMenuItem.DropDown.Items.Count > 0)
 
-            foreach (ToolStripMenuItem sMenuItem in sourceMenu.DropDownItems)
+        //                {
+        //                    SyncMenu(sMenuItem, tMenuItem);
+        //                }
 
-            {
+        //                tMenuItem.Checked = sMenuItem.Checked;
 
-                foreach(ToolStripMenuItem tMenuItem in targetMenu.DropDownItems)
+        //                tMenuItem.Visible = sMenuItem.Visible;
 
-                {
-
-                    if (tMenuItem.Text == sMenuItem.Text && tMenuItem.Text != "")
-
-                    {
-
-                        if (sMenuItem.Text == "Server Selection" || sMenuItem.Text == "Character Selection")
-
-                        {
-
-                            SyncMenuText(sMenuItem, tMenuItem);
-
-                        }
-
-                        if (sMenuItem.DropDown.Items.Count > 0)
-
-                        {
-
-                            SyncMenu(sMenuItem, tMenuItem);
-
-                        }
-
-                        tMenuItem.Checked = sMenuItem.Checked;
-
-                        tMenuItem.Visible = sMenuItem.Visible;
-
-                        break;
-
-                    }
-
-                }
-
-            }
-
-        }
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
 
         public void SetContextMenu(bool notground = true)
         {
             if (alertAddmobname.Length > 0)
             {
-                this.ContextMenuStrip = this.mnuContextAddFilter;
+                ContextMenuStrip = mnuContextAddFilter;
                 // set text for mob name in the top
-                this.mnuMobName.Text = "'" + alertAddmobname + "'";
-                this.mnuMobName.Enabled = true;
-                this.mnuMobName.Visible = true;
+                mnuMobName.Text = "'" + alertAddmobname + "'";
+                mnuMobName.Enabled = true;
+                mnuMobName.Visible = true;
                 // dont add email alerts for ground items
-                this.addZoneEmailAlertFilterToolStripMenuItem.Enabled = notground;
-                if (mapnameWithLabels.Length > 0)
-                    this.mnuAddMapLabel.Enabled = true;
-                else
-                    this.mnuAddMapLabel.Enabled = false;
-
+                addZoneEmailAlertFilterToolStripMenuItem.Enabled = notground;
+                mnuAddMapLabel.Enabled = mapnameWithLabels.Length > 0;
             }
             else
             {
                 // Set the default context menu, since we don't have a proper name to work with
-                this.ContextMenuStrip = this.mnuContext;
-                if (eq.longname.Length > 0 && eq.playerinfo != null && eq.playerinfo.Name.Length > 0)
-                {
-                    addMapTextToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    addMapTextToolStripMenuItem.Enabled = false;
-                }
-                if (Settings.Instance.ShowMenuBar)
-                {
-                    this.mnuShowMenuBar.Visible = false;
-                }
-                else
-                {
-                    this.mnuShowMenuBar.Visible = true;
-                }
+                ContextMenuStrip = mnuContext;
+                addMapTextToolStripMenuItem.Enabled = eq.longname.Length > 0 && eq.playerinfo?.Name.Length > 0;
+                mnuShowMenuBar.Visible = !Settings.Instance.ShowMenuBar;
             }
         }
 
-        private void mnuOpenMap_Click(object sender, System.EventArgs e) 
+        private void mnuOpenMap_Click(object sender, EventArgs e)
 
         {
-
             openFileDialog.InitialDirectory = Settings.Instance.MapDir;
 
             openFileDialog.Filter = "Map Files (*.map;*.txt)|*.map;*.txt|All Files (*.*)|*.*";
 
             openFileDialog.FilterIndex = 1;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK) 
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
 
             {
                 mapnameWithLabels = "";
 
-                string filename = openFileDialog.FileName;          
+                string filename = openFileDialog.FileName;
 
                 loadmap(filename);
 
                 int lastSlashIndex = filename.LastIndexOf("\\");
 
                 if (lastSlashIndex > 0)
-
                     filename = filename.Substring(lastSlashIndex+1);
 
                 filename = filename.Substring(0, filename.Length - 4);
 
                 if (filename.EndsWith("_1"))
-
                     filename = filename.Substring(0, filename.Length - 2);
 
                 toolStripShortName.Text = filename.ToUpper();
@@ -5257,43 +4777,34 @@ namespace myseq
                 mapPane.TabText = filename.ToLower();
 
                 curZone = filename.ToUpper();
-
             }
+        }
 
-        }   
-
-        private void mnuSaveMobs_Click(object sender, System.EventArgs e) 
+        private void mnuSaveMobs_Click(object sender, EventArgs e)
 
         {
-
             eq.SaveMobs();
-
         }
 
-        private void mnuSavePrefs_Click(object sender, System.EventArgs e) 
+        private void mnuSavePrefs_Click(object sender, EventArgs e)
 
         {
-
             savePrefs("prefs.xml");
-
         }
 
-        private void mnuExit_Click(object sender, System.EventArgs e) 
+        private void mnuExit_Click(object sender, EventArgs e)
 
         {
-
             StopListening();
 
-            this.Close();
+            Close();
 
             Application.Exit();
+        }
 
-        } 
-
-        private void mnuOptions_Click(object sender, System.EventArgs e) 
+        private void mnuOptions_Click(object sender, EventArgs e)
 
         {
-
             frmOptions f3 = new frmOptions();
             if (Settings.Instance.OptionsWindowsLocation.X != 0 && Settings.Instance.OptionsWindowsLocation.Y != 0)
             {
@@ -5301,7 +4812,7 @@ namespace myseq
                 f3.Location = Settings.Instance.OptionsWindowsLocation;
                 f3.Size = Settings.Instance.OptionsWindowsSize;
             }
-            
+
             // Set the Options
 
             f3.txtIPAddress1.Text = Settings.Instance.IPAddress1;
@@ -5315,8 +4826,6 @@ namespace myseq
             f3.txtIPAddress5.Text = Settings.Instance.IPAddress5;
 
             f3.txtPortNo.Text = Settings.Instance.Port.ToString();
-
-
 
             f3.spnOverrideLevel.Value = Settings.Instance.LevelOverride;
 
@@ -5344,8 +4853,6 @@ namespace myseq
 
             f3.txtHuntAudioFile.Text = Settings.Instance.HuntAudioFile;
 
-
-
             f3.txtCautionPrefix.Text = Settings.Instance.CautionPrefix;
 
             f3.chkCautionMatchFull.Checked = Settings.Instance.MatchFullTextC;  //Caution
@@ -5360,8 +4867,6 @@ namespace myseq
 
             f3.txtCautionAudioFile.Text = Settings.Instance.CautionAudioFile;
 
-
-
             f3.txtDangerPrefix.Text = Settings.Instance.DangerPrefix;
 
             f3.chkDangerMatchFull.Checked = Settings.Instance.MatchFullTextD;  //danger
@@ -5375,8 +4880,6 @@ namespace myseq
             f3.optDangerPlay.Checked = Settings.Instance.PlayOnDanger;
 
             f3.txtDangerAudioFile.Text = Settings.Instance.DangerAudioFile;
-
-
 
             f3.txtAlertPrefix.Text = Settings.Instance.AlertPrefix;
 
@@ -5402,9 +4905,9 @@ namespace myseq
 
             f3.pvpLevels.Value = Settings.Instance.PVPLevels;
 
-            f3.txtWindowName.Text = Settings.Instance.TitleBar.ToString();
+            f3.txtWindowName.Text = Settings.Instance.TitleBar;
 
-            f3.txtSearchString.Text = Settings.Instance.SearchString.ToString();
+            f3.txtSearchString.Text = Settings.Instance.SearchString;
 
             f3.picMapBackgroundColor.BackColor = Settings.Instance.BackColor;
 
@@ -5502,8 +5005,7 @@ namespace myseq
             if (Settings.Instance.PCBorderColor != f3.picPlayerBorder.BackColor)
             {
                 Settings.Instance.PCBorderColor = f3.picPlayerBorder.BackColor;
-                if (mapCon != null)
-                    mapCon.UpdatePCBorder();
+                mapCon?.UpdatePCBorder();
             }
 
             Settings.Instance.PrefixStars = f3.chkPrefixAlerts.Checked;
@@ -5606,8 +5108,7 @@ namespace myseq
 
             GroundItemList.listView.BackColor = Settings.Instance.ListBackColor;
 
-            if (Settings.Instance.TitleBar.ToString().Length > 0)
-
+            if (Settings.Instance.TitleBar.Length > 0)
                 BaseTitle = Settings.Instance.TitleBar;
 
             Settings.Instance.MapDir = f3.txtMapDir.Text;
@@ -5629,7 +5130,6 @@ namespace myseq
             Settings.Instance.MaxLogLevel = (LogLevel)f3.spnLogLevel.Value;
 
             if (Settings.Instance.CurrentIPAddress == 0 && f3.txtIPAddress1.Text.Length > 0)
-
                 Settings.Instance.CurrentIPAddress = 1;
 
             DrawOpts = Settings.Instance.DrawOptions;
@@ -5644,23 +5144,18 @@ namespace myseq
 
             ServerSelection();
 
-            if (eq != null)
-
-                eq.LoadSpawnInfo();
+            eq?.LoadSpawnInfo();
 
             SetTitle();
 
             savePrefs("prefs.xml");
 
-            if (mapCon != null)
-
-                mapCon.Invalidate();
+            mapCon?.Invalidate();
         }
 
-        private void ServerSelection() 
+        private void ServerSelection()
 
         {
-
             mnuIPAddress1.Text = Settings.Instance.IPAddress1;
 
             mnuIPAddress2.Text = Settings.Instance.IPAddress2;
@@ -5680,10 +5175,9 @@ namespace myseq
             mnuIPAddress4.Enabled = mnuIPAddress4.Visible = Convert.ToBoolean(mnuIPAddress4.Text.Length);
 
             mnuIPAddress5.Enabled = mnuIPAddress5.Visible = Convert.ToBoolean(mnuIPAddress5.Text.Length);
-
         }
 
-        private void mnuRefreshSpawnList_Click(object sender, System.EventArgs e) 
+        private void mnuRefreshSpawnList_Click(object sender, EventArgs e)
 
         {
             eq.DisablePlayAlerts();
@@ -5693,10 +5187,9 @@ namespace myseq
             map.ClearMap();
 
             eq.mobsTimers.LoadTimers();
-
         }
 
-        private void mnuDepthFilter_Click(object sender, System.EventArgs e) 
+        private void mnuDepthFilter_Click(object sender, EventArgs e)
 
         {
             ToggleDepthFilter();
@@ -5705,10 +5198,10 @@ namespace myseq
                 try
                 {
                     // Save depth filter settings to file
-                    String myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
+                    string myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
                     if (!Directory.Exists(myPath))
                         Directory.CreateDirectory(myPath);
-                    String ConfigFile = Path.Combine(myPath, "config.ini");
+                    string ConfigFile = Path.Combine(myPath, "config.ini");
 
                     IniFile ConIni = new IniFile(ConfigFile);
                     if (Settings.Instance.DepthFilter)
@@ -5718,7 +5211,6 @@ namespace myseq
                 }
                 catch (Exception ex) { LogLib.WriteLine("Error writing depth filter setting to ini file: ", ex); }
             }
-            
         }
 
         private void ToggleDepthFilter()
@@ -5729,83 +5221,57 @@ namespace myseq
             Settings.Instance.DepthFilter = mnuDepthFilter.Checked;
 
             // update the toolbar settings
-            this.toolStripDepthFilterButton.Checked = Settings.Instance.DepthFilter;
-            this.toolStripZNegUp.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZNeg.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZNegDown.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZPosDown.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZOffsetLabel.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZPosUp.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZPos.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripZPosLabel.Enabled = Settings.Instance.DepthFilter;
-            this.toolStripResetDepthFilter.Enabled = Settings.Instance.DepthFilter;
+            toolStripDepthFilterButton.Checked = Settings.Instance.DepthFilter;
+            toolStripZNegUp.Enabled = Settings.Instance.DepthFilter;
+            toolStripZNeg.Enabled = Settings.Instance.DepthFilter;
+            toolStripZNegDown.Enabled = Settings.Instance.DepthFilter;
+            toolStripZPosDown.Enabled = Settings.Instance.DepthFilter;
+            toolStripZOffsetLabel.Enabled = Settings.Instance.DepthFilter;
+            toolStripZPosUp.Enabled = Settings.Instance.DepthFilter;
+            toolStripZPos.Enabled = Settings.Instance.DepthFilter;
+            toolStripZPosLabel.Enabled = Settings.Instance.DepthFilter;
+            toolStripResetDepthFilter.Enabled = Settings.Instance.DepthFilter;
 
-            if (Settings.Instance.DepthFilter)
-                this.toolStripDepthFilterButton.Image = global::myseq.Properties.Resources.ExpandSpaceHS;
-            else
-                this.toolStripDepthFilterButton.Image = global::myseq.Properties.Resources.ShrinkSpaceHS;
-
+            toolStripDepthFilterButton.Image = Settings.Instance.DepthFilter ? Properties.Resources.ExpandSpaceHS : Properties.Resources.ShrinkSpaceHS;
         }
 
-        private void mnuDynamicAlpha_Click(object sender, System.EventArgs e)
+        private void mnuDynamicAlpha_Click(object sender, EventArgs e)
 
         {
-
             mnuDynamicAlpha.Checked = !mnuDynamicAlpha.Checked;
             mnuDynamicAlpha2.Checked = mnuDynamicAlpha.Checked;
 
-
             Settings.Instance.UseDynamicAlpha = mnuDynamicAlpha.Checked;
-
         }
 
-        private void mnuForceDistinct_Click(object sender, System.EventArgs e)
+        private void mnuForceDistinct_Click(object sender, EventArgs e)
 
         {
-
             mnuForceDistinct.Checked = !mnuForceDistinct.Checked;
             mnuForceDistinct2.Checked = mnuForceDistinct.Checked;
 
             Settings.Instance.ForceDistinct = mnuForceDistinct.Checked;
 
             resetMapPens();
-
         }
 
-        private void mnuShowGridLines_Click(object sender, System.EventArgs e) 
+        private void mnuShowGridLines_Click(object sender, EventArgs e)
 
         {
-
             mnuShowGridLines.Checked = !mnuShowGridLines.Checked;
 
-            if (mnuShowGridLines.Checked)
-
-            {
-
-                Settings.Instance.DrawOptions = Settings.Instance.DrawOptions | DrawOptions.GridLines;
-
-            }
-
-            else
-
-            {
-
-                Settings.Instance.DrawOptions = Settings.Instance.DrawOptions & (DrawOptions.DrawAll ^ DrawOptions.GridLines);
-
-            }
+            Settings.Instance.DrawOptions = mnuShowGridLines.Checked
+                ? Settings.Instance.DrawOptions | DrawOptions.GridLines
+                : Settings.Instance.DrawOptions & (DrawOptions.DrawAll ^ DrawOptions.GridLines);
 
             DrawOpts = Settings.Instance.DrawOptions;
 
-            if (mapCon != null)
-
-                mapCon.Invalidate();
-
+            mapCon?.Invalidate();
         }
 
-        private void mnuShowListGridLines_Click(object sender, System.EventArgs e)
+        private void mnuShowListGridLines_Click(object sender, EventArgs e)
 
         {
-
             mnuShowListGridLines.Checked = !mnuShowListGridLines.Checked;
 
             Settings.Instance.ShowListGridLines = mnuShowListGridLines.Checked;
@@ -5815,13 +5281,11 @@ namespace myseq
             SpawnTimerList.listView.GridLines = mnuShowListGridLines.Checked;
 
             GroundItemList.listView.GridLines = mnuShowListGridLines.Checked;
-
         }
 
-        private void mnuGridInterval_Click(object sender, System.EventArgs e) 
+        private void mnuGridInterval_Click(object sender, EventArgs e)
 
         {
-
             mnuGridInterval100.Checked = sender.Equals(mnuGridInterval100);
 
             mnuGridInterval250.Checked = sender.Equals(mnuGridInterval250);
@@ -5832,94 +5296,78 @@ namespace myseq
 
             Settings.Instance.GridInterval = GridInterval();
 
-            if (mapCon != null)
-
-                mapCon.Invalidate();
-
+            mapCon?.Invalidate();
         }
 
-        private void mnuGridColor_Click(object sender, System.EventArgs e) 
+        private void mnuGridColor_Click(object sender, EventArgs e)
 
         {
-
-            if(colorPicker.ShowDialog() != DialogResult.Cancel) 
+            if(colorPicker.ShowDialog() != DialogResult.Cancel)
 
             {
-
                 if (Settings.Instance.GridColor != colorPicker.Color)
 
                 {
                     Settings.Instance.GridColor = colorPicker.Color;
 
-                    if (mapCon != null)
-
-                        mapCon.Invalidate();
+                    mapCon?.Invalidate();
                 }
-
             }
-
         }
 
-        private void mnuBackgroungColor_Click(object sender, System.EventArgs e) 
+        private void mnuBackgroungColor_Click(object sender, EventArgs e)
 
         {
-
-            if(colorPicker.ShowDialog() != DialogResult.Cancel) 
+            if(colorPicker.ShowDialog() != DialogResult.Cancel)
 
             {
                 if (colorPicker.Color != Settings.Instance.BackColor)
                 {
-
                     Settings.Instance.BackColor = colorPicker.Color;
 
                     resetMapPens();
-
                 }
-
             }
-
         }
 
         private void SetFollowOption(FollowOption NewFollowOption)
 
         {
-
             Settings.Instance.FollowOption = NewFollowOption;
 
             if (NewFollowOption == FollowOption.None)
             {
-                this.mnuFollowNone.Image = global::myseq.Properties.Resources.BlackX;
-                this.mnuFollowNone2.Image = global::myseq.Properties.Resources.BlackX;
+                mnuFollowNone.Image = Properties.Resources.BlackX;
+                mnuFollowNone2.Image = Properties.Resources.BlackX;
             }
             else
             {
-                this.mnuFollowNone.Image = null;
-                this.mnuFollowNone2.Image = null;
+                mnuFollowNone.Image = null;
+                mnuFollowNone2.Image = null;
             }
             if (NewFollowOption == FollowOption.Player)
             {
-                this.mnuFollowPlayer.Image = global::myseq.Properties.Resources.BlackX;
-                this.mnuFollowPlayer2.Image = global::myseq.Properties.Resources.BlackX;
+                mnuFollowPlayer.Image = Properties.Resources.BlackX;
+                mnuFollowPlayer2.Image = Properties.Resources.BlackX;
             }
             else
             {
-                this.mnuFollowPlayer.Image = null;
-                this.mnuFollowPlayer2.Image = null;
+                mnuFollowPlayer.Image = null;
+                mnuFollowPlayer2.Image = null;
             }
             if (NewFollowOption == FollowOption.Target)
             {
-                this.mnuFollowTarget.Image = global::myseq.Properties.Resources.BlackX;
-                this.mnuFollowTarget2.Image = global::myseq.Properties.Resources.BlackX;
+                mnuFollowTarget.Image = Properties.Resources.BlackX;
+                mnuFollowTarget2.Image = Properties.Resources.BlackX;
             }
             else
             {
-                this.mnuFollowTarget.Image = null;
-                this.mnuFollowTarget2.Image = null;
+                mnuFollowTarget.Image = null;
+                mnuFollowTarget2.Image = null;
             }
             switch (NewFollowOption)
 
             {
-
                 case FollowOption.None:
 
                     toolStripCoPStatus.Text = "";
@@ -5945,78 +5393,63 @@ namespace myseq
                     mapPane.offsety.Value = 0;
 
                     break;
-
             }
-
         }
 
-        private void mnuFollowNone_Click(object sender, System.EventArgs e)
+        private void mnuFollowNone_Click(object sender, EventArgs e)
 
         {
-
             SetFollowOption(FollowOption.None);
-
         }
 
-        private void mnuFollowPlayer_Click(object sender, System.EventArgs e) 
+        private void mnuFollowPlayer_Click(object sender, EventArgs e)
 
         {
-
             SetFollowOption(FollowOption.Player);
-
         }
 
-        private void mnuFollowTarget_Click(object sender, System.EventArgs e)
+        private void mnuFollowTarget_Click(object sender, EventArgs e)
 
         {
-
             SetFollowOption(FollowOption.Target);
-
         }
 
-        private void mnuReloadAlerts_Click(object sender, System.EventArgs e) 
+        private void mnuReloadAlerts_Click(object sender, EventArgs e)
 
         {
-            if (bIsRunning == false)
-
+            if (!bIsRunning)
                 return;
 
             filters.ClearArrays();
 
-            filters.loadAlerts(curZone);
+            filters.LoadAlerts(curZone);
 
             timDelayAlerts.Start();
 
             eq.DisablePlayAlerts();
 
             eq.mobsTimers.ResetTimers();
-            if (map != null)
-                map.ClearMap();
+            map?.ClearMap();
 
             eq.mobsTimers.LoadTimers();
-
-        }   
-
-        private void mnuAddEditAlerts_Click(object sender, System.EventArgs e) 
-
-        {
-
-            filters.editAlertFile(curZone);
-
         }
 
-        private void mnuSpawnListFont_Click(object sender, System.EventArgs e) 
+        private void mnuAddEditAlerts_Click(object sender, EventArgs e)
 
         {
+            filters.EditAlertFile(curZone);
+        }
 
+        private void mnuSpawnListFont_Click(object sender, EventArgs e)
+
+        {
             fontDialog1.Font = SpawnList.listView.Font;
 
             fontDialog1.ShowApply = true;
 
-            if(fontDialog1.ShowDialog() != DialogResult.Cancel) 
+            if(fontDialog1.ShowDialog() != DialogResult.Cancel)
 
             {
-
                 SpawnList.listView.Font = fontDialog1.Font;
 
                 SpawnTimerList.listView.Font = fontDialog1.Font;
@@ -6028,110 +5461,79 @@ namespace myseq
                 Settings.Instance.ListFontStyle = fontDialog1.Font.Style;
 
                 reloadAlertFiles();
-
             }
-
         }
 
-        private void mnuCollectMobTrails_Click(object sender, System.EventArgs e) 
+        private void mnuCollectMobTrails_Click(object sender, EventArgs e)
 
         {
-
-            mnuCollectMobTrails.Checked = !mnuCollectMobTrails.Checked;   
+            mnuCollectMobTrails.Checked = !mnuCollectMobTrails.Checked;
 
             Settings.Instance.CollectMobTrails = mnuCollectMobTrails.Checked;
 
-            if (mapCon != null)
-
-                mapCon.Invalidate();
-
+            mapCon?.Invalidate();
         }
 
-        private void mnuShowSpawnList_Click(object sender, System.EventArgs e) 
+        private void mnuShowSpawnList_Click(object sender, EventArgs e)
 
         {
-
             mnuShowSpawnList.Checked = !mnuShowSpawnList.Checked;
 
             Settings.Instance.ShowMobList = mnuShowSpawnList.Checked;
 
             if (Settings.Instance.ShowMobList)
-
                 SpawnList.Show(dockPanel);
-
             else
-
                 SpawnList.Hide();
-
         }
 
-        private void mnuShowSpawnListTimer_Click(object sender, System.EventArgs e)
+        private void mnuShowSpawnListTimer_Click(object sender, EventArgs e)
 
         {
-
             mnuShowSpawnListTimer.Checked = !mnuShowSpawnListTimer.Checked;
 
             Settings.Instance.ShowMobListTimer = mnuShowSpawnListTimer.Checked;
 
             if (Settings.Instance.ShowMobListTimer)
-
                 SpawnTimerList.Show(dockPanel);
-
             else
-
                 SpawnTimerList.Hide();
-
         }
 
-        private void mnuShowGroundItemList_Click(object sender, System.EventArgs e)
+        private void mnuShowGroundItemList_Click(object sender, EventArgs e)
         {
-
             mnuShowGroundItemList.Checked = !mnuShowGroundItemList.Checked;
 
             Settings.Instance.ShowGroundItemList = mnuShowGroundItemList.Checked;
 
             if (Settings.Instance.ShowGroundItemList)
-
                 GroundItemList.Show(dockPanel);
-
             else
-
                 GroundItemList.Hide();
-
         }
 
-        private void mnuShowMobTrails_Click(object sender, System.EventArgs e) 
+        private void mnuShowMobTrails_Click(object sender, EventArgs e)
 
         {
-
             mnuShowMobTrails.Checked = !mnuShowMobTrails.Checked;
 
-            if (mnuShowMobTrails.Checked)
+            Settings.Instance.DrawOptions = mnuShowMobTrails.Checked
+                ? Settings.Instance.DrawOptions | DrawOptions.SpawnTrails
+                : Settings.Instance.DrawOptions & (DrawOptions.DrawAll ^ DrawOptions.SpawnTrails);
 
-                Settings.Instance.DrawOptions = Settings.Instance.DrawOptions | DrawOptions.SpawnTrails;
-
-            else
-
-                Settings.Instance.DrawOptions = Settings.Instance.DrawOptions & (DrawOptions.DrawAll ^ DrawOptions.SpawnTrails);
-
-            if (mapCon != null)
-
-                mapCon.Invalidate();
-
+            mapCon?.Invalidate();
         }
 
-        private void mnuAbout_Click(object sender, System.EventArgs e) 
+        private void mnuAbout_Click(object sender, EventArgs e)
 
         {
-
             AboutDlg ab = new AboutDlg();
-            this.TopMost = false;
+            TopMost = false;
             ab.ShowDialog();
-            this.TopMost = mnuAlwaysOnTop.Checked;
-
+            TopMost = mnuAlwaysOnTop.Checked;
         }
 
-        private void mnuShowTargetInfo_Click(object sender, System.EventArgs e) 
+        private void mnuShowTargetInfo_Click(object sender, EventArgs e)
 
         {
             Settings.Instance.ShowTargetInfo = !Settings.Instance.ShowTargetInfo;
@@ -6139,20 +5541,15 @@ namespace myseq
             mnuShowTargetInfo.Checked = Settings.Instance.ShowTargetInfo;
             mnuShowTargetInfo2.Checked = Settings.Instance.ShowTargetInfo;
 
-            if (mapCon != null)
-
-                mapCon.Invalidate();
-
+            mapCon?.Invalidate();
         }
 
-        private void mnuListColor_Click(object sender, System.EventArgs e) 
+        private void mnuListColor_Click(object sender, EventArgs e)
 
         {
-
-            if(colorPicker.ShowDialog() != DialogResult.Cancel) 
+            if(colorPicker.ShowDialog() != DialogResult.Cancel)
 
             {
-
                 Settings.Instance.ListBackColor = colorPicker.Color;
 
                 SpawnList.listView.BackColor = Settings.Instance.ListBackColor;
@@ -6160,124 +5557,103 @@ namespace myseq
                 SpawnTimerList.listView.BackColor = Settings.Instance.ListBackColor;
 
                 GroundItemList.listView.BackColor = Settings.Instance.ListBackColor;
-
             }
-
         }
 
-        private void mnuAutoSelectEQTarget_Click(object sender, System.EventArgs e) 
+        private void mnuAutoSelectEQTarget_Click(object sender, EventArgs e)
 
         {
             Settings.Instance.AutoSelectEQTarget = !Settings.Instance.AutoSelectEQTarget;
-            
+
             mnuAutoSelectEQTarget.Checked = Settings.Instance.AutoSelectEQTarget;
             mnuAutoSelectEQTarget2.Checked = Settings.Instance.AutoSelectEQTarget;
-
         }
 
-        private void mnuGlobalAlerts_Click(object sender, System.EventArgs e) 
+        private void mnuGlobalAlerts_Click(object sender, EventArgs e)
 
         {
-
-            filters.editAlertFile("global");
-
+            filters.EditAlertFile("global");
         }
 
-        private void mnuShowNPCs_Click(object sender, System.EventArgs e)
+        private void mnuShowNPCs_Click(object sender, EventArgs e)
 
         {
-
             mnuShowNPCs.Checked = !mnuShowNPCs.Checked;
 
             Settings.Instance.ShowNPCs = mnuShowNPCs.Checked;
 
             comm.UpdateHidden();
-
         }
 
-        private void mnuShowLookupText_Click(object sender, System.EventArgs e)
+        private void mnuShowLookupText_Click(object sender, EventArgs e)
 
         {
-
             mnuShowLookupText.Checked = !mnuShowLookupText.Checked;
 
             Settings.Instance.ShowLookupText = mnuShowLookupText.Checked;
 
             comm.UpdateHidden();
-
         }
-        private void mnuAlwaysOnTop_Click(object sender, System.EventArgs e)
+        private void mnuAlwaysOnTop_Click(object sender, EventArgs e)
 
         {
-
             mnuAlwaysOnTop.Checked = !mnuAlwaysOnTop.Checked;
 
             Settings.Instance.AlwaysOnTop = mnuAlwaysOnTop.Checked;
 
             if (mnuAlwaysOnTop.Checked)
             {
-                this.TopMost = true;
-                this.TopLevel = true;
+                TopMost = true;
+                TopLevel = true;
             } else
             {
-                this.TopMost = false;
+                TopMost = false;
             }
-
-
         }
 
-        private void mnuShowLookupNumber_Click(object sender, System.EventArgs e)
+        private void mnuShowLookupNumber_Click(object sender, EventArgs e)
 
         {
-
             mnuShowLookupNumber.Checked = !mnuShowLookupNumber.Checked;
 
             Settings.Instance.ShowLookupNumber = mnuShowLookupNumber.Checked;
 
             comm.UpdateHidden();
-
         }
 
-        private void mnuShowCorpses_Click(object sender, System.EventArgs e)
+        private void mnuShowCorpses_Click(object sender, EventArgs e)
 
         {
-
             mnuShowCorpses.Checked = !mnuShowCorpses.Checked;
 
             Settings.Instance.ShowCorpses = mnuShowCorpses.Checked;
 
             comm.UpdateHidden();
-
         }
 
-        private void mnuShowPlayers_Click(object sender, System.EventArgs e)
+        private void mnuShowPlayers_Click(object sender, EventArgs e)
 
         {
-
             mnuShowPlayers.Checked = !mnuShowPlayers.Checked;
 
             Settings.Instance.ShowPlayers = mnuShowPlayers.Checked;
 
             comm.UpdateHidden();
-
         }
 
-        private void mnuShowInvis_Click(object sender, System.EventArgs e)
+        private void mnuShowInvis_Click(object sender, EventArgs e)
 
         {
-
             mnuShowInvis.Checked = !mnuShowInvis.Checked;
 
             Settings.Instance.ShowInvis = mnuShowInvis.Checked;
 
             comm.UpdateHidden();
-
         }
 
-        private void mnuShowMounts_Click(object sender, System.EventArgs e)
+        private void mnuShowMounts_Click(object sender, EventArgs e)
 
         {
-
             mnuShowMounts.Checked = !mnuShowMounts.Checked;
 
             Settings.Instance.ShowMounts = mnuShowMounts.Checked;
@@ -6285,10 +5661,9 @@ namespace myseq
             comm.UpdateHidden();
         }
 
-        private void mnuShowFamiliars_Click(object sender, System.EventArgs e)
+        private void mnuShowFamiliars_Click(object sender, EventArgs e)
 
         {
-
             mnuShowFamiliars.Checked = !mnuShowFamiliars.Checked;
 
             Settings.Instance.ShowFamiliars = mnuShowFamiliars.Checked;
@@ -6296,45 +5671,39 @@ namespace myseq
             comm.UpdateHidden();
         }
 
-        private void mnuShowPets_Click(object sender, System.EventArgs e)
+        private void mnuShowPets_Click(object sender, EventArgs e)
 
         {
-
             mnuShowPets.Checked = !mnuShowPets.Checked;
 
             Settings.Instance.ShowPets = mnuShowPets.Checked;
 
             comm.UpdateHidden();
+        }
 
-        }     
-
-        private void mnuTargetInfoFont_Click(object sender, System.EventArgs e) 
+        private void mnuTargetInfoFont_Click(object sender, EventArgs e)
 
         {
-
             fontDialog1.Font = mapCon.lblMobInfo.Font;
 
             fontDialog1.ShowApply = true;
 
-            if(fontDialog1.ShowDialog() != DialogResult.Cancel) 
+            if(fontDialog1.ShowDialog() != DialogResult.Cancel)
 
             {
-
                 mapCon.lblMobInfo.Font = fontDialog1.Font;
 
-                mapCon.lblGameClock.Font = new System.Drawing.Font(fontDialog1.Font.FontFamily.Name,fontDialog1.Font.Size, FontStyle.Bold);
+                mapCon.lblGameClock.Font = new Font(fontDialog1.Font.FontFamily.Name,fontDialog1.Font.Size, FontStyle.Bold);
 
                 Settings.Instance.TargetInfoFontSize = fontDialog1.Font.Size;
 
                 Settings.Instance.TargetInfoFontName = fontDialog1.Font.FontFamily.Name;
 
                 Settings.Instance.TargetInfoFontStyle = fontDialog1.Font.Style;
-
             }
-
         }
 
-        private void mnuShowSpawnPoints_Click(object sender, System.EventArgs e) 
+        private void mnuShowSpawnPoints_Click(object sender, EventArgs e)
 
         {
             if (sender.Equals(mnuShowSpawnPoints))
@@ -6348,78 +5717,54 @@ namespace myseq
                 mnuShowSpawnPoints.Checked = mnuShowSpawnPoints2.Checked;
             }
 
-            if (mnuShowSpawnPoints.Checked)
-
-            {
-
-                Settings.Instance.DrawOptions = Settings.Instance.DrawOptions | DrawOptions.SpawnTimers;
-
-            }
-
-            else
-
-            {
-
-                Settings.Instance.DrawOptions = Settings.Instance.DrawOptions & (DrawOptions.DrawAll ^ DrawOptions.SpawnTimers);
-
-            }
-
+            Settings.Instance.DrawOptions = mnuShowSpawnPoints.Checked
+                ? Settings.Instance.DrawOptions | DrawOptions.SpawnTimers
+                : Settings.Instance.DrawOptions & (DrawOptions.DrawAll ^ DrawOptions.SpawnTimers);
         }
 
-        private void mnuIPAddress1_Click(object sender, System.EventArgs e) 
+        private void mnuIPAddress1_Click(object sender, EventArgs e)
 
         {
-
             ResetMenu(1);
 
             Restart();
-
         }
 
-        private void mnuIPAddress2_Click(object sender, System.EventArgs e) 
+        private void mnuIPAddress2_Click(object sender, EventArgs e)
 
         {
-
             ResetMenu(2);
 
             Restart();
-
         }
 
-        private void mnuIPAddress3_Click(object sender, System.EventArgs e) 
+        private void mnuIPAddress3_Click(object sender, EventArgs e)
 
         {
-
             ResetMenu(3);
 
             Restart();
-
         }
 
-        private void mnuIPAddress4_Click(object sender, System.EventArgs e) 
+        private void mnuIPAddress4_Click(object sender, EventArgs e)
 
         {
-
             ResetMenu(4);
 
             Restart();
-
         }
 
-        private void mnuIPAddress5_Click(object sender, System.EventArgs e) 
+        private void mnuIPAddress5_Click(object sender, EventArgs e)
 
         {
-
             ResetMenu(5);
 
             Restart();
-
         }
 
-        private void ResetMenu(int isCheck) 
+        private void ResetMenu(int isCheck)
 
         {
-
             mnuIPAddress1.Checked = false;
 
             mnuIPAddress2.Checked = false;
@@ -6432,10 +5777,9 @@ namespace myseq
 
             Settings.Instance.CurrentIPAddress = isCheck;
 
-            switch (isCheck) 
+            switch (isCheck)
 
             {
-
                 case 1: {mnuIPAddress1.Checked = true; currentIPAddress = Settings.Instance.IPAddress1; break;}
 
                 case 2: {mnuIPAddress2.Checked = true; currentIPAddress = Settings.Instance.IPAddress2; break;}
@@ -6445,28 +5789,23 @@ namespace myseq
                 case 4: {mnuIPAddress4.Checked = true; currentIPAddress = Settings.Instance.IPAddress4; break;}
 
                 case 5: {mnuIPAddress5.Checked = true; currentIPAddress = Settings.Instance.IPAddress5; break;}
-
             }
+        }
 
-        } 
-
-        private void Restart() 
+        private void Restart()
 
         {
             comm.StopListening();
 
             if (bIsRunning)
-
                 StopListening();
 
             StartListening();
-
         }
 
-        private void mnuCharRefresh_Click(object sender, System.EventArgs e)
+        private void mnuCharRefresh_Click(object sender, EventArgs e)
 
         {
-
             colProcesses.Clear();
 
             mnuChar1.Visible = false;
@@ -6517,113 +5856,106 @@ namespace myseq
 
             mnuChar12.Text = "Char 12";
 
-
             comm.CharRefresh();
-
         }
 
         private void SwitchCharacter(int CharacterIndex)
 
         {
-
             if (colProcesses.Count>=CharacterIndex)
 
             {
-
                 ProcessInfo PI = (ProcessInfo) colProcesses[CharacterIndex-1];
-                
+
                 comm.SwitchCharacter(PI);
-
             }
-
         }
 
-
-
-        private void mnuChar1_Click(object sender, System.EventArgs e)
+        private void mnuChar1_Click(object sender, EventArgs e)
         {
             if (!mnuChar1.Checked && comm.CanSwitchChars())
                 SwitchCharacter(1);
         }
 
-
-
-        private void mnuChar2_Click(object sender, System.EventArgs e)
+        private void mnuChar2_Click(object sender, EventArgs e)
         {
             if (!mnuChar2.Checked && comm.CanSwitchChars())
                 SwitchCharacter(2);
         }
 
-
-
-        private void mnuChar3_Click(object sender, System.EventArgs e)
+        private void mnuChar3_Click(object sender, EventArgs e)
 
         {
              SwitchCharacter(3);
         }
 
-
-
-        private void mnuChar4_Click(object sender, System.EventArgs e)
+        private void mnuChar4_Click(object sender, EventArgs e)
 
         {
              SwitchCharacter(4);
         }
 
-
-
-        private void mnuChar5_Click(object sender, System.EventArgs e)
+        private void mnuChar5_Click(object sender, EventArgs e)
 
         {
              SwitchCharacter(5);
         }
 
-
-
-        private void mnuChar6_Click(object sender, System.EventArgs e)
+        private void mnuChar6_Click(object sender, EventArgs e)
         {
             SwitchCharacter(6);
         }
-
-
 
         private void mnuChar7_Click(object sender, EventArgs e)
         {
             SwitchCharacter(7);
         }
 
-
-
         private void mnuChar8_Click(object sender, EventArgs e)
         {
             SwitchCharacter(8);
         }
-       
 
-        private void mnuKeepCentered_Click(object sender, System.EventArgs e)
+        private void mnuChar9_Click(object sender, EventArgs e)
+        {
+            SwitchCharacter(9);
+        }
+
+        private void mnuChar10_Click(object sender, EventArgs e)
+        {
+            SwitchCharacter(10);
+        }
+
+        private void mnuChar11_Click(object sender, EventArgs e)
+        {
+            SwitchCharacter(11);
+        }
+
+        private void mnuChar12_Click(object sender, EventArgs e)
+        {
+            SwitchCharacter(12);
+        }
+
+        private void mnuKeepCentered_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.KeepCentered = !Settings.Instance.KeepCentered;
 
             mnuKeepCentered.Checked = Settings.Instance.KeepCentered;
             mnuKeepCentered2.Checked = Settings.Instance.KeepCentered;
-
         }
 
         public void ReAdjust()
         {
-            if (mapCon !=null)
-                mapCon.ReAdjust();
+            mapCon?.ReAdjust();
         }
 
         public void reloadAlertFiles()
 
         {
-
             filters.ClearArrays();
 
-            filters.loadAlerts(curZone);
+            filters.LoadAlerts(curZone);
 
             timDelayAlerts.Start();
 
@@ -6635,29 +5967,23 @@ namespace myseq
 
             eq.mobsTimers.LoadTimers();
 
-            if (this.toolStripLookupBox.Text.Length > 0 && toolStripLookupBox.Text != "Mob Search")
+            if (toolStripLookupBox.Text.Length > 0 && toolStripLookupBox.Text != "Mob Search")
+                eq.MarkLookups("0:" + toolStripLookupBox.Text, bFilter0);
 
-                eq.MarkLookups("0:" + this.toolStripLookupBox.Text, bFilter0);
+            if (toolStripLookupBox1.Text.Length > 0 && toolStripLookupBox1.Text != "Mob Search")
+                eq.MarkLookups("1:" + toolStripLookupBox1.Text, bFilter1);
 
-            if (this.toolStripLookupBox1.Text.Length > 0 && toolStripLookupBox1.Text != "Mob Search")
+            if (toolStripLookupBox2.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
+                eq.MarkLookups("2:" + toolStripLookupBox2.Text, bFilter2);
 
-                eq.MarkLookups("1:" + this.toolStripLookupBox1.Text, bFilter1);
+            if (toolStripLookupBox3.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
+                eq.MarkLookups("3:" + toolStripLookupBox2.Text, bFilter3);
 
-            if (this.toolStripLookupBox2.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
+            if (toolStripLookupBox4.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
+                eq.MarkLookups("4:" + toolStripLookupBox2.Text, bFilter4);
 
-                eq.MarkLookups("2:" + this.toolStripLookupBox2.Text, bFilter2);
-
-            if (this.toolStripLookupBox3.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-
-                eq.MarkLookups("3:" + this.toolStripLookupBox2.Text, bFilter3);
-
-            if (this.toolStripLookupBox4.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-
-                eq.MarkLookups("4:" + this.toolStripLookupBox2.Text, bFilter4);
-
-            if (this.toolStripLookupBox5.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-
-                eq.MarkLookups("5:" + this.toolStripLookupBox2.Text, bFilter5);
+            if (toolStripLookupBox5.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
+                eq.MarkLookups("5:" + toolStripLookupBox2.Text, bFilter5);
         }
 
         public void resetMapPens()
@@ -6671,13 +5997,11 @@ namespace myseq
 
                 mapCon.Invalidate();
             }
-
         }
 
         public void ProcessPacket(SPAWNINFO si, bool update_hidden)
 
         {
-
             // SPAWN  // si.flags == 0  
 
             // Target // si.flags == 1
@@ -6692,10 +6016,9 @@ namespace myseq
 
             // PLAYER // si.flags == 253                
 
-            switch (si.flags) 
+            switch (si.flags)
 
             {
-
                 case SPAWNINFO.PacketType.Zone:
 
                     ProcessMap(si);
@@ -6728,7 +6051,7 @@ namespace myseq
 
                 case SPAWNINFO.PacketType.Spawn:
 
-                    eq.ProcessSpawns(si,this,SpawnList,filters,mapPane,reHelper, update_hidden);
+                    eq.ProcessSpawns(si, this, SpawnList, filters, mapPane, update_hidden);
 
                     break;
 
@@ -6736,35 +6059,29 @@ namespace myseq
 
                     ProcessProcessInfo(si);
 
-                    if (eq.playerinfo != null && eq.playerinfo.Name.Length > 1)
-                        SetCharSelection(eq.playerinfo.Name.ToString());
+                    if (eq.playerinfo?.Name.Length > 1)
+                        SetCharSelection(eq.playerinfo.Name);
 
                     break;
 
                 default:
 
-                    this.Text = "Unknown Packet Type: " + si.flags.ToString();
+                    Text = "Unknown Packet Type: " + si.flags.ToString();
 
                     break;
-
-            }          
-
+            }
         }
-
-
 
         private void mnuMapLabelsFont_Click(object sender, EventArgs e)
 
         {
-
             fontDialog1.Font = mapCon.drawFont;
 
             fontDialog1.ShowApply = true;
 
-            if(fontDialog1.ShowDialog() != DialogResult.Cancel) 
+            if(fontDialog1.ShowDialog() != DialogResult.Cancel)
 
             {
-
                 mapCon.drawFont = fontDialog1.Font;
 
                 Settings.Instance.MapLabelFontSize = fontDialog1.Font.Size;
@@ -6779,13 +6096,11 @@ namespace myseq
                 //map.ClearMap();      
 
             }
-
         }
 
         private void mnuClearSavedTimers_Click(object sender, EventArgs e)
 
         {
-
             // Clear Saved Spawn Timers
 
             eq.mobsTimers.ClearSavedTimers();
@@ -6801,33 +6116,26 @@ namespace myseq
             eq.SpawnY = -1.0f;
 
             map.ClearMap();
-
         }
-
-
 
         private void mnuGridLabelColor_Click(object sender, EventArgs e)
 
         {
-
             if (colorPicker.ShowDialog() != DialogResult.Cancel)
 
             {
-
                 Settings.Instance.GridLabelColor = colorPicker.Color;
 
-                if (mapCon != null)
-
-                    mapCon.Invalidate();
-
+                mapCon?.Invalidate();
             }
-
         }
 
         public void addMapText(string textToAdd)
         {
-            frmAddMapText mapBox = new frmAddMapText();
-            mapBox.txtColr = Settings.Instance.SelectedAddMapText;
+            frmAddMapText mapBox = new frmAddMapText
+            {
+                txtColr = Settings.Instance.SelectedAddMapText
+            };
             string new_text = textToAdd.Replace("#","");
 
             if (addTextFormLocation.X != 0 && addTextFormLocation.Y != 0)
@@ -6836,10 +6144,7 @@ namespace myseq
                 mapBox.Location = addTextFormLocation;
             }
 
-            if (new_text.Length > 0)
-                mapBox.txtAdd = new_text;
-            else
-                mapBox.txtAdd = "Enter Text Label";
+            mapBox.txtAdd = new_text.Length > 0 ? new_text : "Enter Text Label";
             mapBox.txtBkg = Settings.Instance.BackColor;
             if (mapnameWithLabels.Length > 4  && (mapnameWithLabels.EndsWith(".txt") || mapnameWithLabels.EndsWith(".map")))
             {
@@ -6869,25 +6174,26 @@ namespace myseq
                     Settings.Instance.SelectedAddMapText = mapBox.txtColr;
                 // we have a valid addition of text
                 new_text = mapBox.txtAdd.TrimEnd('_', ' ');
-                
+
                 // add it to map now
                 if (new_text.Length > 0)
                 {
                     if(mapnameWithLabels.EndsWith(".txt")) {
-
-                        MapText work = new MapText();
-                        work.text = new_text;
-                        work.x = (int)alertX;
-                        work.y = (int)alertY;
-                        work.z = (int)alertZ;
-                        work.size = mapBox.txtSize;
-                        work.color = new SolidBrush(mapBox.txtColr);
+                        MapText work = new MapText
+                        {
+                            text = new_text,
+                            x = (int)alertX,
+                            y = (int)alertY,
+                            z = (int)alertZ,
+                            size = mapBox.txtSize,
+                            color = new SolidBrush(mapBox.txtColr)
+                        };
                         work.draw_color = eq.GetDistinctColor(work.color);
                         eq.AddMapText(work);
 
                         // string to append to map file
                         new_text = new_text.Replace(" ", "_");
-                        string soe_maptext = String.Format("P {0:f4}, {1:f4}, {2:f4}, {3}, {4}, {5}, {6}, {7}\n", this.alertX * -1, this.alertY * -1, this.alertZ, mapBox.txtColr.R, mapBox.txtColr.G, mapBox.txtColr.B, mapBox.txtSize, new_text);
+                        string soe_maptext = $"P {alertX * -1:f4}, {alertY * -1:f4}, {alertZ:f4}, {mapBox.txtColr.R}, {mapBox.txtColr.G}, {mapBox.txtColr.B}, {mapBox.txtSize}, {new_text}\n";
                         if (DialogResult.Yes == MessageBox.Show("Do you want to write the label to " + mapBox.mapName + "?" + Environment.NewLine + Environment.NewLine + soe_maptext, "Write label to map file?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
                             File.AppendAllText(mapnameWithLabels, soe_maptext);
                         else
@@ -6896,23 +6202,24 @@ namespace myseq
                     else if (mapnameWithLabels.EndsWith(".map"))
                     {
                         // string to append to .map file
-                        string seq_maptext = String.Format("P,{0},{1},{2:f0},{3:f0},{4:f0}\n", new_text, mapBox.txtColr.Name, alertX, alertY, alertZ);
-                        
-                        MapText work = new MapText();
-                        work.text = new_text;
-                        work.x = (int)alertX;
-                        work.y = (int)alertY;
-                        work.z = (int)alertZ;
-                        work.color = new SolidBrush(mapBox.txtColr);
+                        var seq_maptext = $"P,{new_text},{mapBox.txtColr.Name},{alertX:f0},{alertY:f0},{alertZ:f0}\n";
+
+                        MapText work = new MapText
+                        {
+                            text = new_text,
+                            x = (int)alertX,
+                            y = (int)alertY,
+                            z = (int)alertZ,
+                            color = new SolidBrush(mapBox.txtColr)
+                        };
                         work.draw_color = eq.GetDistinctColor(work.color);
                         eq.AddMapText(work);
 
-                        if (DialogResult.Yes == MessageBox.Show("Do you want to write the label to " + mapBox.mapName + "?" + Environment.NewLine + Environment.NewLine + seq_maptext, "Write label to map file?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
+                        if (DialogResult.Yes == MessageBox.Show($"Do you want to write the label to {mapBox.mapName}?{Environment.NewLine}{Environment.NewLine}{seq_maptext}", "Write label to map file?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
                             File.AppendAllText(mapnameWithLabels, seq_maptext);
                         else
                             eq.DeleteMapText(work);
                     }
-
                 }
             }
         }
@@ -6920,62 +6227,39 @@ namespace myseq
         public bool dialogBox(string titleText, string labelText, string dialogText)
 
         {
+            frmDialogBox dlgBox = new frmDialogBox
+            {
+                dlgTitle = titleText,
 
-            frmDialogBox dlgBox = new frmDialogBox();
+                dlgLabel = labelText,
 
-            dlgBox.dlgTitle = titleText;
+                dlgTextBox = dialogText,
 
-            dlgBox.dlgLabel = labelText;
+                TopMost = true
+            };
 
-            dlgBox.dlgTextBox = dialogText;
-
-            dlgBox.TopMost = true;
-
-            if (dlgBox.ShowDialog() == DialogResult.OK)
+            if (dlgBox.ShowDialog() == DialogResult.OK && dlgBox.dlgTextBox.Length > 0)
 
             {
+                SpawnList.mobname = dlgBox.dlgTextBox;
 
-                if (dlgBox.dlgTextBox.Length > 0)
+                SpawnTimerList.mobname = dlgBox.dlgTextBox;
 
-                {
-
-                    SpawnList.mobname = dlgBox.dlgTextBox;
-
-                    SpawnTimerList.mobname = dlgBox.dlgTextBox;
-
-                    return true;
-
-                }
-
-                else
-
-                    return false;
-
+                return true;
             }
-
             else
-
             {
-
                 return false;
-
             }
-
         }
 
+        //private void mnuSaveAlerts_Click(object sender, EventArgs e)
 
+        //{
+        //    filters.WriteAlertFile(curZone);
 
-        private void mnuSaveAlerts_Click(object sender, EventArgs e)
-
-        {
-
-            filters.writeAlertFile(curZone);
-
-            filters.writeAlertFile("global");
-
-        }
-
-
+        //    filters.WriteAlertFile("global");
+        //}
 
         private void mnuShowZoneText_Click(object sender, EventArgs e)
 
@@ -6990,41 +6274,21 @@ namespace myseq
                 mnuShowZoneText2.Checked = !mnuShowZoneText2.Checked;
                 mnuShowZoneText.Checked = mnuShowZoneText2.Checked;
             }
-            
 
-            if (mnuShowZoneText.Checked)
-
-            {
-
-                Settings.Instance.DrawOptions = Settings.Instance.DrawOptions | DrawOptions.ZoneText;
-
-            }
-
-            else
-
-            {
-
-                Settings.Instance.DrawOptions = Settings.Instance.DrawOptions & (DrawOptions.DrawAll ^ DrawOptions.ZoneText);
-
-            }
+            Settings.Instance.DrawOptions = mnuShowZoneText.Checked
+                ? Settings.Instance.DrawOptions | DrawOptions.ZoneText
+                : Settings.Instance.DrawOptions & (DrawOptions.DrawAll ^ DrawOptions.ZoneText);
 
             DrawOpts = Settings.Instance.DrawOptions;
 
-            if (mapCon != null)
-
-                mapCon.Invalidate();
-
+            mapCon?.Invalidate();
         }
-
 
         private void mnuMapReset_Click(object sender, EventArgs e)
 
         {
-
             mapCon.MapReset();
-
         }
-
 
         private void mnuShowLayer1_Click(object sender, EventArgs e)
 
@@ -7042,24 +6306,20 @@ namespace myseq
 
             Settings.Instance.ShowLayer1 = mnuShowLayer1.Checked;
 
-            string f = Settings.Instance.MapDir + "\\" + eq.shortname;
-            bool foundmap = false;
-            if (loadmap(f + ".txt"))
-                foundmap = true;
+            //string f = Settings.Instance.MapDir + "\\" + eq.shortname;
+            //bool fm = false;
+            //if (loadmap(f + ".txt"))
+            //    fm = true;
 
-            if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
-                foundmap = true;
+            //if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
+            //    fm = true;
 
-            if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
-                foundmap = true;
+            //if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
+            //    fm = true;
 
-            if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
-                foundmap = true;
-
+            //if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
+            //    fm = true;
         }
-
-
-
 
         private void mnuShowLayer2_Click(object sender, EventArgs e)
 
@@ -7075,23 +6335,21 @@ namespace myseq
                 mnuShowLayer2.Checked = mnuShowLayer22.Checked;
             }
 
-
             Settings.Instance.ShowLayer2 = mnuShowLayer2.Checked;
 
-            string f = Settings.Instance.MapDir + "\\" + eq.shortname;
-            bool foundmap = false;
-            if (loadmap(f + ".txt"))
-                foundmap = true;
+            //string f = Settings.Instance.MapDir + "\\" + eq.shortname;
+            //bool fm = false;
+            //if (loadmap(f + ".txt"))
+            //    fm = true;
 
-            if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
-                foundmap = true;
+            //if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
+            //    fm = true;
 
-            if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
-                foundmap = true;
+            //if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
+            //    fm = true;
 
-            if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
-                foundmap = true;
-
+            //if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
+            //    fm = true;
         }
 
         private void mnuShowLayer3_Click(object sender, EventArgs e)
@@ -7110,27 +6368,24 @@ namespace myseq
 
             Settings.Instance.ShowLayer3 = mnuShowLayer3.Checked;
 
-            string f = Settings.Instance.MapDir + "\\" + eq.shortname;
-            bool foundmap = false;
-            if (loadmap(f + ".txt"))
-                foundmap = true;
+            //string f = Settings.Instance.MapDir + "\\" + eq.shortname;
+            //bool fm = false;
+            //if (loadmap(f + ".txt"))
+            //    fm = true;
 
-            if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
-                foundmap = true;
+            //if (Settings.Instance.ShowLayer1 && loadmap(f + "_1.txt"))
+            //    fm = true;
 
-            if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
-                foundmap = true;
+            //if (Settings.Instance.ShowLayer2 && loadmap(f + "_2.txt"))
+            //    fm = true;
 
-            if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
-                foundmap = true;
-
+            //if (Settings.Instance.ShowLayer3 && loadmap(f + "_3.txt"))
+            //    fm = true;
         }
-
 
         private void mnuSodTitanium_Click(object sender, EventArgs e)
 
         {
-
             mnuConSoD.Checked = true;
 
             mnuConSoF.Checked = false;
@@ -7143,20 +6398,14 @@ namespace myseq
 
             Settings.Instance.DefaultCon = false;
 
-            eq.fillConColors(this);
+            eq.FillConColors(this);
 
             eq.UpdateMobListColors();
-
-            
-
         }
-
-
 
         private void mnuConDefault_Click(object sender, EventArgs e)
 
         {
-
             mnuConSoD.Checked = false;
 
             mnuConSoF.Checked = false;
@@ -7169,18 +6418,14 @@ namespace myseq
 
             Settings.Instance.DefaultCon = true;
 
-            eq.fillConColors(this);
+            eq.FillConColors(this);
 
             eq.UpdateMobListColors();
-
         }
-
-
 
         private void mnuConSoF_Click(object sender, EventArgs e)
 
         {
-
             mnuConSoD.Checked = false;
 
             mnuConSoF.Checked = true;
@@ -7193,62 +6438,45 @@ namespace myseq
 
             Settings.Instance.DefaultCon = false;
 
-            eq.fillConColors(this);
+            eq.FillConColors(this);
 
             eq.UpdateMobListColors();
-
         }
-
-
 
         private void mnuShowPCNames_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.ShowPCNames = !Settings.Instance.ShowPCNames;
 
             mnuShowPCNames.Checked = Settings.Instance.ShowPCNames;
             mnuShowPCNames2.Checked = Settings.Instance.ShowPCNames;
-
         }
-
-
 
         private void mnuShowNPCNames_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.ShowNPCNames = !Settings.Instance.ShowNPCNames;
 
             mnuShowNPCNames.Checked = Settings.Instance.ShowNPCNames;
             mnuShowNPCNames2.Checked = Settings.Instance.ShowNPCNames;
-
         }
-
-
 
         private void mnuShowNPCCorpseNames_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.ShowNPCCorpseNames = !Settings.Instance.ShowNPCCorpseNames;
 
             mnuShowNPCCorpseNames.Checked = Settings.Instance.ShowNPCCorpseNames;
             mnuShowNPCCorpseNames2.Checked = Settings.Instance.ShowNPCCorpseNames;
-
         }
-
-
 
         private void mnuShowPlayerCorpseNames_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.ShowPlayerCorpseNames = !Settings.Instance.ShowPlayerCorpseNames;
 
             mnuShowPlayerCorpseNames.Checked = Settings.Instance.ShowPlayerCorpseNames;
             mnuShowPlayerCorpseNames2.Checked = Settings.Instance.ShowPlayerCorpseNames;
-
         }
         
         private void mnuShowPCGuild_Click(object sender, EventArgs e)
@@ -7265,172 +6493,129 @@ namespace myseq
         private void mnuFilterMapLines_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.FilterMapLines = !Settings.Instance.FilterMapLines;
 
             mnuFilterMapLines.Checked = Settings.Instance.FilterMapLines;
             mnuFilterMapLines2.Checked = Settings.Instance.FilterMapLines;
-
         }
 
         private void mnuFilterMapText_Click(object sender, EventArgs e)
         {
-
             Settings.Instance.FilterMapText = !Settings.Instance.FilterMapText;
 
             mnuFilterMapText.Checked = Settings.Instance.FilterMapText;
             mnuFilterMapText2.Checked = Settings.Instance.FilterMapText;
-
         }
 
         private void mnuFilterNPCs_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.FilterNPCs = !Settings.Instance.FilterNPCs;
 
             mnuFilterNPCs.Checked = Settings.Instance.FilterNPCs;
             mnuFilterNPCs2.Checked = Settings.Instance.FilterNPCs;
-
         }
-
-
 
         private void mnuFilterPlayers_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.FilterPlayers = !Settings.Instance.FilterPlayers;
 
             mnuFilterPlayers.Checked = Settings.Instance.FilterPlayers;
             mnuFilterPlayers2.Checked = Settings.Instance.FilterPlayers;
-
         }
-
-
 
         private void mnuFilterSpawnPoints_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.FilterSpawnPoints = !Settings.Instance.FilterSpawnPoints;
 
             mnuFilterSpawnPoints.Checked = Settings.Instance.FilterSpawnPoints;
             mnuFilterSpawnPoints2.Checked = Settings.Instance.FilterSpawnPoints;
-
         }
 
         private void mnuFilterPlayerCorpses_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.FilterPlayerCorpses = !Settings.Instance.FilterPlayerCorpses;
 
             mnuFilterPlayerCorpses.Checked = Settings.Instance.FilterPlayerCorpses;
             mnuFilterPlayerCorpses2.Checked = Settings.Instance.FilterPlayerCorpses;
-
         }
 
         private void mnuFilterGroundItems_Click(object sender, EventArgs e)
         {
-
             Settings.Instance.FilterGroundItems = !Settings.Instance.FilterGroundItems;
 
             mnuFilterGroundItems.Checked = Settings.Instance.FilterGroundItems;
             mnuFilterGroundItems2.Checked = Settings.Instance.FilterGroundItems;
-
         }
 
         private void mnuFilterNPCCorpses_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.FilterNPCCorpses = !Settings.Instance.FilterNPCCorpses;
 
             mnuFilterNPCCorpses.Checked = Settings.Instance.FilterNPCCorpses;
             mnuFilterNPCCorpses2.Checked = Settings.Instance.FilterNPCCorpses;
-
         }
 
         private void mnuShowPVP_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.ShowPVP = !Settings.Instance.ShowPVP;
 
             mnuShowPVP.Checked = Settings.Instance.ShowPVP;
             mnuShowPVP2.Checked = Settings.Instance.ShowPVP;
-
         }
 
         private void mnuShowPVPLevel_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.ShowPVPLevel = !Settings.Instance.ShowPVPLevel;
 
             mnuShowPVPLevel.Checked = Settings.Instance.ShowPVPLevel;
             mnuShowPVPLevel2.Checked = Settings.Instance.ShowPVPLevel;
-
         }
-
-
 
         private void mnuShowNPCLevels_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.ShowNPCLevels = !Settings.Instance.ShowNPCLevels;
 
             mnuShowNPCLevels.Checked = Settings.Instance.ShowNPCLevels;
             mnuShowNPCLevels2.Checked = Settings.Instance.ShowNPCLevels;
-
         }
-
-
 
         private void mnuAutoExpand_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.AutoExpand = !Settings.Instance.AutoExpand;
 
             mnuAutoExpand.Checked = Settings.Instance.AutoExpand;
             mnuAutoExpand2.Checked = Settings.Instance.AutoExpand;
-
         }
-
-
 
         private void mnuSaveSpawnLog_Click(object sender, EventArgs e)
 
         {
-
             mnuSaveSpawnLog.Checked = !mnuSaveSpawnLog.Checked;
 
             Settings.Instance.SaveSpawnLogs = mnuSaveSpawnLog.Checked;
-
         }
-
-
 
         private void mnuSpawnCountdown_Click(object sender, EventArgs e)
 
         {
-
             Settings.Instance.SpawnCountdown = !Settings.Instance.SpawnCountdown;
-            
+
             mnuSpawnCountdown.Checked = Settings.Instance.SpawnCountdown;
             mnuSpawnCountdown2.Checked = Settings.Instance.SpawnCountdown;
-
         }
-
-
 
         private void mnuShowPCCorpses_Click(object sender, EventArgs e)
 
         {
-
             mnuShowPCCorpses.Checked = !mnuShowPCCorpses.Checked;
 
             Settings.Instance.ShowPCCorpses = mnuShowPCCorpses.Checked;
@@ -7438,18 +6623,14 @@ namespace myseq
             comm.UpdateHidden();
         }
 
-
-
         private void mnuShowMyCorpse_Click(object sender, EventArgs e)
 
         {
-
             mnuShowMyCorpse.Checked = !mnuShowMyCorpse.Checked;
 
             Settings.Instance.ShowMyCorpse = mnuShowMyCorpse.Checked;
 
             comm.UpdateHidden();
-
         }
 
         private void mnuForceDistinctText_Click(object sender, EventArgs e)
@@ -7460,20 +6641,17 @@ namespace myseq
             mnuForceDistinctText2.Checked = Settings.Instance.ForceDistinctText;
 
             resetMapPens();
-
         }
 
         private void mnuAddHuntFilter_Click(object sender, EventArgs e)
         {
             if (dialogBox("Add to Zone Hunt Filters", "Add name to Hunt list:", alertAddmobname))
             {
-
                 filters.AddToAlerts(filters.hunt, alertAddmobname);
 
-                filters.writeAlertFile(curZone);
+                filters.WriteAlertFile(curZone);
 
                 reloadAlertFiles();
-
             }
         }
 
@@ -7481,13 +6659,11 @@ namespace myseq
         {
             if (dialogBox("Add to Zone Caution Filters", "Add name to Caution list:", alertAddmobname))
             {
-
                 filters.AddToAlerts(filters.caution, alertAddmobname);
 
-                filters.writeAlertFile(curZone);
+                filters.WriteAlertFile(curZone);
 
                 reloadAlertFiles();
-
             }
         }
 
@@ -7495,13 +6671,11 @@ namespace myseq
         {
             if (dialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", alertAddmobname))
             {
-
                 filters.AddToAlerts(filters.danger, alertAddmobname);
 
-                filters.writeAlertFile(curZone);
+                filters.WriteAlertFile(curZone);
 
                 reloadAlertFiles();
-
             }
         }
 
@@ -7509,27 +6683,23 @@ namespace myseq
         {
             if (dialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", alertAddmobname))
             {
-
                 filters.AddToAlerts(filters.alert, alertAddmobname);
 
-                filters.writeAlertFile(curZone);
+                filters.WriteAlertFile(curZone);
 
                 reloadAlertFiles();
-
             }
         }
 
         private void mnuSearchAllakhazam_Click(object sender, EventArgs e)
         {
-            string searchname = Regex.Replace(alertAddmobname.Replace("_", " "), "[0-9#]", "").Trim();
+            var searchname = RegexHelper.SearchName(alertAddmobname);
 
             if (searchname.Length > 0)
             {
+                var searchURL = string.Format(Settings.Instance.SearchString, searchname);
 
-                string searchURL = String.Format(Settings.Instance.SearchString, searchname);
-
-                System.Diagnostics.Process.Start(searchURL);
-
+                Process.Start(searchURL);
             }
         }
 
@@ -7538,88 +6708,76 @@ namespace myseq
             Settings.Instance.ShowMenuBar = !Settings.Instance.ShowMenuBar;
 
             mnuShowMenuBar.Checked = Settings.Instance.ShowMenuBar;
-            this.mnuViewMenuBar.Checked = Settings.Instance.ShowMenuBar;
+            mnuViewMenuBar.Checked = Settings.Instance.ShowMenuBar;
 
             if (Settings.Instance.ShowMenuBar)
             {
-                this.mnuMainMenu.Show();
+                mnuMainMenu.Show();
             }
             else
             {
-                this.mnuMainMenu.Hide();
+                mnuMainMenu.Hide();
             }
-        }
-
-        private void menuItem5_Click(object sender, EventArgs e)
-        {
-            this.addMapText("Testing");
         }
 
         private void mnuViewStatusBar_Click(object sender, EventArgs e)
         {
             Settings.Instance.ShowStatusBar = !Settings.Instance.ShowStatusBar;
 
-            this.mnuViewStatusBar.Checked = Settings.Instance.ShowStatusBar;
+            mnuViewStatusBar.Checked = Settings.Instance.ShowStatusBar;
             if (Settings.Instance.ShowStatusBar)
-                this.statusBarStrip.Show();
+                statusBarStrip.Show();
             else
-                this.statusBarStrip.Hide();
+                statusBarStrip.Hide();
         }
 
         private void mnuViewDepthFilterToolBar_Click(object sender, EventArgs e)
         {
             Settings.Instance.ShowToolBar = !Settings.Instance.ShowToolBar;
 
-            this.mnuViewDepthFilterBar.Checked = Settings.Instance.ShowToolBar;
+            mnuViewDepthFilterBar.Checked = Settings.Instance.ShowToolBar;
             if (Settings.Instance.ShowToolBar)
             {
-                this.toolBarStrip.Show();
+                toolBarStrip.Show();
             }
             else
             {
-                this.toolBarStrip.Hide();
+                toolBarStrip.Hide();
             }
         }
 
         private void toolStripScale_TextUpdate(object sender, EventArgs e)
         {
-            string Str = this.toolStripScale.Text.Trim();
+            string Str = toolStripScale.Text.Trim();
             Str = Str.Replace("%", "");
 
-            double Num;
             bool validnum = false;
             if (Str.Length > 0)
             {
-                bool isNum = double.TryParse(Str, out Num);
+                bool isNum = double.TryParse(Str, out var Num);
 
                 if (isNum)
                 {
-                    if (Num < 1 || Num > (double)mapPane.scale.Maximum)
-                        validnum = false;
-                    else
-                        validnum = true;
-                }  
+                    validnum = Num >= 1 && Num <= (double)mapPane.scale.Maximum;
+                }
             }
-
 
             if (!validnum)
             {
-                toolStripScale.Text = String.Format("{0:0.0%}", mapPane.scale.Value / 100);
-                MessageBox.Show(String.Format("Enter a number between {0} and {1}", mapPane.scale.Minimum, mapPane.scale.Maximum), "Invalid Value Entered.");
+                toolStripScale.Text = $"{mapPane.scale.Value / 100:0.0%}";
+                MessageBox.Show($"Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
             }
-
         }
 
         private void toolStripScale_Leave(object sender, EventArgs e)
         {
-            string Str = this.toolStripScale.Text.Trim();
+            string Str = toolStripScale.Text.Trim();
             Str = Str.Replace("%", "");
 
-            double Num;
             bool validnum = false;
             if (Str.Length > 0)
             {
-                bool isNum = double.TryParse(Str, out Num);
+                bool isNum = double.TryParse(Str, out var Num);
 
                 if (isNum)
                 {
@@ -7627,18 +6785,23 @@ namespace myseq
                     {
                         mapPane.scale.Value = (decimal)Num;
                         validnum = true;
-                    } else
-
+                    }
+                    else
+                    {
                         validnum = false;
+                    }
                 }
             }
 
             if (!validnum)
             {
-                toolStripScale.Text = String.Format("{0:0.0%}", mapPane.scale.Value / 100);
-                MessageBox.Show(String.Format("Enter a number between {0} and {1}", mapPane.scale.Minimum, mapPane.scale.Maximum), "Invalid Value Entered.");
-            } else
-                toolStripScale.Text = String.Format("{0:0.0%}", mapPane.scale.Value / 100);
+                toolStripScale.Text = $"{mapPane.scale.Value / 100:0.0%}";
+                MessageBox.Show($"Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
+            }
+            else
+            {
+                toolStripScale.Text = $"{mapPane.scale.Value / 100:0.0%}";
+            }
         }
 
         private void toolStripZoomIn_Click(object sender, EventArgs e)
@@ -7714,31 +6877,25 @@ namespace myseq
         {
             // validate that text is a usable number
             // allow a value of 0 to 3500
-            string Str = this.toolStripZPos.Text.Trim();
-            
-            double Num;
+            string Str = toolStripZPos.Text.Trim();
+
             bool validnum = true;
             if (Str.Length > 0)
             {
-                bool isNum = double.TryParse(Str, out Num);
+                bool isNum = double.TryParse(Str, out var Num);
                 validnum = false;
                 if (isNum)
                 {
-                    if (Num < 0 || Num > 3500)
-                        validnum = false;
-                    else
-                        validnum = true;
+                    validnum = Num >= 0 && Num <= 3500;
                 }
-                if (Str.Length == 1 & Str == ".")
+                if (Str.Length == 1 && Str == ".")
                     validnum = true;
             }
             if (!validnum)
             {
-                toolStripZPos.Text = String.Format("{0:0.0}",mapPane.filterzpos.Value);
+                toolStripZPos.Text = $"{mapPane.filterzpos.Value:0.0}";
                 MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Pos Value Entered.");
             }
-
-
         }
 
         private void toolStripZPosUp_Click(object sender, EventArgs e)
@@ -7748,7 +6905,7 @@ namespace myseq
             if (current_val > mapPane.filterzpos.Maximum)
                 current_val = mapPane.filterzpos.Maximum;
             mapPane.filterzpos.Value = current_val;
-            toolStripZPos.Text = String.Format("{0:0.0}",current_val);
+            toolStripZPos.Text = $"{current_val:0.0}";
         }
 
         private void toolStripZPosDown_Click(object sender, EventArgs e)
@@ -7758,7 +6915,7 @@ namespace myseq
             if (current_val < mapPane.filterzpos.Minimum)
                 current_val = mapPane.filterzpos.Minimum;
             mapPane.filterzpos.Value = current_val;
-            toolStripZPos.Text = String.Format("{0:0.0}", current_val);
+            toolStripZPos.Text = $"{current_val:0.0}";
         }
 
         private void toolStripZNegDown_Click(object sender, EventArgs e)
@@ -7768,7 +6925,7 @@ namespace myseq
             if (current_val < mapPane.filterzneg.Minimum)
                 current_val = mapPane.filterzneg.Minimum;
             mapPane.filterzneg.Value = current_val;
-            toolStripZNeg.Text = String.Format("{0:0.0}", current_val);
+            toolStripZNeg.Text = $"{current_val:0.0}";
         }
 
         private void toolStripZNegUp_Click(object sender, EventArgs e)
@@ -7778,26 +6935,25 @@ namespace myseq
             if (current_val > mapPane.filterzneg.Maximum)
                 current_val = mapPane.filterzneg.Maximum;
             mapPane.filterzneg.Value = current_val;
-            toolStripZNeg.Text = String.Format("{0:0.0}", current_val);
+            toolStripZNeg.Text = $"{current_val:0.0}";
         }
 
         private void toolStripResetDepthFilter_Click(object sender, EventArgs e)
         {
             mapPane.filterzneg.Value = 75;
             mapPane.filterzpos.Value = 75;
-            toolStripZNeg.Text = String.Format("{0:0.0}", 75);
-            toolStripZPos.Text = String.Format("{0:0.0}", 75);
+            toolStripZNeg.Text = $"{75:0.0}";
+            toolStripZPos.Text = $"{75:0.0}";
         }
 
         private void toolStripZPos_Leave(object sender, EventArgs e)
         {
             // update Z-Pos value
-            string Str = this.toolStripZPos.Text.Trim();
+            string Str = toolStripZPos.Text.Trim();
             bool validnum = false;
-            double Num;
             if (Str.Length > 0)
             {
-                bool isNum = double.TryParse(Str, out Num);
+                bool isNum = double.TryParse(Str, out var Num);
                 if (isNum)
                 {
                     if (Num >= 0 && Num <= 3500)
@@ -7809,34 +6965,30 @@ namespace myseq
                 }
             }
             if (!validnum)
-                toolStripZPos.Text = String.Format("{0:0.0}", mapPane.filterzpos.Value);
+                toolStripZPos.Text = $"{mapPane.filterzpos.Value:0.0}";
         }
 
         private void toolStripZNeg_TextChanged(object sender, EventArgs e)
         {
             // validate that text is a usable number
             // allow a value of 0 to 3500
-            string Str = this.toolStripZNeg.Text.Trim();
+            string Str = toolStripZNeg.Text.Trim();
 
-            double Num;
             bool validnum = true;
             if (Str.Length > 0)
             {
-                bool isNum = double.TryParse(Str, out Num);
+                bool isNum = double.TryParse(Str, out var Num);
                 validnum = false;
                 if (isNum)
                 {
-                    if (Num < 0 || Num > 3500)
-                        validnum = false;
-                    else
-                        validnum = true;
+                    validnum = Num >= 0 && Num <= 3500;
                 }
-                if (Str.Length == 1 & Str == ".")
+                if (Str.Length == 1 && Str == ".")
                     validnum = true;
             }
             if (!validnum)
             {
-                toolStripZNeg.Text = String.Format("{0:0.0}", mapPane.filterzneg.Value);
+                toolStripZNeg.Text = $"{mapPane.filterzneg.Value:0.0}";
                 MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Neg Value Entered.");
             }
         }
@@ -7844,12 +6996,11 @@ namespace myseq
         private void toolStripZNeg_Leave(object sender, EventArgs e)
         {
             // update Z-Pos value
-            string Str = this.toolStripZNeg.Text.Trim();
+            string Str = toolStripZNeg.Text.Trim();
             bool validnum = false;
-            double Num;
             if (Str.Length > 0)
             {
-                bool isNum = double.TryParse(Str, out Num);
+                bool isNum = double.TryParse(Str, out var Num);
                 if (isNum)
                 {
                     if (Num >= 0 && Num <= 3500)
@@ -7861,60 +7012,60 @@ namespace myseq
                 }
             }
             if (!validnum)
-                toolStripZNeg.Text = String.Format("{0:0.0}", mapPane.filterzneg.Value);
+                toolStripZNeg.Text = $"{mapPane.filterzneg.Value:0.0}";
         }
 
         private void mnuAddMapLabel_Click(object sender, EventArgs e)
         {
-            this.addMapText(alertAddmobname);
+            addMapText(alertAddmobname);
         }
 
         private void toolStripResetLookup_Click(object sender, EventArgs e)
         {
-            this.toolStripLookupBox.Text = "";
-            this.toolStripLookupBox.Focus();
+            toolStripLookupBox.Text = "";
+            toolStripLookupBox.Focus();
             eq.MarkLookups("0:");
         }
         private void toolStripResetLookup1_Click(object sender, EventArgs e)
         {
-            this.toolStripLookupBox1.Text = "";
-            this.toolStripLookupBox1.Focus();
+            toolStripLookupBox1.Text = "";
+            toolStripLookupBox1.Focus();
             eq.MarkLookups("1:");
         }
         private void toolStripResetLookup2_Click(object sender, EventArgs e)
         {
-            this.toolStripLookupBox2.Text = "";
-            this.toolStripLookupBox2.Focus();
+            toolStripLookupBox2.Text = "";
+            toolStripLookupBox2.Focus();
             eq.MarkLookups("2:");
         }
         private void toolStripResetLookup3_Click(object sender, EventArgs e)
         {
-            this.toolStripLookupBox3.Text = "";
-            this.toolStripLookupBox3.Focus();
+            toolStripLookupBox3.Text = "";
+            toolStripLookupBox3.Focus();
             eq.MarkLookups("3:");
         }
         private void toolStripResetLookup4_Click(object sender, EventArgs e)
         {
-            this.toolStripLookupBox4.Text = "";
-            this.toolStripLookupBox4.Focus();
+            toolStripLookupBox4.Text = "";
+            toolStripLookupBox4.Focus();
             eq.MarkLookups("4:");
         }
         private void toolStripResetLookup5_Click(object sender, EventArgs e)
         {
-            this.toolStripLookupBox5.Text = "";
-            this.toolStripLookupBox5.Focus();
+            toolStripLookupBox5.Text = "";
+            toolStripLookupBox5.Focus();
             eq.MarkLookups("5:");
         }
         private void toolStripCheckLookup_CheckChanged(object sender, EventArgs e)
         {
-            if (this.toolStripCheckLookup.Checked)
+            if (toolStripCheckLookup.Checked)
             {
-                this.toolStripCheckLookup.Text = "L";
+                toolStripCheckLookup.Text = "L";
                 bFilter0 = false;
             }
             else
             {
-                this.toolStripCheckLookup.Text = "F";
+                toolStripCheckLookup.Text = "F";
                 bFilter0 = true;
             }
             string new_text = toolStripLookupBox.Text.Replace(" ", "_");
@@ -7922,14 +7073,14 @@ namespace myseq
         }
         private void toolStripCheckLookup1_CheckChanged(object sender, EventArgs e)
         {
-            if (this.toolStripCheckLookup1.Checked)
+            if (toolStripCheckLookup1.Checked)
             {
-                this.toolStripCheckLookup1.Text = "L";
+                toolStripCheckLookup1.Text = "L";
                 bFilter1 = false;
             }
             else
             {
-                this.toolStripCheckLookup1.Text = "F";
+                toolStripCheckLookup1.Text = "F";
                 bFilter1 = true;
             }
             string new_text = toolStripLookupBox1.Text.Replace(" ", "_");
@@ -7937,14 +7088,14 @@ namespace myseq
         }
         private void toolStripCheckLookup2_CheckChanged(object sender, EventArgs e)
         {
-            if (this.toolStripCheckLookup2.Checked)
+            if (toolStripCheckLookup2.Checked)
             {
-                this.toolStripCheckLookup2.Text = "L";
+                toolStripCheckLookup2.Text = "L";
                 bFilter2 = false;
             }
             else
             {
-                this.toolStripCheckLookup2.Text = "F";
+                toolStripCheckLookup2.Text = "F";
                 bFilter2 = true;
             }
             string new_text = toolStripLookupBox2.Text.Replace(" ", "_");
@@ -7952,14 +7103,14 @@ namespace myseq
         }
         private void toolStripCheckLookup3_CheckChanged(object sender, EventArgs e)
         {
-            if (this.toolStripCheckLookup3.Checked)
+            if (toolStripCheckLookup3.Checked)
             {
-                this.toolStripCheckLookup3.Text = "L";
+                toolStripCheckLookup3.Text = "L";
                 bFilter3 = false;
             }
             else
             {
-                this.toolStripCheckLookup3.Text = "F";
+                toolStripCheckLookup3.Text = "F";
                 bFilter3 = true;
             }
             string new_text = toolStripLookupBox3.Text.Replace(" ", "_");
@@ -7967,14 +7118,14 @@ namespace myseq
         }
         private void toolStripCheckLookup4_CheckChanged(object sender, EventArgs e)
         {
-            if (this.toolStripCheckLookup4.Checked)
+            if (toolStripCheckLookup4.Checked)
             {
-                this.toolStripCheckLookup4.Text = "L";
+                toolStripCheckLookup4.Text = "L";
                 bFilter4 = false;
             }
             else
             {
-                this.toolStripCheckLookup4.Text = "F";
+                toolStripCheckLookup4.Text = "F";
                 bFilter4 = true;
             }
             string new_text = toolStripLookupBox4.Text.Replace(" ", "_");
@@ -7982,13 +7133,13 @@ namespace myseq
         }
         private void toolStripCheckLookup5_CheckChanged(object sender, EventArgs e)
         {
-            if (this.toolStripCheckLookup5.Checked)
+            if (toolStripCheckLookup5.Checked)
             {
-                this.toolStripCheckLookup5.Text = "L";
+                toolStripCheckLookup5.Text = "L";
                 bFilter5 = false;
             }
             else
-            { this.toolStripCheckLookup5.Text = "F";
+            { toolStripCheckLookup5.Text = "F";
                 bFilter5 = true;
             }
             string new_text = toolStripLookupBox5.Text.Replace(" ", "_");
@@ -8003,8 +7154,7 @@ namespace myseq
                 {
                     string new_text = toolStripLookupBox.Text.Replace(" ", "_");
                     eq.MarkLookups("0:" + new_text, bFilter0);
-                    if (mapCon != null)
-                        mapCon.Focus();
+                    mapCon?.Focus();
                 }
                 else
                 {
@@ -8013,7 +7163,6 @@ namespace myseq
                 }
 
                 e.Handled = true;
-
             }
         }
         private void toolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -8024,8 +7173,7 @@ namespace myseq
                 {
                     string new_text = toolStripLookupBox1.Text.Replace(" ", "_");
                     eq.MarkLookups("1:" + new_text, bFilter1);
-                    if (mapCon != null)
-                        mapCon.Focus();
+                    mapCon?.Focus();
                 }
                 else
                 {
@@ -8034,7 +7182,6 @@ namespace myseq
                 }
 
                 e.Handled = true;
-
             }
         }
         private void toolStripTextBox2_KeyPress(object sender, KeyPressEventArgs e)
@@ -8045,8 +7192,7 @@ namespace myseq
                 {
                     string new_text = toolStripLookupBox2.Text.Replace(" ", "_");
                     eq.MarkLookups("2:" + new_text, bFilter2);
-                    if (mapCon != null)
-                        mapCon.Focus();
+                    mapCon?.Focus();
                 }
                 else
                 {
@@ -8055,7 +7201,6 @@ namespace myseq
                 }
 
                 e.Handled = true;
-
             }
         }
         private void toolStripTextBox3_KeyPress(object sender, KeyPressEventArgs e)
@@ -8066,8 +7211,7 @@ namespace myseq
                 {
                     string new_text = toolStripLookupBox3.Text.Replace(" ", "_");
                     eq.MarkLookups("3:" + new_text, bFilter3);
-                    if (mapCon != null)
-                        mapCon.Focus();
+                    mapCon?.Focus();
                 }
                 else
                 {
@@ -8076,7 +7220,6 @@ namespace myseq
                 }
 
                 e.Handled = true;
-
             }
         }
         private void toolStripTextBox4_KeyPress(object sender, KeyPressEventArgs e)
@@ -8087,8 +7230,7 @@ namespace myseq
                 {
                     string new_text = toolStripLookupBox4.Text.Replace(" ", "_");
                     eq.MarkLookups("4:" + new_text, bFilter4);
-                    if (mapCon != null)
-                        mapCon.Focus();
+                    mapCon?.Focus();
                 }
                 else
                 {
@@ -8097,7 +7239,6 @@ namespace myseq
                 }
 
                 e.Handled = true;
-
             }
         }
         private void toolStripTextBox5_KeyPress(object sender, KeyPressEventArgs e)
@@ -8109,8 +7250,7 @@ namespace myseq
                     string new_text = toolStripLookupBox5.Text.Replace(" ", "_");
                     eq.MarkLookups("5:" + new_text, bFilter5
                         );
-                    if (mapCon != null)
-                        mapCon.Focus();
+                    mapCon?.Focus();
                 }
                 else
                 {
@@ -8119,7 +7259,6 @@ namespace myseq
                 }
 
                 e.Handled = true;
-
             }
         }
 
@@ -8127,14 +7266,12 @@ namespace myseq
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                string Str = this.toolStripScale.Text.Trim();
+                string Str = toolStripScale.Text.Trim();
                 Str = Str.Replace("%", "");
-
-                double Num;
 
                 if (Str.Length > 0)
                 {
-                    bool isNum = double.TryParse(Str, out Num);
+                    bool isNum = double.TryParse(Str, out var Num);
 
                     if (isNum)
                     {
@@ -8142,16 +7279,15 @@ namespace myseq
                             mapPane.scale.Value = (decimal)Num;
                     }
                 }
-                this.toolStripScale.Focus();
+                toolStripScale.Focus();
 
                 e.Handled = true;
-
             }
         }
 
         private void SetUpdateSteps()
         {
-            int update_steps = 1000 / Settings.Instance.UpdateDelay + 1;
+            int update_steps = (1000 / Settings.Instance.UpdateDelay) + 1;
             if (update_steps < 3)
                 update_steps = 3;
 
@@ -8168,7 +7304,7 @@ namespace myseq
             // add map text, to where the player is currently located
             if (eq.longname.Length > 0)
             {
-                if (eq.playerinfo != null && eq.playerinfo.Name.Length > 0)
+                if (eq.playerinfo?.Name.Length > 0)
                 {
                     alertX = eq.playerinfo.X;
                     alertY = eq.playerinfo.Y;
@@ -8193,29 +7329,28 @@ namespace myseq
         {
             Settings.Instance.ShowListSearchBox = !Settings.Instance.ShowListSearchBox;
 
-            this.mnuShowListSearchBox.Checked = Settings.Instance.ShowListSearchBox;
+            mnuShowListSearchBox.Checked = Settings.Instance.ShowListSearchBox;
 
             if (Settings.Instance.ShowListSearchBox)
             {
-                this.SpawnList.ShowSearchBox();
-                this.SpawnTimerList.ShowSearchBox();
-                this.GroundItemList.ShowSearchBox();
+                SpawnList.ShowSearchBox();
+                SpawnTimerList.ShowSearchBox();
+                GroundItemList.ShowSearchBox();
             }
             else
             {
-                this.SpawnList.HideSearchBox();
-                this.SpawnTimerList.HideSearchBox();
-                this.GroundItemList.HideSearchBox();
+                SpawnList.HideSearchBox();
+                SpawnTimerList.HideSearchBox();
+                GroundItemList.HideSearchBox();
             }
         }
 
         private void mnuSmallTargetInfo_Click(object sender, EventArgs e)
-        {        
+        {
             Settings.Instance.SmallTargetInfo = !Settings.Instance.SmallTargetInfo;
 
             mnuSmallTargetInfo.Checked = Settings.Instance.SmallTargetInfo;
             mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
-
         }
         private void mnuSmallTargetInfo2_Click(object sender, EventArgs e)
         {
@@ -8223,19 +7358,16 @@ namespace myseq
 
             mnuSmallTargetInfo.Checked = Settings.Instance.SmallTargetInfo;
             mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
-
         }
 
         private void toolStripScale_DropDownClosed(object sender, EventArgs e)
         {
-            string Str = this.toolStripScale.SelectedItem.ToString();
+            string Str = toolStripScale.SelectedItem.ToString();
             Str = Str.Replace("%", "");
-            
-            double Num;
 
             if (Str.Length > 0)
             {
-                bool isNum = double.TryParse(Str, out Num);
+                bool isNum = double.TryParse(Str, out var Num);
 
                 if (isNum)
                 {
@@ -8249,107 +7381,85 @@ namespace myseq
 
         private void addZoneEmailAlertFilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             if (dialogBox("Add to Zone Email Alert Filters", "Add name to Email list:", alertAddmobname))
             {
-
                 filters.AddToAlerts(filters.emailAlert, alertAddmobname);
 
-                filters.writeAlertFile(curZone);
+                filters.WriteAlertFile(curZone);
 
                 reloadAlertFiles();
-
             }
         }
 
-        private void toolStripEmailAlerts_Click(object sender, EventArgs e)
-        {
-            if (Settings.Instance.EmailAlerts == true)
-            {
-                // turn off alerts
-                Settings.Instance.EmailAlerts = false;
-            }
-            else
-            {
-                // trying to turn on alerts.  Check if To and From emails set.
-                if (SMTPSettings.Instance.FromEmail == string.Empty || SMTPSettings.Instance.ToEmail == string.Empty || SMTPSettings.Instance.SmtpServer == string.Empty)
-                {
-                    MessageBox.Show("Set Email Settings on the SMTP tab in the\r\nOptions Dialog before enabling email alerts.", "Initial Email Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-                if (SMTPSettings.Instance.UseNetworkCredentials == true || (SMTPSettings.Instance.SmtpUsername.ToString().Length > 0 && SMTPSettings.Instance.SmtpPassword.ToString().Length > 0))
-                {
-                    // Check if we can resolve the host
-                    IPHostEntry host;
-                    try { host = Dns.GetHostEntry(SMTPSettings.Instance.SmtpServer.ToString()); }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SMTPSettings.Instance.SmtpServer.ToString() + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    // Using network credentials, so no login prompt needed
-                    Settings.Instance.EmailAlerts = !Settings.Instance.EmailAlerts;
-                }
-                else
-                {
-                    // we got here, so everything must be filled out
-                    IPHostEntry host;
-                    try { host = Dns.GetHostEntry(SMTPSettings.Instance.SmtpServer.ToString()); }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SMTPSettings.Instance.SmtpServer.ToString() + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+        //private void toolStripEmailAlerts_Click(object sender, EventArgs e)
+        //{
+        //    if (Settings.Instance.EmailAlerts)
+        //    {
+        //        // turn off alerts
+        //        Settings.Instance.EmailAlerts = false;
+        //    }
+        //    else
+        //    {
+        //        // trying to turn on alerts.  Check if To and From emails set.
+        //        if (SmtpSettings.Instance.FromEmail?.Length == 0 || SmtpSettings.Instance.ToEmail?.Length == 0 || SmtpSettings.Instance.SmtpServer?.Length == 0)
+        //        {
+        //            MessageBox.Show("Set Email Settings on the SMTP tab in the\r\nOptions Dialog before enabling email alerts.", "Initial Email Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        //            return;
+        //        }
+        //        if (SmtpSettings.Instance.UseNetworkCredentials || (SmtpSettings.Instance.SmtpUsername.Length > 0 && SmtpSettings.Instance.SmtpPassword.Length > 0))
+        //        {
+        //            // Check if we can resolve the host
+        //            IPHostEntry host;
+        //            try { host = Dns.GetHostEntry(SmtpSettings.Instance.SmtpServer); }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SmtpSettings.Instance.SmtpServer + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //                return;
+        //            }
+        //            // Using network credentials, so no login prompt needed
+        //            Settings.Instance.EmailAlerts = !Settings.Instance.EmailAlerts;
+        //        }
+        //        else
+        //        {
+        //            // we got here, so everything must be filled out
+        //            IPHostEntry host;
+        //            try { host = Dns.GetHostEntry(SmtpSettings.Instance.SmtpServer); }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SmtpSettings.Instance.SmtpServer + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //                return;
+        //            }
 
-                    // Pop up username/password login screen for email
-                    frmLogin f4 = new frmLogin();
-                    f4.StartPosition = FormStartPosition.CenterScreen;
-                    // the validation in the ShowDialog, will turn on alerts if passes and ok pushed.
-                    f4.ShowDialog();
-                }
-            }
-            
-            this.toolStripEmailAlerts.Checked = Settings.Instance.EmailAlerts;
+        //            // Pop up username/password login screen for email
+        //            frmLogin f4 = new frmLogin
+        //            {
+        //                StartPosition = FormStartPosition.CenterScreen
+        //            };
+        //            // the validation in the ShowDialog, will turn on alerts if passes and ok pushed.
+        //            f4.ShowDialog();
+        //        }
+        //    }
 
-            if (Settings.Instance.EmailAlerts)
-            {
-                toolStripEmailAlerts.ToolTipText = "Disable Email Alerts";
-                if (filters.emailAlert.Count > 0)
-                    reloadAlertFiles();
-            }
-            else
-            {
-                toolStripEmailAlerts.ToolTipText = "Enable Email Alerts";
-            }
-        }
+        //    toolStripEmailAlerts.Checked = Settings.Instance.EmailAlerts;
+
+        //    if (Settings.Instance.EmailAlerts)
+        //    {
+        //        toolStripEmailAlerts.ToolTipText = "Disable Email Alerts";
+        //        if (filters.emailAlert.Count > 0)
+        //            reloadAlertFiles();
+        //    }
+        //    else
+        //    {
+        //        toolStripEmailAlerts.ToolTipText = "Enable Email Alerts";
+        //    }
+        //}
 
         private void mnuAutoConnect_Click(object sender, EventArgs e)
         {
             Settings.Instance.AutoConnect = !Settings.Instance.AutoConnect;
-            this.mnuAutoConnect.Checked = Settings.Instance.AutoConnect;
+            mnuAutoConnect.Checked = Settings.Instance.AutoConnect;
         }
 
-        private void toolStripZPos_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-
-                mapCon.Focus();
-                e.Handled = true;
-
-            }
-        }
-
-        private void toolStripZNeg_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-
-                mapCon.Focus();
-                e.Handled = true;
-
-            }
-        }
 
 
         private void toolStripLookupBox_Click(object sender, EventArgs e)
@@ -8357,63 +7467,56 @@ namespace myseq
             if (toolStripLookupBox.Text == "Mob Search")
             {
                 toolStripLookupBox.Text = "";
-                this.toolStripLookupBox.ForeColor = System.Drawing.SystemColors.WindowText;
+                toolStripLookupBox.ForeColor = SystemColors.WindowText;
             }
-            
         }
         private void toolStripLookupBox1_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox1.Text == "Mob Search")
             {
                 toolStripLookupBox1.Text = "";
-                this.toolStripLookupBox1.ForeColor = System.Drawing.SystemColors.WindowText;
+                toolStripLookupBox1.ForeColor = SystemColors.WindowText;
             }
-
         }
         private void toolStripLookupBox2_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox2.Text == "Mob Search")
             {
                 toolStripLookupBox2.Text = "";
-                this.toolStripLookupBox2.ForeColor = System.Drawing.SystemColors.WindowText;
+                toolStripLookupBox2.ForeColor = SystemColors.WindowText;
             }
-
         }
         private void toolStripLookupBox3_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox3.Text == "Mob Search")
             {
                 toolStripLookupBox3.Text = "";
-                this.toolStripLookupBox3.ForeColor = System.Drawing.SystemColors.WindowText;
+                toolStripLookupBox3.ForeColor = SystemColors.WindowText;
             }
-
         }
         private void toolStripLookupBox4_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox4.Text == "Mob Search")
             {
                 toolStripLookupBox4.Text = "";
-                this.toolStripLookupBox4.ForeColor = System.Drawing.SystemColors.WindowText;
+                toolStripLookupBox4.ForeColor = SystemColors.WindowText;
             }
-
         }
         private void toolStripLookupBox5_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox5.Text == "Mob Search")
             {
                 toolStripLookupBox5.Text = "";
-                this.toolStripLookupBox5.ForeColor = System.Drawing.SystemColors.WindowText;
+                toolStripLookupBox5.ForeColor = SystemColors.WindowText;
             }
-
         }
         private void toolStripLookupBox_Leave(object sender, EventArgs e)
         {
-
             if (toolStripLookupBox.Text.Length > 0)
             {
                 if (toolStripLookupBox.Text == "Mob Search")
                 {
-                    this.toolStripLookupBox.ForeColor = System.Drawing.SystemColors.GrayText;
+                    toolStripLookupBox.ForeColor = SystemColors.GrayText;
                     eq.MarkLookups("0:");
                 }
                 else
@@ -8424,7 +7527,7 @@ namespace myseq
             }
             else
             {
-                this.toolStripLookupBox.ForeColor = System.Drawing.SystemColors.GrayText;
+                toolStripLookupBox.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox.Text = "Mob Search";
                 eq.MarkLookups("0:");
             }
@@ -8432,12 +7535,11 @@ namespace myseq
 
         private void toolStripLookupBox1_Leave(object sender, EventArgs e)
         {
-
             if (toolStripLookupBox1.Text.Length > 0)
             {
                 if (toolStripLookupBox1.Text == "Mob Search")
                 {
-                    this.toolStripLookupBox1.ForeColor = System.Drawing.SystemColors.GrayText;
+                    toolStripLookupBox1.ForeColor = SystemColors.GrayText;
                     eq.MarkLookups("1:");
                 }
                 else
@@ -8448,7 +7550,7 @@ namespace myseq
             }
             else
             {
-                this.toolStripLookupBox1.ForeColor = System.Drawing.SystemColors.GrayText;
+                toolStripLookupBox1.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox1.Text = "Mob Search";
                 eq.MarkLookups("1:");
             }
@@ -8456,12 +7558,11 @@ namespace myseq
 
         private void toolStripLookupBox2_Leave(object sender, EventArgs e)
         {
-
             if (toolStripLookupBox2.Text.Length > 0)
             {
                 if (toolStripLookupBox2.Text == "Mob Search")
                 {
-                    this.toolStripLookupBox2.ForeColor = System.Drawing.SystemColors.GrayText;
+                    toolStripLookupBox2.ForeColor = SystemColors.GrayText;
                     eq.MarkLookups("2:");
                 }
                 else
@@ -8472,7 +7573,7 @@ namespace myseq
             }
             else
             {
-                this.toolStripLookupBox2.ForeColor = System.Drawing.SystemColors.GrayText;
+                toolStripLookupBox2.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox2.Text = "Mob Search";
                 eq.MarkLookups("2:");
             }
@@ -8480,12 +7581,11 @@ namespace myseq
 
         private void toolStripLookupBox3_Leave(object sender, EventArgs e)
         {
-
             if (toolStripLookupBox3.Text.Length > 0)
             {
                 if (toolStripLookupBox3.Text == "Mob Search")
                 {
-                    this.toolStripLookupBox3.ForeColor = System.Drawing.SystemColors.GrayText;
+                    toolStripLookupBox3.ForeColor = SystemColors.GrayText;
                     eq.MarkLookups("3:");
                 }
                 else
@@ -8496,7 +7596,7 @@ namespace myseq
             }
             else
             {
-                this.toolStripLookupBox3.ForeColor = System.Drawing.SystemColors.GrayText;
+                toolStripLookupBox3.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox3.Text = "Mob Search";
                 eq.MarkLookups("3:");
             }
@@ -8504,12 +7604,11 @@ namespace myseq
 
         private void toolStripLookupBox4_Leave(object sender, EventArgs e)
         {
-
             if (toolStripLookupBox4.Text.Length > 0)
             {
                 if (toolStripLookupBox4.Text == "Mob Search")
                 {
-                    this.toolStripLookupBox4.ForeColor = System.Drawing.SystemColors.GrayText;
+                    toolStripLookupBox4.ForeColor = SystemColors.GrayText;
                     eq.MarkLookups("4:");
                 }
                 else
@@ -8520,7 +7619,7 @@ namespace myseq
             }
             else
             {
-                this.toolStripLookupBox4.ForeColor = System.Drawing.SystemColors.GrayText;
+                toolStripLookupBox4.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox4.Text = "Mob Search";
                 eq.MarkLookups("4:");
             }
@@ -8528,12 +7627,11 @@ namespace myseq
 
         private void toolStripLookupBox5_Leave(object sender, EventArgs e)
         {
-
             if (toolStripLookupBox5.Text.Length > 0)
             {
                 if (toolStripLookupBox5.Text == "Mob Search")
                 {
-                    this.toolStripLookupBox5.ForeColor = System.Drawing.SystemColors.GrayText;
+                    toolStripLookupBox5.ForeColor = SystemColors.GrayText;
                     eq.MarkLookups("5:");
                 }
                 else
@@ -8544,14 +7642,12 @@ namespace myseq
             }
             else
             {
-                this.toolStripLookupBox5.ForeColor = System.Drawing.SystemColors.GrayText;
+                toolStripLookupBox5.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox5.Text = "Mob Search";
                 eq.MarkLookups("5:");
             }
         }
 
-      
-        
         private void mnuFileMain_DropDownOpening(object sender, EventArgs e)
         {
             // Update the Character Selection list
@@ -8613,35 +7709,14 @@ namespace myseq
             processcount = 0;
         }
 
-        private void mnuChar9_Click(object sender, EventArgs e)
-        {
-            SwitchCharacter(9);
-        }
-
-        private void mnuChar10_Click(object sender, EventArgs e)
-        {
-            SwitchCharacter(10);
-        }
-
-        private void mnuChar11_Click(object sender, EventArgs e)
-        {
-            SwitchCharacter(11);
-        }
-
-        private void mnuChar12_Click(object sender, EventArgs e)
-        {
-            SwitchCharacter(12);
-        }
-
         private void toolStripLevel_TextUpdate(object sender, EventArgs e)
         {
-            string Str = this.toolStripLevel.Text.Trim();
+            string Str = toolStripLevel.Text.Trim();
 
-            long Num;
             bool validnum = true;
             if (Str.Length > 0)
             {
-                bool isNum = long.TryParse(Str, out Num);
+                bool isNum = long.TryParse(Str, out var Num);
 
                 if (isNum)
                 {
@@ -8652,7 +7727,6 @@ namespace myseq
                 }
             }
 
-
             if (!validnum)
             {
                 MessageBox.Show("1. Enter a number between 1-105 or select Auto");
@@ -8661,13 +7735,12 @@ namespace myseq
 
         private void toolStripLevel_Leave(object sender, EventArgs e)
         {
-            string Str = this.toolStripLevel.Text.Trim();
+            string Str = toolStripLevel.Text.Trim();
 
-            long Num;
             bool validnum = true;
             if (Str.Length > 0)
             {
-                bool isNum = long.TryParse(Str, out Num);
+                bool isNum = long.TryParse(Str, out var Num);
 
                 if (isNum)
                 {
@@ -8683,7 +7756,7 @@ namespace myseq
                     else
                     {
                         Settings.Instance.LevelOverride = -1;
-                        this.gconLevel = -1;
+                        gconLevel = -1;
                     }
                 }
             }
@@ -8692,27 +7765,43 @@ namespace myseq
             {
                 MessageBox.Show("2. Enter a number between 1-105 or Auto");
             } else {
-                this.gConBaseName = "";
+                gConBaseName = "";
+            }
+        }
+
+        private void toolStripZPos_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                mapCon.Focus();
+                e.Handled = true;
+            }
+        }
+
+        private void toolStripZNeg_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                mapCon.Focus();
+                e.Handled = true;
             }
         }
 
         private void toolStripLevel_DropDownClosed(object sender, EventArgs e)
         {
-            string Str = this.toolStripLevel.SelectedItem.ToString();
-
-            long Num;
+            string Str = toolStripLevel.SelectedItem.ToString();
 
             if (Str.Length > 0)
             {
-                bool isNum = long.TryParse(Str, out Num);
-                this.gConBaseName = "";
+                bool isNum = long.TryParse(Str, out var Num);
+                gConBaseName = "";
                 if (isNum)
                 {
                     if (Num >= 1 && Num <= 105)
                     {
                         //Do Stuff
                         Settings.Instance.LevelOverride = (int)Num;
-                        this.gconLevel = (int)Num;
+                        gconLevel = (int)Num;
                     }
                 }
                 else
@@ -8720,7 +7809,7 @@ namespace myseq
                     if (Str == "Auto")
                     {
                         Settings.Instance.LevelOverride = -1;
-                        this.gconLevel = (int)Num;
+                        gconLevel = (int)Num;
                     }
                 }
             }
@@ -8730,13 +7819,11 @@ namespace myseq
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                string Str = this.toolStripLevel.Text.Trim();
-
-                long Num;
+                string Str = toolStripLevel.Text.Trim();
 
                 if (Str.Length > 0)
                 {
-                    bool isNum = long.TryParse(Str, out Num);
+                    bool isNum = long.TryParse(Str, out var Num);
 
                     if (isNum)
                     {
@@ -8744,17 +7831,15 @@ namespace myseq
                         {
                             //do stuff
                             Settings.Instance.LevelOverride = (int)Num;
-                            this.gconLevel = (int)Num;
+                            gconLevel = (int)Num;
                         }
                     }
                 }
-                this.toolStripScale.Focus();
+                toolStripScale.Focus();
 
                 e.Handled = true;
-
             }
         }
-
     }
 }
 

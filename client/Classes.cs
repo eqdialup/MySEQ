@@ -1,23 +1,22 @@
 using System;
-using System.Drawing;
 using System.Collections;
+using System.Drawing;
 using System.IO;
 
 namespace myseq
 {
-	
-	#region ColorConverter
-	/// <summary>
-	/// Summary description for ColorConverter.
-	/// Class to convert a ShowEQ line color into a c# color.
-	/// Optionally can load a unix style RGB.txt to increase the number of
-	/// named colors above that which .NET natively supports
-	/// </summary>
-	public class ColorConverter
+    #region ColorConverter
+    /// <summary>
+    /// Summary description for ColorConverter.
+    /// Class to convert a ShowEQ line color into a c# color.
+    /// Optionally can load a unix style RGB.txt to increase the number of
+    /// named colors above that which .NET natively supports
+    /// </summary>
+    public class ColorConverter
 	{
 		private Hashtable NamedColors;
 
-		public ColorConverter()	
+		public ColorConverter()
 		{
 			NamedColors = new Hashtable();
 		}
@@ -59,9 +58,11 @@ namespace myseq
 					string[] colorValues = colorValue.Split(' ');
 					if ((colorValues.Length == 3) && (colorName.Length > 0))
 					{
-						NamedColor nc = new NamedColor();
-						nc.Name = (colorName);
-						byte red   = byte.Parse(colorValues[0]);
+                        NamedColor nc = new NamedColor
+                        {
+                            Name = colorName
+                        };
+                        byte red   = byte.Parse(colorValues[0]);
 						byte green = byte.Parse(colorValues[1]);
 						byte blue  = byte.Parse(colorValues[2]);
 						nc.Color   = Color.FromArgb(red, green, blue);
@@ -70,24 +71,22 @@ namespace myseq
 					}
 				}
 			}
-
 		}
 
 		public void Initialise(string filename)
 		{
 			NamedColors = new Hashtable();
-			if (File.Exists(filename)) 
+			if (File.Exists(filename))
 			{
-				using (StreamReader sr = new StreamReader(filename)) 
+				using (StreamReader sr = new StreamReader(filename))
 				{
-					while (sr.Peek() >= 0) 
+					while (sr.Peek() >= 0)
 					{
 						string sLine = sr.ReadLine();
 						ProcessFileLine(sLine);
 					}
-				}		
-			}		
-
+				}
+			}
 		}
 
 		public Color StringToColor(string sInput)
@@ -96,63 +95,34 @@ namespace myseq
 			string sFixed = FixName(sInput);
 			if (sFixed.StartsWith("#") && sFixed.Length == 7) // an RGB value in the form #RRGGBB 
 			{
-				int red   = System.Convert.ToInt32(sFixed.Substring(1, 2), 16);
-				int green = System.Convert.ToInt32(sFixed.Substring(3, 2), 16);
-				int blue  = System.Convert.ToInt32(sFixed.Substring(5, 2), 16);
-				return Color.FromArgb(red, green, blue);;
+				int red   = Convert.ToInt32(sFixed.Substring(1, 2), 16);
+				int green = Convert.ToInt32(sFixed.Substring(3, 2), 16);
+				int blue  = Convert.ToInt32(sFixed.Substring(5, 2), 16);
+				return Color.FromArgb(red, green, blue);
 			}
 			else if (NamedColors.ContainsKey(sFixed)) // a named Color
 			{
 				NamedColor nc = (NamedColor)NamedColors[sFixed];
 				return nc.Color;
 			}
-			else 
+			else
 			{
 				cColor = Color.FromName(sFixed);
-				if (cColor.IsKnownColor)
-					return cColor;
-				else
-				{
-					return Color.PaleGreen;
-				}
-			}
+                return cColor.IsKnownColor ? cColor : Color.PaleGreen;
+            }
 		}
 	}
 	#endregion
 
 	public class ProcessInfo
 	{
-		private int mProcessID;
-		private string msCharName;
 		public ProcessInfo(int ProcessID, string sCharName)
 		{
-			mProcessID = ProcessID;
-			msCharName = sCharName;
+			this.ProcessID = ProcessID;
+            SCharName = sCharName;
 		}
 
-		public int ProcessID
-		{
-			get
-			{
-				return mProcessID;
-			}
-            set
-            {
-                mProcessID = value;
-            }
-		}
-		public string sCharName
-		{
-			get
-			{
-				return msCharName;
-			}
-            set
-            {
-                msCharName = value;
-            }
-		}
-	}
-
-
+        public int ProcessID { get; set; }
+        public string SCharName { get; set; }
+    }
 }
