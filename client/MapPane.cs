@@ -388,12 +388,15 @@ namespace myseq {
             this.mapCon.Name = "mapCon";
             this.mapCon.Size = new System.Drawing.Size(384, 264);
             this.mapCon.TabIndex = 0;
+            this.mapCon.UpdateSteps = 5;
+            this.mapCon.UpdateTicks = 1;
             this.mapCon.MouseEnter += new System.EventHandler(this.mapCon_MouseEnter);
             // 
             // MapPane
             // 
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(760, 441);
             this.Controls.Add(this.cmdLookup);
             this.Controls.Add(this.cmdCommand);
             this.Controls.Add(this.offsetx);
@@ -409,8 +412,8 @@ namespace myseq {
             this.Controls.Add(this.lblOffsetY);
             this.Controls.Add(this.lblOffsetX);
             this.Controls.Add(this.mapCon);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "MapPane";
-            this.Size = new System.Drawing.Size(776, 480);
             this.Resize += new System.EventHandler(this.MapPane_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.offsetx)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.offsety)).EndInit();

@@ -3041,7 +3041,8 @@ namespace myseq
                                         }
                                         else if (Settings.Instance.ShowPCNames && (sp.Name.Length > 0))
                                         { DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y); }
-                                        else { DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + gName, sp.X, sp.Y); }
+                                        else if (Settings.Instance.ShowPCGuild && (gName.Length > 0)) 
+                                            { DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + gName, sp.X, sp.Y); }
 
                                     }
 
