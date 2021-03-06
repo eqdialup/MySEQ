@@ -344,6 +344,8 @@ namespace Structures
 
         public bool ShowPCNames { get; set; }
 
+        public bool ShowPCGuild { get; set; }
+
         public bool ShowNPCCorpseNames { get; set; }
 
         public bool ShowPlayerCorpseNames { get; set; }

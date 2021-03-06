@@ -1188,10 +1188,16 @@ namespace myseq
             catch (Exception ex) {LogLib.WriteLine($"Error with FillRectangle({x1}, {y1}, {width}, {height}): ", ex);}
         }
 
-        private void DrawSpawnNames(Brush dBrush, string tName, float x1, float y1) {
+        private void DrawSpawnNames(Brush dBrush, string tName, float x1, float y1, string gName) {
             float xoffset = bkgBuffer.Graphics.MeasureString(tName, drawFont).Width * 0.5f;
+            float goffset = bkgBuffer.Graphics.MeasureString(gName, drawFont).Width * 0.5f;
 
-            try { bkgBuffer.Graphics.DrawString(tName, drawFont, dBrush, CalcScreenCoordX(x1) - xoffset, CalcScreenCoordY(y1) - SpawnSize - drawFont.GetHeight()); }
+            try
+               {
+                bkgBuffer.Graphics.DrawString(tName, drawFont, dBrush, CalcScreenCoordX(x1) - xoffset, CalcScreenCoordY(y1) - SpawnSize - drawFont.GetHeight());
+                if (gName !="") bkgBuffer.Graphics.DrawString(gName, drawFont, dBrush, CalcScreenCoordX(x1) - xoffset, CalcScreenCoordY(y1) - SpawnSize - drawFont.GetHeight());
+                }
+
             catch (Exception ex) {LogLib.WriteLine($"Error with DrawSpawnNames({tName}, {x1}, {y1}): ", ex);}
         }
 
@@ -1930,7 +1936,7 @@ namespace myseq
                             DrawRectangle(yellowPen, x - SpawnPlusSizeOffset + 0.5f, y - SpawnPlusSizeOffset + 0.5f, SpawnPlusSize, SpawnPlusSize);
 
                             if (Settings.Instance.ShowPlayerCorpseNames && (sp.Name.Length > 0))
-                                DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y);
+                                DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, "");
 
                             sp.filtered = false;
                         }
@@ -1948,7 +1954,7 @@ namespace myseq
                             DrawLine(cyanPen, x, y - drawOffset, x, y + drawOffset);
 
                             if (Settings.Instance.ShowNPCCorpseNames && (sp.Name.Length > 0))
-                                DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y);
+                                DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, "");
 
                             sp.filtered = false;
                         }
@@ -2159,12 +2165,12 @@ namespace myseq
                                         else 
                                             if (Settings.Instance.ShowPCNames && (sp.Name.Length > 0))
                                         {
-                                            DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y);
+                                            DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, gName);
                                         }
                                         else
                                         {
                                             if (Settings.Instance.ShowPVPLevel)
-                                                DrawSpawnNames(textBrush, sp.Level.ToString(), sp.X, sp.Y);
+                                                DrawSpawnNames(textBrush, sp.Level.ToString(), sp.X, sp.Y, gName);
                                         }
 
                                         if (flash)
@@ -2200,7 +2206,7 @@ namespace myseq
                                         }
 
                                         if (Settings.Instance.ShowPCNames && (sp.Name.Length > 0))
-                                            DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y);
+                                            DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, gName);
                                     }
                                 }
                             }
@@ -2216,9 +2222,9 @@ namespace myseq
                                 sp.filtered = false;
 
                                 if (Settings.Instance.ShowNPCNames && (sp.Name.Length > 0))
-                                    DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y);
+                                    DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, gName);
                                 else if (Settings.Instance.ShowNPCLevels && (sp.Name.Length > 0))
-                                    DrawSpawnNames(textBrush, sp.Level.ToString(), sp.X, sp.Y);
+                                    DrawSpawnNames(textBrush, sp.Level.ToString(), sp.X, sp.Y, gName);
 
                                 if (DrawDirection)
                                     DrawDirectionLines(sp, x, y);
@@ -2331,6 +2337,7 @@ namespace myseq
 
         private void DrawRings(float x, float y, SPAWNINFO sp)
         {
+            string gName = eq.guildNumToString(sp.Guild);
             if (sp.isLookup && (!sp.isCorpse || Settings.Instance.CorpseAlerts))
             {
                 if (!lookup_set)
@@ -2343,9 +2350,9 @@ namespace myseq
                 if (Settings.Instance.ShowLookupText)
                 {
                     if (Settings.Instance.ShowLookupNumber)
-                        DrawSpawnNames(textBrush, sp.lookupNumber, sp.X, sp.Y);
+                        DrawSpawnNames(textBrush, sp.lookupNumber, sp.X, sp.Y, gName);
                     else
-                        DrawSpawnNames(textBrush, sp.Name, sp.X, sp.Y);
+                        DrawSpawnNames(textBrush, sp.Name, sp.X, sp.Y, gName);
                 }
             }
         }
@@ -2704,7 +2711,6 @@ namespace myseq
         #region DrawSpawnTimers
 
         public void DrawSpawnTimers()
-
         {
             try
 
@@ -2712,7 +2718,7 @@ namespace myseq
                 // Draw Spawn Timers
 
                 Pen pen;
-
+                
                 DateTime now = DateTime.Now;
 
                 float minZ = eq.playerinfo.Z - filterneg;
@@ -2795,11 +2801,10 @@ namespace myseq
 
                     {
                         DrawLine(pen, stX - stOffset, stY, stX + stOffset, stY);
-
                         DrawLine(pen, stX, stY - stOffset, stX, stY + stOffset);
 
                         if (Settings.Instance.SpawnCountdown && (checkTimer > 0) && (checkTimer < 120))
-                            DrawSpawnNames(textBrush, checkTimer.ToString(), st.X, st.Y);
+                            DrawSpawnNames(textBrush, checkTimer.ToString(), st.X, st.Y, "");
                     }
 
                     // Draw Blue Line to selected spawn location

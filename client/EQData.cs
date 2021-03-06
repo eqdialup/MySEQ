@@ -1477,17 +1477,17 @@ namespace myseq
 
                         ListItem thisitem = new ListItem();
 
-                        if ((tok = getnexttoken(ref line, '=')) != null)
+                        if ((tok = Getnexttoken(ref line, '=')) != null)
                         {
 
                             thisitem.ActorDef = tok.ToUpper();
 
-                            if ((tok = getnexttoken(ref line, ',')) != null)
+                            if ((tok = Getnexttoken(ref line, ',')) != null)
                             {
 
                                 thisitem.Name = tok;
 
-                                if ((tok = getnexttoken(ref thisitem.ActorDef, '_')) != null)
+                                if ((tok = Getnexttoken(ref thisitem.ActorDef, '_')) != null)
                                 {
 
                                     thisitem.ID = int.Parse(tok, NumFormat);
@@ -1565,7 +1565,7 @@ namespace myseq
 
             string temp = ActorDef;
 
-            if ((tok = getnexttoken(ref temp, '_')) != null)
+            if ((tok = Getnexttoken(ref temp, '_')) != null)
             {
 
                 IFormatProvider NumFormat = new CultureInfo("en-US");
@@ -2800,7 +2800,7 @@ namespace myseq
 
                         item1.SubItems.Add(guildNumToString(si.Guild));
 
-                        item1.SubItems.Add(FixMobName(si.Name));
+                        item1.SubItems.Add(RegexHelper.FixMobName(si.Name));
 
 
                         if (si.Type == 2 || si.Type == 3 || si.isLDONObject)
@@ -3084,7 +3084,7 @@ namespace myseq
         }
 
 
-        public string raceNumtoString(int num)
+        public string RaceNumtoString(int num)
         {
             if (num == 2250)
                 return "Interactive Object";
