@@ -273,7 +273,7 @@ namespace myseq
         private ToolStripMenuItem mnuIPAddress3;
         private ToolStripMenuItem mnuIPAddress4;
         private ToolStripMenuItem mnuIPAddress5;
-        private ToolStripMenuItem mnuCharacterSelection;
+        private ToolStripMenuItem mnuCharSelect;
         private ToolStripMenuItem mnuChar1;
         private ToolStripMenuItem mnuChar2;
         private ToolStripMenuItem mnuChar3;
@@ -343,7 +343,7 @@ namespace myseq
         private ToolStripMenuItem mnuSmallTargetInfo;
         private ToolStripMenuItem mnuSmallTargetInfo2;
         private ToolStripSeparator toolStripSeparator19;
-        private ToolStripMenuItem addZoneEmailAlertFilterToolStripMenuItem;
+//        private ToolStripMenuItem addZoneEmailAlertFilterToolStripMenuItem;
         private ToolStripMenuItem mnuAutoConnect;
         public ToolStripComboBox toolStripLevel;
         public int gLastconLevel = -1;
@@ -674,7 +674,7 @@ namespace myseq
             Text = BaseTitle;
 
             if (Settings.Instance.AutoConnect)
-                AutoConnect();
+                StartListening();
         }
 
         /// <summary>
@@ -740,7 +740,7 @@ namespace myseq
             this.mnuIPAddress3 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuIPAddress4 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuIPAddress5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuCharacterSelection = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuCharSelect = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuChar1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuChar2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuChar3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -910,7 +910,6 @@ namespace myseq
             this.mnuAddCautionFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAddDangerFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAddAlertFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.addZoneEmailAlertFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripBasecon = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSepAddFilter = new System.Windows.Forms.ToolStripSeparator();
             this.mnuAddMapLabel = new System.Windows.Forms.ToolStripMenuItem();
@@ -953,6 +952,7 @@ namespace myseq
             this.toolStripZNegUp = new System.Windows.Forms.ToolStripButton();
             this.toolStripZNegDown = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetDepthFilter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripOptions = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLookupBox = new System.Windows.Forms.ToolStripTextBox();
@@ -973,7 +973,6 @@ namespace myseq
             this.toolStripLookupBox5 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripCheckLookup5 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup5 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripOptions = new System.Windows.Forms.ToolStripButton();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.mnuMainMenu.SuspendLayout();
             this.mnuContext.SuspendLayout();
@@ -1011,7 +1010,7 @@ namespace myseq
             this.mnuConnect,
             this.mnuAutoConnect,
             this.mnuServerSelection,
-            this.mnuCharacterSelection,
+            this.mnuCharSelect,
             this.toolStripSeparator3,
             this.mnuExit});
             this.mnuFileMain.Name = "mnuFileMain";
@@ -1127,9 +1126,9 @@ namespace myseq
             this.mnuIPAddress5.Size = new System.Drawing.Size(107, 22);
             this.mnuIPAddress5.Click += new System.EventHandler(this.mnuIPAddress5_Click);
             // 
-            // mnuCharacterSelection
+            // mnuCharSelect
             // 
-            this.mnuCharacterSelection.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuCharSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuChar1,
             this.mnuChar2,
             this.mnuChar3,
@@ -1144,17 +1143,17 @@ namespace myseq
             this.mnuChar12,
             this.menuItem13,
             this.mnuCharRefresh});
-            this.mnuCharacterSelection.Name = "mnuCharacterSelection";
-            this.mnuCharacterSelection.Overflow = System.Windows.Forms.ToolStripItemOverflow.Always;
-            this.mnuCharacterSelection.Size = new System.Drawing.Size(177, 22);
-            this.mnuCharacterSelection.Text = "&Character Selection";
+            this.mnuCharSelect.Name = "mnuCharSelect";
+            this.mnuCharSelect.Overflow = System.Windows.Forms.ToolStripItemOverflow.Always;
+            this.mnuCharSelect.Size = new System.Drawing.Size(177, 22);
+            this.mnuCharSelect.Text = "&Character Selection";
             // 
             // mnuChar1
             // 
             this.mnuChar1.Checked = true;
             this.mnuChar1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuChar1.Name = "mnuChar1";
-            this.mnuChar1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D1)));
             this.mnuChar1.Size = new System.Drawing.Size(188, 22);
             this.mnuChar1.Text = "Char 1";
@@ -1164,7 +1163,7 @@ namespace myseq
             // mnuChar2
             // 
             this.mnuChar2.Name = "mnuChar2";
-            this.mnuChar2.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar2.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D2)));
             this.mnuChar2.Size = new System.Drawing.Size(188, 22);
             this.mnuChar2.Text = "Char 2";
@@ -1174,7 +1173,7 @@ namespace myseq
             // mnuChar3
             // 
             this.mnuChar3.Name = "mnuChar3";
-            this.mnuChar3.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar3.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D3)));
             this.mnuChar3.Size = new System.Drawing.Size(188, 22);
             this.mnuChar3.Text = "Char 3";
@@ -1184,7 +1183,7 @@ namespace myseq
             // mnuChar4
             // 
             this.mnuChar4.Name = "mnuChar4";
-            this.mnuChar4.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar4.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D4)));
             this.mnuChar4.Size = new System.Drawing.Size(188, 22);
             this.mnuChar4.Text = "Char 4";
@@ -1194,7 +1193,7 @@ namespace myseq
             // mnuChar5
             // 
             this.mnuChar5.Name = "mnuChar5";
-            this.mnuChar5.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar5.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D5)));
             this.mnuChar5.Size = new System.Drawing.Size(188, 22);
             this.mnuChar5.Text = "Char 5";
@@ -1204,7 +1203,7 @@ namespace myseq
             // mnuChar6
             // 
             this.mnuChar6.Name = "mnuChar6";
-            this.mnuChar6.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar6.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D6)));
             this.mnuChar6.Size = new System.Drawing.Size(188, 22);
             this.mnuChar6.Text = "Char 6";
@@ -1214,7 +1213,7 @@ namespace myseq
             // mnuChar7
             // 
             this.mnuChar7.Name = "mnuChar7";
-            this.mnuChar7.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar7.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D7)));
             this.mnuChar7.Size = new System.Drawing.Size(188, 22);
             this.mnuChar7.Text = "Char 7";
@@ -1224,7 +1223,7 @@ namespace myseq
             // mnuChar8
             // 
             this.mnuChar8.Name = "mnuChar8";
-            this.mnuChar8.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar8.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D8)));
             this.mnuChar8.Size = new System.Drawing.Size(188, 22);
             this.mnuChar8.Text = "Char 8";
@@ -1234,7 +1233,7 @@ namespace myseq
             // mnuChar9
             // 
             this.mnuChar9.Name = "mnuChar9";
-            this.mnuChar9.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar9.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D9)));
             this.mnuChar9.Size = new System.Drawing.Size(188, 22);
             this.mnuChar9.Text = "Char 9";
@@ -1244,7 +1243,7 @@ namespace myseq
             // mnuChar10
             // 
             this.mnuChar10.Name = "mnuChar10";
-            this.mnuChar10.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar10.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D0)));
             this.mnuChar10.Size = new System.Drawing.Size(188, 22);
             this.mnuChar10.Text = "Char 10";
@@ -1254,7 +1253,7 @@ namespace myseq
             // mnuChar11
             // 
             this.mnuChar11.Name = "mnuChar11";
-            this.mnuChar11.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar11.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.B)));
             this.mnuChar11.Size = new System.Drawing.Size(188, 22);
             this.mnuChar11.Text = "Char 11";
@@ -1264,7 +1263,7 @@ namespace myseq
             // mnuChar12
             // 
             this.mnuChar12.Name = "mnuChar12";
-            this.mnuChar12.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuChar12.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.C)));
             this.mnuChar12.Size = new System.Drawing.Size(188, 22);
             this.mnuChar12.Text = "Char 12";
@@ -1324,7 +1323,7 @@ namespace myseq
             this.mnuListColor,
             this.mnuBackgroungColor});
             this.mnuChangeColor.Name = "mnuChangeColor";
-            this.mnuChangeColor.Size = new System.Drawing.Size(173, 22);
+            this.mnuChangeColor.Size = new System.Drawing.Size(180, 22);
             this.mnuChangeColor.Text = "C&hange Color";
             // 
             // mnuGridColor
@@ -1362,7 +1361,7 @@ namespace myseq
             this.mnuTargetInfoFont,
             this.mnuMapLabelsFont});
             this.mnuChangeFont.Name = "mnuChangeFont";
-            this.mnuChangeFont.Size = new System.Drawing.Size(173, 22);
+            this.mnuChangeFont.Size = new System.Drawing.Size(180, 22);
             this.mnuChangeFont.Text = "Change &Font";
             // 
             // mnuSpawnListFont
@@ -1389,59 +1388,59 @@ namespace myseq
             // toolStripSeparator18
             // 
             this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator18.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuReloadAlerts
             // 
             this.mnuReloadAlerts.Image = ((System.Drawing.Image)(resources.GetObject("mnuReloadAlerts.Image")));
             this.mnuReloadAlerts.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuReloadAlerts.Name = "mnuReloadAlerts";
-            this.mnuReloadAlerts.Size = new System.Drawing.Size(173, 22);
+            this.mnuReloadAlerts.Size = new System.Drawing.Size(180, 22);
             this.mnuReloadAlerts.Text = "&Reload Alerts";
             this.mnuReloadAlerts.Click += new System.EventHandler(this.mnuReloadAlerts_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuEditGlobalAlerts
             // 
             this.mnuEditGlobalAlerts.Name = "mnuEditGlobalAlerts";
-            this.mnuEditGlobalAlerts.Size = new System.Drawing.Size(173, 22);
+            this.mnuEditGlobalAlerts.Size = new System.Drawing.Size(180, 22);
             this.mnuEditGlobalAlerts.Text = "Edit &Global Alerts";
             this.mnuEditGlobalAlerts.Click += new System.EventHandler(this.mnuGlobalAlerts_Click);
             // 
             // mnuEditZoneAlerts
             // 
             this.mnuEditZoneAlerts.Name = "mnuEditZoneAlerts";
-            this.mnuEditZoneAlerts.Size = new System.Drawing.Size(173, 22);
+            this.mnuEditZoneAlerts.Size = new System.Drawing.Size(180, 22);
             this.mnuEditZoneAlerts.Text = "Edit &Zone Alerts";
             this.mnuEditZoneAlerts.Click += new System.EventHandler(this.mnuAddEditAlerts_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuRefreshSpawnList
             // 
             this.mnuRefreshSpawnList.Name = "mnuRefreshSpawnList";
-            this.mnuRefreshSpawnList.Size = new System.Drawing.Size(173, 22);
+            this.mnuRefreshSpawnList.Size = new System.Drawing.Size(180, 22);
             this.mnuRefreshSpawnList.Text = "&Refresh Spawn List";
             this.mnuRefreshSpawnList.Click += new System.EventHandler(this.mnuRefreshSpawnList_Click);
             // 
             // mnuClearSavedTimers
             // 
             this.mnuClearSavedTimers.Name = "mnuClearSavedTimers";
-            this.mnuClearSavedTimers.Size = new System.Drawing.Size(173, 22);
+            this.mnuClearSavedTimers.Size = new System.Drawing.Size(180, 22);
             this.mnuClearSavedTimers.Text = "Clear Saved &Timers";
             this.mnuClearSavedTimers.Click += new System.EventHandler(this.mnuClearSavedTimers_Click);
             // 
             // mnuSaveSpawnLog
             // 
             this.mnuSaveSpawnLog.Name = "mnuSaveSpawnLog";
-            this.mnuSaveSpawnLog.Size = new System.Drawing.Size(173, 22);
+            this.mnuSaveSpawnLog.Size = new System.Drawing.Size(180, 22);
             this.mnuSaveSpawnLog.Text = "Save Spawn Log";
             this.mnuSaveSpawnLog.Click += new System.EventHandler(this.mnuSaveSpawnLog_Click);
             // 
@@ -1647,6 +1646,7 @@ namespace myseq
             // mnuAlwaysOnTop
             // 
             this.mnuAlwaysOnTop.Name = "mnuAlwaysOnTop";
+            this.mnuAlwaysOnTop.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T)));
             this.mnuAlwaysOnTop.Size = new System.Drawing.Size(198, 22);
             this.mnuAlwaysOnTop.Text = "Always On Top";
             this.mnuAlwaysOnTop.Click += new System.EventHandler(this.mnuAlwaysOnTop_Click);
@@ -2464,14 +2464,13 @@ namespace myseq
             this.mnuAddCautionFilter,
             this.mnuAddDangerFilter,
             this.mnuAddAlertFilter,
-            this.addZoneEmailAlertFilterToolStripMenuItem,
             this.toolStripBasecon,
             this.mnuSepAddFilter,
             this.mnuAddMapLabel,
             this.toolStripSepAddMapLabel,
             this.mnuSearchAllakhazam});
             this.mnuContextAddFilter.Name = "mnuContextAddFilter";
-            this.mnuContextAddFilter.Size = new System.Drawing.Size(229, 220);
+            this.mnuContextAddFilter.Size = new System.Drawing.Size(229, 198);
             // 
             // mnuMobName
             // 
@@ -2513,13 +2512,6 @@ namespace myseq
             this.mnuAddAlertFilter.Size = new System.Drawing.Size(228, 22);
             this.mnuAddAlertFilter.Text = "Add Zone Rare Alert Filter";
             this.mnuAddAlertFilter.Click += new System.EventHandler(this.mnuAddAlertFilter_Click);
-            // 
-            // addZoneEmailAlertFilterToolStripMenuItem
-            // 
-            this.addZoneEmailAlertFilterToolStripMenuItem.Name = "addZoneEmailAlertFilterToolStripMenuItem";
-            this.addZoneEmailAlertFilterToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
-            this.addZoneEmailAlertFilterToolStripMenuItem.Text = "Add Email Alert Filter";
-            this.addZoneEmailAlertFilterToolStripMenuItem.Click += new System.EventHandler(this.addZoneEmailAlertFilterToolStripMenuItem_Click);
             // 
             // toolStripBasecon
             // 
@@ -2627,8 +2619,8 @@ namespace myseq
             // toolStripMouseLocation
             // 
             this.toolStripMouseLocation.AutoSize = false;
-            this.toolStripMouseLocation.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.toolStripMouseLocation.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripMouseLocation.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMouseLocation.Name = "toolStripMouseLocation";
@@ -2639,8 +2631,8 @@ namespace myseq
             // toolStripDistance
             // 
             this.toolStripDistance.AutoSize = false;
-            this.toolStripDistance.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.toolStripDistance.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripDistance.Name = "toolStripDistance";
             this.toolStripDistance.Size = new System.Drawing.Size(100, 17);
@@ -2648,8 +2640,8 @@ namespace myseq
             // 
             // toolStripSpring
             // 
-            this.toolStripSpring.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.toolStripSpring.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripSpring.Name = "toolStripSpring";
             this.toolStripSpring.Size = new System.Drawing.Size(955, 17);
@@ -2658,8 +2650,8 @@ namespace myseq
             // toolStripVersion
             // 
             this.toolStripVersion.AutoSize = false;
-            this.toolStripVersion.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.toolStripVersion.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripVersion.Name = "toolStripVersion";
             this.toolStripVersion.Size = new System.Drawing.Size(60, 17);
@@ -2667,8 +2659,8 @@ namespace myseq
             // toolStripServerAddress
             // 
             this.toolStripServerAddress.AutoSize = false;
-            this.toolStripServerAddress.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.toolStripServerAddress.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripServerAddress.Name = "toolStripServerAddress";
             this.toolStripServerAddress.Size = new System.Drawing.Size(90, 17);
@@ -2676,16 +2668,16 @@ namespace myseq
             // toolStripCoPStatus
             // 
             this.toolStripCoPStatus.AutoSize = false;
-            this.toolStripCoPStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.toolStripCoPStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripCoPStatus.Name = "toolStripCoPStatus";
             this.toolStripCoPStatus.Size = new System.Drawing.Size(30, 17);
             // 
             // toolStripShortName
             // 
-            this.toolStripShortName.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.toolStripShortName.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripShortName.Name = "toolStripShortName";
             this.toolStripShortName.Size = new System.Drawing.Size(4, 17);
@@ -2693,8 +2685,8 @@ namespace myseq
             // toolStripFPS
             // 
             this.toolStripFPS.AutoSize = false;
-            this.toolStripFPS.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.toolStripFPS.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripFPS.Name = "toolStripFPS";
             this.toolStripFPS.Size = new System.Drawing.Size(60, 17);
@@ -3052,6 +3044,18 @@ namespace myseq
             this.toolStripResetDepthFilter.ToolTipText = "Reset Depth Filter Settings";
             this.toolStripResetDepthFilter.Click += new System.EventHandler(this.toolStripResetDepthFilter_Click);
             // 
+            // toolStripOptions
+            // 
+            this.toolStripOptions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripOptions.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOptions.Image")));
+            this.toolStripOptions.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripOptions.Name = "toolStripOptions";
+            this.toolStripOptions.Size = new System.Drawing.Size(23, 22);
+            this.toolStripOptions.Text = "Options";
+            this.toolStripOptions.ToolTipText = "Open Options Dialog";
+            this.toolStripOptions.Click += new System.EventHandler(this.mnuOptions_Click);
+            // 
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
@@ -3274,18 +3278,6 @@ namespace myseq
             this.toolStripResetLookup5.ToolTipText = "Reset Find Mob Search String";
             this.toolStripResetLookup5.Click += new System.EventHandler(this.toolStripResetLookup5_Click);
             // 
-            // toolStripOptions
-            // 
-            this.toolStripOptions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripOptions.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOptions.Image")));
-            this.toolStripOptions.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripOptions.Name = "toolStripOptions";
-            this.toolStripOptions.Size = new System.Drawing.Size(23, 22);
-            this.toolStripOptions.Text = "Options";
-            this.toolStripOptions.ToolTipText = "Open Options Dialog";
-            this.toolStripOptions.Click += new System.EventHandler(this.mnuOptions_Click);
-            // 
             // dockPanel
             // 
             this.dockPanel.ActiveAutoHideContent = null;
@@ -3437,60 +3429,60 @@ namespace myseq
             map?.NewMap();
         }
 
-        public void AutoConnect()
-        {
-            colProcesses?.Clear();
+        //public void AutoConnect()
+        //{
+        //    colProcesses?.Clear();
 
-            if (eq.playerinfo != null)
-                eq.playerinfo.Name = "";
+        //    if (eq.playerinfo != null)
+        //        eq.playerinfo.Name = "";
 
-            if (mnuIPAddress1.Checked)
-                currentIPAddress = Settings.Instance.IPAddress1;
-            else if (mnuIPAddress2.Checked)
-                currentIPAddress = Settings.Instance.IPAddress2;
-            else if (mnuIPAddress3.Checked)
-                currentIPAddress = Settings.Instance.IPAddress3;
-            else if (mnuIPAddress4.Checked)
-                currentIPAddress = Settings.Instance.IPAddress4;
-            else if (mnuIPAddress5.Checked)
-                currentIPAddress = Settings.Instance.IPAddress5;
+        //    if (mnuIPAddress1.Checked)
+        //        currentIPAddress = Settings.Instance.IPAddress1;
+        //    else if (mnuIPAddress2.Checked)
+        //        currentIPAddress = Settings.Instance.IPAddress2;
+        //    else if (mnuIPAddress3.Checked)
+        //        currentIPAddress = Settings.Instance.IPAddress3;
+        //    else if (mnuIPAddress4.Checked)
+        //        currentIPAddress = Settings.Instance.IPAddress4;
+        //    else if (mnuIPAddress5.Checked)
+        //        currentIPAddress = Settings.Instance.IPAddress5;
 
-            if (currentIPAddress.Length == 0)
-                return;
+        //    if (currentIPAddress.Length == 0)
+        //        return;
 
-            // Try to connect to the server         
+        //    // Try to connect to the server         
 
-            if (!comm.ConnectToServer(currentIPAddress, Settings.Instance.Port, false))
-            {
-                return;
-            }
-            else
-            {
-                toolStripServerAddress.Text = currentIPAddress;
-            }
+        //    if (!comm.ConnectToServer(currentIPAddress, Settings.Instance.Port, false))
+        //    {
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        toolStripServerAddress.Text = currentIPAddress;
+        //    }
 
-            // Clear map
+        //    // Clear map
 
-            map.ClearMap();
+        //    map.ClearMap();
 
-            // Start the timer
+        //    // Start the timer
 
-            timPackets.Start();
+        //    timPackets.Start();
 
-            mapCon.Focus();
+        //    mapCon.Focus();
 
-            mapPane.cmdCommand.Text = "Stop";
+        //    mapPane.cmdCommand.Text = "Stop";
 
-            mnuConnect.Text = "&Disconnect";
+        //    mnuConnect.Text = "&Disconnect";
 
-            mnuConnect.Image = Properties.Resources.RedDelete;
+        //    mnuConnect.Image = Properties.Resources.RedDelete;
 
-            toolStripStartStop.Text = "Stop";
-            toolStripStartStop.ToolTipText = "Disconnect from Server";
-            toolStripStartStop.Image = Properties.Resources.RedDelete;
+        //    toolStripStartStop.Text = "Stop";
+        //    toolStripStartStop.ToolTipText = "Disconnect from Server";
+        //    toolStripStartStop.Image = Properties.Resources.RedDelete;
 
-            bIsRunning = true;
-        }
+        //    bIsRunning = true;
+        //}
 
         public void StartListening()
 
@@ -4153,246 +4145,169 @@ namespace myseq
 
                 colProcesses.Add(PI);
 
-                switch (colProcesses.Count)
-
+                if (colProcesses.Count == 1)
                 {
-                    case 1:
+                    mnuChar1.Text = si.Name;
 
-                    {
-                        mnuChar1.Text = si.Name;
+                    mnuChar1.Visible = true;
 
-                        mnuChar1.Visible = true;
+                    mnuChar1.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 2)
+                {
+                    mnuChar2.Text = si.Name;
 
-                        mnuChar1.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                    mnuChar2.Visible = true;
 
-                        break;
-                    }
+                    mnuChar2.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 3)
+                {
+                    mnuChar3.Text = si.Name;
 
-                    case 2:
+                    mnuChar3.Visible = true;
 
-                    {
-                        mnuChar2.Text = si.Name;
+                    mnuChar3.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 4)
+                {
+                    mnuChar4.Text = si.Name;
 
-                        mnuChar2.Visible = true;
+                    mnuChar4.Visible = true;
 
-                        mnuChar2.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                    mnuChar4.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 5)
+                {
+                    mnuChar5.Text = si.Name;
 
-                        break;
-                    }
+                    mnuChar5.Visible = true;
 
-                    case 3:
+                    mnuChar5.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 6)
+                {
+                    mnuChar6.Text = si.Name;
 
-                    {
-                        mnuChar3.Text = si.Name;
+                    mnuChar6.Visible = true;
 
-                        mnuChar3.Visible = true;
+                    mnuChar6.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 7)
+                {
+                    mnuChar7.Text = si.Name;
 
-                        mnuChar3.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                    mnuChar7.Visible = true;
 
-                        break;
-                    }
+                    mnuChar7.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 8)
+                {
+                    mnuChar8.Text = si.Name;
 
-                    case 4:
+                    mnuChar8.Visible = true;
 
-                    {
-                        mnuChar4.Text = si.Name;
+                    mnuChar8.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 9)
+                {
+                    mnuChar9.Text = si.Name;
 
-                        mnuChar4.Visible = true;
+                    mnuChar9.Visible = true;
 
-                        mnuChar4.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                    mnuChar9.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 10)
+                {
+                    mnuChar10.Text = si.Name;
 
-                        break;
-                    }
+                    mnuChar10.Visible = true;
 
-                    case 5:
+                    mnuChar10.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 11)
+                {
+                    mnuChar11.Text = si.Name;
 
-                    {
-                        mnuChar5.Text = si.Name;
+                    mnuChar11.Visible = true;
 
-                        mnuChar5.Visible = true;
+                    mnuChar11.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                }
+                else if (colProcesses.Count == 12)
+                {
+                    mnuChar12.Text = si.Name;
 
-                        mnuChar5.Checked = (CurrentProcess!=null) && (CurrentProcess.ProcessID == PI.ProcessID);
+                    mnuChar12.Visible = true;
 
-                        break;
-                    }
-
-                    case 6:
-                    {
-                        mnuChar6.Text = si.Name;
-
-                        mnuChar6.Visible = true;
-
-                        mnuChar6.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
-
-                        break;
-                    }
-
-                    case 7:
-                    {
-                        mnuChar7.Text = si.Name;
-
-                        mnuChar7.Visible = true;
-
-                        mnuChar7.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
-
-                        break;
-                    }
-
-                    case 8:
-                    {
-                        mnuChar8.Text = si.Name;
-
-                        mnuChar8.Visible = true;
-
-                        mnuChar8.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
-
-                        break;
-                    }
-
-                    case 9:
-                    {
-                        mnuChar9.Text = si.Name;
-
-                        mnuChar9.Visible = true;
-
-                        mnuChar9.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
-
-                        break;
-                    }
-
-                    case 10:
-                    {
-                        mnuChar10.Text = si.Name;
-
-                        mnuChar10.Visible = true;
-
-                        mnuChar10.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
-
-                        break;
-                    }
-
-                    case 11:
-                    {
-                        mnuChar11.Text = si.Name;
-
-                        mnuChar11.Visible = true;
-
-                        mnuChar11.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
-
-                        break;
-                    }
-
-                    case 12:
-                    {
-                        mnuChar12.Text = si.Name;
-
-                        mnuChar12.Visible = true;
-
-                        mnuChar12.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
-
-                        break;
-                    }
+                    mnuChar12.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
                 }
 
-                switch (colProcesses.Count)
-
+                if (colProcesses.Count == 1)
                 {
-                    case 1:
+                    mnuChar2.Visible = false;
+                    mnuChar2.Text = "Char 2";
+                    mnuChar2.Checked = false;
 
-                    {
-                        mnuChar2.Visible = false;
-                        mnuChar2.Text = "Char 2";
-                        mnuChar2.Checked = false;
-
-                        goto case 2;
-                    }
-
-                    case 2:
-
-                    {
-                        mnuChar3.Visible = false;
-                        mnuChar3.Text = "Char 3";
-                        mnuChar3.Checked = false;
-                        goto case 3;
-                    }
-
-                    case 3:
-
-                    {
-                        mnuChar4.Visible = false;
-                        mnuChar4.Text = "Char 4";
-                        mnuChar4.Checked = false;
-                        goto case 4;
-                    }
-
-                    case 4:
-
-                    {
-                        mnuChar5.Visible = false;
-                        mnuChar5.Text = "Char 5";
-                        mnuChar5.Checked = false;
-                        goto case 5;
-                    }
-
-                    case 5:
-                    {
-                        mnuChar6.Visible = false;
-                        mnuChar6.Text = "Char 6";
-                        mnuChar6.Checked = false;
-                        goto case 6;
-                    }
-
-                    case 6:
-                    {
-                        mnuChar7.Visible = false;
-                        mnuChar7.Text = "Char 7";
-                        mnuChar7.Checked = false;
-                        goto case 7;
-                    }
-
-                    case 7:
-                    {
-                        mnuChar8.Visible = false;
-                        mnuChar8.Text = "Char 8";
-                        mnuChar8.Checked = false;
-                        goto case 8;
-                    }
-
-                    case 8:
-                    {
-                        mnuChar9.Visible = false;
-                        mnuChar9.Text = "Char 9";
-                        mnuChar9.Checked = false;
-                        goto case 9;
-                    }
-
-                    case 9:
-                    {
-                        mnuChar10.Visible = false;
-                        mnuChar10.Text = "Char 10";
-                        mnuChar10.Checked = false;
-                        goto case 10;
-                    }
-
-                    case 10:
-                    {
-                        mnuChar11.Visible = false;
-                        mnuChar11.Text = "Char 11";
-                        mnuChar11.Checked = false;
-                        goto case 11;
-                    }
-
-                    case 11:
-                    {
-                        mnuChar12.Visible = false;
-                        mnuChar12.Text = "Char 12";
-                        mnuChar12.Checked = false;
-                        break;
-                    }
-
-                    default:
-
-                        break;
+                }
+                else if (colProcesses.Count == 2)
+                {
+                    mnuChar3.Visible = false;
+                    mnuChar3.Text = "Char 3";
+                    mnuChar3.Checked = false;
+                }
+                else if (colProcesses.Count == 3)
+                {
+                    mnuChar4.Visible = false;
+                    mnuChar4.Text = "Char 4";
+                    mnuChar4.Checked = false;
+                }
+                else if (colProcesses.Count == 4)
+                {
+                    mnuChar5.Visible = false;
+                    mnuChar5.Text = "Char 5";
+                    mnuChar5.Checked = false;
+                }
+                else if (colProcesses.Count == 5)
+                {
+                    mnuChar6.Visible = false;
+                    mnuChar6.Text = "Char 6";
+                    mnuChar6.Checked = false;
+                }
+                else if (colProcesses.Count == 6)
+                {
+                    mnuChar7.Visible = false;
+                    mnuChar7.Text = "Char 7";
+                    mnuChar7.Checked = false;
+                }
+                else if (colProcesses.Count == 7)
+                {
+                    mnuChar8.Visible = false;
+                    mnuChar8.Text = "Char 8";
+                    mnuChar8.Checked = false;
+                }
+                else if (colProcesses.Count == 8)
+                {
+                    mnuChar9.Visible = false;
+                    mnuChar9.Text = "Char 9";
+                    mnuChar9.Checked = false;
+                }
+                else if (colProcesses.Count == 9)
+                {
+                    mnuChar10.Visible = false;
+                    mnuChar10.Text = "Char 10";
+                    mnuChar10.Checked = false;
+                }
+                else if (colProcesses.Count == 10)
+                {
+                    mnuChar11.Visible = false;
+                    mnuChar11.Text = "Char 11";
+                    mnuChar11.Checked = false;
+                }
+                else if (colProcesses.Count == 11)
+                {
+                    mnuChar12.Visible = false;
+                    mnuChar12.Text = "Char 12";
+                    mnuChar12.Checked = false;
                 }
             }
         }
@@ -4409,7 +4324,7 @@ namespace myseq
             try
 
             {
-                LogLib.WriteLine("Short Zone Name: (" + si.Name + ")");
+                LogLib.WriteLine($"ProcesssMap: Short Zone Name: ({si.Name})");
 
                 bool foundmap = false;
 
@@ -4422,7 +4337,7 @@ namespace myseq
                 if (location > 0)
                     fn = fn.Substring(0, location);
 
-                LogLib.WriteLine("Using Short Zone Name: (" + fn + ")");
+                LogLib.WriteLine($"Using Short Zone Name: ({fn})");
 
                 f += fn;
 
@@ -4478,9 +4393,9 @@ namespace myseq
                         {
                             IniFile ConIni = new IniFile(ConfigFile);
 
-                            string strIniValue = "";
+//                            string strIniValue = "";
 
-                            strIniValue = ConIni.ReadValue("Zones", curZone, "");
+                            var strIniValue = ConIni.ReadValue("Zones", curZone, "");
                             if (strIniValue.Length > 0)
                             {
                                 if ((strIniValue == "0" && Settings.Instance.DepthFilter) ||
@@ -4614,22 +4529,6 @@ namespace myseq
 
         #endregion
 
-        /*
-
-                #region AddSpawnTimer
-
-                private void AddSpawnTimer(SPAWNINFO si, DateTime dt) {
-
-                    EQData eq = eq;
-
-                    eq.AddSpawnTimer(si,dt);
-
-                }
-
-                #endregion
-
-        */
-
         private void SetGridInterval()
 
         {
@@ -4732,7 +4631,7 @@ namespace myseq
                 mnuMobName.Enabled = true;
                 mnuMobName.Visible = true;
                 // dont add email alerts for ground items
-                addZoneEmailAlertFilterToolStripMenuItem.Enabled = notground;
+//                addZoneEmailAlertFilterToolStripMenuItem.Enabled = notground;
                 mnuAddMapLabel.Enabled = mapnameWithLabels.Length > 0;
             }
             else
@@ -5803,60 +5702,16 @@ namespace myseq
             StartListening();
         }
 
+        /// <summary>
+
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuCharRefresh_Click(object sender, EventArgs e)
 
         {
             colProcesses.Clear();
-
-            mnuChar1.Visible = false;
-
-            mnuChar1.Text = "Char 1";
-
-            mnuChar2.Visible = false;
-
-            mnuChar2.Text = "Char 2";
-
-            mnuChar3.Visible = false;
-
-            mnuChar3.Text = "Char 3";
-
-            mnuChar4.Visible = false;
-
-            mnuChar4.Text = "Char 4";
-
-            mnuChar5.Visible = false;
-
-            mnuChar5.Text = "Char 5";
-
-            mnuChar6.Visible = false;
-
-            mnuChar6.Text = "Char 6";
-
-            mnuChar7.Visible = false;
-
-            mnuChar7.Text = "Char 7";
-
-            mnuChar8.Visible = false;
-
-            mnuChar8.Text = "Char 8";
-
-            mnuChar9.Visible = false;
-
-            mnuChar9.Text = "Char 9";
-
-            mnuChar10.Visible = false;
-
-            mnuChar10.Text = "Char 10";
-
-            mnuChar11.Visible = false;
-
-            mnuChar11.Text = "Char 11";
-
-            mnuChar12.Visible = false;
-
-            mnuChar12.Text = "Char 12";
-
-            comm.CharRefresh();
+            VisChar();
         }
 
         private void SwitchCharacter(int CharacterIndex)
@@ -6033,7 +5888,7 @@ namespace myseq
 
                 case SPAWNINFO.PacketType.GroundItem:
 
-                    eq.ProcessGroundItems(si,filters,GroundItemList);
+                    eq.ProcessGroundItems(si,filters);//,GroundItemList);
 
                     break;
 
@@ -6194,7 +6049,7 @@ namespace myseq
                         // string to append to map file
                         new_text = new_text.Replace(" ", "_");
                         string soe_maptext = $"P {alertX * -1:f4}, {alertY * -1:f4}, {alertZ:f4}, {mapBox.txtColr.R}, {mapBox.txtColr.G}, {mapBox.txtColr.B}, {mapBox.txtSize}, {new_text}\n";
-                        if (DialogResult.Yes == MessageBox.Show("Do you want to write the label to " + mapBox.mapName + "?" + Environment.NewLine + Environment.NewLine + soe_maptext, "Write label to map file?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
+                        if (DialogResult.Yes == MessageBox.Show($"Do you want to write the label to {mapBox.mapName}?{Environment.NewLine}{Environment.NewLine}{soe_maptext}", "Write label to map file?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
                             File.AppendAllText(mapnameWithLabels, soe_maptext);
                         else
                             eq.DeleteMapText(work);
@@ -6647,7 +6502,7 @@ namespace myseq
         {
             if (dialogBox("Add to Zone Hunt Filters", "Add name to Hunt list:", alertAddmobname))
             {
-                filters.AddToAlerts(filters.hunt, alertAddmobname);
+                filters.AddToAlerts(filters.Hunt, alertAddmobname);
 
                 filters.WriteAlertFile(curZone);
 
@@ -6659,7 +6514,7 @@ namespace myseq
         {
             if (dialogBox("Add to Zone Caution Filters", "Add name to Caution list:", alertAddmobname))
             {
-                filters.AddToAlerts(filters.caution, alertAddmobname);
+                filters.AddToAlerts(filters.Caution, alertAddmobname);
 
                 filters.WriteAlertFile(curZone);
 
@@ -6671,7 +6526,7 @@ namespace myseq
         {
             if (dialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", alertAddmobname))
             {
-                filters.AddToAlerts(filters.danger, alertAddmobname);
+                filters.AddToAlerts(filters.Danger, alertAddmobname);
 
                 filters.WriteAlertFile(curZone);
 
@@ -6683,7 +6538,7 @@ namespace myseq
         {
             if (dialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", alertAddmobname))
             {
-                filters.AddToAlerts(filters.alert, alertAddmobname);
+                filters.AddToAlerts(filters.Alert, alertAddmobname);
 
                 filters.WriteAlertFile(curZone);
 
@@ -7379,17 +7234,17 @@ namespace myseq
             }
         }
 
-        private void addZoneEmailAlertFilterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (dialogBox("Add to Zone Email Alert Filters", "Add name to Email list:", alertAddmobname))
-            {
-                filters.AddToAlerts(filters.emailAlert, alertAddmobname);
+        //private void addZoneEmailAlertFilterToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    if (dialogBox("Add to Zone Email Alert Filters", "Add name to Email list:", alertAddmobname))
+        //    {
+        //        filters.AddToAlerts(filters.EmailAlert, alertAddmobname);
 
-                filters.WriteAlertFile(curZone);
+        //        filters.WriteAlertFile(curZone);
 
-                reloadAlertFiles();
-            }
-        }
+        //        reloadAlertFiles();
+        //    }
+        //}
 
         //private void toolStripEmailAlerts_Click(object sender, EventArgs e)
         //{
@@ -7460,8 +7315,6 @@ namespace myseq
             mnuAutoConnect.Checked = Settings.Instance.AutoConnect;
         }
 
-
-
         private void toolStripLookupBox_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox.Text == "Mob Search")
@@ -7512,47 +7365,29 @@ namespace myseq
         }
         private void toolStripLookupBox_Leave(object sender, EventArgs e)
         {
-            if (toolStripLookupBox.Text.Length > 0)
+            if (toolStripLookupBox.Text.Length > 0 && toolStripLookupBox.Text != "Mob Search")
             {
-                if (toolStripLookupBox.Text == "Mob Search")
-                {
-                    toolStripLookupBox.ForeColor = SystemColors.GrayText;
-                    eq.MarkLookups("0:");
-                }
-                else
-                {
-                    string new_text = toolStripLookupBox.Text.Replace(" ", "_");
-                    eq.MarkLookups("0:" + new_text, bFilter0);
-                }
+                string new_text = toolStripLookupBox.Text.Replace(" ", "_");
+                eq.MarkLookups("0:" + new_text, bFilter0);
             }
             else
             {
                 toolStripLookupBox.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox.Text = "Mob Search";
-                eq.MarkLookups("0:");
             }
         }
 
         private void toolStripLookupBox1_Leave(object sender, EventArgs e)
         {
-            if (toolStripLookupBox1.Text.Length > 0)
+            if (toolStripLookupBox1.Text.Length > 0 && toolStripLookupBox1.Text != "Mob Search")
             {
-                if (toolStripLookupBox1.Text == "Mob Search")
-                {
-                    toolStripLookupBox1.ForeColor = SystemColors.GrayText;
-                    eq.MarkLookups("1:");
-                }
-                else
-                {
-                    string new_text = toolStripLookupBox1.Text.Replace(" ", "_");
-                    eq.MarkLookups("1:" + new_text, bFilter1);
-                }
+                string new_text = toolStripLookupBox1.Text.Replace(" ", "_");
+                eq.MarkLookups("0:" + new_text, bFilter0);
             }
             else
             {
                 toolStripLookupBox1.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox1.Text = "Mob Search";
-                eq.MarkLookups("1:");
             }
         }
 
@@ -7653,6 +7488,11 @@ namespace myseq
             // Update the Character Selection list
             // colProcesses.Clear();
 
+            VisChar();
+        }
+
+        private void VisChar()
+        {
             mnuChar1.Visible = false;
 
             mnuChar1.Text = "Char 1";
@@ -7703,6 +7543,7 @@ namespace myseq
 
             comm.CharRefresh();
         }
+
 
         public void StartNewPackets()
         {

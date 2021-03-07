@@ -102,7 +102,7 @@ namespace myseq
 			}
 			else if (NamedColors.ContainsKey(sFixed)) // a named Color
 			{
-				NamedColor nc = (NamedColor)NamedColors[sFixed];
+				var nc = (NamedColor)NamedColors[sFixed];
 				return nc.Color;
 			}
 			else

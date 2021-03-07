@@ -226,21 +226,8 @@ namespace myseq
             if (countTime > 0)
 
             {
-                StringBuilder spawnTimer = new StringBuilder();
-
-                spawnTimer.AppendFormat("Spawn Name: {0}\n", LastSpawnName);
-
-                string names_to_add = "Names encountered: ";
-                string[] names = AllNames.Split(',');
-
-                int namecount = 0;
-
-                NameCount(spawnTimer, ref names_to_add, names, ref namecount);
-
-                if (names_to_add.Length > 0)
-                {
-                    spawnTimer.Append(names_to_add);
-                }
+                // StringBuilder moved to new, common method, as equal for all paths.
+                StringBuilder spawnTimer = StBuilder();
 
                 spawnTimer.Append("\n");
 
@@ -263,21 +250,7 @@ namespace myseq
             else if (SpawnTimer > 0)
 
             {
-                StringBuilder spawnTimer = new StringBuilder();
-
-                spawnTimer.AppendFormat("Spawn Name: {0}\n", LastSpawnName);
-
-                string names_to_add = "Names encountered: ";
-                string[] names = AllNames.Split(',');
-
-                int namecount = 0;
-
-                NameCount(spawnTimer, ref names_to_add, names, ref namecount);
-
-                if (names_to_add.Length > 0)
-                {
-                    spawnTimer.Append(names_to_add);
-                }
+                StringBuilder spawnTimer = StBuilder();
 
                 spawnTimer.Append("\n");
 
@@ -299,21 +272,7 @@ namespace myseq
             }
             else
             {
-                StringBuilder spawnTimer = new StringBuilder();
-
-                spawnTimer.AppendFormat("Spawn Name: {0}\n", LastSpawnName);
-
-                string names_to_add = "Names encountered: ";
-                string[] names = AllNames.Split(',');
-
-                int namecount = 0;
-
-                NameCount(spawnTimer, ref names_to_add, names, ref namecount);
-
-                if (names_to_add.Length > 0)
-                {
-                    spawnTimer.Append(names_to_add);
-                }
+                StringBuilder spawnTimer = StBuilder();
 
                 spawnTimer.Append("\n");
 
@@ -333,6 +292,27 @@ namespace myseq
 
                 return spawnTimer.ToString();
             }
+        }
+
+        private StringBuilder StBuilder()
+        {
+            StringBuilder spawnTimer = new StringBuilder();
+
+            spawnTimer.AppendFormat("Spawn Name: {0}\n", LastSpawnName);
+
+            string names_to_add = "Names encountered: ";
+            string[] names = AllNames.Split(',');
+
+            int namecount = 0;
+
+            NameCount(spawnTimer, ref names_to_add, names, ref namecount);
+
+            if (names_to_add.Length > 0)
+            {
+                spawnTimer.Append(names_to_add);
+            }
+
+            return spawnTimer;
         }
 
         private static void NameCount(StringBuilder spawnTimer, ref string names_to_add, string[] names, ref int namecount)

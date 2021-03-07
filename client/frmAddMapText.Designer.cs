@@ -709,7 +709,7 @@
             this.Name = "frmAddMapText";
             this.Text = "Add Map Text";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.frmAddTextBox_Load);
+//            this.Load += new System.EventHandler(this.frmAddTextBox_Load);
             this.FontSizeGroupBox.ResumeLayout(false);
             this.FontSizeGroupBox.PerformLayout();
             this.ColorGroupBox.ResumeLayout(false);

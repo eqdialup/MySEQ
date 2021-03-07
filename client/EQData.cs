@@ -265,7 +265,6 @@ namespace myseq
                             levelCheck = true;
                         }
                     }
-//                    Regex regEx0 = new Regex(".*" + search0 + ".*", RegexOptions.IgnoreCase);
                     if (levelCheck || RegexHelper.GetRegex(search0). Match(sp.Name).Success)
                     {
                         sp.isLookup = true;
@@ -285,7 +284,6 @@ namespace myseq
                             levelCheck = true;
                         }
                     }
-//                    Regex regEx1 = new Regex(".*" + search1 + ".*", RegexOptions.IgnoreCase);
                     if (levelCheck || RegexHelper.GetRegex(search1). Match(sp.Name).Success)
                     {
                         sp.isLookup = true;
@@ -305,7 +303,6 @@ namespace myseq
                             levelCheck = true;
                         }
                     }
-//                    Regex regEx2 = new Regex(".*" + search2 + ".*", RegexOptions.IgnoreCase);
                     if (levelCheck || RegexHelper.GetRegex(search2). Match(sp.Name).Success)
                     {
                         sp.isLookup = true;
@@ -325,7 +322,6 @@ namespace myseq
                             levelCheck = true;
                         }
                     }
-//                    Regex regEx3 = new Regex(".*" + search3 + ".*", RegexOptions.IgnoreCase);
                     if (levelCheck || RegexHelper.GetRegex(search3). Match(sp.Name).Success)
                     {
                         sp.isLookup = true;
@@ -345,7 +341,6 @@ namespace myseq
                             levelCheck = true;
                         }
                     }
-//                    Regex regEx4 = new Regex(".*" + search4 + ".*", RegexOptions.IgnoreCase);
                     if (levelCheck || RegexHelper.GetRegex(search4). Match(sp.Name).Success)
                     {
                         sp.isLookup = true;
@@ -365,7 +360,6 @@ namespace myseq
                             levelCheck = true;
                         }
                     }
-//                    Regex regEx5 = new Regex(".*" + search5 + ".*", RegexOptions.IgnoreCase);
                     if (levelCheck || RegexHelper.GetRegex(search5). Match(sp.Name).Success)
                     {
                         sp.isLookup = true;
@@ -1355,9 +1349,7 @@ namespace myseq
                 fs.Close();
             }
 
-            string[] retArray = (string[])al.ToArray(Type.GetType("System.String"));
-
-            return retArray;
+            return (string[])al.ToArray(Type.GetType("System.String"));
         }
 
         private void ReadItemList(string filePath)
@@ -1423,15 +1415,8 @@ namespace myseq
                 }
 
             }
-
             sr.Close();
-
             fs.Close();
-
-            //string[] retArray = (string[])al.ToArray(Type.GetType("System.String"));
-
-            return;
-
         }
 
         private void ReadGuildList(string filePath)
@@ -1515,15 +1500,8 @@ namespace myseq
 
             } while (line != null);
 
-
-
             sr.Close();
-
             fs.Close();
-
-
-            return;
-
         }
 
         public string GetItemDescription(string ActorDef)
@@ -1748,7 +1726,7 @@ namespace myseq
             }
         }
 
-        public void ProcessGroundItems(SPAWNINFO si, Filters filters, ListViewPanel GroundItemList)
+        public void ProcessGroundItems(SPAWNINFO si, Filters filters)//, ListViewPanel GroundItemList)
         {
             try
             {
@@ -1791,7 +1769,7 @@ namespace myseq
 
                     // [hunt]
 
-                    if (filters.hunt.Count > 0 && FindMatches(filters.hunt, itemname, Settings.Instance.NoneOnHunt,
+                    if (filters.Hunt.Count > 0 && FindMatches(filters.Hunt, itemname, Settings.Instance.NoneOnHunt,
 
                             Settings.Instance.TalkOnHunt, "Ground Item",
 
@@ -1802,7 +1780,7 @@ namespace myseq
                         gi.isHunt = true;
                     }
 
-                    if (filters.globalHunt.Count > 0 && FindMatches(filters.globalHunt, itemname, Settings.Instance.NoneOnHunt,
+                    if (filters.GlobalHunt.Count > 0 && FindMatches(filters.GlobalHunt, itemname, Settings.Instance.NoneOnHunt,
 
                             Settings.Instance.TalkOnHunt, "Ground Item",
 
@@ -1815,7 +1793,7 @@ namespace myseq
 
                     // [caution]
 
-                    if (filters.caution.Count > 0 && FindMatches(filters.caution, itemname, Settings.Instance.NoneOnCaution,
+                    if (filters.Caution.Count > 0 && FindMatches(filters.Caution, itemname, Settings.Instance.NoneOnCaution,
 
                             Settings.Instance.TalkOnCaution, "Ground Item",
 
@@ -1826,7 +1804,7 @@ namespace myseq
                         gi.isCaution = true;
                     }
 
-                    if (filters.globalCaution.Count > 0 && FindMatches(filters.globalCaution, itemname, Settings.Instance.NoneOnCaution,
+                    if (filters.GlobalCaution.Count > 0 && FindMatches(filters.GlobalCaution, itemname, Settings.Instance.NoneOnCaution,
 
                             Settings.Instance.TalkOnCaution, "Ground Item",
 
@@ -1839,7 +1817,7 @@ namespace myseq
 
                     // [danger]
 
-                    if (filters.danger.Count > 0 && FindMatches(filters.danger, itemname, Settings.Instance.NoneOnDanger,
+                    if (filters.Danger.Count > 0 && FindMatches(filters.Danger, itemname, Settings.Instance.NoneOnDanger,
 
                             Settings.Instance.TalkOnDanger, "Ground Item",
 
@@ -1850,7 +1828,7 @@ namespace myseq
                         gi.isDanger = true;
                     }
 
-                    if (filters.globalDanger.Count > 0 && FindMatches(filters.globalDanger, itemname, Settings.Instance.NoneOnDanger,
+                    if (filters.GlobalDanger.Count > 0 && FindMatches(filters.GlobalDanger, itemname, Settings.Instance.NoneOnDanger,
 
                             Settings.Instance.TalkOnDanger, "Ground Item",
 
@@ -1863,7 +1841,7 @@ namespace myseq
 
                     // [rare]
 
-                    if (filters.alert.Count > 0 && FindMatches(filters.alert, itemname, Settings.Instance.NoneOnAlert,
+                    if (filters.Alert.Count > 0 && FindMatches(filters.Alert, itemname, Settings.Instance.NoneOnAlert,
 
                             Settings.Instance.TalkOnAlert, "Ground Item",
 
@@ -1874,7 +1852,7 @@ namespace myseq
                         gi.isAlert = true;
                     }
 
-                    if (filters.globalAlert.Count > 0 && FindMatches(filters.globalAlert, itemname, Settings.Instance.NoneOnAlert,
+                    if (filters.GlobalAlert.Count > 0 && FindMatches(filters.GlobalAlert, itemname, Settings.Instance.NoneOnAlert,
 
                             Settings.Instance.TalkOnAlert, "Ground Item",
 
@@ -2498,7 +2476,7 @@ namespace myseq
 
                             // [hunt]
 
-                            if (filters.hunt.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.hunt, matchmobname, Settings.Instance.NoneOnHunt,
+                            if (filters.Hunt.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Hunt, matchmobname, Settings.Instance.NoneOnHunt,
 
                                     Settings.Instance.TalkOnHunt, "Hunt Mob",
 
@@ -2517,7 +2495,7 @@ namespace myseq
                                     mobnameWithInfo += " " + HuntPrefix;
                             }
 
-                            if (filters.globalHunt.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.globalHunt, matchmobname, Settings.Instance.NoneOnHunt,
+                            if (filters.GlobalHunt.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalHunt, matchmobname, Settings.Instance.NoneOnHunt,
 
                                     Settings.Instance.TalkOnHunt, "Hunt Mob",
 
@@ -2538,7 +2516,7 @@ namespace myseq
 
                             // [caution]
 
-                            if (filters.caution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.caution, matchmobname, Settings.Instance.NoneOnCaution,
+                            if (filters.Caution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Caution, matchmobname, Settings.Instance.NoneOnCaution,
 
                                     Settings.Instance.TalkOnCaution, "Caution Mob",
 
@@ -2557,7 +2535,7 @@ namespace myseq
                                     mobnameWithInfo += " " + CautionPrefix;
                             }
 
-                            if (filters.globalCaution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.globalCaution, matchmobname, Settings.Instance.NoneOnCaution,
+                            if (filters.GlobalCaution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalCaution, matchmobname, Settings.Instance.NoneOnCaution,
 
                                     Settings.Instance.TalkOnCaution, "Caution Mob",
 
@@ -2578,7 +2556,7 @@ namespace myseq
 
                             // [danger]
 
-                            if (filters.danger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.danger, matchmobname, Settings.Instance.NoneOnDanger,
+                            if (filters.Danger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, Settings.Instance.NoneOnDanger,
 
                                     Settings.Instance.TalkOnDanger, "Danger Mob",
 
@@ -2597,7 +2575,7 @@ namespace myseq
                                     mobnameWithInfo += " " + DangerPrefix;
                             }
 
-                            if (filters.globalDanger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.globalDanger, matchmobname, Settings.Instance.NoneOnDanger,
+                            if (filters.GlobalDanger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalDanger, matchmobname, Settings.Instance.NoneOnDanger,
 
                                     Settings.Instance.TalkOnDanger, "Danger Mob",
 
@@ -2618,7 +2596,7 @@ namespace myseq
 
                             // [rare]
 
-                            if (filters.alert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.alert, matchmobname, Settings.Instance.NoneOnAlert,
+                            if (filters.Alert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Alert, matchmobname, Settings.Instance.NoneOnAlert,
 
                                     Settings.Instance.TalkOnAlert, "Rare Mob",
 
@@ -2637,7 +2615,7 @@ namespace myseq
                                     mobnameWithInfo += " " + AlertPrefix;
                             }
 
-                            if (filters.globalAlert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.globalAlert, matchmobname, Settings.Instance.NoneOnAlert,
+                            if (filters.GlobalAlert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalAlert, matchmobname, Settings.Instance.NoneOnAlert,
 
                                     Settings.Instance.TalkOnAlert, "Rare Mob",
 
@@ -2657,7 +2635,7 @@ namespace myseq
                             }
                             // [Email]
 
-                            if (filters.emailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.emailAlert, matchmobname, false, false, "", false, "", !si.isAlert && !si.isCaution && !si.isDanger && !si.isHunt, true))
+                            if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, false, false, "", false, "", !si.isAlert && !si.isCaution && !si.isDanger && !si.isHunt, true))
                             {
                                 alert = true;
                                 // Flag on map as an alert mob
@@ -2667,7 +2645,7 @@ namespace myseq
                             // [Primary]
                             // Acts like a hunt mob.
 
-                            if (filters.primaryItem.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.primaryItem, primaryName, Settings.Instance.NoneOnHunt,
+                            if (filters.PrimaryItem.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.PrimaryItem, primaryName, Settings.Instance.NoneOnHunt,
 
                                     Settings.Instance.TalkOnHunt, "Hunt Mob Primary",
 
@@ -2689,7 +2667,7 @@ namespace myseq
                             // [Offhand]
                             // Acts like a hunt mob.
 
-                            if (filters.offhandItem.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.offhandItem, offhandName, Settings.Instance.NoneOnHunt,
+                            if (filters.OffhandItem.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.OffhandItem, offhandName, Settings.Instance.NoneOnHunt,
 
                                     Settings.Instance.TalkOnHunt, "Hunt Mob",
 
@@ -3069,7 +3047,7 @@ namespace myseq
 
                 ListItem lis = (ListItem)guildList[num];
 
-                return lis.Name.ToString();
+                return lis.Name;
 
             }
 
@@ -3302,7 +3280,7 @@ namespace myseq
 
                 greyRange = (-1) * level;
 
-                string ConColorsFile = Path.Combine(Settings.Instance.CfgDir, "ConLevels.Ini");
+                var ConColorsFile = Path.Combine(Settings.Instance.CfgDir, "ConLevels.Ini");
 
                 // If using SoD/Titanium Con Colors
                 if (Settings.Instance.SoDCon)
@@ -3758,6 +3736,30 @@ namespace myseq
             {
                 t.draw_color = Settings.Instance.ForceDistinctText ? GetDistinctColor(distinctbrush) : GetDistinctColor(t.color);
                 t.draw_pen = new Pen(t.draw_color.Color);
+            }
+        }
+
+        public void CollectMobTrails()
+        {
+            // Collect Mob Trails
+
+            foreach (SPAWNINFO sp in GetMobsReadonly().Values)
+            {
+                if (sp.Type == 1)
+                {
+                    // Setup NPCs Trails
+
+                    //add point to mobtrails arraylist if not already there
+
+                    MobTrailPoint work = new MobTrailPoint
+                    {
+                        x = (int)sp.X,
+
+                        y = (int)sp.Y
+                    };
+
+                    AddMobTrailPoint(work);
+                }
             }
         }
 

@@ -96,7 +96,7 @@ namespace myseq
 
                 // Instantiate a CSocketClient object
 
-                pSocketClient = new CSocketClient(100000, null,
+                pSocketClient = new CSocketClient(100000, /*, null,*/
 
                     new CSocketClient.MESSAGE_HANDLER(MessageHandlerClient),
 
@@ -131,7 +131,6 @@ namespace myseq
         /// <param name="pSocket"> The SocketClient object the message came from </param>
         /// <param name="iNumberOfBytes"> The number of bytes in the RawBuffer inside the SocketClient </param>
         private void MessageHandlerClient(CSocketClient pSocket, int iNumberOfBytes)
-
         {
             // Process the packet
 
@@ -238,7 +237,7 @@ namespace myseq
         {
             int offset = 0;
 
-            const int SIZE_OF_PACKET = 104;
+            const int SIZE_OF_PACKET = 100; //104 on new server
 
             try {
                 if (bytes > 0)

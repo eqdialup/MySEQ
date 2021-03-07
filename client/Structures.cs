@@ -13,23 +13,23 @@ namespace Structures
 
         public float Z = 0.0f;
 
-        public bool isHunt = false;
+        public bool isHunt;
 
-        public bool isCaution = false;
+        public bool isCaution;
 
-        public bool isDanger = false;
+        public bool isDanger;
 
-        public bool isAlert = false;
+        public bool isAlert;
 
         public string Name = "";
 
         public string Desc = "";
 
-        public ListViewItem listitem = null;
+        public ListViewItem listitem;
 
-        public int gone = 0;
+        public int gone;
 
-        public bool filtered = false;
+        public bool filtered;
     }
 
     #endregion

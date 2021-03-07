@@ -341,12 +341,15 @@ namespace myseq
             mapCon.Name = "mapCon";
             mapCon.Size = new Size(384, 264);
             mapCon.TabIndex = 0;
+            mapCon.UpdateSteps = 5;
+            mapCon.UpdateTicks = 1;
             mapCon.MouseEnter += new EventHandler(mapCon_MouseEnter);
             // 
             // MapPane
             // 
             AutoValidate = AutoValidate.EnablePreventFocusChange;
             BackColor = SystemColors.Control;
+            ClientSize = new Size(760, 441);
             Controls.Add(cmdLookup);
             Controls.Add(cmdCommand);
             Controls.Add(offsetx);
@@ -362,6 +365,7 @@ namespace myseq
             Controls.Add(lblOffsetY);
             Controls.Add(lblOffsetX);
             Controls.Add(mapCon);
+            this.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Name = "MapPane";
             Size = new Size(776, 480);
             Resize += new EventHandler(MapPane_Resize);

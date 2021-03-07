@@ -2,6 +2,7 @@
 {
     public static class PrettyNames
     {
+
         private static readonly string[] s_Spawntypes = new[]
                                         { "Player", "NPC", "Corpse", "Any", "Pet" };
 

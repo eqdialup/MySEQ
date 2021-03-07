@@ -14,36 +14,38 @@ namespace SocketSystem
         /// <summary> DelType: Called when a connection is closed </summary>
         public delegate void CLOSE_HANDLER(CSocketClient pSocket);
 
-        /// <summary> DelType: Called when a socket error occurs </summary>
-        public delegate void ERROR_HANDLER(CSocketClient pSocket, Exception pException);
         /// <summary> RefType: A network stream object </summary>
         private NetworkStream GetNetworkStream { get; set; }
         /// <summary> RefType: A TcpClient object for socket connection </summary>
         private TcpClient GetTcpClient { get; set; }
+
         /// <summary> RetType: A callback object for processing recieved socket data </summary>
         private AsyncCallback GetCallbackReadMethod { get; }
+
         /// <summary> RetType: A callback object for processing send socket data </summary>
         private AsyncCallback GetCallbackWriteMethod { get; }
+
         /// <summary> DelType: A reference to a user supplied function to be called when a socket message arrives </summary>
         private MESSAGE_HANDLER GetMessageHandler { get; }
+
         /// <summary> DelType: A reference to a user supplied function to be called when a socket connection is closed </summary>
         private CLOSE_HANDLER GetCloseHandler { get; }
-        /// <summary> DelType: A reference to a user supplied function to be called when a socket error occurs </summary>
-//        private ERROR_HANDLER GetErrorHandler { get; }
+
         /// <summary> SimType: Flag to indicate if the class has been disposed </summary>
         private bool IsDisposed { get; set; }
+
         /// <summary> RefType: The IpAddress the client is connect to </summary>
         public string GetIpAddress { get; set; }
+
         /// <summary> SimType: The Port to either connect to or listen on </summary>
         public short GetPort { get; set; }
-        /// <summary> RefType: A reference to a user defined object </summary>
-        public object GetUserArg { get; set; }
+
         /// <summary> SimType: A raw buffer to capture data comming off the socket </summary>
         public byte[] GetRawBuffer { get; set; }
+
         /// <summary> SimType: Size of the raw buffer for received socket data </summary>
         public int GetSizeOfRawBuffer { get; set; }
-        /// <summary> SimType: Index into the Socket List Array </summary>
-        public int GetSocketListIndex { get; set; }
+
         /// <summary> RefType: The socket for the client connection </summary>
         public Socket GetClientSocket { get; set; }
 
@@ -51,23 +53,19 @@ namespace SocketSystem
         //********************************************************************
         /// <summary> Constructor for client support </summary>
         /// <param name="iSizeOfRawBuffer"> SimType: The size of the raw buffer </param>
-        /// <param name="pUserArg"> RefType: A Reference to the Users arguments </param>
         /// <param name="pfnMessageHandler"> DelType: Reference to the user defined message handler method </param>
         /// <param name="pfnCloseHandler"> DelType: Reference to the user defined close handler method </param>
-        /// <param name="pfnErrorHandler"> DelType: Reference to the user defined error handler method </param>
-        public CSocketClient(int iSizeOfRawBuffer, object pUserArg,
-            MESSAGE_HANDLER pfnMessageHandler, CLOSE_HANDLER pfnCloseHandler/*, ERROR_HANDLER pfnErrorHandler*/) {
+        public CSocketClient(int iSizeOfRawBuffer,
+            MESSAGE_HANDLER pfnMessageHandler, CLOSE_HANDLER pfnCloseHandler) {
             // Create the raw buffer
             GetSizeOfRawBuffer = iSizeOfRawBuffer;
             GetRawBuffer       = new byte[GetSizeOfRawBuffer];
 
             // Save the user argument
-            GetUserArg = pUserArg;
 
             // Set the handler methods
             GetMessageHandler = pfnMessageHandler;
             GetCloseHandler   = pfnCloseHandler;
-//            GetErrorHandler   = pfnErrorHandler;
 
             // Set the async socket method handlers
             GetCallbackReadMethod  = new AsyncCallback(ReceiveComplete);
@@ -221,6 +219,6 @@ namespace SocketSystem
                 LogLib.WriteLine("Error in CSocketClient.Receive(): Socket Closed");
             }
         }
-    } // End of CSocketClient
-} // End of namespace SocketSystem
+    }
+}
 

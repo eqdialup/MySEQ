@@ -704,112 +704,65 @@ namespace myseq
 
         {
             if (f1.dialogBox("Add to Global Alert Filters", "Add name to Hunt list:", mobname))
+                AddFilter(filters.GlobalHunt, "global");
+        }
 
-            {
-                filters.AddToAlerts(filters.globalHunt,mobname);
+        private void AddFilter(ArrayList fltr, string zone)
+        {
+            filters.AddToAlerts(fltr, mobname);
 
-                filters.WriteAlertFile("global");
+            filters.WriteAlertFile(zone);
 
-                f1.reloadAlertFiles();
-            }
+            f1.reloadAlertFiles();
         }
 
         private void mnuAddCautionFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.dialogBox("Add to Global Alert Filters", "Add name to Caution list:", mobname))
-
-            {
-                filters.AddToAlerts(filters.globalCaution, mobname);
-
-                filters.WriteAlertFile("global");
-
-                f1.reloadAlertFiles();
-            }
+                AddFilter(filters.GlobalCaution, "global");
         }
 
         private void mnuAddDangerFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.dialogBox("Add to Global Alert Filters", "Add name to Danger list:", mobname))
-
-            {
-                filters.AddToAlerts(filters.globalDanger, mobname);
-
-                filters.WriteAlertFile("global");
-
-                f1.reloadAlertFiles();
-            }
+                AddFilter(filters.GlobalDanger, "global");
         }
 
         private void mnuAddAlertFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.dialogBox("Add to Global Alert Filters", "Add name to Rare list:", mobname))
-
-            {
-                filters.AddToAlerts(filters.globalAlert, mobname);
-
-                filters.WriteAlertFile("global");
-
-                f1.reloadAlertFiles();
-            }
+                AddFilter(filters.GlobalAlert, "global");
         }
 
         private void mnuAddZoneHuntFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.dialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", mobname))
-
-            {
-                filters.AddToAlerts(filters.hunt, mobname);
-
-                filters.WriteAlertFile(f1.curZone);
-
-                f1.reloadAlertFiles();
-            }
+                AddFilter(filters.Hunt, f1.curZone);
         }
 
         private void mnuAddZoneCautionFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.dialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", mobname))
-
-            {
-                filters.AddToAlerts(filters.caution, mobname);
-
-                filters.WriteAlertFile(f1.curZone);
-
-                f1.reloadAlertFiles();
-            }
+                AddFilter(filters.Caution, f1.curZone);
         }
 
         private void mnuAddZoneDangerFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.dialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", mobname))
-
-            {
-                filters.AddToAlerts(filters.danger, mobname);
-
-                filters.WriteAlertFile(f1.curZone);
-
-                f1.reloadAlertFiles();
-            }
+                AddFilter(filters.Danger, f1.curZone);
         }
 
         private void mnuAddZoneAlertFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.dialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", mobname))
-
-            {
-                filters.AddToAlerts(filters.alert, mobname);
-
-                filters.WriteAlertFile(f1.curZone);
-
-                f1.reloadAlertFiles();
-            }
+                AddFilter(filters.Alert, f1.curZone);
         }
 
         private void mnuEditGlobalFilters_Click(object sender, EventArgs e)
@@ -821,7 +774,7 @@ namespace myseq
         private void mnuEditZoneFilters_Click(object sender, EventArgs e)
 
         {
-            filters.EditAlertFile(f1.toolStripShortName.Text);
+            filters.EditAlertFile(f1.curZone);
         }
 
         private void mnuReloadFilters_Click(object sender, EventArgs e)

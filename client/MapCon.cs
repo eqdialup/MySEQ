@@ -964,46 +964,29 @@ namespace myseq
 
             // Calculate the Map Center
 
-            switch (Settings.Instance.FollowOption)
-
+            if (Settings.Instance.FollowOption == FollowOption.None)
             {
-                case FollowOption.None:
+                m_mapCenterX = eq.minx + (mapWidth / 2);
 
-                    m_mapCenterX = eq.minx + (mapWidth / 2);
+                m_mapCenterY = eq.miny + (mapHeight / 2);
+            }
+            else if (Settings.Instance.FollowOption == FollowOption.Player)
+            {
+                m_mapCenterX = eq.playerinfo.X;
 
-                    m_mapCenterY = eq.miny + (mapHeight / 2);
+                m_mapCenterY = eq.playerinfo.Y;
+            }
+            else if (Settings.Instance.FollowOption == FollowOption.Target)
+            {
+                SPAWNINFO siTarget = eq.GetSelectedMob();
 
-                    break;
+                if (siTarget != null)
 
-                case FollowOption.Player:
+                {
+                    m_mapCenterX = siTarget.X;
 
-                    m_mapCenterX = eq.playerinfo.X;
-
-                    m_mapCenterY = eq.playerinfo.Y;
-
-                    break;
-
-                case FollowOption.Target:
-
-                    SPAWNINFO siTarget = eq.GetSelectedMob();
-
-                    if (siTarget != null)
-
-                    {
-                        m_mapCenterX = siTarget.X;
-
-                        m_mapCenterY = siTarget.Y;
-
-                        break;
-                    }
-                    else
-                    {
-                        goto case FollowOption.Player;
-                    }
-
-                default:
-
-                        goto case FollowOption.None;
+                    m_mapCenterY = siTarget.Y;
+                }
             }
 
             // When Following a player or spawn and KeepCentered is not selected
@@ -1440,43 +1423,8 @@ namespace myseq
 
                 if (countTime > 0)
                 {
-                    StringBuilder spawnTimer = new StringBuilder();
-
-                    spawnTimer.AppendFormat("Spawn Name: {0}\n", st.LastSpawnName);
-
-                    string names_to_add = "Names encountered: ";
-                    string[] names = st.AllNames.Split(',');
-
-                    int namecount = 0;
-
-                    foreach (string name in names)
-                    {
-                        var namet = RegexHelper.TrimName(name);
-
-                        if (namecount == 0)
-                        {
-                            names_to_add += namet;
-                        }
-                        else
-                        {
-                            if ((namet.Length + names_to_add.Length + 2) < 45)
-                            {
-                                names_to_add += ", ";
-                                names_to_add += namet;
-                            }
-                            else
-                            {
-                                spawnTimer.Append(names_to_add);
-                                spawnTimer.Append("\n");
-                                height_adder++;
-                                height_adder++;
-
-                                names_to_add = namet;
-                            }
-                        }
-
-                        namecount++;
-                    }
+                    // StringBuilder moved to new, common method, as equal for all paths.
+                    height_adder = Spawnformbuild(st, height_adder, out StringBuilder spawnTimer, out var names_to_add);
                     if (names_to_add.Length > 0)
                     {
                         spawnTimer.Append(names_to_add);
@@ -1502,129 +1450,13 @@ namespace myseq
                 }
                 else if (st.SpawnTimer > 0)
                 {
-                    StringBuilder spawnTimer = new StringBuilder();
-
-                    spawnTimer.AppendFormat("Spawn Name: {0}\n", st.LastSpawnName);
-
-                    //spawnTimer.Append("Names encountered: ");
-                    string names_to_add = "Names encountered: ";
-                    string[] names = st.AllNames.Split(',');
-
-                    int namecount = 0;
-
-                    foreach (string name in names)
-                    {
-                        var namet = RegexHelper.TrimName(name);
-
-                        if (namecount == 0)
-                        {
-                            names_to_add += namet;
-                        }
-                        else
-                        {
-                            if ((namet.Length + names_to_add.Length + 2) < 45)
-                            {
-                                names_to_add += ", ";
-                                names_to_add += namet;
-                            }
-                            else
-                            {
-                                spawnTimer.Append(names_to_add);
-                                spawnTimer.Append("\n");
-                                height_adder++;
-                                height_adder++;
-
-                                names_to_add = namet;
-                            }
-                        }
-
-                        namecount++;
-                    }
-                    if (names_to_add.Length > 0)
-                    {
-                        spawnTimer.Append(names_to_add);
-                    }
-
-                    spawnTimer.Append("\n");
-
-                    spawnTimer.AppendFormat("Last Spawned At: {0}\n", st.SpawnTimeStr);
-
-                    spawnTimer.AppendFormat("Last Killed At: {0}\n", st.KillTimeStr);
-
-                    spawnTimer.AppendFormat("Next Spawn At: {0}\n", "");
-
-                    spawnTimer.AppendFormat("Spawn Timer: {0} secs\n", st.SpawnTimer);
-
-                    spawnTimer.AppendFormat("Spawning In: {0}\n", "");
-
-                    spawnTimer.AppendFormat("Spawn Count: {0}\n", st.SpawnCount);
-
-                    spawnTimer.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", st.Y, st.X, st.Z);
-
-                    descr = spawnTimer.ToString();
+                    height_adder = Spawnformbuild(st, height_adder, out StringBuilder spawnTimer, out var names_to_add);
+                    descr = SpawnForm(st, spawnTimer, names_to_add);
                 }
                 else
                 {
-                    StringBuilder spawnTimer = new StringBuilder();
-
-                    spawnTimer.AppendFormat("Spawn Name: {0}\n", st.LastSpawnName);
-
-                    //spawnTimer.Append("Names encountered: ");
-                    string names_to_add = "Names encountered: ";
-                    string[] names = st.AllNames.Split(',');
-
-                    int namecount = 0;
-
-                    foreach (string name in names)
-                    {
-                        var namet = RegexHelper.TrimName(name);
-
-                        if (namecount == 0)
-                        {
-                            names_to_add += namet;
-                        }
-                        else
-                        {
-                            if ((namet.Length + names_to_add.Length + 2) < 45)
-                            {
-                                names_to_add += ", ";
-                                names_to_add += namet;
-                            }
-                            else
-                            {
-                                spawnTimer.Append(names_to_add);
-                                spawnTimer.Append("\n");
-                                height_adder++;
-                                height_adder++;
-
-                                names_to_add = namet;
-                            }
-                        }
-
-                        namecount++;
-                    }
-                    if (names_to_add.Length > 0)
-                    {
-                        spawnTimer.Append(names_to_add);
-                    }
-
-                    spawnTimer.Append("\n");
-
-                    spawnTimer.AppendFormat("Last Spawned At: {0}\n", st.SpawnTimeStr);
-
-                    spawnTimer.AppendFormat("Last Killed At: {0}\n", st.KillTimeStr);
-
-                    spawnTimer.AppendFormat("Next Spawn At: {0}\n", "");
-
-                    spawnTimer.AppendFormat("Spawn Timer: {0} secs\n", "0");
-
-                    spawnTimer.AppendFormat("Spawning In: {0}\n", "");
-
-                    spawnTimer.AppendFormat("Spawn Count: {0}\n", st.SpawnCount);
-
-                    spawnTimer.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", st.Y, st.X, st.Z);
-
-                    descr = spawnTimer.ToString();
+                    height_adder = Spawnformbuild(st, height_adder, out StringBuilder spawnTimer, out var names_to_add);
+                    descr = SpawnForm(st, spawnTimer, names_to_add);
                 }
 
                 //return descr;
@@ -1694,6 +1526,76 @@ namespace myseq
                 return timerInfo;
             }
             catch (Exception ex) { LogLib.WriteLine("Error with TimerInfo(): ", ex); return ""; }
+        }
+
+        private static int Spawnformbuild(SPAWNTIMER st, int height_adder, out StringBuilder spawnTimer, out string names_to_add)
+        {
+            spawnTimer = new StringBuilder();
+            spawnTimer.AppendFormat("Spawn Name: {0}\n", st.LastSpawnName);
+
+            names_to_add = "Names encountered: ";
+            string[] names = st.AllNames.Split(',');
+
+            int namecount = 0;
+
+            foreach (string name in names)
+            {
+                var namet = RegexHelper.TrimName(name);
+
+                if (namecount == 0)
+                {
+                    names_to_add += namet;
+                }
+                else
+                {
+                    if ((namet.Length + names_to_add.Length + 2) < 45)
+                    {
+                        names_to_add += ", ";
+                        names_to_add += namet;
+                    }
+                    else
+                    {
+                        spawnTimer.Append(names_to_add);
+                        spawnTimer.Append("\n");
+                        height_adder++;
+                        height_adder++;
+
+                        names_to_add = namet;
+                    }
+                }
+
+                namecount++;
+            }
+
+            return height_adder;
+        }
+
+        private static string SpawnForm(SPAWNTIMER st, StringBuilder spawnTimer, string names_to_add)
+        {
+            string descr;
+            if (names_to_add.Length > 0)
+            {
+                spawnTimer.Append(names_to_add);
+            }
+
+            spawnTimer.Append("\n");
+
+            spawnTimer.AppendFormat("Last Spawned At: {0}\n", st.SpawnTimeStr);
+
+            spawnTimer.AppendFormat("Last Killed At: {0}\n", st.KillTimeStr);
+
+            spawnTimer.AppendFormat("Next Spawn At: {0}\n", "");
+
+            spawnTimer.AppendFormat("Spawn Timer: {0} secs\n", "0");
+
+            spawnTimer.AppendFormat("Spawning In: {0}\n", "");
+
+            spawnTimer.AppendFormat("Spawn Count: {0}\n", st.SpawnCount);
+
+            spawnTimer.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", st.Y, st.X, st.Z);
+
+            descr = spawnTimer.ToString();
+            return descr;
         }
 
         private string GroundItemInfo(GroundItem gi)
@@ -1869,7 +1771,7 @@ namespace myseq
                         if (collect_mobtrails_count > 8)
                         {
                             collect_mobtrails_count = 0;
-                            CollectMobTrails();
+                            eq.CollectMobTrails();
                         }
                         collect_mobtrails_count++;
                     }
@@ -1966,8 +1868,6 @@ namespace myseq
                 }
             }
         }
-
-
 
         private void DrawSpawns(float pX, float pY, float pZ, float playerx, float playery, DrawOptions DrawOpts)
         {
@@ -2207,6 +2107,8 @@ namespace myseq
 
                                         if (Settings.Instance.ShowPCNames && (sp.Name.Length > 0))
                                             DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, gName);
+                                        else if (Settings.Instance.ShowPCGuild && (gName.Length > 0)) 
+                                            { DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + gName, sp.X, sp.Y, gName); }
                                     }
                                 }
                             }
@@ -3173,30 +3075,30 @@ namespace myseq
                 }
             }
         }
+        
+        //private void CollectMobTrails()
+        //{
+        //    // Collect Mob Trails
 
-        private void CollectMobTrails()
-        {
-            // Collect Mob Trails
+        //    foreach (SPAWNINFO sp in eq.GetMobsReadonly().Values)
+        //    {
+        //        if (sp.Type == 1)
+        //        {
+        //            // Setup NPCs Trails
 
-            foreach (SPAWNINFO sp in eq.GetMobsReadonly().Values)
-            {
-                if (sp.Type == 1)
-                {
-                    // Setup NPCs Trails
+        //            //add point to mobtrails arraylist if not already there
 
-                    //add point to mobtrails arraylist if not already there
+        //            MobTrailPoint work = new MobTrailPoint
+        //            {
+        //                x = (int)sp.X,
 
-                    MobTrailPoint work = new MobTrailPoint
-                    {
-                        x = (int)sp.X,
+        //                y = (int)sp.Y
+        //            };
 
-                        y = (int)sp.Y
-                    };
-
-                    eq.AddMobTrailPoint(work);
-                }
-            }
-        }
+        //            eq.AddMobTrailPoint(work);
+        //        }
+        //    }
+        //}
     }
 
     #region Map Structures

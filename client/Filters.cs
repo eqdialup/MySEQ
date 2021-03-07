@@ -12,54 +12,44 @@ namespace myseq
     public class Filters
 
     {
-        // keep global and zone alerts seperate, so can write them out easier
+        private static readonly ArrayList arrayList = new ArrayList();
 
-        public ArrayList hunt = new ArrayList(); // hunts
-
-        public ArrayList globalHunt = new ArrayList(); // global hunts
-
-        public ArrayList caution = new ArrayList(); // caution
-
-        public ArrayList globalCaution = new ArrayList(); // global caution
-
-        public ArrayList danger = new ArrayList();
-
-        public ArrayList globalDanger = new ArrayList();
-
-        public ArrayList alert = new ArrayList(); // rare
-
-        public ArrayList globalAlert = new ArrayList(); // global rare
-
-        public ArrayList emailAlert = new ArrayList(); // email alert - not global
-
-        public ArrayList primaryItem = new ArrayList(); // item in primary hand.
-
-        public ArrayList offhandItem = new ArrayList(); // item in offhand hand.
+        public ArrayList Hunt { get; set; } = arrayList;
+        public ArrayList Caution { get; set; } = arrayList;
+        public ArrayList GlobalCaution { get; set; } = arrayList;
+        public ArrayList Danger { get; set; } = arrayList;
+        public ArrayList GlobalHunt { get; set; } = arrayList;
+        public ArrayList OffhandItem { get; set; } = arrayList;
+        public ArrayList Alert { get; set; } = arrayList;
+        public ArrayList GlobalDanger { get; set; } = arrayList;
+        public ArrayList EmailAlert { get; set; } = arrayList;
+        public ArrayList PrimaryItem { get; set; } = arrayList;
+        public ArrayList GlobalAlert { get; set; } = arrayList;
 
         public void ClearArrays()
 
         {
-            hunt.Clear();
+            Hunt.Clear();
 
-            caution.Clear();
+            Caution.Clear();
 
-            danger.Clear();
+            Danger.Clear();
 
-            alert.Clear();
+            Alert.Clear();
 
-            globalHunt.Clear();
+            GlobalHunt.Clear();
 
-            globalCaution.Clear();
+            GlobalCaution.Clear();
 
-            globalDanger.Clear();
+            GlobalDanger.Clear();
 
-            globalAlert.Clear();
+            GlobalAlert.Clear();
 
-            emailAlert.Clear();
+            EmailAlert.Clear();
 
-            primaryItem.Clear();
+            PrimaryItem.Clear();
 
-            offhandItem.Clear();
+            OffhandItem.Clear();
         }
 
         public void AddToAlerts(ArrayList list, string additem)
@@ -182,19 +172,19 @@ namespace myseq
                             {
                                 case 1:
 
-                                    AddToAlerts(globalHunt, inputstring);
+                                    AddToAlerts(GlobalHunt, inputstring);
 
                                     break;
 
                                 case 2:
 
-                                    AddToAlerts(globalCaution, inputstring);
+                                    AddToAlerts(GlobalCaution, inputstring);
 
                                     break;
 
                                 case 3:
 
-                                    AddToAlerts(globalAlert, inputstring);
+                                    AddToAlerts(GlobalAlert, inputstring);
 
                                     break;
                             }
@@ -206,19 +196,19 @@ namespace myseq
                             {
                                 case 1:
 
-                                    AddToAlerts(hunt, inputstring);
+                                    AddToAlerts(Hunt, inputstring);
 
                                     break;
 
                                 case 2:
 
-                                    AddToAlerts(caution, inputstring);
+                                    AddToAlerts(Caution, inputstring);
 
                                     break;
 
                                 case 3:
 
-                                    AddToAlerts(alert, inputstring);
+                                    AddToAlerts(Alert, inputstring);
 
                                     break;
                             }
@@ -282,7 +272,7 @@ namespace myseq
             {
                 inp = inp.Trim();
 
-                if (inp.Length > 0 && !inp.StartsWith("<!"))
+                if (inp.Length > 1 && !inp.StartsWith("<!"))
 
                 {
                     string inputstring = inp;
@@ -373,78 +363,52 @@ namespace myseq
 
                         if (zoneName == "global")
                         {
-                            switch (type)
+                            if (type == 1)
                             {
-                                case 1:
-
-                                    AddToAlerts(globalHunt, inputstring);
-
-                                    break;
-
-                                case 2:
-
-                                    AddToAlerts(globalCaution, inputstring);
-
-                                    break;
-
-                                case 3:
-
-                                    AddToAlerts(globalDanger, inputstring);
-
-                                    break;
-
-                                case 4:
-
-                                    AddToAlerts(globalAlert, inputstring);
-
-                                    break;
+                                AddToAlerts(GlobalHunt, inputstring);
+                            }
+                            else if (type == 2)
+                            {
+                                AddToAlerts(GlobalCaution, inputstring);
+                            }
+                            else if (type == 3)
+                            {
+                                AddToAlerts(GlobalDanger, inputstring);
+                            }
+                            else if (type == 4)
+                            {
+                                AddToAlerts(GlobalAlert, inputstring);
                             }
                         }
                         else
                         {
-                            switch (type)
+                            if (type == 1)
                             {
-                                case 1:
-
-                                    AddToAlerts(hunt, inputstring);
-
-                                    break;
-
-                                case 2:
-
-                                    AddToAlerts(caution, inputstring);
-
-                                    break;
-
-                                case 3:
-
-                                    AddToAlerts(danger, inputstring);
-
-                                    break;
-
-                                case 4:
-
-                                    AddToAlerts(alert, inputstring);
-
-                                    break;
-
-                                case 5:
-
-                                    AddToAlerts(emailAlert, inputstring);
-
-                                    break;
-
-                                case 6:
-
-                                    AddToAlerts(primaryItem, inputstring);
-
-                                    break;
-
-                                case 7:
-
-                                    AddToAlerts(offhandItem, inputstring);
-
-                                    break;
+                                AddToAlerts(Hunt, inputstring);
+                            }
+                            else if (type == 2)
+                            {
+                                AddToAlerts(Caution, inputstring);
+                            }
+                            else if (type == 3)
+                            {
+                                AddToAlerts(Danger, inputstring);
+                            }
+                            else if (type == 4)
+                            {
+                                AddToAlerts(Alert, inputstring);
+                            }
+                            else if (type == 5)
+                            {
+                                AddToAlerts(EmailAlert, inputstring);
+                            }
+                            else if (type == 6)
+                            {
+                                AddToAlerts(PrimaryItem, inputstring);
+                            }
+                            else if (type == 7)
+                            {
+                                AddToAlerts(OffhandItem, inputstring);
                             }
                         }
                     }
@@ -490,7 +454,7 @@ namespace myseq
 
                 if (zoneName == "global")
                 {
-                    foreach (string str in globalHunt)
+                    foreach (string str in GlobalHunt)
 
                     {
                         if (str.Length > 0)
@@ -502,7 +466,7 @@ namespace myseq
                 }
                 else
                 {
-                    foreach (string str in hunt)
+                    foreach (string str in Hunt)
 
                     {
                         if (str.Length > 0)
@@ -519,7 +483,7 @@ namespace myseq
 
                 if (zoneName == "global")
                 {
-                    foreach (string str in globalCaution)
+                    foreach (string str in GlobalCaution)
 
                     {
                         if (str.Length > 0)
@@ -531,7 +495,7 @@ namespace myseq
                 }
                 else
                 {
-                    foreach (string str in caution)
+                    foreach (string str in Caution)
 
                     {
                         if (str.Length > 0)
@@ -548,7 +512,7 @@ namespace myseq
 
                 if (zoneName == "global")
                 {
-                    foreach (string str in globalDanger)
+                    foreach (string str in GlobalDanger)
 
                     {
                         if (str.Length > 0)
@@ -560,7 +524,7 @@ namespace myseq
                 }
                 else
                 {
-                    foreach (string str in danger)
+                    foreach (string str in Danger)
 
                     {
                         if (str.Length > 0)
@@ -581,7 +545,7 @@ namespace myseq
 
                 if (zoneName == "global")
                 {
-                    foreach (string str in globalAlert)
+                    foreach (string str in GlobalAlert)
 
                     {
                         if (str.Length > 0)
@@ -593,7 +557,7 @@ namespace myseq
                 }
                 else
                 {
-                    foreach (string str in alert)
+                    foreach (string str in Alert)
 
                     {
                         if (str.Length > 0)
@@ -613,7 +577,7 @@ namespace myseq
                 if (zoneName != "global")
                 {
                     sw.WriteLine("    <section name=\"Email\">");  // Email Alerts - zone only
-                    foreach (string str in emailAlert)
+                    foreach (string str in EmailAlert)
                     {
                         if (str.Length > 0)
                         {
@@ -623,7 +587,7 @@ namespace myseq
                     sw.WriteLine("    </section>");
 
                     sw.WriteLine("    <section name=\"Primary\">");  // Item In Primary Hand Alerts - zone only
-                    foreach (string str in primaryItem)
+                    foreach (string str in PrimaryItem)
                     {
                         if (str.Length > 0)
                         {
@@ -633,7 +597,7 @@ namespace myseq
                     sw.WriteLine("    </section>");
 
                     sw.WriteLine("    <section name=\"Offhand\">");  // Item In Offhand Hand Alerts - zone only
-                    foreach (string str in offhandItem)
+                    foreach (string str in OffhandItem)
                     {
                         if (str.Length > 0)
                         {
@@ -755,21 +719,19 @@ namespace myseq
         public void EditAlertFile(string zoneName)
 
         {
-            string filterFile;
-
             string filterDir = Settings.Instance.FilterDir;
 
-            if (zoneName?.Length == 0)
-                return;
+            if ((zoneName?.Length) != 0)
+            {
+                zoneName = zoneName.ToLower();
 
-            zoneName = zoneName.ToLower();
+                string filterFile = Path.Combine(filterDir, $"{zoneName}.xml");
 
-            filterFile = Path.Combine(filterDir, $"{zoneName}.xml");
+                if (!File.Exists(filterFile))
+                    CreateAlertFile(filterFile);
 
-            if ( !File.Exists(filterFile) )
-                CreateAlertFile(filterFile);
-
-            Process.Start("notepad.exe", filterFile);
+                Process.Start("notepad.exe", filterFile);
+            }
         }
     }
 }
