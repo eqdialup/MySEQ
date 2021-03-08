@@ -500,5 +500,3 @@ namespace myseq
         }
     }
 }
-
->>>>>>> Lenothx/master
