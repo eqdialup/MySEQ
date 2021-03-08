@@ -1,72 +1,41 @@
 using System;
 
-using System.Drawing;
-
-using System.Collections;
-
-using System.ComponentModel;
-
 using System.Windows.Forms;
 
+namespace myseq
+{
+    public class AboutDlg : Form
+    {
+		private Label lblVersion;
 
+		private Label lblInfo1;
 
-using Structures;
+		private Label lblInfo2;
 
+        private Button cmdControl;
 
-
-namespace myseq {
-
-	public class AboutDlg : System.Windows.Forms.Form {
-
-		private System.Windows.Forms.Label lblVersion;
-
-		private System.Windows.Forms.Label lblInfo1;
-
-		private System.Windows.Forms.Label lblInfo2;
-
-        private System.Windows.Forms.Button cmdControl;
-
-		private System.Windows.Forms.PictureBox picLogo;
+		private PictureBox picLogo;
 
         private Label label1;
 
         private LinkLabel linkLabel1;
 
         private LinkLabel linkLabel2;
-        private Label label2;
-        private System.ComponentModel.Container components = null;
-
-
+//        private Label label2;
+        private System.ComponentModel.Container components;
 
 		public AboutDlg() {
-
 			InitializeComponent();
 
-
-
-			lblVersion.Text = Application.ProductVersion.ToString() + " eqDialup's Build";
-
-
-
+			lblVersion.Text = Application.ProductVersion + " Lenny's Build";
 		}
-
-
 
 		protected override void Dispose(bool disposing) {
-
 			if (disposing)
-
-				if (components != null)
-
-					components.Dispose();
-
-
+				components?.Dispose();
 
 			base.Dispose(disposing);
-
 		}
-
-
 
 		#region Windows Form Designer generated code
 
@@ -74,15 +43,14 @@ namespace myseq {
 
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDlg));
-            this.lblInfo1 = new System.Windows.Forms.Label();
-            this.lblVersion = new System.Windows.Forms.Label();
-            this.lblInfo2 = new System.Windows.Forms.Label();
-            this.cmdControl = new System.Windows.Forms.Button();
-            this.picLogo = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblInfo1 = new Label();
+            this.lblVersion = new Label();
+            this.lblInfo2 = new Label();
+            this.cmdControl = new Button();
+            this.picLogo = new PictureBox();
+            this.label1 = new Label();
+            this.linkLabel1 = new LinkLabel();
+            this.linkLabel2 = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -94,7 +62,6 @@ namespace myseq {
             this.lblInfo1.TabIndex = 0;
             this.lblInfo1.Text = "MySEQ Open (2021)";
             this.lblInfo1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblInfo1.Click += new System.EventHandler(this.lblInfo1_Click);
             // 
             // lblVersion
             // 
@@ -121,7 +88,7 @@ namespace myseq {
             this.cmdControl.Size = new System.Drawing.Size(75, 23);
             this.cmdControl.TabIndex = 4;
             this.cmdControl.Text = "OK";
-            this.cmdControl.Click += new System.EventHandler(this.cmdControl_Click);
+            this.cmdControl.Click += new EventHandler(this.CmdControl_Click);
             // 
             // picLogo
             // 
@@ -129,7 +96,7 @@ namespace myseq {
             this.picLogo.Location = new System.Drawing.Point(12, 12);
             this.picLogo.Name = "picLogo";
             this.picLogo.Size = new System.Drawing.Size(64, 64);
-            this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picLogo.SizeMode = PictureBoxSizeMode.StretchImage;
             this.picLogo.TabIndex = 6;
             this.picLogo.TabStop = false;
             // 
@@ -152,7 +119,7 @@ namespace myseq {
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "http://www.showeq.net";
             this.linkLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.linkLabel1.Click += new System.EventHandler(this.linkLabel1_Click);
+            this.linkLabel1.Click += new EventHandler(this.LinkLabel1_Click);
             // 
             // linkLabel2
             // 
@@ -164,23 +131,12 @@ namespace myseq {
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "http://dockpanelsuite.sourceforge.net";
             this.linkLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(97, 63);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(127, 13);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Based on EqMule 2.4.1.0";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
+            this.linkLabel2.LinkClicked += new LinkLabelLinkClickedEventHandler(this.LinkLabel2_LinkClicked);
             // 
             // AboutDlg
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(363, 237);
-            this.Controls.Add(this.label2);
+            this.ClientSize = new System.Drawing.Size(297, 202);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label1);
@@ -189,13 +145,13 @@ namespace myseq {
             this.Controls.Add(this.lblInfo2);
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.lblInfo1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AboutDlg";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = FormStartPosition.CenterParent;
             this.Text = "About MySEQ Open";
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
             this.ResumeLayout(false);
@@ -205,49 +161,21 @@ namespace myseq {
 
 		#endregion
 
-
-
-		private void cmdControl_Click(object sender, System.EventArgs e) {
-
+		private void CmdControl_Click(object sender, EventArgs e) {
 			Close();
-
 		}
 
-
-
-        private void linkLabel1_Click(object sender, EventArgs e)
+        private void LinkLabel1_Click(object sender, EventArgs e)
 
         {
-
             System.Diagnostics.Process.Start("http://www.showeq.net/forums/forum.php");
-
         }
 
-
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 
         {
-
             System.Diagnostics.Process.Start("http://dockpanelsuite.sourceforge.net");
-
-        }
-
-
-
-        private void lblInfo1_Click(object sender, EventArgs e)
-
-        {
-
-
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
         }
     }
-
 }
 

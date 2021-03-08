@@ -1,10 +1,6 @@
 using System.Reflection;
 
-using System.Runtime.CompilerServices;
-
 using System.Runtime.InteropServices;
-
-
 
 //
 
@@ -30,9 +26,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTrademark("MySEQ Open")]
 
-[assembly: AssemblyCulture("")]		
-
-
+[assembly: AssemblyCulture("")]
 
 //
 
@@ -112,5 +106,5 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyKeyName("")]
 
-[assembly: ComVisibleAttribute(true)]
+[assembly: ComVisible(true)]
 
