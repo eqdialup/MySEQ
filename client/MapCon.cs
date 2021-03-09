@@ -86,9 +86,9 @@ namespace myseq
 
         // m_mapCenter - centre point of screen in Map Units.
 
-        private float m_mapCenterX = 0;
+        private float m_mapCenterX;
 
-        private float m_mapCenterY = 0;
+        private float m_mapCenterY;
 
         // m_screenCenter - centre point of screen in Screen Units.
 
@@ -205,16 +205,6 @@ namespace myseq
 
         private SolidBrush textBrush = new SolidBrush(Color.LightGray);
 
-        //private ArrayList MobTrails {get{return mobtrails;}}
-
-        //private ArrayList Items {get{return items;}}
-
-        //private SPAWNINFO PlayerInfo {get{return eq.playerinfo;} set{eq.playerinfo = value;}}
-
-        //private Hashtable Mobs {get{return mobs;}}
-
-        //private Hashtable MobsTimer {get{return mobsTimer;}}
-
         private frmMain f1 = null;          // Caution: this may be null
 
         private MapPane mapPane = null;     // Caution: this may be null
@@ -286,7 +276,6 @@ namespace myseq
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
-
         {
         }
 
@@ -1178,7 +1167,7 @@ namespace myseq
             try
                {
                 bkgBuffer.Graphics.DrawString(tName, drawFont, dBrush, CalcScreenCoordX(x1) - xoffset, CalcScreenCoordY(y1) - SpawnSize - drawFont.GetHeight());
-                if (gName !="") bkgBuffer.Graphics.DrawString(gName, drawFont, dBrush, CalcScreenCoordX(x1) - xoffset, CalcScreenCoordY(y1) - SpawnSize - drawFont.GetHeight());
+                if (gName !="") bkgBuffer.Graphics.DrawString(gName, drawFont, dBrush, CalcScreenCoordX(x1) - goffset, CalcScreenCoordY(y1) - SpawnSize - drawFont.GetHeight());
                 }
 
             catch (Exception ex) {LogLib.WriteLine($"Error with DrawSpawnNames({tName}, {x1}, {y1}): ", ex);}
@@ -2983,24 +2972,6 @@ namespace myseq
 
             Invalidate();
         }
-
-        //private float Calculate3DDistanceSquared(MapPoint mp)
-
-        //{
-        //    float deltaX, deltaY, deltaZ;
-
-        //    deltaX = (float) eq.playerinfo.X - mp.x;
-
-        //    if (deltaX > 300) return 90000.0f;
-
-        //    deltaY = (float) eq.playerinfo.Y - mp.y;
-
-        //    if (deltaY > 300) return 90000.0f;
-
-        //    deltaZ = (float) eq.playerinfo.Z - mp.z;
-
-        //    return (float)(deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ);
-        //}
 
         public void Tick()
         {

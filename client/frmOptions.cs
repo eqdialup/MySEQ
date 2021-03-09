@@ -311,14 +311,11 @@ namespace myseq
 
 		public frmOptions()  {
 			//
-
 			// Required for Windows Form Designer support
-
 			//
 			InitializeComponent();
 
             foreach (string styleName in Enum.GetNames(typeof(HatchStyle)))
-
             {
                 cmbHatch.Items.Add(styleName);
             }
@@ -353,6 +350,143 @@ namespace myseq
             cmbHatch.SelectedText = Settings.Instance.HatchIndex;
 
             cmbAlertSound.SelectedText = Settings.Instance.AlertSound;
+
+            
+            txtIPAddress1.Text = Settings.Instance.IPAddress1;
+
+            txtIPAddress2.Text = Settings.Instance.IPAddress2;
+
+            txtIPAddress3.Text = Settings.Instance.IPAddress3;
+
+            txtIPAddress4.Text = Settings.Instance.IPAddress4;
+
+            txtIPAddress5.Text = Settings.Instance.IPAddress5;
+
+            txtPortNo.Text = Settings.Instance.Port.ToString();
+
+            spnOverrideLevel.Value = Settings.Instance.LevelOverride;
+
+            spnUpdateDelay.Value = Settings.Instance.UpdateDelay;
+
+            chkSaveOnExit.Checked = Settings.Instance.SaveOnExit;
+
+            chkPrefixAlerts.Checked = Settings.Instance.PrefixStars;
+
+            chkAffixAlerts.Checked = Settings.Instance.AffixStars;       // affix
+
+            chkCorpsesAlerts.Checked = Settings.Instance.CorpseAlerts;
+
+            txtHuntPrefix.Text = Settings.Instance.HuntPrefix;
+
+            chkHuntMatchFull.Checked = Settings.Instance.MatchFullTextH;  //hunt
+
+            optHuntNone.Checked = Settings.Instance.NoneOnHunt;
+
+            optHuntBeep.Checked =  Settings.Instance.BeepOnHunt;
+
+            optHuntSpeak.Checked = Settings.Instance.TalkOnHunt;
+
+            optHuntPlay.Checked = Settings.Instance.PlayOnHunt;
+
+            txtHuntAudioFile.Text = Settings.Instance.HuntAudioFile;
+
+            txtCautionPrefix.Text = Settings.Instance.CautionPrefix;
+
+            chkCautionMatchFull.Checked = Settings.Instance.MatchFullTextC;  //Caution
+
+            optCautionNone.Checked = Settings.Instance.NoneOnCaution;
+
+            optCautionBeep.Checked = Settings.Instance.BeepOnCaution;
+
+            optCautionSpeak.Checked = Settings.Instance.TalkOnCaution;
+
+            optCautionPlay.Checked = Settings.Instance.PlayOnCaution;
+
+            txtCautionAudioFile.Text = Settings.Instance.CautionAudioFile;
+
+            txtDangerPrefix.Text = Settings.Instance.DangerPrefix;
+
+            chkDangerMatchFull.Checked = Settings.Instance.MatchFullTextD;  //danger
+
+            optDangerNone.Checked = Settings.Instance.NoneOnDanger;
+
+            optDangerBeep.Checked = Settings.Instance.BeepOnDanger;
+
+            optDangerSpeak.Checked = Settings.Instance.TalkOnDanger;
+
+            optDangerPlay.Checked = Settings.Instance.PlayOnDanger;
+
+            txtDangerAudioFile.Text = Settings.Instance.DangerAudioFile;
+
+            txtAlertPrefix.Text = Settings.Instance.AlertPrefix;
+
+            chkAlertMatchFull.Checked = Settings.Instance.MatchFullTextA;  //Rare
+
+            optAlertNone.Checked = Settings.Instance.NoneOnAlert;
+
+            optAlertBeep.Checked = Settings.Instance.BeepOnAlert;
+
+            optAlertSpeak.Checked = Settings.Instance.TalkOnAlert;
+
+            optAlertPlay.Checked = Settings.Instance.PlayOnAlert;
+
+            txtAlertAudioFile.Text = Settings.Instance.AlertAudioFile;
+
+            spnRangeCircle.Value = Settings.Instance.RangeCircle;
+
+            numMinAlertLevel.Value = Settings.Instance.MinAlertLevel;
+
+            spnSpawnSize.Value = Settings.Instance.SpawnDrawSize;
+
+            FadedLines.Value = Settings.Instance.FadedLines;
+
+            pvpLevels.Value = Settings.Instance.PVPLevels;
+
+            txtWindowName.Text = Settings.Instance.TitleBar;
+
+            txtSearchString.Text = Settings.Instance.SearchString;
+
+            picMapBackgroundColor.BackColor = Settings.Instance.BackColor;
+
+            picListBackgroundColor.BackColor = Settings.Instance.ListBackColor;
+
+            picGridColor.BackColor = Settings.Instance.GridColor;
+
+            picGridLabelColor.BackColor = Settings.Instance.GridLabelColor;
+
+            picRangeCircleColor.BackColor = Settings.Instance.RangeCircleColor;
+
+            picPlayerBorder.BackColor = Settings.Instance.PCBorderColor;
+
+            chkColorRangeCircle.Checked = Settings.Instance.ColorRangeCircle;
+
+            cmbAlertSound.SelectedItem = Settings.Instance.AlertSound;
+
+            cmbHatch.SelectedItem = Settings.Instance.HatchIndex;
+
+            chkDrawFoV.Checked = Settings.Instance.DrawFoV;
+
+            chkShowZoneName.Checked = Settings.Instance.ShowZoneName;
+
+            chkShowCharName.Checked = Settings.Instance.ShowCharName;
+
+            chkShowTargetInfo.Checked = Settings.Instance.ShowTargetInfo;
+
+            txtMapDir.Text = Settings.Instance.MapDir;
+
+            txtFilterDir.Text = Settings.Instance.FilterDir;
+
+            txtCfgDir.Text = Settings.Instance.CfgDir;
+
+            txtLogDir.Text = Settings.Instance.LogDir;
+
+            txtTimerDir.Text = Settings.Instance.TimerDir;
+
+            spnLogLevel.Value = (int)Settings.Instance.MaxLogLevel;
+
+            chkSelectSpawnList.Checked = Settings.Instance.AutoSelectSpawnList;
+
+            SetFgDrawOptions(Settings.Instance.DrawOptions);
 		}
 
 		/// <summary>
@@ -1927,7 +2061,12 @@ namespace myseq
 
 		private void cmdCommand_Click(object sender, EventArgs e)
         {
-            //            UpdateSMTPSettings();
+//            UpdateSMTPSettings();
+            if (chkSaveOnExit.Checked)  // This checkbox actually DO something now. 
+                {
+                SaveSettings();
+                }
+
 
             bool done = true;
 
@@ -1978,6 +2117,146 @@ namespace myseq
             {
                 return MessageBox.Show($" {dir} directory doesn't exist.  Create it?", "Directory Not Found", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
             }
+        }
+
+        private void SaveSettings()
+        {
+            // Set the Settings
+
+                Settings.Instance.IPAddress1 = txtIPAddress1.Text;
+
+                Settings.Instance.IPAddress2 = txtIPAddress2.Text;
+
+                Settings.Instance.IPAddress3 = txtIPAddress3.Text;
+
+                Settings.Instance.IPAddress4 = txtIPAddress4.Text;
+
+                Settings.Instance.IPAddress5 = txtIPAddress5.Text;
+
+                Settings.Instance.Port = int.Parse(txtPortNo.Text);
+
+                Settings.Instance.LevelOverride = (int)spnOverrideLevel.Value;
+
+                Settings.Instance.SaveOnExit = chkSaveOnExit.Checked;
+
+                Settings.Instance.UpdateDelay = (int)spnUpdateDelay.Value;
+
+                Settings.Instance.CorpseAlerts = chkCorpsesAlerts.Checked;
+
+                Settings.Instance.BackColor = picMapBackgroundColor.BackColor;
+
+                Settings.Instance.PCBorderColor = picPlayerBorder.BackColor;
+
+            Settings.Instance.PrefixStars = chkPrefixAlerts.Checked;
+
+            Settings.Instance.AffixStars = chkAffixAlerts.Checked;
+
+            Settings.Instance.HuntPrefix = txtHuntPrefix.Text;
+
+            Settings.Instance.MatchFullTextH = chkHuntMatchFull.Checked;  //hunt
+
+            Settings.Instance.NoneOnHunt = optHuntNone.Checked;
+
+            Settings.Instance.BeepOnHunt = optHuntBeep.Checked;
+
+            Settings.Instance.TalkOnHunt = optHuntSpeak.Checked;
+
+            Settings.Instance.PlayOnHunt = optHuntPlay.Checked;
+
+            Settings.Instance.HuntAudioFile = txtHuntAudioFile.Text;
+
+            Settings.Instance.CautionPrefix = txtCautionPrefix.Text;
+
+            Settings.Instance.MatchFullTextC = chkCautionMatchFull.Checked;  //Caution
+
+            Settings.Instance.NoneOnCaution = optCautionNone.Checked;
+
+            Settings.Instance.BeepOnCaution = optCautionBeep.Checked;
+
+            Settings.Instance.TalkOnCaution = optCautionSpeak.Checked;
+
+            Settings.Instance.PlayOnCaution = optCautionPlay.Checked;
+
+            Settings.Instance.CautionAudioFile = txtCautionAudioFile.Text;
+
+            Settings.Instance.DangerPrefix = txtDangerPrefix.Text;
+
+            Settings.Instance.MatchFullTextD = chkDangerMatchFull.Checked;  //Caution
+
+            Settings.Instance.NoneOnDanger = optDangerNone.Checked;
+
+            Settings.Instance.BeepOnDanger = optDangerBeep.Checked;
+
+            Settings.Instance.TalkOnDanger = optDangerSpeak.Checked;
+
+            Settings.Instance.PlayOnDanger = optDangerPlay.Checked;
+
+            Settings.Instance.DangerAudioFile = txtDangerAudioFile.Text;
+
+            Settings.Instance.AlertPrefix = txtAlertPrefix.Text;
+
+            Settings.Instance.MatchFullTextA = chkAlertMatchFull.Checked;  //Rare
+
+            Settings.Instance.NoneOnAlert = optAlertNone.Checked;
+
+            Settings.Instance.BeepOnAlert = optAlertBeep.Checked;
+
+            Settings.Instance.TalkOnAlert = optAlertSpeak.Checked;
+
+            Settings.Instance.PlayOnAlert = optAlertPlay.Checked;
+
+            Settings.Instance.AlertAudioFile = txtAlertAudioFile.Text;
+
+            Settings.Instance.RangeCircle = (int)spnRangeCircle.Value;
+
+            Settings.Instance.DrawOptions = GetDrawOptions();
+
+            Settings.Instance.ShowTargetInfo = chkShowTargetInfo.Checked;
+
+            Settings.Instance.ShowZoneName = chkShowZoneName.Checked;
+
+            Settings.Instance.ShowCharName = chkShowCharName.Checked;
+
+            Settings.Instance.DrawFoV = chkDrawFoV.Checked;
+
+            Settings.Instance.ColorRangeCircle = chkColorRangeCircle.Checked;
+
+            Settings.Instance.AlertSound = cmbAlertSound.SelectedItem.ToString();
+
+            Settings.Instance.HatchIndex = cmbHatch.SelectedItem.ToString();
+
+            Settings.Instance.SpawnDrawSize = (int)spnSpawnSize.Value;
+
+            Settings.Instance.FadedLines = (int)FadedLines.Value;
+
+            Settings.Instance.PVPLevels = (int)pvpLevels.Value;
+
+            Settings.Instance.MinAlertLevel = (int)numMinAlertLevel.Value;
+
+            Settings.Instance.TitleBar = txtWindowName.Text;
+
+            Settings.Instance.SearchString = txtSearchString.Text;
+
+            Settings.Instance.MapDir = txtMapDir.Text;
+
+            Settings.Instance.FilterDir = txtFilterDir.Text;
+
+            Settings.Instance.CfgDir = txtCfgDir.Text;
+
+            Settings.Instance.LogDir = txtLogDir.Text;
+
+            Settings.Instance.TimerDir = txtTimerDir.Text;
+
+            Settings.Instance.AutoSelectSpawnList = chkSelectSpawnList.Checked;
+
+            Settings.Instance.OptionsWindowsLocation = Location;
+
+            Settings.Instance.OptionsWindowsSize = Size;
+
+            Settings.Instance.MaxLogLevel = (LogLevel)spnLogLevel.Value;
+
+            if (Settings.Instance.CurrentIPAddress == 0 && txtIPAddress1.Text.Length > 0)
+                Settings.Instance.CurrentIPAddress = 1;
         }
 
         private void cmdMapBackgroundColor_Click(object sender, EventArgs e)

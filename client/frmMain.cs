@@ -1045,7 +1045,7 @@ namespace myseq
             // 
             this.mnuOpenMap.Image = ((System.Drawing.Image)(resources.GetObject("mnuOpenMap.Image")));
             this.mnuOpenMap.Name = "mnuOpenMap";
-            this.mnuOpenMap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.mnuOpenMap.ShortcutKeys = (System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O);
             this.mnuOpenMap.Size = new System.Drawing.Size(177, 22);
             this.mnuOpenMap.Text = "&Open Map";
             this.mnuOpenMap.Click += new System.EventHandler(this.mnuOpenMap_Click);
@@ -1053,7 +1053,7 @@ namespace myseq
             // mnuSaveMobs
             // 
             this.mnuSaveMobs.Name = "mnuSaveMobs";
-            this.mnuSaveMobs.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.mnuSaveMobs.ShortcutKeys = (System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S);
             this.mnuSaveMobs.Size = new System.Drawing.Size(177, 22);
             this.mnuSaveMobs.Text = "&Save Mobs";
             this.mnuSaveMobs.Click += new System.EventHandler(this.mnuSaveMobs_Click);
@@ -1094,35 +1094,35 @@ namespace myseq
             // mnuIPAddress1
             // 
             this.mnuIPAddress1.Name = "mnuIPAddress1";
-            this.mnuIPAddress1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D1)));
+            this.mnuIPAddress1.ShortcutKeys = (System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D1);
             this.mnuIPAddress1.Size = new System.Drawing.Size(107, 22);
             this.mnuIPAddress1.Click += new System.EventHandler(this.mnuIPAddress1_Click);
             // 
             // mnuIPAddress2
             // 
             this.mnuIPAddress2.Name = "mnuIPAddress2";
-            this.mnuIPAddress2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
+            this.mnuIPAddress2.ShortcutKeys = (System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2);
             this.mnuIPAddress2.Size = new System.Drawing.Size(107, 22);
             this.mnuIPAddress2.Click += new System.EventHandler(this.mnuIPAddress2_Click);
             // 
             // mnuIPAddress3
             // 
             this.mnuIPAddress3.Name = "mnuIPAddress3";
-            this.mnuIPAddress3.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
+            this.mnuIPAddress3.ShortcutKeys = (System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3);
             this.mnuIPAddress3.Size = new System.Drawing.Size(107, 22);
             this.mnuIPAddress3.Click += new System.EventHandler(this.mnuIPAddress3_Click);
             // 
             // mnuIPAddress4
             // 
             this.mnuIPAddress4.Name = "mnuIPAddress4";
-            this.mnuIPAddress4.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D4)));
+            this.mnuIPAddress4.ShortcutKeys = (System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D4);
             this.mnuIPAddress4.Size = new System.Drawing.Size(107, 22);
             this.mnuIPAddress4.Click += new System.EventHandler(this.mnuIPAddress4_Click);
             // 
             // mnuIPAddress5
             // 
             this.mnuIPAddress5.Name = "mnuIPAddress5";
-            this.mnuIPAddress5.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D5)));
+            this.mnuIPAddress5.ShortcutKeys = (System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D5);
             this.mnuIPAddress5.Size = new System.Drawing.Size(107, 22);
             this.mnuIPAddress5.Click += new System.EventHandler(this.mnuIPAddress5_Click);
             // 
@@ -1153,8 +1153,8 @@ namespace myseq
             this.mnuChar1.Checked = true;
             this.mnuChar1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuChar1.Name = "mnuChar1";
-            this.mnuChar1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D1)));
+            this.mnuChar1.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D1);
             this.mnuChar1.Size = new System.Drawing.Size(188, 22);
             this.mnuChar1.Text = "Char 1";
             this.mnuChar1.Visible = false;
@@ -1163,8 +1163,8 @@ namespace myseq
             // mnuChar2
             // 
             this.mnuChar2.Name = "mnuChar2";
-            this.mnuChar2.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D2)));
+            this.mnuChar2.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D2);
             this.mnuChar2.Size = new System.Drawing.Size(188, 22);
             this.mnuChar2.Text = "Char 2";
             this.mnuChar2.Visible = false;
@@ -1173,8 +1173,8 @@ namespace myseq
             // mnuChar3
             // 
             this.mnuChar3.Name = "mnuChar3";
-            this.mnuChar3.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D3)));
+            this.mnuChar3.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D3);
             this.mnuChar3.Size = new System.Drawing.Size(188, 22);
             this.mnuChar3.Text = "Char 3";
             this.mnuChar3.Visible = false;
@@ -1183,8 +1183,8 @@ namespace myseq
             // mnuChar4
             // 
             this.mnuChar4.Name = "mnuChar4";
-            this.mnuChar4.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D4)));
+            this.mnuChar4.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D4);
             this.mnuChar4.Size = new System.Drawing.Size(188, 22);
             this.mnuChar4.Text = "Char 4";
             this.mnuChar4.Visible = false;
@@ -1193,8 +1193,8 @@ namespace myseq
             // mnuChar5
             // 
             this.mnuChar5.Name = "mnuChar5";
-            this.mnuChar5.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D5)));
+            this.mnuChar5.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D5);
             this.mnuChar5.Size = new System.Drawing.Size(188, 22);
             this.mnuChar5.Text = "Char 5";
             this.mnuChar5.Visible = false;
@@ -1203,8 +1203,8 @@ namespace myseq
             // mnuChar6
             // 
             this.mnuChar6.Name = "mnuChar6";
-            this.mnuChar6.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D6)));
+            this.mnuChar6.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D6);
             this.mnuChar6.Size = new System.Drawing.Size(188, 22);
             this.mnuChar6.Text = "Char 6";
             this.mnuChar6.Visible = false;
@@ -1213,8 +1213,8 @@ namespace myseq
             // mnuChar7
             // 
             this.mnuChar7.Name = "mnuChar7";
-            this.mnuChar7.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D7)));
+            this.mnuChar7.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D7);
             this.mnuChar7.Size = new System.Drawing.Size(188, 22);
             this.mnuChar7.Text = "Char 7";
             this.mnuChar7.Visible = false;
@@ -1223,8 +1223,8 @@ namespace myseq
             // mnuChar8
             // 
             this.mnuChar8.Name = "mnuChar8";
-            this.mnuChar8.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D8)));
+            this.mnuChar8.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D8);
             this.mnuChar8.Size = new System.Drawing.Size(188, 22);
             this.mnuChar8.Text = "Char 8";
             this.mnuChar8.Visible = false;
@@ -1233,8 +1233,8 @@ namespace myseq
             // mnuChar9
             // 
             this.mnuChar9.Name = "mnuChar9";
-            this.mnuChar9.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D9)));
+            this.mnuChar9.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D9);
             this.mnuChar9.Size = new System.Drawing.Size(188, 22);
             this.mnuChar9.Text = "Char 9";
             this.mnuChar9.Visible = false;
@@ -1243,8 +1243,8 @@ namespace myseq
             // mnuChar10
             // 
             this.mnuChar10.Name = "mnuChar10";
-            this.mnuChar10.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D0)));
+            this.mnuChar10.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.D0);
             this.mnuChar10.Size = new System.Drawing.Size(188, 22);
             this.mnuChar10.Text = "Char 10";
             this.mnuChar10.Visible = false;
@@ -1253,8 +1253,8 @@ namespace myseq
             // mnuChar11
             // 
             this.mnuChar11.Name = "mnuChar11";
-            this.mnuChar11.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.B)));
+            this.mnuChar11.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.B);
             this.mnuChar11.Size = new System.Drawing.Size(188, 22);
             this.mnuChar11.Text = "Char 11";
             this.mnuChar11.Visible = false;
@@ -1263,8 +1263,8 @@ namespace myseq
             // mnuChar12
             // 
             this.mnuChar12.Name = "mnuChar12";
-            this.mnuChar12.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.C)));
+            this.mnuChar12.ShortcutKeys = ((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            | System.Windows.Forms.Keys.C);
             this.mnuChar12.Size = new System.Drawing.Size(188, 22);
             this.mnuChar12.Text = "Char 12";
             this.mnuChar12.Visible = false;
@@ -1292,7 +1292,7 @@ namespace myseq
             // mnuExit
             // 
             this.mnuExit.Name = "mnuExit";
-            this.mnuExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.mnuExit.ShortcutKeys = (System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X);
             this.mnuExit.Size = new System.Drawing.Size(177, 22);
             this.mnuExit.Text = "E&xit";
             this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
@@ -1646,7 +1646,7 @@ namespace myseq
             // mnuAlwaysOnTop
             // 
             this.mnuAlwaysOnTop.Name = "mnuAlwaysOnTop";
-            this.mnuAlwaysOnTop.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T)));
+            this.mnuAlwaysOnTop.ShortcutKeys = (System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T);
             this.mnuAlwaysOnTop.Size = new System.Drawing.Size(198, 22);
             this.mnuAlwaysOnTop.Text = "Always On Top";
             this.mnuAlwaysOnTop.Click += new System.EventHandler(this.mnuAlwaysOnTop_Click);
@@ -2619,9 +2619,9 @@ namespace myseq
             // toolStripMouseLocation
             // 
             this.toolStripMouseLocation.AutoSize = false;
-            this.toolStripMouseLocation.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripMouseLocation.BorderSides = (((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom);
             this.toolStripMouseLocation.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMouseLocation.Name = "toolStripMouseLocation";
             this.toolStripMouseLocation.Size = new System.Drawing.Size(150, 17);
@@ -2631,18 +2631,18 @@ namespace myseq
             // toolStripDistance
             // 
             this.toolStripDistance.AutoSize = false;
-            this.toolStripDistance.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripDistance.BorderSides = (((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom);
             this.toolStripDistance.Name = "toolStripDistance";
             this.toolStripDistance.Size = new System.Drawing.Size(100, 17);
             this.toolStripDistance.ToolTipText = "Game Distance from Player to Cursor";
             // 
             // toolStripSpring
             // 
-            this.toolStripSpring.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripSpring.BorderSides = (((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom);
             this.toolStripSpring.Name = "toolStripSpring";
             this.toolStripSpring.Size = new System.Drawing.Size(955, 17);
             this.toolStripSpring.Spring = true;
@@ -2650,44 +2650,44 @@ namespace myseq
             // toolStripVersion
             // 
             this.toolStripVersion.AutoSize = false;
-            this.toolStripVersion.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripVersion.BorderSides = (((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom);
             this.toolStripVersion.Name = "toolStripVersion";
             this.toolStripVersion.Size = new System.Drawing.Size(60, 17);
             // 
             // toolStripServerAddress
             // 
             this.toolStripServerAddress.AutoSize = false;
-            this.toolStripServerAddress.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripServerAddress.BorderSides = (((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom);
             this.toolStripServerAddress.Name = "toolStripServerAddress";
             this.toolStripServerAddress.Size = new System.Drawing.Size(90, 17);
             // 
             // toolStripCoPStatus
             // 
             this.toolStripCoPStatus.AutoSize = false;
-            this.toolStripCoPStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripCoPStatus.BorderSides = (((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom);
             this.toolStripCoPStatus.Name = "toolStripCoPStatus";
             this.toolStripCoPStatus.Size = new System.Drawing.Size(30, 17);
             // 
             // toolStripShortName
             // 
-            this.toolStripShortName.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripShortName.BorderSides = (((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom);
             this.toolStripShortName.Name = "toolStripShortName";
             this.toolStripShortName.Size = new System.Drawing.Size(4, 17);
             // 
             // toolStripFPS
             // 
             this.toolStripFPS.AutoSize = false;
-            this.toolStripFPS.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.toolStripFPS.BorderSides = (((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom);
             this.toolStripFPS.Name = "toolStripFPS";
             this.toolStripFPS.Size = new System.Drawing.Size(60, 17);
             // 
@@ -2759,116 +2759,35 @@ namespace myseq
             this.toolStripLevel.Items.AddRange(new object[] {
             "Auto",
             "1",
-            "2",
-            "3",
-            "4",
             "5",
-            "6",
-            "7",
-            "8",
-            "9",
             "10",
-            "11",
-            "12",
-            "13",
-            "14",
             "15",
-            "16",
-            "17",
-            "18",
-            "19",
             "20",
-            "21",
-            "22",
-            "23",
-            "24",
             "25",
-            "26",
-            "27",
-            "28",
-            "29",
             "30",
-            "31",
-            "32",
-            "33",
-            "34",
             "35",
-            "36",
-            "37",
-            "38",
-            "39",
             "40",
-            "41",
-            "42",
-            "43",
-            "44",
             "45",
-            "46",
-            "47",
-            "48",
-            "49",
             "50",
-            "51",
-            "52",
-            "53",
-            "54",
             "55",
-            "56",
-            "57",
-            "58",
-            "59",
             "60",
-            "61",
-            "62",
-            "63",
-            "64",
             "65",
-            "66",
-            "67",
-            "68",
-            "69",
             "70",
-            "71",
-            "72",
-            "73",
-            "74",
             "75",
-            "76",
-            "77",
-            "78",
-            "79",
             "80",
-            "81",
-            "82",
-            "83",
-            "84",
             "85",
-            "86",
-            "87",
-            "88",
-            "89",
             "90",
-            "91",
-            "92",
-            "93",
-            "94",
             "95",
-            "96",
-            "97",
-            "98",
-            "99",
             "100",
-            "101",
-            "102",
-            "103",
-            "104",
-            "105"});
+            "105",
+            "110",
+            "115"}); // Trim to every 5th level, else a long long list to scroll through. More detailed with typing.
             this.toolStripLevel.MaxDropDownItems = 80;
             this.toolStripLevel.MaxLength = 4;
             this.toolStripLevel.Name = "toolStripLevel";
             this.toolStripLevel.Size = new System.Drawing.Size(75, 25);
             this.toolStripLevel.Text = "Auto";
-            this.toolStripLevel.ToolTipText = "Auto or 1-105 to filter mobcolors accordingly";
+            this.toolStripLevel.ToolTipText = "Auto or 1-115 to filter mobcolors accordingly";
             this.toolStripLevel.DropDownClosed += new System.EventHandler(this.toolStripLevel_DropDownClosed);
             this.toolStripLevel.TextUpdate += new System.EventHandler(this.toolStripLevel_TextUpdate);
             this.toolStripLevel.Leave += new System.EventHandler(this.toolStripLevel_Leave);
@@ -2907,25 +2826,25 @@ namespace myseq
             // 
             this.toolStripScale.BackColor = System.Drawing.SystemColors.Window;
             this.toolStripScale.Items.AddRange(new object[] {
-            "10.0%",
-            "25.0%",
-            "50.0%",
-            "75.0%",
-            "100.0%",
-            "125.0%",
-            "150.0%",
-            "175.0%",
-            "200.0%",
-            "250.0%",
-            "300.0%",
-            "400.0%",
-            "500.0%",
-            "1000.0%",
-            "2000.0%"});
+            "10%",
+            "25%",
+            "50%",
+            "75%",
+            "100%",
+            "125%",
+            "150%",
+            "175%",
+            "200%",
+            "250%",
+            "300%",
+            "400%",
+            "500%",
+            "1000%",
+            "2000%"});// removed decimal point. never used. 
             this.toolStripScale.Margin = new System.Windows.Forms.Padding(0);
             this.toolStripScale.Name = "toolStripScale";
             this.toolStripScale.Size = new System.Drawing.Size(75, 25);
-            this.toolStripScale.Text = "100.0%";
+            this.toolStripScale.Text = "100%";
             this.toolStripScale.ToolTipText = "Select or Enter a value for amount of map zoom.";
             this.toolStripScale.DropDownClosed += new System.EventHandler(this.toolStripScale_DropDownClosed);
             this.toolStripScale.TextUpdate += new System.EventHandler(this.toolStripScale_TextUpdate);
@@ -4707,300 +4626,22 @@ namespace myseq
             frmOptions f3 = new frmOptions();
             if (Settings.Instance.OptionsWindowsLocation.X != 0 && Settings.Instance.OptionsWindowsLocation.Y != 0)
             {
-                f3.StartPosition = FormStartPosition.Manual;
+                f3.StartPosition = FormStartPosition.CenterParent;
                 f3.Location = Settings.Instance.OptionsWindowsLocation;
                 f3.Size = Settings.Instance.OptionsWindowsSize;
             }
-
-            // Set the Options
-
-            f3.txtIPAddress1.Text = Settings.Instance.IPAddress1;
-
-            f3.txtIPAddress2.Text = Settings.Instance.IPAddress2;
-
-            f3.txtIPAddress3.Text = Settings.Instance.IPAddress3;
-
-            f3.txtIPAddress4.Text = Settings.Instance.IPAddress4;
-
-            f3.txtIPAddress5.Text = Settings.Instance.IPAddress5;
-
-            f3.txtPortNo.Text = Settings.Instance.Port.ToString();
-
-            f3.spnOverrideLevel.Value = Settings.Instance.LevelOverride;
-
-            f3.spnUpdateDelay.Value = Settings.Instance.UpdateDelay;
-
-            f3.chkSaveOnExit.Checked = Settings.Instance.SaveOnExit;
-
-            f3.chkPrefixAlerts.Checked = Settings.Instance.PrefixStars;
-
-            f3.chkAffixAlerts.Checked = Settings.Instance.AffixStars;       // affix
-
-            f3.chkCorpsesAlerts.Checked = Settings.Instance.CorpseAlerts;
-
-            f3.txtHuntPrefix.Text = Settings.Instance.HuntPrefix;
-
-            f3.chkHuntMatchFull.Checked = Settings.Instance.MatchFullTextH;  //hunt
-
-            f3.optHuntNone.Checked = Settings.Instance.NoneOnHunt;
-
-            f3.optHuntBeep.Checked =  Settings.Instance.BeepOnHunt;
-
-            f3.optHuntSpeak.Checked = Settings.Instance.TalkOnHunt;
-
-            f3.optHuntPlay.Checked = Settings.Instance.PlayOnHunt;
-
-            f3.txtHuntAudioFile.Text = Settings.Instance.HuntAudioFile;
-
-            f3.txtCautionPrefix.Text = Settings.Instance.CautionPrefix;
-
-            f3.chkCautionMatchFull.Checked = Settings.Instance.MatchFullTextC;  //Caution
-
-            f3.optCautionNone.Checked = Settings.Instance.NoneOnCaution;
-
-            f3.optCautionBeep.Checked = Settings.Instance.BeepOnCaution;
-
-            f3.optCautionSpeak.Checked = Settings.Instance.TalkOnCaution;
-
-            f3.optCautionPlay.Checked = Settings.Instance.PlayOnCaution;
-
-            f3.txtCautionAudioFile.Text = Settings.Instance.CautionAudioFile;
-
-            f3.txtDangerPrefix.Text = Settings.Instance.DangerPrefix;
-
-            f3.chkDangerMatchFull.Checked = Settings.Instance.MatchFullTextD;  //danger
-
-            f3.optDangerNone.Checked = Settings.Instance.NoneOnDanger;
-
-            f3.optDangerBeep.Checked = Settings.Instance.BeepOnDanger;
-
-            f3.optDangerSpeak.Checked = Settings.Instance.TalkOnDanger;
-
-            f3.optDangerPlay.Checked = Settings.Instance.PlayOnDanger;
-
-            f3.txtDangerAudioFile.Text = Settings.Instance.DangerAudioFile;
-
-            f3.txtAlertPrefix.Text = Settings.Instance.AlertPrefix;
-
-            f3.chkAlertMatchFull.Checked = Settings.Instance.MatchFullTextA;  //Rare
-
-            f3.optAlertNone.Checked = Settings.Instance.NoneOnAlert;
-
-            f3.optAlertBeep.Checked = Settings.Instance.BeepOnAlert;
-
-            f3.optAlertSpeak.Checked = Settings.Instance.TalkOnAlert;
-
-            f3.optAlertPlay.Checked = Settings.Instance.PlayOnAlert;
-
-            f3.txtAlertAudioFile.Text = Settings.Instance.AlertAudioFile;
-
-            f3.spnRangeCircle.Value = Settings.Instance.RangeCircle;
-
-            f3.numMinAlertLevel.Value = Settings.Instance.MinAlertLevel;
-
-            f3.spnSpawnSize.Value = Settings.Instance.SpawnDrawSize;
-
-            f3.FadedLines.Value = Settings.Instance.FadedLines;
-
-            f3.pvpLevels.Value = Settings.Instance.PVPLevels;
-
-            f3.txtWindowName.Text = Settings.Instance.TitleBar;
-
-            f3.txtSearchString.Text = Settings.Instance.SearchString;
-
-            f3.picMapBackgroundColor.BackColor = Settings.Instance.BackColor;
-
-            f3.picListBackgroundColor.BackColor = Settings.Instance.ListBackColor;
-
-            f3.picGridColor.BackColor = Settings.Instance.GridColor;
-
-            f3.picGridLabelColor.BackColor = Settings.Instance.GridLabelColor;
-
-            f3.picRangeCircleColor.BackColor = Settings.Instance.RangeCircleColor;
-
-            f3.picPlayerBorder.BackColor = Settings.Instance.PCBorderColor;
-
-            f3.chkColorRangeCircle.Checked = Settings.Instance.ColorRangeCircle;
-
-            f3.cmbAlertSound.SelectedItem = Settings.Instance.AlertSound;
-
-            f3.cmbHatch.SelectedItem = Settings.Instance.HatchIndex;
-
-            f3.chkDrawFoV.Checked = Settings.Instance.DrawFoV;
-
-            f3.chkShowZoneName.Checked = Settings.Instance.ShowZoneName;
-
-            f3.chkShowCharName.Checked = Settings.Instance.ShowCharName;
-
-            f3.chkShowTargetInfo.Checked = Settings.Instance.ShowTargetInfo;
-
-            f3.txtMapDir.Text = Settings.Instance.MapDir;
-
-            f3.txtFilterDir.Text = Settings.Instance.FilterDir;
-
-            f3.txtCfgDir.Text = Settings.Instance.CfgDir;
-
-            f3.txtLogDir.Text = Settings.Instance.LogDir;
-
-            f3.txtTimerDir.Text = Settings.Instance.TimerDir;
-
-            f3.spnLogLevel.Value = (int)Settings.Instance.MaxLogLevel;
-
-            f3.chkSelectSpawnList.Checked = Settings.Instance.AutoSelectSpawnList;
-
-            f3.SetFgDrawOptions(Settings.Instance.DrawOptions);
-
-            // Show the Option Window
+            // Options form now handles getting and changing the values to settings. poor practice to let a method in a diff class do it. 
 
             f3.ShowDialog();
             if (f3.DialogResult.ToString() == "Cancel")
             {
-                f3.Hide();
+                f3.Close();//.Hide();
                 return;
             }
-            // Set the Settings
-
-            if (Settings.Instance.IPAddress1 != f3.txtIPAddress1.Text)
-                Settings.Instance.IPAddress1 = f3.txtIPAddress1.Text;
-
-            if (Settings.Instance.IPAddress2 != f3.txtIPAddress2.Text)
-                Settings.Instance.IPAddress2 = f3.txtIPAddress2.Text;
-
-            if (Settings.Instance.IPAddress3 != f3.txtIPAddress3.Text)
-                Settings.Instance.IPAddress3 = f3.txtIPAddress3.Text;
-
-            if (Settings.Instance.IPAddress4 != f3.txtIPAddress4.Text)
-                Settings.Instance.IPAddress4 = f3.txtIPAddress4.Text;
-
-            if (Settings.Instance.IPAddress5 != f3.txtIPAddress5.Text)
-                Settings.Instance.IPAddress5 = f3.txtIPAddress5.Text;
-
-            if (Settings.Instance.Port != int.Parse(f3.txtPortNo.Text))
-                Settings.Instance.Port = int.Parse(f3.txtPortNo.Text);
-
-            if (Settings.Instance.LevelOverride != (int)f3.spnOverrideLevel.Value)
-                Settings.Instance.LevelOverride = (int)f3.spnOverrideLevel.Value;
-
-            if (Settings.Instance.SaveOnExit != f3.chkSaveOnExit.Checked)
-                Settings.Instance.SaveOnExit = f3.chkSaveOnExit.Checked;
-
-            if (Settings.Instance.UpdateDelay != (int)f3.spnUpdateDelay.Value)
-            {
-                Settings.Instance.UpdateDelay = (int)f3.spnUpdateDelay.Value;
-                timPackets.Interval = Settings.Instance.UpdateDelay;
-                SetUpdateSteps();
-            }
-
-            if (Settings.Instance.CorpseAlerts != f3.chkCorpsesAlerts.Checked) {
-                Settings.Instance.CorpseAlerts = f3.chkCorpsesAlerts.Checked;
-                reloadAlertFiles();
-            }
-
-            if (Settings.Instance.BackColor != f3.picMapBackgroundColor.BackColor) {
-                Settings.Instance.BackColor = f3.picMapBackgroundColor.BackColor;
-                resetMapPens();
-            }
-
-            if (Settings.Instance.PCBorderColor != f3.picPlayerBorder.BackColor)
-            {
-                Settings.Instance.PCBorderColor = f3.picPlayerBorder.BackColor;
-                mapCon?.UpdatePCBorder();
-            }
-
-            Settings.Instance.PrefixStars = f3.chkPrefixAlerts.Checked;
-
-            Settings.Instance.AffixStars = f3.chkAffixAlerts.Checked;
-
-            Settings.Instance.HuntPrefix = f3.txtHuntPrefix.Text;
-
-            Settings.Instance.MatchFullTextH = f3.chkHuntMatchFull.Checked;  //hunt
-
-            Settings.Instance.NoneOnHunt = f3.optHuntNone.Checked;
-
-            Settings.Instance.BeepOnHunt = f3.optHuntBeep.Checked;
-
-            Settings.Instance.TalkOnHunt = f3.optHuntSpeak.Checked;
-
-            Settings.Instance.PlayOnHunt = f3.optHuntPlay.Checked;
-
-            Settings.Instance.HuntAudioFile = f3.txtHuntAudioFile.Text;
-
-            Settings.Instance.CautionPrefix = f3.txtCautionPrefix.Text;
-
-            Settings.Instance.MatchFullTextC = f3.chkCautionMatchFull.Checked;  //Caution
-
-            Settings.Instance.NoneOnCaution = f3.optCautionNone.Checked;
-
-            Settings.Instance.BeepOnCaution = f3.optCautionBeep.Checked;
-
-            Settings.Instance.TalkOnCaution = f3.optCautionSpeak.Checked;
-
-            Settings.Instance.PlayOnCaution = f3.optCautionPlay.Checked;
-
-            Settings.Instance.CautionAudioFile = f3.txtCautionAudioFile.Text;
-
-            Settings.Instance.DangerPrefix = f3.txtDangerPrefix.Text;
-
-            Settings.Instance.MatchFullTextD = f3.chkDangerMatchFull.Checked;  //Caution
-
-            Settings.Instance.NoneOnDanger = f3.optDangerNone.Checked;
-
-            Settings.Instance.BeepOnDanger = f3.optDangerBeep.Checked;
-
-            Settings.Instance.TalkOnDanger = f3.optDangerSpeak.Checked;
-
-            Settings.Instance.PlayOnDanger = f3.optDangerPlay.Checked;
-
-            Settings.Instance.DangerAudioFile = f3.txtDangerAudioFile.Text;
-
-            Settings.Instance.AlertPrefix = f3.txtAlertPrefix.Text;
-
-            Settings.Instance.MatchFullTextA = f3.chkAlertMatchFull.Checked;  //Rare
-
-            Settings.Instance.NoneOnAlert = f3.optAlertNone.Checked;
-
-            Settings.Instance.BeepOnAlert = f3.optAlertBeep.Checked;
-
-            Settings.Instance.TalkOnAlert = f3.optAlertSpeak.Checked;
-
-            Settings.Instance.PlayOnAlert = f3.optAlertPlay.Checked;
-
-            Settings.Instance.AlertAudioFile = f3.txtAlertAudioFile.Text;
-
-            Settings.Instance.RangeCircle = (int)f3.spnRangeCircle.Value;
-
-            Settings.Instance.DrawOptions = f3.GetDrawOptions();
-
-            Settings.Instance.ShowTargetInfo = f3.chkShowTargetInfo.Checked;
-
-            Settings.Instance.ShowZoneName = f3.chkShowZoneName.Checked;
-
-            Settings.Instance.ShowCharName = f3.chkShowCharName.Checked;
-
-            Settings.Instance.DrawFoV = f3.chkDrawFoV.Checked;
-
-            Settings.Instance.ColorRangeCircle = f3.chkColorRangeCircle.Checked;
-
-            Settings.Instance.AlertSound = f3.cmbAlertSound.SelectedItem.ToString();
-
-            Settings.Instance.HatchIndex = f3.cmbHatch.SelectedItem.ToString();
-
-            Settings.Instance.SpawnDrawSize = (int)f3.spnSpawnSize.Value;
-
-            if (Settings.Instance.FadedLines != (int)f3.FadedLines.Value)
-            {
-                Settings.Instance.FadedLines = (int)f3.FadedLines.Value;
-                resetMapPens();
-            }
-
-            Settings.Instance.PVPLevels = (int)f3.pvpLevels.Value;
-
-            Settings.Instance.MinAlertLevel = (int)f3.numMinAlertLevel.Value;
-
-            Settings.Instance.TitleBar = f3.txtWindowName.Text;
-
-            Settings.Instance.SearchString = f3.txtSearchString.Text;
-
+            timPackets.Interval = Settings.Instance.UpdateDelay;
+            SetUpdateSteps();
+            reloadAlertFiles();
+            resetMapPens();
             SpawnList.listView.BackColor = Settings.Instance.ListBackColor;
 
             SpawnTimerList.listView.BackColor = Settings.Instance.ListBackColor;
@@ -5010,31 +4651,9 @@ namespace myseq
             if (Settings.Instance.TitleBar.Length > 0)
                 BaseTitle = Settings.Instance.TitleBar;
 
-            Settings.Instance.MapDir = f3.txtMapDir.Text;
-
-            Settings.Instance.FilterDir = f3.txtFilterDir.Text;
-
-            Settings.Instance.CfgDir = f3.txtCfgDir.Text;
-
-            Settings.Instance.LogDir = f3.txtLogDir.Text;
-
-            Settings.Instance.TimerDir = f3.txtTimerDir.Text;
-
-            Settings.Instance.AutoSelectSpawnList = f3.chkSelectSpawnList.Checked;
-
-            Settings.Instance.OptionsWindowsLocation = f3.Location;
-
-            Settings.Instance.OptionsWindowsSize = f3.Size;
-
-            Settings.Instance.MaxLogLevel = (LogLevel)f3.spnLogLevel.Value;
-
-            if (Settings.Instance.CurrentIPAddress == 0 && f3.txtIPAddress1.Text.Length > 0)
-                Settings.Instance.CurrentIPAddress = 1;
-
             DrawOpts = Settings.Instance.DrawOptions;
 
             mnuShowGridLines.Checked = (Settings.Instance.DrawOptions & DrawOptions.GridLines) != DrawOptions.DrawNone;
-
             mnuShowZoneText.Checked = (Settings.Instance.DrawOptions & DrawOptions.ZoneText) != DrawOptions.DrawNone;
             mnuShowLayer1.Checked = Settings.Instance.ShowLayer1;
             mnuShowLayer2.Checked = Settings.Instance.ShowLayer2;
@@ -5832,13 +5451,13 @@ namespace myseq
                 eq.MarkLookups("2:" + toolStripLookupBox2.Text, bFilter2);
 
             if (toolStripLookupBox3.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-                eq.MarkLookups("3:" + toolStripLookupBox2.Text, bFilter3);
+                eq.MarkLookups("3:" + toolStripLookupBox3.Text, bFilter3);
 
             if (toolStripLookupBox4.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-                eq.MarkLookups("4:" + toolStripLookupBox2.Text, bFilter4);
+                eq.MarkLookups("4:" + toolStripLookupBox4.Text, bFilter4);
 
             if (toolStripLookupBox5.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-                eq.MarkLookups("5:" + toolStripLookupBox2.Text, bFilter5);
+                eq.MarkLookups("5:" + toolStripLookupBox5.Text, bFilter5);
         }
 
         public void resetMapPens()
@@ -6601,62 +6220,149 @@ namespace myseq
             }
         }
 
-        private void toolStripScale_TextUpdate(object sender, EventArgs e)
-        {
-            string Str = toolStripScale.Text.Trim();
-            Str = Str.Replace("%", "");
 
-            bool validnum = false;
+
+
+
+        private void toolStripZPos_TextChanged(object sender, EventArgs e)
+        {
+            // validate that text is a usable number
+            // allow a value of 0 to 3500
+            string Str = toolStripZPos.Text.Trim();
+
+            bool validnum = true;
             if (Str.Length > 0)
             {
                 bool isNum = double.TryParse(Str, out var Num);
-
+                validnum = false;
                 if (isNum)
                 {
-                    validnum = Num >= 1 && Num <= (double)mapPane.scale.Maximum;
+                    validnum = Num >= 0 && Num <= 3500;
                 }
+                if (Str.Length == 1 && Str == ".")
+                    validnum = true;
             }
-
             if (!validnum)
             {
-                toolStripScale.Text = $"{mapPane.scale.Value / 100:0.0%}";
-                MessageBox.Show($"Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
+                toolStripZPos.Text = $"{mapPane.filterzpos.Value:0.0}";
+                MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Pos Value Entered.");
             }
         }
 
-        private void toolStripScale_Leave(object sender, EventArgs e)
+        private void toolStripZPosUp_Click(object sender, EventArgs e)
         {
-            string Str = toolStripScale.Text.Trim();
-            Str = Str.Replace("%", "");
+            decimal current_val = mapPane.filterzpos.Value;
+            current_val += 5;
+            if (current_val > mapPane.filterzpos.Maximum)
+                current_val = mapPane.filterzpos.Maximum;
+            mapPane.filterzpos.Value = current_val;
+            toolStripZPos.Text = $"{current_val:0}";
+        }
 
+        private void toolStripZPosDown_Click(object sender, EventArgs e)
+        {
+            decimal current_val = mapPane.filterzpos.Value;
+            current_val -= 5;
+            if (current_val < mapPane.filterzpos.Minimum)
+                current_val = mapPane.filterzpos.Minimum;
+            mapPane.filterzpos.Value = current_val;
+            toolStripZPos.Text = $"{current_val:0}";
+        }
+
+        private void toolStripZNegDown_Click(object sender, EventArgs e)
+        {
+            decimal current_val = mapPane.filterzneg.Value;
+            current_val -= 5;
+            if (current_val < mapPane.filterzneg.Minimum)
+                current_val = mapPane.filterzneg.Minimum;
+            mapPane.filterzneg.Value = current_val;
+            toolStripZNeg.Text = $"{current_val:0.0}";
+        }
+
+        private void toolStripZNegUp_Click(object sender, EventArgs e)
+        {
+            decimal current_val = mapPane.filterzneg.Value;
+            current_val += 5;
+            if (current_val > mapPane.filterzneg.Maximum)
+                current_val = mapPane.filterzneg.Maximum;
+            mapPane.filterzneg.Value = current_val;
+            toolStripZNeg.Text = $"{current_val:0.0}";
+        }
+
+        private void toolStripResetDepthFilter_Click(object sender, EventArgs e)
+        {
+            mapPane.filterzneg.Value = 75;
+            mapPane.filterzpos.Value = 75;
+            toolStripZNeg.Text = $"{75:0.0}";
+            toolStripZPos.Text = $"{75:0.0}";
+        }
+
+        private void toolStripZPos_Leave(object sender, EventArgs e)
+        {
+            // update Z-Pos value
+            string Str = toolStripZPos.Text.Trim();
             bool validnum = false;
             if (Str.Length > 0)
             {
                 bool isNum = double.TryParse(Str, out var Num);
-
-                if (isNum)
+                if (isNum && Num >= 0 && Num <= 3500)
                 {
-                    if (Num >= (double)mapPane.scale.Minimum && Num <= (double)mapPane.scale.Maximum)
-                    {
-                        mapPane.scale.Value = (decimal)Num;
-                        validnum = true;
-                    }
-                    else
-                    {
-                        validnum = false;
-                    }
+                    mapPane.filterzpos.Value = (decimal)Num;
+                    validnum = true;
                 }
             }
+            if (!validnum)
+                toolStripZPos.Text = $"{mapPane.filterzpos.Value:0.0}";
+        }
 
+        private void toolStripZNeg_TextChanged(object sender, EventArgs e)
+        {
+            // validate that text is a usable number
+            // allow a value of 0 to 3500
+            string Str = toolStripZNeg.Text.Trim();
+
+            bool validnum = true;
+            if (Str.Length > 0)
+            {
+                bool isNum = double.TryParse(Str, out var Num);
+                validnum = false;
+                if (isNum)
+                {
+                    validnum = Num >= 0 && Num <= 3500;
+                }
+                if (Str.Length == 1 && Str == ".")
+                    validnum = true;
+            }
             if (!validnum)
             {
-                toolStripScale.Text = $"{mapPane.scale.Value / 100:0.0%}";
-                MessageBox.Show($"Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
+                toolStripZNeg.Text = $"{mapPane.filterzneg.Value:0.0}";
+                MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Neg Value Entered.");
             }
-            else
+        }
+
+        private void toolStripZNeg_Leave(object sender, EventArgs e)
+        {
+            // update Z-Pos value
+            string Str = toolStripZNeg.Text.Trim();
+            bool validnum = false;
+            if (Str.Length > 0)
             {
-                toolStripScale.Text = $"{mapPane.scale.Value / 100:0.0%}";
+                bool isNum = double.TryParse(Str, out var Num);
+                if (isNum && Num >= 0 && Num <= 3500)
+                {
+                    mapPane.filterzneg.Value = (decimal)Num;
+                    validnum = true;
+                }
             }
+            if (!validnum)
+                toolStripZNeg.Text = $"{mapPane.filterzneg.Value:0.0}";
+        }
+
+
+
+        private void mnuAddMapLabel_Click(object sender, EventArgs e)
+        {
+            addMapText(alertAddmobname);
         }
 
         private void toolStripZoomIn_Click(object sender, EventArgs e)
@@ -6727,154 +6433,252 @@ namespace myseq
             if (current_val >= mapPane.scale.Minimum && current_val <= mapPane.scale.Maximum)
                 mapPane.scale.Value = current_val;
         }
-
-        private void toolStripZPos_TextChanged(object sender, EventArgs e)
+        private void toolStripScale_TextUpdate(object sender, EventArgs e)
         {
-            // validate that text is a usable number
-            // allow a value of 0 to 3500
-            string Str = toolStripZPos.Text.Trim();
+            string Str = toolStripScale.Text.Trim();
 
-            bool validnum = true;
-            if (Str.Length > 0)
+            bool validnum = false;
+
+            if (!string.IsNullOrEmpty(Str))
             {
+                Str = Str.Replace("%", "");
                 bool isNum = double.TryParse(Str, out var Num);
-                validnum = false;
+
                 if (isNum)
                 {
-                    validnum = Num >= 0 && Num <= 3500;
+                    validnum = Num >= 1 && Num <= (double)mapPane.scale.Maximum;
                 }
-                if (Str.Length == 1 && Str == ".")
-                    validnum = true;
             }
+
             if (!validnum)
             {
-                toolStripZPos.Text = $"{mapPane.filterzpos.Value:0.0}";
-                MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Pos Value Entered.");
+                toolStripScale.Text = $"{mapPane.scale.Value / 100:0%}";
+                MessageBox.Show($"1. Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
             }
         }
-
-        private void toolStripZPosUp_Click(object sender, EventArgs e)
+        private void toolStripScale_Leave(object sender, EventArgs e)
         {
-            decimal current_val = mapPane.filterzpos.Value;
-            current_val += 5;
-            if (current_val > mapPane.filterzpos.Maximum)
-                current_val = mapPane.filterzpos.Maximum;
-            mapPane.filterzpos.Value = current_val;
-            toolStripZPos.Text = $"{current_val:0.0}";
-        }
-
-        private void toolStripZPosDown_Click(object sender, EventArgs e)
-        {
-            decimal current_val = mapPane.filterzpos.Value;
-            current_val -= 5;
-            if (current_val < mapPane.filterzpos.Minimum)
-                current_val = mapPane.filterzpos.Minimum;
-            mapPane.filterzpos.Value = current_val;
-            toolStripZPos.Text = $"{current_val:0.0}";
-        }
-
-        private void toolStripZNegDown_Click(object sender, EventArgs e)
-        {
-            decimal current_val = mapPane.filterzneg.Value;
-            current_val -= 5;
-            if (current_val < mapPane.filterzneg.Minimum)
-                current_val = mapPane.filterzneg.Minimum;
-            mapPane.filterzneg.Value = current_val;
-            toolStripZNeg.Text = $"{current_val:0.0}";
-        }
-
-        private void toolStripZNegUp_Click(object sender, EventArgs e)
-        {
-            decimal current_val = mapPane.filterzneg.Value;
-            current_val += 5;
-            if (current_val > mapPane.filterzneg.Maximum)
-                current_val = mapPane.filterzneg.Maximum;
-            mapPane.filterzneg.Value = current_val;
-            toolStripZNeg.Text = $"{current_val:0.0}";
-        }
-
-        private void toolStripResetDepthFilter_Click(object sender, EventArgs e)
-        {
-            mapPane.filterzneg.Value = 75;
-            mapPane.filterzpos.Value = 75;
-            toolStripZNeg.Text = $"{75:0.0}";
-            toolStripZPos.Text = $"{75:0.0}";
-        }
-
-        private void toolStripZPos_Leave(object sender, EventArgs e)
-        {
-            // update Z-Pos value
-            string Str = toolStripZPos.Text.Trim();
+            string Str = toolStripScale.Text.Trim();
             bool validnum = false;
-            if (Str.Length > 0)
+            if (!string.IsNullOrEmpty(Str))
             {
-                bool isNum = double.TryParse(Str, out var Num);
-                if (isNum)
+                Str = Str.Replace("%", "");
+                bool isNum = decimal.TryParse(Str, out decimal Num);
+
+                if (isNum && Num >= mapPane.scale.Minimum && Num <= mapPane.scale.Maximum)
                 {
-                    if (Num >= 0 && Num <= 3500)
+                    mapPane.scale.Value = Num;
+                    validnum = true;
+                }
+            }
+
+            if (!validnum)
+            {
+                toolStripScale.Text = $"{mapPane.scale.Value / 100:0%}";
+                MessageBox.Show($"2. Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
+            }
+            else
+            {
+                toolStripScale.Text = $"{mapPane.scale.Value / 100:0%}";
+            }
+        }
+        private void toolStripScale_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                string Str = toolStripScale.Text.Trim();
+                Str = Str.Replace("%", "");
+
+                if (Str.Length > 0)
+                {
+                    bool isNum = decimal.TryParse(Str, out var Num);
+
+                    if (isNum && Num >= mapPane.scale.Minimum && Num <= mapPane.scale.Maximum)
                     {
-                        decimal z_pos = (decimal)Num;
-                        mapPane.filterzpos.Value = z_pos;
-                        validnum = true;
+                        mapPane.scale.Value = Num;
                     }
                 }
-            }
-            if (!validnum)
-                toolStripZPos.Text = $"{mapPane.filterzpos.Value:0.0}";
-        }
+                toolStripScale.Focus();
 
-        private void toolStripZNeg_TextChanged(object sender, EventArgs e)
-        {
-            // validate that text is a usable number
-            // allow a value of 0 to 3500
-            string Str = toolStripZNeg.Text.Trim();
-
-            bool validnum = true;
-            if (Str.Length > 0)
-            {
-                bool isNum = double.TryParse(Str, out var Num);
-                validnum = false;
-                if (isNum)
-                {
-                    validnum = Num >= 0 && Num <= 3500;
-                }
-                if (Str.Length == 1 && Str == ".")
-                    validnum = true;
-            }
-            if (!validnum)
-            {
-                toolStripZNeg.Text = $"{mapPane.filterzneg.Value:0.0}";
-                MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Neg Value Entered.");
+                e.Handled = true;
             }
         }
-
-        private void toolStripZNeg_Leave(object sender, EventArgs e)
+        private void toolStripScale_DropDownClosed(object sender, EventArgs e)
         {
-            // update Z-Pos value
-            string Str = toolStripZNeg.Text.Trim();
-            bool validnum = false;
-            if (Str.Length > 0)
+            string Str = toolStripScale.SelectedItem.ToString();
+
+            if (!string.IsNullOrEmpty(Str))
+
             {
-                bool isNum = double.TryParse(Str, out var Num);
-                if (isNum)
+                Str = Str.Replace("%", "");
+                bool isNum = decimal.TryParse(Str, out var Num);
+
+                if (isNum && Num >= mapPane.scale.Minimum && Num <= mapPane.scale.Maximum)
                 {
-                    if (Num >= 0 && Num <= 3500)
-                    {
-                        decimal z_neg = (decimal)Num;
-                        mapPane.filterzneg.Value = z_neg;
-                        validnum = true;
-                    }
+                    mapPane.scale.Value = Num; // lots of unneccessary number conversions removed. (string to double and back to decimal)
                 }
             }
-            if (!validnum)
-                toolStripZNeg.Text = $"{mapPane.filterzneg.Value:0.0}";
         }
 
-        private void mnuAddMapLabel_Click(object sender, EventArgs e)
+        private void SetUpdateSteps()
         {
-            addMapText(alertAddmobname);
+            int update_steps = (1000 / Settings.Instance.UpdateDelay) + 1;
+            if (update_steps < 3)
+                update_steps = 3;
+
+            int update_ticks = 250 / Settings.Instance.UpdateDelay;
+            if (update_ticks < 1)
+                update_ticks = 1;
+
+            mapCon.UpdateSteps = update_steps;
+            mapCon.UpdateTicks = update_ticks;
         }
 
+        private void addMapTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // add map text, to where the player is currently located
+            if (eq.longname.Length > 0)
+            {
+                if (eq.playerinfo?.Name.Length > 0)
+                {
+                    alertX = eq.playerinfo.X;
+                    alertY = eq.playerinfo.Y;
+                    alertZ = eq.playerinfo.Z;
+                    addMapText("Text to Add");
+                }
+            }
+        }
+        private IDockContent GetContentFromPersistString(string persistString)
+        {
+            if (persistString == "SpawnList")
+                return SpawnList;
+            else if (persistString == "SpawnTimerList")
+                return SpawnTimerList;
+            else if (persistString == "GroundSpawnList")
+                return GroundItemList;
+            else
+                return mapPane;
+        }
+
+        private void mnuShowListSearchBox_Click(object sender, EventArgs e)
+        {
+            Settings.Instance.ShowListSearchBox = !Settings.Instance.ShowListSearchBox;
+
+            mnuShowListSearchBox.Checked = Settings.Instance.ShowListSearchBox;
+
+            if (Settings.Instance.ShowListSearchBox)
+            {
+                SpawnList.ShowSearchBox();
+                SpawnTimerList.ShowSearchBox();
+                GroundItemList.ShowSearchBox();
+            }
+            else
+            {
+                SpawnList.HideSearchBox();
+                SpawnTimerList.HideSearchBox();
+                GroundItemList.HideSearchBox();
+            }
+        }
+
+        private void mnuSmallTargetInfo_Click(object sender, EventArgs e)
+        {
+            Settings.Instance.SmallTargetInfo = !Settings.Instance.SmallTargetInfo;
+
+            mnuSmallTargetInfo.Checked = Settings.Instance.SmallTargetInfo;
+            mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
+        }
+        private void mnuSmallTargetInfo2_Click(object sender, EventArgs e)
+        {
+            Settings.Instance.SmallTargetInfo = !Settings.Instance.SmallTargetInfo;
+
+            mnuSmallTargetInfo.Checked = Settings.Instance.SmallTargetInfo;
+            mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
+        }
+
+
+
+        //private void addZoneEmailAlertFilterToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    if (dialogBox("Add to Zone Email Alert Filters", "Add name to Email list:", alertAddmobname))
+        //    {
+        //        filters.AddToAlerts(filters.EmailAlert, alertAddmobname);
+
+        //        filters.WriteAlertFile(curZone);
+
+        //        reloadAlertFiles();
+        //    }
+        //}
+
+        //private void toolStripEmailAlerts_Click(object sender, EventArgs e)
+        //{
+        //    if (Settings.Instance.EmailAlerts)
+        //    {
+        //        // turn off alerts
+        //        Settings.Instance.EmailAlerts = false;
+        //    }
+        //    else
+        //    {
+        //        // trying to turn on alerts.  Check if To and From emails set.
+        //        if (SmtpSettings.Instance.FromEmail?.Length == 0 || SmtpSettings.Instance.ToEmail?.Length == 0 || SmtpSettings.Instance.SmtpServer?.Length == 0)
+        //        {
+        //            MessageBox.Show("Set Email Settings on the SMTP tab in the\r\nOptions Dialog before enabling email alerts.", "Initial Email Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        //            return;
+        //        }
+        //        if (SmtpSettings.Instance.UseNetworkCredentials || (SmtpSettings.Instance.SmtpUsername.Length > 0 && SmtpSettings.Instance.SmtpPassword.Length > 0))
+        //        {
+        //            // Check if we can resolve the host
+        //            IPHostEntry host;
+        //            try { host = Dns.GetHostEntry(SmtpSettings.Instance.SmtpServer); }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SmtpSettings.Instance.SmtpServer + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //                return;
+        //            }
+        //            // Using network credentials, so no login prompt needed
+        //            Settings.Instance.EmailAlerts = !Settings.Instance.EmailAlerts;
+        //        }
+        //        else
+        //        {
+        //            // we got here, so everything must be filled out
+        //            IPHostEntry host;
+        //            try { host = Dns.GetHostEntry(SmtpSettings.Instance.SmtpServer); }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SmtpSettings.Instance.SmtpServer + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //                return;
+        //            }
+
+        //            // Pop up username/password login screen for email
+        //            frmLogin f4 = new frmLogin
+        //            {
+        //                StartPosition = FormStartPosition.CenterScreen
+        //            };
+        //            // the validation in the ShowDialog, will turn on alerts if passes and ok pushed.
+        //            f4.ShowDialog();
+        //        }
+        //    }
+
+        //    toolStripEmailAlerts.Checked = Settings.Instance.EmailAlerts;
+
+        //    if (Settings.Instance.EmailAlerts)
+        //    {
+        //        toolStripEmailAlerts.ToolTipText = "Disable Email Alerts";
+        //        if (filters.emailAlert.Count > 0)
+        //            reloadAlertFiles();
+        //    }
+        //    else
+        //    {
+        //        toolStripEmailAlerts.ToolTipText = "Enable Email Alerts";
+        //    }
+        //}
+
+        private void mnuAutoConnect_Click(object sender, EventArgs e)
+        {
+            Settings.Instance.AutoConnect = !Settings.Instance.AutoConnect;
+            mnuAutoConnect.Checked = Settings.Instance.AutoConnect;
+        }
+
+        #region lookupbox
         private void toolStripResetLookup_Click(object sender, EventArgs e)
         {
             toolStripLookupBox.Text = "";
@@ -7117,204 +6921,6 @@ namespace myseq
             }
         }
 
-        private void toolStripScale_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                string Str = toolStripScale.Text.Trim();
-                Str = Str.Replace("%", "");
-
-                if (Str.Length > 0)
-                {
-                    bool isNum = double.TryParse(Str, out var Num);
-
-                    if (isNum)
-                    {
-                        if (Num >= (double)mapPane.scale.Minimum && Num <= (double)mapPane.scale.Maximum)
-                            mapPane.scale.Value = (decimal)Num;
-                    }
-                }
-                toolStripScale.Focus();
-
-                e.Handled = true;
-            }
-        }
-
-        private void SetUpdateSteps()
-        {
-            int update_steps = (1000 / Settings.Instance.UpdateDelay) + 1;
-            if (update_steps < 3)
-                update_steps = 3;
-
-            int update_ticks = 250 / Settings.Instance.UpdateDelay;
-            if (update_ticks < 1)
-                update_ticks = 1;
-
-            mapCon.UpdateSteps = update_steps;
-            mapCon.UpdateTicks = update_ticks;
-        }
-
-        private void addMapTextToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // add map text, to where the player is currently located
-            if (eq.longname.Length > 0)
-            {
-                if (eq.playerinfo?.Name.Length > 0)
-                {
-                    alertX = eq.playerinfo.X;
-                    alertY = eq.playerinfo.Y;
-                    alertZ = eq.playerinfo.Z;
-                    addMapText("Text to Add");
-                }
-            }
-        }
-        private IDockContent GetContentFromPersistString(string persistString)
-        {
-            if (persistString == "SpawnList")
-                return SpawnList;
-            else if (persistString == "SpawnTimerList")
-                return SpawnTimerList;
-            else if (persistString == "GroundSpawnList")
-                return GroundItemList;
-            else
-                return mapPane;
-        }
-
-        private void mnuShowListSearchBox_Click(object sender, EventArgs e)
-        {
-            Settings.Instance.ShowListSearchBox = !Settings.Instance.ShowListSearchBox;
-
-            mnuShowListSearchBox.Checked = Settings.Instance.ShowListSearchBox;
-
-            if (Settings.Instance.ShowListSearchBox)
-            {
-                SpawnList.ShowSearchBox();
-                SpawnTimerList.ShowSearchBox();
-                GroundItemList.ShowSearchBox();
-            }
-            else
-            {
-                SpawnList.HideSearchBox();
-                SpawnTimerList.HideSearchBox();
-                GroundItemList.HideSearchBox();
-            }
-        }
-
-        private void mnuSmallTargetInfo_Click(object sender, EventArgs e)
-        {
-            Settings.Instance.SmallTargetInfo = !Settings.Instance.SmallTargetInfo;
-
-            mnuSmallTargetInfo.Checked = Settings.Instance.SmallTargetInfo;
-            mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
-        }
-        private void mnuSmallTargetInfo2_Click(object sender, EventArgs e)
-        {
-            Settings.Instance.SmallTargetInfo = !Settings.Instance.SmallTargetInfo;
-
-            mnuSmallTargetInfo.Checked = Settings.Instance.SmallTargetInfo;
-            mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
-        }
-
-        private void toolStripScale_DropDownClosed(object sender, EventArgs e)
-        {
-            string Str = toolStripScale.SelectedItem.ToString();
-            Str = Str.Replace("%", "");
-
-            if (Str.Length > 0)
-            {
-                bool isNum = double.TryParse(Str, out var Num);
-
-                if (isNum)
-                {
-                    if (Num >= (double)mapPane.scale.Minimum && Num <= (double)mapPane.scale.Maximum)
-                    {
-                        mapPane.scale.Value = (decimal)Num;
-                    }
-                }
-            }
-        }
-
-        //private void addZoneEmailAlertFilterToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    if (dialogBox("Add to Zone Email Alert Filters", "Add name to Email list:", alertAddmobname))
-        //    {
-        //        filters.AddToAlerts(filters.EmailAlert, alertAddmobname);
-
-        //        filters.WriteAlertFile(curZone);
-
-        //        reloadAlertFiles();
-        //    }
-        //}
-
-        //private void toolStripEmailAlerts_Click(object sender, EventArgs e)
-        //{
-        //    if (Settings.Instance.EmailAlerts)
-        //    {
-        //        // turn off alerts
-        //        Settings.Instance.EmailAlerts = false;
-        //    }
-        //    else
-        //    {
-        //        // trying to turn on alerts.  Check if To and From emails set.
-        //        if (SmtpSettings.Instance.FromEmail?.Length == 0 || SmtpSettings.Instance.ToEmail?.Length == 0 || SmtpSettings.Instance.SmtpServer?.Length == 0)
-        //        {
-        //            MessageBox.Show("Set Email Settings on the SMTP tab in the\r\nOptions Dialog before enabling email alerts.", "Initial Email Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-        //            return;
-        //        }
-        //        if (SmtpSettings.Instance.UseNetworkCredentials || (SmtpSettings.Instance.SmtpUsername.Length > 0 && SmtpSettings.Instance.SmtpPassword.Length > 0))
-        //        {
-        //            // Check if we can resolve the host
-        //            IPHostEntry host;
-        //            try { host = Dns.GetHostEntry(SmtpSettings.Instance.SmtpServer); }
-        //            catch (Exception ex)
-        //            {
-        //                MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SmtpSettings.Instance.SmtpServer + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //                return;
-        //            }
-        //            // Using network credentials, so no login prompt needed
-        //            Settings.Instance.EmailAlerts = !Settings.Instance.EmailAlerts;
-        //        }
-        //        else
-        //        {
-        //            // we got here, so everything must be filled out
-        //            IPHostEntry host;
-        //            try { host = Dns.GetHostEntry(SmtpSettings.Instance.SmtpServer); }
-        //            catch (Exception ex)
-        //            {
-        //                MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SmtpSettings.Instance.SmtpServer + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //                return;
-        //            }
-
-        //            // Pop up username/password login screen for email
-        //            frmLogin f4 = new frmLogin
-        //            {
-        //                StartPosition = FormStartPosition.CenterScreen
-        //            };
-        //            // the validation in the ShowDialog, will turn on alerts if passes and ok pushed.
-        //            f4.ShowDialog();
-        //        }
-        //    }
-
-        //    toolStripEmailAlerts.Checked = Settings.Instance.EmailAlerts;
-
-        //    if (Settings.Instance.EmailAlerts)
-        //    {
-        //        toolStripEmailAlerts.ToolTipText = "Disable Email Alerts";
-        //        if (filters.emailAlert.Count > 0)
-        //            reloadAlertFiles();
-        //    }
-        //    else
-        //    {
-        //        toolStripEmailAlerts.ToolTipText = "Enable Email Alerts";
-        //    }
-        //}
-
-        private void mnuAutoConnect_Click(object sender, EventArgs e)
-        {
-            Settings.Instance.AutoConnect = !Settings.Instance.AutoConnect;
-            mnuAutoConnect.Checked = Settings.Instance.AutoConnect;
-        }
-
         private void toolStripLookupBox_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox.Text == "Mob Search")
@@ -7382,7 +6988,7 @@ namespace myseq
             if (toolStripLookupBox1.Text.Length > 0 && toolStripLookupBox1.Text != "Mob Search")
             {
                 string new_text = toolStripLookupBox1.Text.Replace(" ", "_");
-                eq.MarkLookups("0:" + new_text, bFilter0);
+                eq.MarkLookups("1:" + new_text, bFilter1);
             }
             else
             {
@@ -7393,95 +6999,61 @@ namespace myseq
 
         private void toolStripLookupBox2_Leave(object sender, EventArgs e)
         {
-            if (toolStripLookupBox2.Text.Length > 0)
+            if (toolStripLookupBox2.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
             {
-                if (toolStripLookupBox2.Text == "Mob Search")
-                {
-                    toolStripLookupBox2.ForeColor = SystemColors.GrayText;
-                    eq.MarkLookups("2:");
-                }
-                else
-                {
-                    string new_text = toolStripLookupBox2.Text.Replace(" ", "_");
-                    eq.MarkLookups("2:" + new_text, bFilter2);
-                }
+                string new_text = toolStripLookupBox2.Text.Replace(" ", "_");
+                eq.MarkLookups("2:" + new_text, bFilter2);
             }
             else
             {
                 toolStripLookupBox2.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox2.Text = "Mob Search";
-                eq.MarkLookups("2:");
             }
         }
 
         private void toolStripLookupBox3_Leave(object sender, EventArgs e)
         {
-            if (toolStripLookupBox3.Text.Length > 0)
+            if (toolStripLookupBox3.Text.Length > 0 && toolStripLookupBox3.Text != "Mob Search")
             {
-                if (toolStripLookupBox3.Text == "Mob Search")
-                {
-                    toolStripLookupBox3.ForeColor = SystemColors.GrayText;
-                    eq.MarkLookups("3:");
-                }
-                else
-                {
-                    string new_text = toolStripLookupBox3.Text.Replace(" ", "_");
-                    eq.MarkLookups("3:" + new_text, bFilter3);
-                }
+                string new_text = toolStripLookupBox3.Text.Replace(" ", "_");
+                eq.MarkLookups("3:" + new_text, bFilter3);
             }
             else
             {
                 toolStripLookupBox3.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox3.Text = "Mob Search";
-                eq.MarkLookups("3:");
             }
         }
 
         private void toolStripLookupBox4_Leave(object sender, EventArgs e)
         {
-            if (toolStripLookupBox4.Text.Length > 0)
+            if (toolStripLookupBox4.Text.Length > 0 && toolStripLookupBox4.Text != "Mob Search")
             {
-                if (toolStripLookupBox4.Text == "Mob Search")
-                {
-                    toolStripLookupBox4.ForeColor = SystemColors.GrayText;
-                    eq.MarkLookups("4:");
-                }
-                else
-                {
-                    string new_text = toolStripLookupBox4.Text.Replace(" ", "_");
-                    eq.MarkLookups("4:" + new_text, bFilter4);
-                }
+                string new_text = toolStripLookupBox4.Text.Replace(" ", "_");
+                eq.MarkLookups("4:" + new_text, bFilter4);
             }
             else
             {
                 toolStripLookupBox4.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox4.Text = "Mob Search";
-                eq.MarkLookups("4:");
             }
         }
 
         private void toolStripLookupBox5_Leave(object sender, EventArgs e)
         {
-            if (toolStripLookupBox5.Text.Length > 0)
+            if (toolStripLookupBox5.Text.Length > 0 && toolStripLookupBox5.Text != "Mob Search")
             {
-                if (toolStripLookupBox5.Text == "Mob Search")
-                {
-                    toolStripLookupBox5.ForeColor = SystemColors.GrayText;
-                    eq.MarkLookups("5:");
-                }
-                else
-                {
-                    string new_text = toolStripLookupBox5.Text.Replace(" ", "_");
-                    eq.MarkLookups("5:" + new_text, bFilter5);
-                }
+                string new_text = toolStripLookupBox5.Text.Replace(" ", "_");
+                eq.MarkLookups("5:" + new_text, bFilter5);
             }
             else
             {
                 toolStripLookupBox5.ForeColor = SystemColors.GrayText;
                 toolStripLookupBox5.Text = "Mob Search";
-                eq.MarkLookups("5:");
             }
         }
+
+        #endregion
 
         private void mnuFileMain_DropDownOpening(object sender, EventArgs e)
         {
@@ -7544,70 +7116,9 @@ namespace myseq
             comm.CharRefresh();
         }
 
-
         public void StartNewPackets()
         {
             processcount = 0;
-        }
-
-        private void toolStripLevel_TextUpdate(object sender, EventArgs e)
-        {
-            string Str = toolStripLevel.Text.Trim();
-
-            bool validnum = true;
-            if (Str.Length > 0)
-            {
-                bool isNum = long.TryParse(Str, out var Num);
-
-                if (isNum)
-                {
-                    if (Num < 1 || Num > 105)
-                    {
-                        validnum = false;
-                    }
-                }
-            }
-
-            if (!validnum)
-            {
-                MessageBox.Show("1. Enter a number between 1-105 or select Auto");
-            }
-        }
-
-        private void toolStripLevel_Leave(object sender, EventArgs e)
-        {
-            string Str = toolStripLevel.Text.Trim();
-
-            bool validnum = true;
-            if (Str.Length > 0)
-            {
-                bool isNum = long.TryParse(Str, out var Num);
-
-                if (isNum)
-                {
-                    if (Num < 1 || Num > 105)
-                    {
-                        validnum = false;
-                    }
-                } else {
-                    if (Str != "Auto")
-                    {
-                        validnum = false;
-                    }
-                    else
-                    {
-                        Settings.Instance.LevelOverride = -1;
-                        gconLevel = -1;
-                    }
-                }
-            }
-
-            if (!validnum)
-            {
-                MessageBox.Show("2. Enter a number between 1-105 or Auto");
-            } else {
-                gConBaseName = "";
-            }
         }
 
         private void toolStripZPos_KeyPress(object sender, KeyPressEventArgs e)
@@ -7628,52 +7139,94 @@ namespace myseq
             }
         }
 
+// <summary>
+// These do almost exactly the same, can probaly remove and link all to one super method.
+        private void toolStripLevel_TextUpdate(object sender, EventArgs e)
+        {
+            string Str = toolStripLevel.Text.Trim();
+
+//            bool validnum = true; // only one operation, apply the false outcome directly.
+            if (!string.IsNullOrEmpty(Str)) // better filter than "if (Str.Length > 0)"
+            {
+                bool isNum = long.TryParse(Str, out var Num);
+                if (isNum && (Num < 1 || Num > 115))
+                {
+                    MessageBox.Show("1. Enter a number between 1-115 or select Auto");
+//                    validnum = false;
+                }
+            }
+
+            //if (!validnum)
+            //{ 
+            //    MessageBox.Show("1. Enter a number between 1-115 or select Auto");
+            //} // 
+        }
+        private void toolStripLevel_Leave(object sender, EventArgs e)
+        {
+            string Str = toolStripLevel.Text.Trim();
+
+            bool validnum = true;
+            if (Str.Length > 0)
+            {
+                bool isNum = long.TryParse(Str, out var Num);
+
+                if (isNum && (Num < 1 || Num > 115))
+                {
+                    validnum = false;
+                }
+                else if (Str != "Auto" && !isNum)
+                {
+                    validnum = false;
+                }
+                else
+                {
+                    Settings.Instance.LevelOverride = -1;
+                    gconLevel = -1;
+                }
+            }
+
+            if (!validnum)
+            {
+                MessageBox.Show("2. Enter a number between 1-115 or Auto");
+            } else {
+                gConBaseName = "";
+            }
+        }
         private void toolStripLevel_DropDownClosed(object sender, EventArgs e)
         {
             string Str = toolStripLevel.SelectedItem.ToString();
 
-            if (Str.Length > 0)
+            if (!string.IsNullOrEmpty(Str))
             {
-                bool isNum = long.TryParse(Str, out var Num);
+                bool isNum = int.TryParse(Str, out var Num);
                 gConBaseName = "";
-                if (isNum)
+                if (isNum && Num >= 1 && Num <= 115)
                 {
-                    if (Num >= 1 && Num <= 105)
-                    {
-                        //Do Stuff
-                        Settings.Instance.LevelOverride = (int)Num;
-                        gconLevel = (int)Num;
-                    }
+                    Settings.Instance.LevelOverride = Num;
+                    gconLevel = Num;
                 }
-                else
+                else if (Str == "Auto")
                 {
-                    if (Str == "Auto")
-                    {
-                        Settings.Instance.LevelOverride = -1;
-                        gconLevel = (int)Num;
-                    }
+                    Settings.Instance.LevelOverride = -1;
+                    gconLevel = Num;
                 }
             }
         }
-
         private void toolStripLevel_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
                 string Str = toolStripLevel.Text.Trim();
 
-                if (Str.Length > 0)
+                if (!string.IsNullOrEmpty(Str))
                 {
                     bool isNum = long.TryParse(Str, out var Num);
 
-                    if (isNum)
+                    if (isNum && Num >= 1 && Num <= 115)
                     {
-                        if (Num >= 1 && Num <= 105)
-                        {
-                            //do stuff
-                            Settings.Instance.LevelOverride = (int)Num;
-                            gconLevel = (int)Num;
-                        }
+                        //do stuff
+                        Settings.Instance.LevelOverride = (int)Num;
+                        gconLevel = (int)Num;
                     }
                 }
                 toolStripScale.Focus();
