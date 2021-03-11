@@ -1,4 +1,6 @@
-﻿namespace myseq
+﻿using System.ComponentModel;
+
+namespace myseq
 {
     partial class frmAddMapText
     {
@@ -79,12 +81,12 @@
             this.picMapTextColor1 = new System.Windows.Forms.PictureBox();
             this.FontSizeGroupBox.SuspendLayout();
             this.ColorGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picMapTextColor40)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picMapTextColor35)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picMapTextColor30)).BeginInit();
+            ((ISupportInitialize)(this.picMapTextColor40)).BeginInit();
+            ((ISupportInitialize)(this.picMapTextColor35)).BeginInit();
+            ((ISupportInitialize)(this.picMapTextColor30)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMapTextColor25)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMapTextColor20)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picMapTextColor15)).BeginInit();
+            ((ISupportInitialize)(this.picMapTextColor15)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMapTextColor10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMapTextColor5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMapTextColor39)).BeginInit();

@@ -1,118 +1,31 @@
 using System;
 using System.Collections;
-using System.Drawing;
-using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace myseq
 {
-    #region ColorConverter
     /// <summary>
-    /// Summary description for ColorConverter.
-    /// Class to convert a ShowEQ line color into a c# color.
-    /// Optionally can load a unix style RGB.txt to increase the number of
-    /// named colors above that which .NET natively supports
+    /// Small snippet classes with static methods, and have little to no impact on experience. 
+    /// moved to parasoll file for easier overview and reduce clutter in the larger classes.
     /// </summary>
-    public class ColorConverter
-	{
-		private Hashtable NamedColors;
+    internal static class SafeNativeMethods
+    {
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        internal static extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
 
-		public ColorConverter()
-		{
-			NamedColors = new Hashtable();
-		}
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        internal static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
 
-		private class NamedColor
-		{
-			public string Name;
-			public Color Color;
-		}
+        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        internal static extern bool Beep(uint freq, uint dur);
 
-		private string FixName(string sInput)
-		{
-			string sFixed = sInput;
-			sFixed = sFixed.ToLower().Replace(" ", "");
-			sFixed = sFixed.Replace("grey", "gray");
-			return sFixed;
-		}
+        [DllImport("winmm.dll")]
 
-		private bool IsKnownColor(string sName)
-		{
-			if (NamedColors.ContainsKey(sName))
-				return true;
-			else
-				return Color.FromName(sName).IsKnownColor;
-		}
-
-		private void ProcessFileLine(string sLine)
-		{
-			int start = sLine.IndexOf("\t\t");
-			if (start != -1)
-			{
-				string colorName = FixName(sLine.Substring(start + 2));
-				if (!IsKnownColor(colorName))
-				{
-					string colorValue = sLine.Substring(0, start).Trim();
-					colorValue = colorValue.Replace("  ", " ");
-					colorValue = colorValue.Replace("  ", " ");
-					colorValue = colorValue.Replace("  ", " ");
-					string[] colorValues = colorValue.Split(' ');
-					if ((colorValues.Length == 3) && (colorName.Length > 0))
-					{
-                        NamedColor nc = new NamedColor
-                        {
-                            Name = colorName
-                        };
-                        byte red   = byte.Parse(colorValues[0]);
-						byte green = byte.Parse(colorValues[1]);
-						byte blue  = byte.Parse(colorValues[2]);
-						nc.Color   = Color.FromArgb(red, green, blue);
-						if (!NamedColors.ContainsKey(nc.Name))
-							NamedColors.Add(nc.Name, nc);
-					}
-				}
-			}
-		}
-
-		public void Initialise(string filename)
-		{
-			NamedColors = new Hashtable();
-			if (File.Exists(filename))
-			{
-				using (StreamReader sr = new StreamReader(filename))
-				{
-					while (sr.Peek() >= 0)
-					{
-						string sLine = sr.ReadLine();
-						ProcessFileLine(sLine);
-					}
-				}
-			}
-		}
-
-		public Color StringToColor(string sInput)
-		{
-			Color cColor;
-			string sFixed = FixName(sInput);
-			if (sFixed.StartsWith("#") && sFixed.Length == 7) // an RGB value in the form #RRGGBB 
-			{
-				int red   = Convert.ToInt32(sFixed.Substring(1, 2), 16);
-				int green = Convert.ToInt32(sFixed.Substring(3, 2), 16);
-				int blue  = Convert.ToInt32(sFixed.Substring(5, 2), 16);
-				return Color.FromArgb(red, green, blue);
-			}
-			else if (NamedColors.ContainsKey(sFixed)) // a named Color
-			{
-				var nc = (NamedColor)NamedColors[sFixed];
-				return nc.Color;
-			}
-			else
-			{
-				cColor = Color.FromName(sFixed);
-                return cColor.IsKnownColor ? cColor : Color.PaleGreen;
-            }
-		}
-	}
-	#endregion
+        internal static extern long PlaySound(string lpszName, long hModule, long dwFlags);
+    }
 
 	public class ProcessInfo
 	{
@@ -125,4 +38,286 @@ namespace myseq
         public int ProcessID { get; set; }
         public string SCharName { get; set; }
     }
+
+    public class ListBoxComparerSpawnList : IComparer
+    {
+        public int Compare(object a, object b)
+
+        {
+            ListViewItem sa = (ListViewItem)a;
+
+            ListViewItem sb = (ListViewItem)b;
+
+            int res = 0;
+
+            if (Column == 0)    // Name
+            {
+                res = string.Compare(sa.Text, sb.Text);
+            }
+            else if (Column == 1)   // Level
+
+            {
+                int ia = int.Parse(sa.SubItems[1].Text);
+
+                int ib = int.Parse(sb.SubItems[1].Text);
+
+                if (ia < ib) res = -1;
+                else res = ia > ib ? 1 : 0;
+            }
+            else if ((Column == 2) ||   // Class 
+
+                (Column == 3) ||    // Primary
+
+                (Column == 4) ||    // Offhand
+
+                (Column == 5) ||    // Race
+
+                (Column == 6) ||    // Owner
+
+                (Column == 7) ||    // Last Name
+
+                (Column == 8) ||    // Type
+
+                (Column == 9) ||    // Invis
+
+                (Column == 17))     // Guild
+
+
+            {
+                res = string.Compare(sa.SubItems[Column].Text, sb.SubItems[Column].Text);
+            }
+            else if ((Column == 10) ||   // Run Speed
+
+               (Column == 13) ||   // X
+
+               (Column == 14) ||   // Y
+
+               (Column == 15) ||   // Z
+
+               (Column == 16))     // Distance
+
+            {
+                float fa = float.Parse(sa.SubItems[Column].Text);
+
+                float fb = float.Parse(sb.SubItems[Column].Text);
+
+                if (fa < fb) res = -1;
+                else res = fa > fb ? 1 : 0;
+            }
+            else if (Column == 11)
+
+            { // SpawnID
+                uint ia = uint.Parse(sa.SubItems[11].Text);
+
+                uint ib = uint.Parse(sb.SubItems[11].Text);
+
+                if (ia < ib) res = -1;
+                else res = ia > ib ? 1 : 0;
+            }
+            else if (Column == 12)
+
+            {
+                DateTime dta = DateTime.Parse(sa.SubItems[12].Text);
+
+                DateTime dtb = DateTime.Parse(sb.SubItems[12].Text);
+
+                res = DateTime.Compare(dta, dtb);
+            }
+
+            if (Descending) res = -res;
+
+            return res;
+        }
+
+        public ListBoxComparerSpawnList(ListView.ListViewItemCollection spawns, bool descending, int column)
+
+        {
+            Spawns = spawns;
+
+            Descending = descending;
+
+            Column = column;
+        }
+
+        private ListView.ListViewItemCollection Spawns;
+
+        private bool Descending;
+
+        private int Column;
+    }
+
+    public class ListBoxComparerSpawnTimerList : IComparer
+
+    {
+        public int Compare(object a, object b)
+
+        {
+            ListViewItem sa = (ListViewItem)a;
+
+            ListViewItem sb = (ListViewItem)b;
+
+            int res = 0;
+
+            if (Column == 0 || Column == 3)    // Last Spawn = 0  // zone = 3
+            {
+                res = string.Compare(sa.Text, sb.Text);
+            }
+            else if (Column == 1 ||   // Countdown
+               Column == 2 || // SpawnTimer
+               Column == 7)   // SpawnCount
+
+            {
+                int ia = int.Parse(sa.SubItems[1].Text);
+
+                int ib = int.Parse(sb.SubItems[1].Text);
+
+                if (ia < ib) res = -1;
+                else res = ia > ib ? 1 : 0;
+            }
+
+            //else if ()
+
+            //    res = string.Compare(sa.SubItems[Column].Text, sb.SubItems[Column].Text);
+
+            else if (
+
+                (Column == 4) ||   // X
+
+                (Column == 5) ||   // Y
+
+                (Column == 6)    // Z
+
+                )
+
+            {
+                float fa = float.Parse(sa.SubItems[Column].Text);
+
+                float fb = float.Parse(sb.SubItems[Column].Text);
+
+                if (fa < fb) res = -1;
+                else res = fa > fb ? 1 : 0;
+            }
+            else if (Column == 8 || // SpawnTime
+
+                Column == 9 || // KillTime
+
+                Column == 10) // NextSpawn
+
+            {
+                if (sa.SubItems[Column].Text.Length == 0)
+
+                {
+                    res = 1;
+                }
+                else if (sb.SubItems[Column].Text.Length == 0)
+
+                {
+                    res = -1;
+                }
+                else
+                {
+                    DateTime dta = DateTime.Parse(sa.SubItems[Column].Text);
+
+                    DateTime dtb = DateTime.Parse(sb.SubItems[Column].Text);
+
+                    res = DateTime.Compare(dta, dtb);
+                }
+            }
+
+            if (Descending) res = -res;
+
+            return res;
+        }
+
+        public ListBoxComparerSpawnTimerList(ListView.ListViewItemCollection spawns, bool descending, int column)
+
+        {
+            Spawns = spawns;
+
+            Descending = descending;
+
+            Column = column;
+        }
+
+        private ListView.ListViewItemCollection Spawns;
+
+        private bool Descending;
+
+        private int Column;
+    }
+
+    public class ListBoxComparerGroundItemsList : IComparer
+    {
+        public int Compare(object a, object b)
+        {
+            ListViewItem sa = (ListViewItem)a;
+
+            ListViewItem sb = (ListViewItem)b;
+
+            int res = 0;
+
+            if (Column == 0)    // Description
+            {
+                res = string.Compare(sa.Text, sb.Text);
+            }
+            else if ((Column == 1) ||   // ActorDef
+
+               (Column == 2))    // Spawn Time
+            {
+                res = string.Compare(sa.SubItems[Column].Text, sb.SubItems[Column].Text);
+            }
+            else if ((Column == 3) ||   // X
+
+               (Column == 4) ||   // Y
+
+               (Column == 5)) // Z
+            {
+                float fa = float.Parse(sa.SubItems[Column].Text);
+
+                float fb = float.Parse(sb.SubItems[Column].Text);
+
+                if (fa < fb) res = -1;
+                else res = fa > fb ? 1 : 0;
+            }
+
+            if (Descending) res = -res;
+
+            return res;
+        }
+
+        public ListBoxComparerGroundItemsList(ListView.ListViewItemCollection spawns, bool descending, int column)
+        {
+            Spawns = spawns;
+
+            Descending = descending;
+
+            Column = column;
+        }
+
+        private ListView.ListViewItemCollection Spawns;
+
+        private bool Descending;
+
+        private int Column;
+    }
+
+    public static class SAudio
+        {
+        private static string sndFile;
+
+        private static void PlaySnd()
+        {
+            SafeNativeMethods.PlaySound(sndFile, 0, 0);
+        }
+
+        public static void Play(string fileName)
+        {
+            sndFile = fileName;
+
+            ThreadStart entry = new ThreadStart(PlaySnd);
+
+            Thread thrd = new Thread(entry);
+
+            thrd.Start();
+        }}
 }

@@ -19,13 +19,13 @@ namespace Structures
     public static class RegexHelper
     {
         public static bool IsMount(string mobName)
-        => mobName.IndexOf("s_Mount") > 0;
+        => mobName.IndexOf("s_Mount") >= 1;
 
         public static bool IsFamiliar(string mobName)
-        => mobName.IndexOf("`s_fami") > 0;
+        => mobName.IndexOf("`s_fami") >= 1;
 
         public static bool IsMerc(string mobName)
-        => mobName.IndexOf("'s Merc") > 0;
+        => mobName.IndexOf("'s Merc") >= 1;
 
         public static string FixMobName(string name)
             => name?.IndexOf("_", StringComparison.OrdinalIgnoreCase) == 0 ? name : name?.Replace("_", " ").Trim();
@@ -34,7 +34,7 @@ namespace Structures
 
         public static string FixMobNameMatch(string name) => Regex.Replace(name, "^*[^a-zA-Z #]", "");
 
-        public static string FilterMobName(string name) => Regex.Replace(name, "^*[^a-zA-Z_ #]", "");
+        public static string FilterMobName(string name) => Regex.Replace(name, "^*[^a-zA-Z_ #]", "").Trim();
 
         public static string TrimName(string name) => Regex.Replace(name?.Replace("_", " "), "[0-9]", "").Trim();
 
