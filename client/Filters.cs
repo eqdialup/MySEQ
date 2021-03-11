@@ -41,6 +41,7 @@ namespace myseq
 
             //            OffhandItem.Clear();
         }
+
         /// <summary>
         /// Highly doubtful anyone operating with 4.xx filters still, those were replaced/removed in 2006 or so. removed funtion to read them.
         /// program is doing a continuous job in purging all .conf files too.
@@ -188,6 +189,7 @@ namespace myseq
 
         public void ReadNewAlertFile(string zoneName)
         {
+            int type = 0;
             // Load the 5.xx version alerts
             StreamReader sw;
 
@@ -226,7 +228,6 @@ namespace myseq
                 {
                     inp = inp.ToLower();
 
-                    int type = 0;
                     if (inp.StartsWith("<section name=\"hunt\">"))
                     {
                         type = 1;
@@ -325,29 +326,32 @@ namespace myseq
                                 AddToAlerts(GlobalAlert, inputstring);
                             }
                         }
-                        else if (type == 1)
+                        else
                         {
-                            AddToAlerts(Hunt, inputstring);
-                        }
-                        else if (type == 2)
-                        {
-                            AddToAlerts(Caution, inputstring);
-                        }
-                        else if (type == 3)
-                        {
-                            AddToAlerts(Danger, inputstring);
-                        }
-                        else if (type == 4)
-                        {
-                            AddToAlerts(Alert, inputstring);
-                        }
-                        else if (type == 5)
-                        {
-                            AddToAlerts(EmailAlert, inputstring);
-                        }
-                        else if (type == 6)
-                        {
-                            AddToAlerts(WieldedItems, inputstring);
+                            if (type == 1)
+                            {
+                                AddToAlerts(Hunt, inputstring);
+                            }
+                            else if (type == 2)
+                            {
+                                AddToAlerts(Caution, inputstring);
+                            }
+                            else if (type == 3)
+                            {
+                                AddToAlerts(Danger, inputstring);
+                            }
+                            else if (type == 4)
+                            {
+                                AddToAlerts(Alert, inputstring);
+                            }
+                            else if (type == 5)
+                            {
+                                AddToAlerts(EmailAlert, inputstring);
+                            }
+                            else if (type == 6)
+                            {
+                                AddToAlerts(WieldedItems, inputstring);
+                            }
                         }
                     }
                 }
