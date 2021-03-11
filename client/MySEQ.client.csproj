@@ -120,6 +120,7 @@
     <Compile Include="Classes.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ColorConverter.cs" />
     <Compile Include="EQCommunications.cs">
       <SubType>Code</SubType>
     </Compile>

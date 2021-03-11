@@ -7,11 +7,11 @@ namespace Structures
     #region GroundItem class
 
     public class GroundItem {
-        public float X = 0.0f;
+        public float X;
 
-        public float Y = 0.0f;
+        public float Y;
 
-        public float Z = 0.0f;
+        public float Z;
 
         public bool isHunt;
 
