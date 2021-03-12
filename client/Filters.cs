@@ -309,48 +309,44 @@ namespace myseq
 
                         if (zoneName == "global")
                         {
-                            if (type == 1)
+                            switch (type)
                             {
-                                AddToAlerts(GlobalHunt, inputstring);
-                            }
-                            else if (type == 2)
-                            {
-                                AddToAlerts(GlobalCaution, inputstring);
-                            }
-                            else if (type == 3)
-                            {
-                                AddToAlerts(GlobalDanger, inputstring);
-                            }
-                            else if (type == 4)
-                            {
-                                AddToAlerts(GlobalAlert, inputstring);
+                                case 1:
+                                    AddToAlerts(GlobalHunt, inputstring);
+                                    break;
+                                case 2:
+                                    AddToAlerts(GlobalCaution, inputstring);
+                                    break;
+                                case 3:
+                                    AddToAlerts(GlobalDanger, inputstring);
+                                    break;
+                                case 4:
+                                    AddToAlerts(GlobalAlert, inputstring);
+                                    break;
                             }
                         }
                         else
                         {
-                            if (type == 1)
+                            switch (type)
                             {
-                                AddToAlerts(Hunt, inputstring);
-                            }
-                            else if (type == 2)
-                            {
-                                AddToAlerts(Caution, inputstring);
-                            }
-                            else if (type == 3)
-                            {
-                                AddToAlerts(Danger, inputstring);
-                            }
-                            else if (type == 4)
-                            {
-                                AddToAlerts(Alert, inputstring);
-                            }
-                            else if (type == 5)
-                            {
-                                AddToAlerts(EmailAlert, inputstring);
-                            }
-                            else if (type == 6)
-                            {
-                                AddToAlerts(WieldedItems, inputstring);
+                                case 1:
+                                    AddToAlerts(Hunt, inputstring);
+                                    break;
+                                case 2:
+                                    AddToAlerts(Caution, inputstring);
+                                    break;
+                                case 3:
+                                    AddToAlerts(Danger, inputstring);
+                                    break;
+                                case 4:
+                                    AddToAlerts(Alert, inputstring);
+                                    break;
+                                case 5:
+                                    AddToAlerts(EmailAlert, inputstring);
+                                    break;
+                                case 6:
+                                    AddToAlerts(WieldedItems, inputstring);
+                                    break;
                             }
                         }
                     }

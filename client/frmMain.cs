@@ -2877,7 +2877,7 @@ namespace myseq
             this.toolStripZPos.Margin = new Padding(0);
             this.toolStripZPos.Name = "toolStripZPos";
             this.toolStripZPos.Size = new Size(40, 25);
-            this.toolStripZPos.Text = "75.0";
+            this.toolStripZPos.Text = "75";
             this.toolStripZPos.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolStripZPos.ToolTipText = "Enter a value for Z-Pos between 0 and 3500.";
             this.toolStripZPos.Leave += new EventHandler(this.toolStripZPos_Leave);
@@ -2921,7 +2921,7 @@ namespace myseq
             this.toolStripZNeg.Margin = new Padding(0);
             this.toolStripZNeg.Name = "toolStripZNeg";
             this.toolStripZNeg.Size = new Size(40, 25);
-            this.toolStripZNeg.Text = "75.0";
+            this.toolStripZNeg.Text = "75";
             this.toolStripZNeg.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolStripZNeg.ToolTipText = "Enter a value for Z-Neg between 0 and 3500.";
             this.toolStripZNeg.Leave += new EventHandler(this.toolStripZNeg_Leave);
@@ -6133,7 +6133,7 @@ namespace myseq
             bool validnum = true;
             if (Str.Length > 0)
             {
-                bool isNum = int.TryParse(Str, out var Num);
+                bool isNum = decimal.TryParse(Str, out var Num);
                 validnum = false;
                 if (isNum)
                 {
@@ -6144,7 +6144,7 @@ namespace myseq
             }
             if (!validnum)
             {
-                toolStripZPos.Text = $"{mapPane.filterzpos.Value:0.0}";
+                toolStripZPos.Text = $"{mapPane.filterzpos.Value}";
                 MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Pos Value Entered.");
             }
         }
@@ -6156,7 +6156,7 @@ namespace myseq
             if (current_val > mapPane.filterzpos.Maximum)
                 current_val = mapPane.filterzpos.Maximum;
             mapPane.filterzpos.Value = current_val;
-            toolStripZPos.Text = $"{current_val:0}";
+            toolStripZPos.Text = $"{current_val}";
         }
 
         private void toolStripZPosDown_Click(object sender, EventArgs e)
@@ -6166,7 +6166,7 @@ namespace myseq
             if (current_val < mapPane.filterzpos.Minimum)
                 current_val = mapPane.filterzpos.Minimum;
             mapPane.filterzpos.Value = current_val;
-            toolStripZPos.Text = $"{current_val:0}";
+            toolStripZPos.Text = $"{current_val}";
         }
 
         private void toolStripZNegDown_Click(object sender, EventArgs e)
@@ -6176,7 +6176,7 @@ namespace myseq
             if (current_val < mapPane.filterzneg.Minimum)
                 current_val = mapPane.filterzneg.Minimum;
             mapPane.filterzneg.Value = current_val;
-            toolStripZNeg.Text = $"{current_val:0.0}";
+            toolStripZNeg.Text = $"{current_val}";
         }
 
         private void toolStripZNegUp_Click(object sender, EventArgs e)
@@ -6186,15 +6186,15 @@ namespace myseq
             if (current_val > mapPane.filterzneg.Maximum)
                 current_val = mapPane.filterzneg.Maximum;
             mapPane.filterzneg.Value = current_val;
-            toolStripZNeg.Text = $"{current_val:0.0}";
+            toolStripZNeg.Text = $"{current_val}";
         }
 
         private void toolStripResetDepthFilter_Click(object sender, EventArgs e)
         {
             mapPane.filterzneg.Value = 75;
             mapPane.filterzpos.Value = 75;
-            toolStripZNeg.Text = $"{75:0.0}";
-            toolStripZPos.Text = $"{75:0.0}";
+            toolStripZNeg.Text = $"{75}";
+            toolStripZPos.Text = $"{75}";
         }
 
         private void toolStripZPos_Leave(object sender, EventArgs e)
@@ -6212,7 +6212,7 @@ namespace myseq
                 }
             }
             if (!validnum)
-                toolStripZPos.Text = $"{mapPane.filterzpos.Value:0.0}";
+                toolStripZPos.Text = $"{mapPane.filterzpos.Value}";
         }
 
         private void toolStripZNeg_TextChanged(object sender, EventArgs e)
@@ -6224,7 +6224,7 @@ namespace myseq
             bool validnum = true;
             if (Str.Length > 0)
             {
-                bool isNum = int.TryParse(Str, out var Num);
+                bool isNum = decimal.TryParse(Str, out var Num);
                 validnum = false;
                 if (isNum)
                 {
@@ -6235,7 +6235,7 @@ namespace myseq
             }
             if (!validnum)
             {
-                toolStripZNeg.Text = $"{mapPane.filterzneg.Value:0.0}";
+                toolStripZNeg.Text = $"{mapPane.filterzneg.Value}";
                 MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Neg Value Entered.");
             }
         }
@@ -6255,10 +6255,8 @@ namespace myseq
                 }
             }
             if (!validnum)
-                toolStripZNeg.Text = $"{mapPane.filterzneg.Value:0.0}";
+                toolStripZNeg.Text = $"{mapPane.filterzneg.Value}";
         }
-
-
 
         private void mnuAddMapLabel_Click(object sender, EventArgs e)
         {
@@ -6495,82 +6493,6 @@ namespace myseq
             mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
         }
 
-
-
-        //private void addZoneEmailAlertFilterToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    if (dialogBox("Add to Zone Email Alert Filters", "Add name to Email list:", alertAddmobname))
-        //    {
-        //        filters.AddToAlerts(filters.EmailAlert, alertAddmobname);
-
-        //        filters.WriteAlertFile(curZone);
-
-        //        reloadAlertFiles();
-        //    }
-        //}
-
-        //private void toolStripEmailAlerts_Click(object sender, EventArgs e)
-        //{
-        //    if (Settings.Instance.EmailAlerts)
-        //    {
-        //        // turn off alerts
-        //        Settings.Instance.EmailAlerts = false;
-        //    }
-        //    else
-        //    {
-        //        // trying to turn on alerts.  Check if To and From emails set.
-        //        if (SmtpSettings.Instance.FromEmail?.Length == 0 || SmtpSettings.Instance.ToEmail?.Length == 0 || SmtpSettings.Instance.SmtpServer?.Length == 0)
-        //        {
-        //            MessageBox.Show("Set Email Settings on the SMTP tab in the\r\nOptions Dialog before enabling email alerts.", "Initial Email Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-        //            return;
-        //        }
-        //        if (SmtpSettings.Instance.UseNetworkCredentials || (SmtpSettings.Instance.SmtpUsername.Length > 0 && SmtpSettings.Instance.SmtpPassword.Length > 0))
-        //        {
-        //            // Check if we can resolve the host
-        //            IPHostEntry host;
-        //            try { host = Dns.GetHostEntry(SmtpSettings.Instance.SmtpServer); }
-        //            catch (Exception ex)
-        //            {
-        //                MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SmtpSettings.Instance.SmtpServer + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //                return;
-        //            }
-        //            // Using network credentials, so no login prompt needed
-        //            Settings.Instance.EmailAlerts = !Settings.Instance.EmailAlerts;
-        //        }
-        //        else
-        //        {
-        //            // we got here, so everything must be filled out
-        //            IPHostEntry host;
-        //            try { host = Dns.GetHostEntry(SmtpSettings.Instance.SmtpServer); }
-        //            catch (Exception ex)
-        //            {
-        //                MessageBox.Show("Error resolving SMTP Server Address\r\n\r\n" + SmtpSettings.Instance.SmtpServer + "\r\n\r\n" + ex.Message, "Error Resolving SMTP Server Address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //                return;
-        //            }
-
-        //            // Pop up username/password login screen for email
-        //            frmLogin f4 = new frmLogin
-        //            {
-        //                StartPosition = FormStartPosition.CenterScreen
-        //            };
-        //            // the validation in the ShowDialog, will turn on alerts if passes and ok pushed.
-        //            f4.ShowDialog();
-        //        }
-        //    }
-
-        //    toolStripEmailAlerts.Checked = Settings.Instance.EmailAlerts;
-
-        //    if (Settings.Instance.EmailAlerts)
-        //    {
-        //        toolStripEmailAlerts.ToolTipText = "Disable Email Alerts";
-        //        if (filters.emailAlert.Count > 0)
-        //            reloadAlertFiles();
-        //    }
-        //    else
-        //    {
-        //        toolStripEmailAlerts.ToolTipText = "Enable Email Alerts";
-        //    }
-        //}
 
         private void mnuAutoConnect_Click(object sender, EventArgs e)
         {
