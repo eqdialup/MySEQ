@@ -368,7 +368,7 @@ namespace Structures
 
         public bool CorpseAlerts { get; set; } = true;
 
-        public int LevelOverride { get; set; } = -1;
+        public int LevelOverride = -1;
 
         public int RangeCircle { get; set; } = 150;
 

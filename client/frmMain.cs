@@ -6020,6 +6020,7 @@ namespace myseq
 
             resetMapPens();
         }
+        #region filters
 
         private void mnuAddHuntFilter_Click(object sender, EventArgs e)
         {
@@ -6068,7 +6069,7 @@ namespace myseq
                 reloadAlertFiles();
             }
         }
-
+#endregion
         private void mnuSearchAllakhazam_Click(object sender, EventArgs e)
         {
             var searchname = RegexHelper.SearchName(alertAddmobname);
@@ -6109,6 +6110,7 @@ namespace myseq
                 statusBarStrip.Hide();
         }
 
+        #region depth filter
         private void mnuViewDepthFilterToolBar_Click(object sender, EventArgs e)
         {
             Settings.Instance.ShowToolBar = !Settings.Instance.ShowToolBar;
@@ -6257,12 +6259,31 @@ namespace myseq
             if (!validnum)
                 toolStripZNeg.Text = $"{mapPane.filterzneg.Value}";
         }
+        private void toolStripZPos_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                mapCon.Focus();
+                e.Handled = true;
+            }
+        }
+
+        private void toolStripZNeg_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                mapCon.Focus();
+                e.Handled = true;
+            }
+        }
+        #endregion
 
         private void mnuAddMapLabel_Click(object sender, EventArgs e)
         {
             addMapText(alertAddmobname);
         }
 
+        #region zoom
         private void toolStripZoomIn_Click(object sender, EventArgs e)
         {
             decimal current_val = mapPane.scale.Value;
@@ -6417,7 +6438,7 @@ namespace myseq
                 }
             }
         }
-
+        #endregion
         private void SetUpdateSteps()
         {
             int update_steps = (1000 / Settings.Instance.UpdateDelay) + 1;
@@ -6492,7 +6513,6 @@ namespace myseq
             mnuSmallTargetInfo.Checked = Settings.Instance.SmallTargetInfo;
             mnuSmallTargetInfo2.Checked = Settings.Instance.SmallTargetInfo;
         }
-
 
         private void mnuAutoConnect_Click(object sender, EventArgs e)
         {
@@ -6943,24 +6963,6 @@ namespace myseq
             processcount = 0;
         }
 
-        private void toolStripZPos_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                mapCon.Focus();
-                e.Handled = true;
-            }
-        }
-
-        private void toolStripZNeg_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                mapCon.Focus();
-                e.Handled = true;
-            }
-        }
-
 // <summary>
 // These do almost exactly the same, can probaly remove and link all to one super method.
         private void toolStripLevel_TextUpdate(object sender, EventArgs e)
@@ -6974,7 +6976,7 @@ namespace myseq
                 if (isNum && (Num < 1 || Num > 115))
                 {
                     MessageBox.Show("1. Enter a number between 1-115 or select Auto");
-//                    validnum = false;
+                    //                    validnum = false;
                 }
             }
 
@@ -7002,8 +7004,9 @@ namespace myseq
                 }
                 else
                 {
-                    Settings.Instance.LevelOverride = -1;
-                    gconLevel = -1;
+                    toolStripLevel.Text = Num.ToString();
+                    Settings.Instance.LevelOverride = Num;
+                    gconLevel = Num;
                 }
             }
 
