@@ -61,8 +61,6 @@ namespace SocketSystem
             GetSizeOfRawBuffer = iSizeOfRawBuffer;
             GetRawBuffer       = new byte[GetSizeOfRawBuffer];
 
-            // Save the user argument
-
             // Set the handler methods
             GetMessageHandler = pfnMessageHandler;
             GetCloseHandler   = pfnCloseHandler;
@@ -73,7 +71,6 @@ namespace SocketSystem
 
             // Init the dispose flag
             IsDisposed = false;
-
         }
 
         //*******************************************************************

@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("MySEQ Open Client")]
 
-[assembly: AssemblyDescription("MySEQ Open Client")]
+[assembly: AssemblyDescription("Visit the forums at http://showeq.net for information and any questions.")]
 
 [assembly: AssemblyConfiguration("MySEQ")]
 

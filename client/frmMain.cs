@@ -4941,7 +4941,7 @@ namespace myseq
         private void mnuAbout_Click(object sender, EventArgs e)
 
         {
-            AboutDlg ab = new AboutDlg();
+            AboutDialog ab = new AboutDialog();
             TopMost = false;
             ab.ShowDialog();
             TopMost = mnuAlwaysOnTop.Checked;

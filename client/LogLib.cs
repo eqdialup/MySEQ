@@ -30,20 +30,14 @@ namespace Structures
         {
             if (maxLogLevel >= LogLevel.Error)
             {
-                try
-                {
-                    WriteLine($"{msg}{ex.Message}\n{ex.StackTrace}", LogLevel.Error);
-                }
-                catch { /* How does one log an error if the logging function is the one erroring? */ }
-            }
+                WriteLine($"{msg}{ex.Message}\n{ex.StackTrace}", LogLevel.Error);
+            }/* How does one log an error if the logging function is the one erroring? */
         }
 
         public static void WriteLine(string msg, LogLevel logLevel)
         {
             if (logLevel <= maxLogLevel && logLevel > LogLevel.Off)
             {
-                try
-                {
                     string logpath = Settings.Instance.LogDir;
                     string logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";
 
@@ -54,11 +48,9 @@ namespace Structures
                     outLog.WriteLine($"[{(int)logLevel}] {DateTime.Now:MM/dd/yyyy HH:mm:ss.ff} - {msg}");
                     outLog.Close();
                     fs.Close();
-                }
-                catch { /* How does one log an error if the logging function is the one erroring? */ }
+/* How does one log an error if the logging function is the one erroring? */
             }
         }
     }
     #endregion
-
 }
