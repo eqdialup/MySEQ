@@ -1,7 +1,7 @@
-// Class Files
 
 using myseq.Properties;
 using Structures;
+
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -342,7 +342,7 @@ namespace myseq
         private ToolStripMenuItem mnuSmallTargetInfo;
         private ToolStripMenuItem mnuSmallTargetInfo2;
         private ToolStripSeparator toolStripSeparator19;
-//        private ToolStripMenuItem addZoneEmailAlertFilterToolStripMenuItem;
+
         private ToolStripMenuItem mnuAutoConnect;
         public ToolStripComboBox toolStripLevel;
         public int gLastconLevel = -1;
@@ -3275,26 +3275,26 @@ namespace myseq
 
         #endregion
 
-        [STAThread]
+//        [STAThread]
 
-        static void Main()
+        //static void Main()
 
-        {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            try {Application.Run(new FrmMain());}
-            catch (Exception e)
+        //{
+        //    Application.EnableVisualStyles();
+        //    Application.SetCompatibleTextRenderingDefault(false);
+        //    try {Application.Run(new FrmMain());}
+        //    catch (Exception e)
 
-            {
-                string s = $"Uncaught exception in Main(): {e.Message}";
+        //    {
+        //        string s = $"Uncaught exception in Main(): {e.Message}";
 
-                LogLib.WriteLine(s);
+        //        LogLib.WriteLine(s);
 
-                MessageBox.Show(s);
+        //        MessageBox.Show(s);
 
-                Application.Exit();
-            }
-        }
+        //        Application.Exit();
+        //    }
+        //}
 
         private void frmMain_Closing(object sender, CancelEventArgs e)
 

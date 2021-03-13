@@ -306,7 +306,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="WindowState" Type="System.Windows.Forms.FormWindowState" Scope="User">
-      <Value Profile="(Default)">Normal</Value>
+      <Value Profile="(Default)">Maximized</Value>
     </Setting>
     <Setting Name="WindowsSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">800, 600</Value>
@@ -321,7 +321,7 @@
       <Value Profile="(Default)">20, 20</Value>
     </Setting>
     <Setting Name="WindowsPosition" Type="System.Windows.Forms.FormStartPosition" Scope="User">
-      <Value Profile="(Default)">Manual</Value>
+      <Value Profile="(Default)">CenterScreen</Value>
     </Setting>
     <Setting Name="PrefixStars" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -351,7 +351,7 @@
       <Value Profile="(Default)">5555</Value>
     </Setting>
     <Setting Name="AutoConnect" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="GridInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">500</Value>
@@ -426,7 +426,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ShowLayer3" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ShowPCGuild" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

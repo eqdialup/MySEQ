@@ -13,7 +13,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>myseq</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>myseq.FrmMain</StartupObject>
+    <StartupObject>myseq.Program</StartupObject>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -170,6 +170,7 @@
     <Compile Include="MobsTimers.cs" />
     <Compile Include="PacketType.cs" />
     <Compile Include="PrettyNames.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

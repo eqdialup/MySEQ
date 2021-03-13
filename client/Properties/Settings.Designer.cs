@@ -1237,7 +1237,7 @@ namespace myseq.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Maximized")]
         public global::System.Windows.Forms.FormWindowState WindowState {
             get {
                 return ((global::System.Windows.Forms.FormWindowState)(this["WindowState"]));
@@ -1297,7 +1297,7 @@ namespace myseq.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Manual")]
+        [global::System.Configuration.DefaultSettingValueAttribute("CenterScreen")]
         public global::System.Windows.Forms.FormStartPosition WindowsPosition {
             get {
                 return ((global::System.Windows.Forms.FormStartPosition)(this["WindowsPosition"]));
@@ -1417,7 +1417,7 @@ namespace myseq.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool AutoConnect {
             get {
                 return ((bool)(this["AutoConnect"]));
@@ -1717,7 +1717,7 @@ namespace myseq.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ShowLayer3 {
             get {
                 return ((bool)(this["ShowLayer3"]));
