@@ -2,7 +2,7 @@
 
 namespace myseq
 {
-    partial class frmAddMapText
+    partial class FrmAddMapText
     {
         /// <summary>
         /// Required designer variable.
@@ -693,7 +693,7 @@ namespace myseq
             this.picMapTextColor1.TabIndex = 2;
             this.picMapTextColor1.TabStop = false;
             this.picMapTextColor1.SizeChanged += new System.EventHandler(this.picMapTextColor1_SizeChanged);
-            this.picMapTextColor1.Click += new System.EventHandler(this.picMapTextColor1_Click);
+            this.picMapTextColor1.Click += new System.EventHandler(this.PicMapTextColor1_Click);
             // 
             // frmAddMapText
             // 

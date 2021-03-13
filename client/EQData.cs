@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using myseq.Properties;
 
 namespace myseq
 {
@@ -140,8 +141,6 @@ namespace myseq
         private bool filter3;
         private bool filter4;
         private bool filter5;
-        //        private bool levelCheck;
-        //        private int searchLevel;
 
         public void EnablePlayAlerts()
         {
@@ -371,7 +370,7 @@ namespace myseq
 
         public void PlayAlertSound()
         {
-            switch (Settings.Instance.AlertSound)
+            switch (Settings.Default.AlertSound)
             {
                 case "Asterisk":
 
@@ -415,7 +414,7 @@ namespace myseq
 
             if (st != null)
             {
-                if (Settings.Instance.AutoSelectSpawnList && st.itmSpawnTimerList != null)
+                if (Settings.Default.AutoSelectSpawnList && st.itmSpawnTimerList != null)
                 {
                     st.itmSpawnTimerList.EnsureVisible();
                     st.itmSpawnTimerList.Selected = true;
@@ -442,7 +441,7 @@ namespace myseq
 
             if (gi != null)
             {
-                if (Settings.Instance.AutoSelectSpawnList)
+                if (Settings.Default.AutoSelectSpawnList)
                 {
                     gi.listitem.EnsureVisible();
 
@@ -469,7 +468,7 @@ namespace myseq
 
             if (sp != null)
             {
-                if (Settings.Instance.AutoSelectSpawnList)
+                if (Settings.Default.AutoSelectSpawnList)
                 {
                     sp.listitem.EnsureVisible();
 
@@ -640,26 +639,6 @@ namespace myseq
             }
         }
 
-        //public SPAWNINFO FindSpawnTimer(float delta, float x, float y)
-        //{
-        //    try
-        //    {
-        //        foreach (SPAWNINFO st in mobsTimers.GetRespawned().Values)
-        //        {
-        //            if (st.X < x + delta && st.X > x - delta && st.Y < y + delta && st.Y > y - delta)
-        //                return st;
-        //        }
-
-        //        return null;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogLib.WriteLine("Error in SPAWNINFO FindTimer(): ", ex);
-
-        //        return null;
-        //    }
-        //}
-
         public GroundItem FindGroundItem(float delta, float x, float y)
         {
             foreach (GroundItem gi in itemcollection)
@@ -693,19 +672,19 @@ namespace myseq
 
         public void InitLookups()
         {
-            Classes = GetStrArrayFromTextFile(Path.Combine(Settings.Instance.CfgDir, "Classes.txt"));
+            Classes = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Classes.txt"));
 
-            Races = GetStrArrayFromTextFile(Path.Combine(Settings.Instance.CfgDir, "Races.txt"));
+            Races = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Races.txt"));
 
             itemList.Clear();
 
-            ReadItemList(Path.Combine(Settings.Instance.CfgDir, "GroundItems.ini"));
+            ReadItemList(Path.Combine(Settings.Default.CfgDir, "GroundItems.ini"));
 
             guildList.Clear();
 
-            ReadGuildList(Path.Combine(Settings.Instance.CfgDir, "Guilds.txt"));
+            ReadGuildList(Path.Combine(Settings.Default.CfgDir, "Guilds.txt"));
 
-            ColorChart.Initialise(Path.Combine(Settings.Instance.CfgDir, "RGB.txt"));
+            ColorChart.Initialise(Path.Combine(Settings.Default.CfgDir, "RGB.txt"));
         }
 
         public bool LoadMapInternal(string filename)
@@ -1638,7 +1617,7 @@ namespace myseq
 
         private void CheckMapMinMax(SPAWNINFO si)
         {
-            if (Settings.Instance.AutoExpand)
+            if (Settings.Default.AutoExpand)
             {
                 if ((minx > si.X) && (si.X > -20000)) minx = si.X;
 
@@ -1693,96 +1672,96 @@ namespace myseq
 
                     // [hunt]
 
-                    if (filters.Hunt.Count > 0 && FindMatches(filters.Hunt, itemname, Settings.Instance.NoneOnHunt,
+                    if (filters.Hunt.Count > 0 && FindMatches(filters.Hunt, itemname, Settings.Default.NoneOnHunt,
 
-                            Settings.Instance.TalkOnHunt, "Ground Item",
+                            Settings.Default.TalkOnHunt, "Ground Item",
 
-                            Settings.Instance.PlayOnHunt, Settings.Instance.HuntAudioFile,
+                            Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
 
-                            Settings.Instance.BeepOnHunt, MatchFullTextH))
+                            Settings.Default.BeepOnHunt, MatchFullTextH))
                     {
                         gi.isHunt = true;
                     }
 
-                    if (filters.GlobalHunt.Count > 0 && FindMatches(filters.GlobalHunt, itemname, Settings.Instance.NoneOnHunt,
+                    if (filters.GlobalHunt.Count > 0 && FindMatches(filters.GlobalHunt, itemname, Settings.Default.NoneOnHunt,
 
-                            Settings.Instance.TalkOnHunt, "Ground Item",
+                            Settings.Default.TalkOnHunt, "Ground Item",
 
-                            Settings.Instance.PlayOnHunt, Settings.Instance.HuntAudioFile,
+                            Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
 
-                            Settings.Instance.BeepOnHunt, MatchFullTextH))
+                            Settings.Default.BeepOnHunt, MatchFullTextH))
                     {
                         gi.isHunt = true;
                     }
 
                     // [caution]
 
-                    if (filters.Caution.Count > 0 && FindMatches(filters.Caution, itemname, Settings.Instance.NoneOnCaution,
+                    if (filters.Caution.Count > 0 && FindMatches(filters.Caution, itemname, Settings.Default.NoneOnCaution,
 
-                            Settings.Instance.TalkOnCaution, "Ground Item",
+                            Settings.Default.TalkOnCaution, "Ground Item",
 
-                            Settings.Instance.PlayOnCaution, Settings.Instance.CautionAudioFile,
+                            Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
 
-                            Settings.Instance.BeepOnCaution, MatchFullTextC))
+                            Settings.Default.BeepOnCaution, MatchFullTextC))
                     {
                         gi.isCaution = true;
                     }
 
-                    if (filters.GlobalCaution.Count > 0 && FindMatches(filters.GlobalCaution, itemname, Settings.Instance.NoneOnCaution,
+                    if (filters.GlobalCaution.Count > 0 && FindMatches(filters.GlobalCaution, itemname, Settings.Default.NoneOnCaution,
 
-                            Settings.Instance.TalkOnCaution, "Ground Item",
+                            Settings.Default.TalkOnCaution, "Ground Item",
 
-                            Settings.Instance.PlayOnCaution, Settings.Instance.CautionAudioFile,
+                            Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
 
-                            Settings.Instance.BeepOnCaution, MatchFullTextC))
+                            Settings.Default.BeepOnCaution, MatchFullTextC))
                     {
                         gi.isCaution = true;
                     }
 
                     // [danger]
 
-                    if (filters.Danger.Count > 0 && FindMatches(filters.Danger, itemname, Settings.Instance.NoneOnDanger,
+                    if (filters.Danger.Count > 0 && FindMatches(filters.Danger, itemname, Settings.Default.NoneOnDanger,
 
-                            Settings.Instance.TalkOnDanger, "Ground Item",
+                            Settings.Default.TalkOnDanger, "Ground Item",
 
-                            Settings.Instance.PlayOnDanger, Settings.Instance.DangerAudioFile,
+                            Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
 
-                            Settings.Instance.BeepOnDanger, MatchFullTextD))
+                            Settings.Default.BeepOnDanger, MatchFullTextD))
                     {
                         gi.isDanger = true;
                     }
 
-                    if (filters.GlobalDanger.Count > 0 && FindMatches(filters.GlobalDanger, itemname, Settings.Instance.NoneOnDanger,
+                    if (filters.GlobalDanger.Count > 0 && FindMatches(filters.GlobalDanger, itemname, Settings.Default.NoneOnDanger,
 
-                            Settings.Instance.TalkOnDanger, "Ground Item",
+                            Settings.Default.TalkOnDanger, "Ground Item",
 
-                            Settings.Instance.PlayOnDanger, Settings.Instance.DangerAudioFile,
+                            Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
 
-                            Settings.Instance.BeepOnDanger, MatchFullTextD))
+                            Settings.Default.BeepOnDanger, MatchFullTextD))
                     {
                         gi.isDanger = true;
                     }
 
                     // [rare]
 
-                    if (filters.Alert.Count > 0 && FindMatches(filters.Alert, itemname, Settings.Instance.NoneOnAlert,
+                    if (filters.Alert.Count > 0 && FindMatches(filters.Alert, itemname, Settings.Default.NoneOnAlert,
 
-                            Settings.Instance.TalkOnAlert, "Ground Item",
+                            Settings.Default.TalkOnAlert, "Ground Item",
 
-                            Settings.Instance.PlayOnAlert, Settings.Instance.AlertAudioFile,
+                            Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
 
-                            Settings.Instance.BeepOnAlert, MatchFullTextA))
+                            Settings.Default.BeepOnAlert, MatchFullTextA))
                     {
                         gi.isAlert = true;
                     }
 
-                    if (filters.GlobalAlert.Count > 0 && FindMatches(filters.GlobalAlert, itemname, Settings.Instance.NoneOnAlert,
+                    if (filters.GlobalAlert.Count > 0 && FindMatches(filters.GlobalAlert, itemname, Settings.Default.NoneOnAlert,
 
-                            Settings.Instance.TalkOnAlert, "Ground Item",
+                            Settings.Default.TalkOnAlert, "Ground Item",
 
-                            Settings.Instance.PlayOnAlert, Settings.Instance.AlertAudioFile,
+                            Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
 
-                            Settings.Instance.BeepOnAlert, MatchFullTextA))
+                            Settings.Default.BeepOnAlert, MatchFullTextA))
                     {
                         gi.isAlert = true;
                     }
@@ -1816,7 +1795,7 @@ namespace myseq
         {
             try
             {
-                if (Settings.Instance.AutoSelectEQTarget && EQSelectedID != (int)si.SpawnID)
+                if (Settings.Default.AutoSelectEQTarget && EQSelectedID != (int)si.SpawnID)
                 {
                     EQSelectedID = (int)si.SpawnID;
 
@@ -1830,7 +1809,7 @@ namespace myseq
                     {
                         if (sp.SpawnID == EQSelectedID)
                         {
-                            if (Settings.Instance.AutoSelectSpawnList)
+                            if (Settings.Default.AutoSelectSpawnList)
                             {
                                 sp.listitem.EnsureVisible();
 
@@ -1864,9 +1843,9 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessWorld(): ", ex); }
         }
 
-        public void ProcessSpawns(SPAWNINFO si, frmMain f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
+        public void ProcessSpawns(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
         {
-            CorpseAlerts = Settings.Instance.CorpseAlerts;
+            CorpseAlerts = Settings.Default.CorpseAlerts;
             if (si.Name.Contains("a_tainted_egg"))
             {
                 si.Class = 1;
@@ -1913,29 +1892,29 @@ namespace myseq
 
                                     if (mob.m_isMyCorpse)
                                     {
-                                        si.hidden = !Settings.Instance.ShowMyCorpse;
+                                        si.hidden = !Settings.Default.ShowMyCorpse;
                                     }
                                     else
                                     {
                                         // Other Players Corpses
 
-                                        si.hidden = !Settings.Instance.ShowPCCorpses;
+                                        si.hidden = !Settings.Default.ShowPCCorpses;
                                     }
                                 }
                                 else
                                 {
-                                    si.hidden = !Settings.Instance.ShowCorpses;
+                                    si.hidden = !Settings.Default.ShowCorpses;
                                 }
                             }
                             else if (mob.m_isPlayer)
                             {
-                                si.hidden = !Settings.Instance.ShowPlayers;
+                                si.hidden = !Settings.Default.ShowPlayers;
                             }
                             else
                             {
                                 // non-corpse, non-player spawn (aka NPC)
 
-                                if (!Settings.Instance.ShowNPCs) // hides all NPCs
+                                if (!Settings.Default.ShowNPCs) // hides all NPCs
                                 {
                                     si.hidden = true;
                                 }
@@ -1943,16 +1922,16 @@ namespace myseq
                                 {
                                     si.hidden = false;
 
-                                    if (si.isEventController && !Settings.Instance.ShowInvis) // Invis Men
+                                    if (si.isEventController && !Settings.Default.ShowInvis) // Invis Men
 
                                         si.hidden = true;
-                                    else if (mob.isMount && !Settings.Instance.ShowMounts) // Mounts
+                                    else if (mob.isMount && !Settings.Default.ShowMounts) // Mounts
 
                                         si.hidden = true;
-                                    else if (mob.isPet && !Settings.Instance.ShowPets) // Pets
+                                    else if (mob.isPet && !Settings.Default.ShowPets) // Pets
 
                                         si.hidden = true;
-                                    else if (mob.isFamiliar && !Settings.Instance.ShowFamiliars) // Familiars
+                                    else if (mob.isFamiliar && !Settings.Default.ShowFamiliars) // Familiars
 
                                         si.hidden = true;
                                 }
@@ -2158,10 +2137,8 @@ namespace myseq
                             mob.Guild = si.Guild;
 
                             if (si.Guild > 0)
-
                                 li.SubItems[17].Text = guildNumToString(si.Guild);
                             else
-
                                 li.SubItems[17].Text = "";
                         }
 
@@ -2232,7 +2209,7 @@ namespace myseq
 
                             ((si.Z - playerinfo.Z) * (si.Z - playerinfo.Z)));
 
-                        if (Settings.Instance.FollowOption == FollowOption.Target)
+                        if (Settings.Default.FollowOption == FollowOption.Target)
                             f1.ReAdjust();
 
                         li.SubItems[16].Text = sd.ToString("#.000");
@@ -2260,7 +2237,7 @@ namespace myseq
 
                         si.m_isPlayer = true;
 
-                        if (!Settings.Instance.ShowPlayers) si.hidden = true;
+                        if (!Settings.Default.ShowPlayers) si.hidden = true;
                     }
                     else
                     {
@@ -2285,25 +2262,25 @@ namespace myseq
                             {
                                 si.m_isPlayer = true;
 
-                                if (!Settings.Instance.ShowPCCorpses) si.hidden = true;
+                                if (!Settings.Default.ShowPCCorpses) si.hidden = true;
 
                                 if (si.Name.Length > 0 && CheckMyCorpse(si.Name))
                                 {
                                     si.m_isMyCorpse = true;
 
-                                    si.hidden = !Settings.Instance.ShowMyCorpse;
+                                    si.hidden = !Settings.Default.ShowMyCorpse;
                                 }
                             }
                             else
                             {
-                                if (!Settings.Instance.ShowCorpses) si.hidden = true;
+                                if (!Settings.Default.ShowCorpses) si.hidden = true;
                             }
                         }
                         else
                         {
                             // non-corpse, non-player spawn (aka NPC)
 
-                            if (!Settings.Instance.ShowNPCs) si.hidden = true;
+                            if (!Settings.Default.ShowNPCs) si.hidden = true;
 
                             if (si.OwnerID > 0)
                             {
@@ -2315,7 +2292,7 @@ namespace myseq
                                     if (owner.IsPlayer())
                                     {
                                         si.isPet = true;
-                                        if (!Settings.Instance.ShowPets) si.hidden = true;
+                                        if (!Settings.Default.ShowPets) si.hidden = true;
                                     }
                                 }
                                 else
@@ -2329,7 +2306,7 @@ namespace myseq
                             if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
                             {
                                 si.isEventController = true;
-                                if (!Settings.Instance.ShowInvis)
+                                if (!Settings.Default.ShowInvis)
                                     si.hidden = true;
                             }
                             else if (si.Class == 62)
@@ -2348,7 +2325,7 @@ namespace myseq
                             {
                                 si.isMount = true;
 
-                                if (!Settings.Instance.ShowMounts) si.hidden = true;
+                                if (!Settings.Default.ShowMounts) si.hidden = true;
                             }
                             else if (RegexHelper.IsFamiliar(si.Name))
                             {
@@ -2358,7 +2335,7 @@ namespace myseq
 
                                 si.isFamiliar = true;
 
-                                if (!Settings.Instance.ShowFamiliars) si.hidden = true;
+                                if (!Settings.Default.ShowFamiliars) si.hidden = true;
                             }
                         }
                     }
@@ -2387,7 +2364,7 @@ namespace myseq
                             offhandName = ItemNumToString(si.Offhand);
 
                         // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
-                        if (!si.isLDONObject && !si.isEventController && !si.isFamiliar && !si.isMount && !si.isMerc && si.OwnerID == 0)
+                        if (!(si.isLDONObject || si.isEventController || si.isFamiliar || si.isMount || si.isMerc && si.OwnerID != 0))
                         {
                             /* ************************************* *
                             * ************* ALERTS **************** *
@@ -2395,11 +2372,11 @@ namespace myseq
 
                             // [hunt]
 
-                            if (filters.Hunt.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Hunt, matchmobname, Settings.Instance.NoneOnHunt,
+                            if (filters.Hunt.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Hunt, matchmobname, Settings.Default.NoneOnHunt,
 
-                                    Settings.Instance.TalkOnHunt, "Hunt Mob",
-                                    Settings.Instance.PlayOnHunt, Settings.Instance.HuntAudioFile,
-                                    Settings.Instance.BeepOnHunt, MatchFullTextH))
+                                    Settings.Default.TalkOnHunt, "Hunt Mob",
+                                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                                    Settings.Default.BeepOnHunt, MatchFullTextH))
                             {
                                 alert = true;
                                 if (PrefixStars)
@@ -2414,11 +2391,11 @@ namespace myseq
 
                                 si.isHunt = true;
                             }
-                            if (filters.GlobalHunt.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalHunt, matchmobname, Settings.Instance.NoneOnHunt,
+                            if (filters.GlobalHunt.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalHunt, matchmobname, Settings.Default.NoneOnHunt,
 
-                                    Settings.Instance.TalkOnHunt, "Hunt Mob",
-                                    Settings.Instance.PlayOnHunt, Settings.Instance.HuntAudioFile,
-                                    Settings.Instance.BeepOnHunt, MatchFullTextH))
+                                    Settings.Default.TalkOnHunt, "Hunt Mob",
+                                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                                    Settings.Default.BeepOnHunt, MatchFullTextH))
                             {
                                 alert = true;
                                 if (PrefixStars)
@@ -2434,20 +2411,20 @@ namespace myseq
                             }
 
                             // [caution]
-                            if (filters.Caution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Caution, matchmobname, Settings.Instance.NoneOnCaution,
+                            if (filters.Caution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Caution, matchmobname, Settings.Default.NoneOnCaution,
 
-                                    Settings.Instance.TalkOnCaution, "Caution Mob",
-                                    Settings.Instance.PlayOnCaution, Settings.Instance.CautionAudioFile,
-                                    Settings.Instance.BeepOnCaution, MatchFullTextC))
+                                    Settings.Default.TalkOnCaution, "Caution Mob",
+                                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
+                                    Settings.Default.BeepOnCaution, MatchFullTextC))
                             {
                                 alert = MarkCaution(ref mobnameWithInfo);
                                 si.isCaution = true;
                             }
-                            if (filters.GlobalCaution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalCaution, matchmobname, Settings.Instance.NoneOnCaution,
+                            if (filters.GlobalCaution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalCaution, matchmobname, Settings.Default.NoneOnCaution,
 
-                                    Settings.Instance.TalkOnCaution, "Caution Mob",
-                                    Settings.Instance.PlayOnCaution, Settings.Instance.CautionAudioFile,
-                                    Settings.Instance.BeepOnCaution, MatchFullTextC))
+                                    Settings.Default.TalkOnCaution, "Caution Mob",
+                                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
+                                    Settings.Default.BeepOnCaution, MatchFullTextC))
                             {
                                 alert = true;
 
@@ -2461,34 +2438,34 @@ namespace myseq
                             }
 
                             // [danger]
-                            if (filters.Danger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, Settings.Instance.NoneOnDanger,
+                            if (filters.Danger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, Settings.Default.NoneOnDanger,
 
-                                    Settings.Instance.TalkOnDanger, "Danger Mob",
+                                    Settings.Default.TalkOnDanger, "Danger Mob",
 
-                                    Settings.Instance.PlayOnDanger, Settings.Instance.DangerAudioFile,
+                                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
 
-                                    Settings.Instance.BeepOnDanger, MatchFullTextD))
+                                    Settings.Default.BeepOnDanger, MatchFullTextD))
                             {
                                 alert = MarkDanger(ref mobnameWithInfo);
                                 si.isDanger = true;
                             }
-                            if (filters.GlobalDanger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalDanger, matchmobname, Settings.Instance.NoneOnDanger,
+                            if (filters.GlobalDanger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalDanger, matchmobname, Settings.Default.NoneOnDanger,
 
-                                    Settings.Instance.TalkOnDanger, "Danger Mob",
+                                    Settings.Default.TalkOnDanger, "Danger Mob",
 
-                                    Settings.Instance.PlayOnDanger, Settings.Instance.DangerAudioFile,
+                                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
 
-                                    Settings.Instance.BeepOnDanger, MatchFullTextD))
+                                    Settings.Default.BeepOnDanger, MatchFullTextD))
                             {
                                 alert = MarkDanger(ref mobnameWithInfo);
                                 si.isDanger = true;
                             }
 
                             // [rare]
-                            if (filters.Alert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Alert, matchmobname, Settings.Instance.NoneOnAlert,
-                                    Settings.Instance.TalkOnAlert, "Rare Mob",
-                                    Settings.Instance.PlayOnAlert, Settings.Instance.AlertAudioFile,
-                                    Settings.Instance.BeepOnAlert, MatchFullTextA))
+                            if (filters.Alert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Alert, matchmobname, Settings.Default.NoneOnAlert,
+                                    Settings.Default.TalkOnAlert, "Rare Mob",
+                                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
+                                    Settings.Default.BeepOnAlert, MatchFullTextA))
                             {
                                 alert = true;
 
@@ -2500,10 +2477,10 @@ namespace myseq
                                 if (AffixStars)
                                     mobnameWithInfo += " " + AlertPrefix;
                             }
-                            if (filters.GlobalAlert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalAlert, matchmobname, Settings.Instance.NoneOnAlert,
-                                    Settings.Instance.TalkOnAlert, "Rare Mob",
-                                    Settings.Instance.PlayOnAlert, Settings.Instance.AlertAudioFile,
-                                    Settings.Instance.BeepOnAlert, MatchFullTextA))
+                            if (filters.GlobalAlert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalAlert, matchmobname, Settings.Default.NoneOnAlert,
+                                    Settings.Default.TalkOnAlert, "Rare Mob",
+                                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
+                                    Settings.Default.BeepOnAlert, MatchFullTextA))
                             {
                                 alert = true;
                                 if (PrefixStars)
@@ -2527,10 +2504,10 @@ namespace myseq
 
                             // [Wielded Items]
                             // Acts like a hunt mob.
-                            if (filters.WieldedItems.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.WieldedItems, primaryName, Settings.Instance.NoneOnHunt,
-                                    Settings.Instance.TalkOnHunt, "Hunt Mob Wielded",
-                                    Settings.Instance.PlayOnHunt, Settings.Instance.HuntAudioFile,
-                                    Settings.Instance.BeepOnHunt, MatchFullTextH))
+                            if (filters.WieldedItems.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.WieldedItems, primaryName, Settings.Default.NoneOnHunt,
+                                    Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
+                                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                                    Settings.Default.BeepOnHunt, MatchFullTextH))
                             {
                                 alert = true;
                                 if (PrefixStars)
@@ -2549,10 +2526,10 @@ namespace myseq
                             // [Offhand]
                             // Acts like a hunt mob.
                             if (filters.WieldedItems.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.WieldedItems, offhandName,
-                                Settings.Instance.NoneOnHunt,
-                                    Settings.Instance.TalkOnHunt, "Hunt Mob Wielded",
-                                    Settings.Instance.PlayOnHunt, Settings.Instance.HuntAudioFile,
-                                    Settings.Instance.BeepOnHunt, MatchFullTextH))
+                                Settings.Default.NoneOnHunt,
+                                    Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
+                                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                                    Settings.Default.BeepOnHunt, MatchFullTextH))
                             {
                                 alert = true;
                                 if (PrefixStars)
@@ -2646,7 +2623,7 @@ namespace myseq
                         }
 
                         if (alert)
-                            item1.Font = new Font(Settings.Instance.ListFontName, Settings.Instance.ListFontSize, FontStyle.Bold);
+                            item1.Font = Settings.Default.ListFont;
 
                         si.gone = 0;
 
@@ -2690,7 +2667,7 @@ namespace myseq
             }
         }
 
-        private static void LookupBoxMatch(SPAWNINFO si, frmMain f1)
+        private static void LookupBoxMatch(SPAWNINFO si, FrmMain f1)
         {
             si.isLookup = false;
             if (f1.toolStripLookupBox.Text.Length > 1
@@ -2783,7 +2760,7 @@ namespace myseq
 
                             // Change the colors to be more visible on white if the background is white
 
-                            if (Settings.Instance.ListBackColor == Color.White)
+                            if (Settings.Default.ListBackColor == Color.White)
                             {
                                 if (li.ForeColor == Color.White)
                                     li.ForeColor = Color.Black;
@@ -2791,7 +2768,7 @@ namespace myseq
                                     li.ForeColor = Color.Goldenrod;
                             }
 
-                            if (Settings.Instance.ListBackColor == Color.Black && li.ForeColor == Color.Black)
+                            if (Settings.Default.ListBackColor == Color.Black && li.ForeColor == Color.Black)
                             {
                                 li.ForeColor = Color.White;
                             }
@@ -2876,7 +2853,7 @@ namespace myseq
 
             StreamWriter sw = new StreamWriter(filename, false);
 
-            sw.Write(@"Name	Level	Class	Race	Lastname	Type	Invis	Run Speed	SpawnID	X	Y	Z	Heading");
+            sw.Write("Name	Level	Class	Race	Lastname	Type	Invis	Run Speed	SpawnID	X	Y	Z	Heading");
 
             foreach (SPAWNINFO si in mobs.Values)
             {
@@ -3061,32 +3038,32 @@ namespace myseq
         {
             // Used to improve packet processing speed
 
-            PrefixStars = Settings.Instance.PrefixStars;
+            PrefixStars = Settings.Default.PrefixStars;
 
-            AffixStars = Settings.Instance.AffixStars;
+            AffixStars = Settings.Default.AffixStars;
 
-            CorpseAlerts = Settings.Instance.CorpseAlerts;
+            CorpseAlerts = Settings.Default.CorpseAlerts;
 
-            MatchFullTextH = Settings.Instance.MatchFullTextH;
+            MatchFullTextH = Settings.Default.MatchFullTextH;
 
-            MatchFullTextC = Settings.Instance.MatchFullTextC;
+            MatchFullTextC = Settings.Default.MatchFullTextC;
 
-            MatchFullTextD = Settings.Instance.MatchFullTextD;
+            MatchFullTextD = Settings.Default.MatchFullTextD;
 
-            MatchFullTextA = Settings.Instance.MatchFullTextA;
+            MatchFullTextA = Settings.Default.MatchFullTextA;
 
-            HuntPrefix = Settings.Instance.HuntPrefix;
+            HuntPrefix = Settings.Default.HuntPrefix;
 
-            CautionPrefix = Settings.Instance.CautionPrefix;
+            CautionPrefix = Settings.Default.CautionPrefix;
 
-            DangerPrefix = Settings.Instance.DangerPrefix;
+            DangerPrefix = Settings.Default.DangerPrefix;
 
-            AlertPrefix = Settings.Instance.AlertPrefix;
+            AlertPrefix = Settings.Default.AlertPrefix;
         }
 
         #region ProcessPlayer
 
-        public void ProcessPlayer(SPAWNINFO si, frmMain f1)
+        public void ProcessPlayer(SPAWNINFO si, FrmMain f1)
         {
             try
             {
@@ -3107,7 +3084,7 @@ namespace myseq
 
                     playerinfo.Y = si.Y;
 
-                    if (Settings.Instance.FollowOption == FollowOption.Player)
+                    if (Settings.Default.FollowOption == FollowOption.Player)
                         f1.ReAdjust();
                 }
 
@@ -3142,7 +3119,7 @@ namespace myseq
                             f1.gConBaseName = "";
                         }
                         f1.gLastconLevel = f1.gconLevel;
-                        Settings.Instance.LevelOverride = f1.gconLevel;
+                        Settings.Default.LevelOverride = f1.gconLevel;
                     }
                     playerinfo.Level = si.Level;
                     FillConColors(f1);
@@ -3163,7 +3140,7 @@ namespace myseq
 
         #endregion ProcessPlayer
 
-        public void FillConColors(frmMain f1)
+        public void FillConColors(FrmMain f1)
         {
             try
             {
@@ -3171,14 +3148,14 @@ namespace myseq
 
                 int level;
 
-                if (Settings.Instance.LevelOverride == -1)
+                if (Settings.Default.LevelOverride == -1)
                 {
                     f1.toolStripLevel.Text = "Auto";
                     level = playerinfo.Level;
                 }
                 else
                 {
-                    level = Settings.Instance.LevelOverride;
+                    level = Settings.Default.LevelOverride;
                     f1.toolStripLevel.Text = level.ToString();
                 }
                 YellowRange = 3;
@@ -3243,8 +3220,8 @@ namespace myseq
         private void VersionColorVariation(int level)
         // Check for SoD, SoF or Real EQ con levels in use
         {
-            var ConColorsFile = Path.Combine(Settings.Instance.CfgDir, "ConLevels.Ini");
-            if (Settings.Instance.SoDCon)
+            var ConColorsFile = Path.Combine(Settings.Default.CfgDir, "ConLevels.Ini");
+            if (Settings.Default.SoDCon)
             {
                 YellowRange = 2;
 
@@ -3349,7 +3326,7 @@ namespace myseq
             }
 
             // If using SoF Con Colors
-            else if (Settings.Instance.SoFCon)
+            else if (Settings.Default.SoFCon)
             {
                 YellowRange = 3;
 
@@ -3474,7 +3451,7 @@ namespace myseq
 
                 YellowRange = Convert.ToInt32(yellowLevels);
             }
-            else if (Settings.Instance.DefaultCon)
+            else if (Settings.Default.DefaultCon)
             {
                 // Using Default Con Colors
 
@@ -3626,21 +3603,21 @@ namespace myseq
             Pen darkpen = new Pen(Color.Black);
             foreach (MapLine line in lines)
             {
-                if (Settings.Instance.ForceDistinct)
+                if (Settings.Default.ForceDistinct)
                 {
                     line.draw_color = GetDistinctColor(darkpen);
-                    line.fade_color = new Pen(Color.FromArgb(Settings.Instance.FadedLines * 255 / 100, line.draw_color.Color));
+                    line.fade_color = new Pen(Color.FromArgb(Settings.Default.FadedLines * 255 / 100, line.draw_color.Color));
                 }
                 else
                 {
                     line.draw_color = GetDistinctColor(new Pen(line.color.Color));
-                    line.fade_color = new Pen(Color.FromArgb(Settings.Instance.FadedLines * 255 / 100, line.draw_color.Color));
+                    line.fade_color = new Pen(Color.FromArgb(Settings.Default.FadedLines * 255 / 100, line.draw_color.Color));
                 }
             }
             SolidBrush distinctbrush = new SolidBrush(Color.Black);
             foreach (MapText t in texts)
             {
-                t.draw_color = Settings.Instance.ForceDistinctText ? GetDistinctColor(distinctbrush) : GetDistinctColor(t.color);
+                t.draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(distinctbrush) : GetDistinctColor(t.color);
                 t.draw_pen = new Pen(t.draw_color.Color);
             }
         }
@@ -3727,16 +3704,16 @@ namespace myseq
 
         public Pen GetDistinctColor(Pen curPen)
         {
-            curPen.Color = GetDistinctColor(curPen.Color, Settings.Instance.BackColor);
+            curPen.Color = GetDistinctColor(curPen.Color, Settings.Default.BackColor);
 
             return curPen;
         }
 
-        public Color GetDistinctColor(Color curColor) => GetDistinctColor(curColor, Settings.Instance.BackColor);
+        public Color GetDistinctColor(Color curColor) => GetDistinctColor(curColor, Settings.Default.BackColor);
 
         public SolidBrush GetDistinctColor(SolidBrush curBrush)
         {
-            curBrush.Color = GetDistinctColor(curBrush.Color, Settings.Instance.BackColor);
+            curBrush.Color = GetDistinctColor(curBrush.Color, Settings.Default.BackColor);
 
             return curBrush;
         }

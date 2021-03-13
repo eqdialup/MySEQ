@@ -1,21 +1,22 @@
-﻿using Structures;
+﻿using myseq.Properties;
+using Structures;
 using System;
 using System.Windows.Forms;
 
 namespace myseq
 {
-    public partial class frmAddMapText : Form
+    public partial class FrmAddMapText : Form
     {
-        public frmAddMapText()
+        public FrmAddMapText()
         {
             InitializeComponent();
         }
 
         private void BtnAddTxtOk_Click(object sender, EventArgs e)
         {
-            if (Settings.Instance.SelectedAddMapText != txtColr)
+            if (Settings.Default.SelectedAddMapText != txtColr)
             {
-                Settings.Instance.SelectedAddMapText = txtColr;
+                Settings.Default.SelectedAddMapText = txtColr;
             }
             Close();
         }
@@ -25,7 +26,7 @@ namespace myseq
             Close();
         }
 
-        private void picMapTextColor1_Click(object sender, EventArgs e)
+        private void PicMapTextColor1_Click(object sender, EventArgs e)
         {
             selectedColor = picMapTextColor1.BackColor;
             updateColorBoxes();

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace myseq
 {
     /// <summary>
-    /// Small snippet classes with static methods, and have little to no impact on experience. 
+    /// Small classes with static methods, and have little to no impact on experience.
     /// moved to parasoll file for easier overview and reduce clutter in the larger classes.
     /// </summary>
     internal static class SafeNativeMethods
@@ -81,7 +81,6 @@ namespace myseq
                 (Column == 9) ||    // Invis
 
                 (Column == 17))     // Guild
-
 
             {
                 res = string.Compare(sa.SubItems[Column].Text, sb.SubItems[Column].Text);
@@ -174,11 +173,6 @@ namespace myseq
                 if (ia < ib) res = -1;
                 else res = ia > ib ? 1 : 0;
             }
-
-            //else if ()
-
-            //    res = string.Compare(sa.SubItems[Column].Text, sb.SubItems[Column].Text);
-
             else if (
 
                 (Column == 4) ||   // X

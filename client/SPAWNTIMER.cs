@@ -1,4 +1,5 @@
-﻿using Structures;
+﻿using myseq.Properties;
+using Structures;
 using System;
 using System.Drawing;
 using System.Text;
@@ -406,7 +407,7 @@ namespace myseq
 
                     SpawnTimer = (Diff.Hours * 3600) + (Diff.Minutes * 60) + Diff.Seconds;
 
-                    if (Settings.Instance.MaxLogLevel > 0)
+                    if (Settings.Default.MaxLogLevel > 0)
                     {
                         string spawnTimer = $"{Diff.Hours:00}:{Diff.Minutes:00}:{Diff.Seconds:00}";
 

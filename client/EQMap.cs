@@ -1,3 +1,4 @@
+using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
@@ -55,7 +56,6 @@ namespace myseq
 
                 eq.SpawnY = -1.0f;
             }
-
         }
 
         protected void OnEnterMap()
@@ -79,15 +79,13 @@ namespace myseq
             initialized = true;
         }
 
-        public void NewMap()
-        {
-            OnEnterMap();
-        }
+        //public void NewMap()
+        //{
+        //    OnEnterMap();
+        //}
 
         public void ClearMap()
-
         {
-
             try {
                 if (!initialized) { throw new Exception("EQMapManager not initialized yet"); }
 
@@ -139,8 +137,8 @@ namespace myseq
             OnEnterMap();
         }
 
-        public bool loadMap(string filename) {
-
+        public bool loadMap(string filename)
+        {
             eq.mobsTimers.ResetTimers();
 
             OnExitMap();
@@ -165,10 +163,8 @@ namespace myseq
             return rc;
         }
 
-        public bool loadLoYMap(string filename, bool resetmap)
-
+        public bool LoadLoYMap(string filename, bool resetmap)
         {
-
             if (resetmap)
 
             {
@@ -368,7 +364,7 @@ namespace myseq
                 {
                     if (index2 > index && tex1.x == tex2.x && tex1.y == tex2.y && tex1.z == tex2.z && tex1.text != tex2.text)
                     {
-                        tex2.offset = tex1.offset + (int)(2.0f * Settings.Instance.MapLabelFontSize);
+                        tex2.offset = tex1.offset + (int)(2.0f * Settings.Default.MapLabel.Size);
                     }
                     index2++;
                 }

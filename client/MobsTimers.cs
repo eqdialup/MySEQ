@@ -1,3 +1,4 @@
+using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
@@ -101,7 +102,7 @@ namespace myseq
         {
             ResetAllTimers();
 
-            string timerpath = Settings.Instance.TimerDir;
+            string timerpath = Settings.Default.TimerDir;
 
             string timerfile = Path.Combine(timerpath, $"spawns-{mapName}.txt");
 
@@ -159,7 +160,7 @@ namespace myseq
                     {
                         mobsTimer.Add(si.ZoneSpawnLoc, st);
 
-                        if (Settings.Instance.MaxLogLevel > 0)
+                        if (Settings.Default.MaxLogLevel > 0)
                             SpawnTimerLog($"Added Spawn: {si.SpawnLoc} Name: {si.Name}");
                     }
                     catch (Exception ex) {LogLib.WriteLine("Error adding new SPAWNTIMER for " + si.Name + ": ", ex);}
@@ -199,7 +200,7 @@ namespace myseq
                         log = st.ReSpawn(si.Name);
                     }
 
-                    if (Settings.Instance.MaxLogLevel > 0)
+                    if (Settings.Default.MaxLogLevel > 0)
                     {
                         SpawnTimerLog($"Found Spawn: {si.SpawnLoc} Name: {si.Name}");
 
@@ -234,7 +235,7 @@ namespace myseq
         {
             try
             {
-                if (Settings.Instance.SaveSpawnLogs || (mapName.Length > 0))
+                if (Settings.Default.SaveSpawnLogs || (mapName.Length > 0))
                     LogSpawns($"[KILL] Loc: {mob.SpawnLoc} Name: {mob.Name}");
 
                 if (mobsTimer.ContainsKey(mob.ZoneSpawnLoc))
@@ -254,7 +255,7 @@ namespace myseq
                         st2.NextSpawnStr = stold.NextSpawnStr;
                     }
 
-                    if (log != string.Empty && Settings.Instance.MaxLogLevel > 0)
+                    if (log != string.Empty && Settings.Default.MaxLogLevel > 0)
                     {
                         SpawnTimerLog($"Updating Kill Time for Spawn: {mob.SpawnLoc} Name: {mob.Name} Killed: {log}");
                     }
@@ -311,11 +312,10 @@ namespace myseq
         private void SpawnTimerLog(string msg)
 
         {
-            if (Settings.Instance.MaxLogLevel == 0)
+            if (Settings.Default.MaxLogLevel == 0)
                 return;
 
-            string logpath = Settings.Instance.LogDir;
-
+            string logpath = Settings.Default.LogDir;
 
             if (!Directory.Exists(logpath)) Directory.CreateDirectory(logpath);
 
@@ -333,12 +333,12 @@ namespace myseq
         private void LogSpawns(string msg)
 
         {
-            if ((!Settings.Instance.SaveSpawnLogs) || (mapName.Length < 3))
+            if ((!Settings.Default.SaveSpawnLogs) || (mapName.Length < 3))
                 return;
 
             try
             {
-                string logpath = Settings.Instance.LogDir;
+                string logpath = Settings.Default.LogDir;
                 string logfile = string.Format($"spawns-{{0}}-{mapName}.txt", DateTime.Now.ToString("MM-dd-yyyy"));
 
                 if (!Directory.Exists(logpath)) Directory.CreateDirectory(logpath);
@@ -355,23 +355,19 @@ namespace myseq
         // Loads timers from a file for the current map
 
         public void LoadTimers()
-
         {
-            if ((!Settings.Instance.saveSpawnTimers)
-                || (mapName.Length == 0)
-                || mapName == "clz"
-                || mapName == "default"
-                || mapName == "bazaar"
-                || mapName.Contains("guild")
-                || mapName == "poknowledge"
-                || mapName == "nexus")
+            if (!string.IsNullOrEmpty(mapName))
+                {
+            if (!Settings.Default.saveSpawnTimers  || mapName == "clz" || mapName == "default" || mapName == "bazaar" || mapName.Contains("guild") || mapName == "poknowledge" || mapName == "nexus")
+            {
                 return;
+            }
             try
 
             {
-                string timerpath = Settings.Instance.TimerDir;
+                string timerpath = Settings.Default.TimerDir;
 
-                string timerfile = Path.Combine(timerpath,"spawns-" + mapName + ".txt");
+                string timerfile = Path.Combine(timerpath, "spawns-" + mapName + ".txt");
 
                 if (!Directory.Exists(timerpath))
                 {
@@ -403,7 +399,7 @@ namespace myseq
                 {
                     string line;
 
-                    int count=0;
+                    int count = 0;
 
                     while ((line = sr.ReadLine()) != null)
 
@@ -468,7 +464,7 @@ namespace myseq
                                 }
                             }
                         }
-                        catch (Exception ex) {LogLib.WriteLine("Error in LoadTimers(), processing line:\r\n"+line,ex);}
+                        catch (Exception ex) { LogLib.WriteLine("Error in LoadTimers(), processing line:\r\n" + line, ex); }
                     }
 
                     LogLib.WriteLine($"Spawns read: {count}", LogLevel.Debug);
@@ -480,7 +476,8 @@ namespace myseq
                     sr.Close();
                 }
             }
-            catch (Exception ex) {LogLib.WriteLine("Error in LoadTimers():",ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error in LoadTimers():", ex); }
+            }
         }
 
         // Saves timers to a file for the current map
@@ -488,7 +485,7 @@ namespace myseq
         private void SaveTimers()
 
         {
-            if ((!Settings.Instance.saveSpawnTimers) || (mapName.Length < 3))
+            if ((!Settings.Default.saveSpawnTimers) || (mapName.Length < 3))
             {
                 MustSave = false;
                 LastSaveTime = DateTime.Now;
@@ -500,7 +497,7 @@ namespace myseq
                 LastSaveTime = DateTime.Now;
 
                 // We are not saving timers for these zone.  If they exist, then delete them.
-                string timerpath = Settings.Instance.TimerDir;
+                string timerpath = Settings.Default.TimerDir;
 
                 if (!Directory.Exists(timerpath))
                 {
@@ -544,7 +541,7 @@ namespace myseq
                     if (count > 0)
 
                     {
-                        string timerpath = Settings.Instance.TimerDir;
+                        string timerpath = Settings.Default.TimerDir;
 
                         if (!Directory.Exists(timerpath))
                         {

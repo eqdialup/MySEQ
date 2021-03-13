@@ -41,7 +41,7 @@ namespace myseq
 
         private System.ComponentModel.Container components = null;
 
-        private frmMain f1 = null; // Caution: may be null
+        private FrmMain f1 = null; // Caution: may be null
 
         private EQData eq = null;
 
@@ -87,7 +87,7 @@ namespace myseq
             filterzpos.Value = 75;
         }
 
-        public void SetComponents(frmMain f1,EQData eq)
+        public void SetComponents(FrmMain f1,EQData eq)
 
         {
             this.f1 = f1;

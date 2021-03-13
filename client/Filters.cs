@@ -1,5 +1,6 @@
 // Class Files
 
+using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
@@ -18,8 +19,6 @@ namespace myseq
         public ArrayList Alert { get; set; } = new ArrayList();
         public ArrayList GlobalDanger { get; set; } = new ArrayList();
         public ArrayList EmailAlert { get; set; } = new ArrayList();
-
-        //        public ArrayList OffhandItem { get; set; } = new ArrayList();
         public ArrayList WieldedItems { get; set; } = new ArrayList();
 
         public ArrayList GlobalAlert { get; set; } = new ArrayList();
@@ -72,121 +71,6 @@ namespace myseq
             }
         }
 
-        //public void ReadAlertFile(string zoneName, bool loadCustomAlerts)
-        //{
-        //    // Load the 4.xx alerts
-        //    StreamReader sw;
-        //    try
-        //    {
-        //        var filterDir = Settings.Instance.FilterDir;
-
-        //        zoneName = zoneName.ToLower();
-
-        //        string filterFile = loadCustomAlerts ? Path.Combine(filterDir, $"custom_{zoneName}.conf") : Path.Combine(filterDir, $"filters_{zoneName}.conf");
-
-        //        if ( !File.Exists(filterFile) )
-        //            return;
-
-        //        // open the existing filter file
-
-        //        sw = new StreamReader(File.Open(filterFile,FileMode.Open));
-        //    }
-        //    catch (Exception ex)
-
-        //    {
-        //        LogLib.WriteLine($"Error opening file stream for {zoneName}: ", ex);
-
-        //        return;
-        //    }
-
-        //    int type = 0;
-        //    string inp;
-        //    while ((inp = sw.ReadLine()) != null)
-
-        //    {
-        //        if (inp.Trim().Length > 0 && !inp.StartsWith("#"))
-
-        //        {
-        //            string inputstring = inp;
-        //            inp = inp.ToLower();
-
-        //            if (inp.StartsWith("[hunt]"))
-        //            {
-        //                type = 1;
-        //            }
-        //            else if (inp.StartsWith("[caution]") || inp.StartsWith("[danger]"))
-        //            {
-        //                type = 2;
-        //            }
-        //            else if (inp.StartsWith("[rare]") || inp.StartsWith("[locate]") || inp.StartsWith("[alert]"))
-        //            {
-        //                type = 3;
-        //            }
-        //            else if (type > 0 && type < 4)
-
-        //            {
-        //                // unknown section headers
-
-        //                if (inp.StartsWith("["))
-
-        //                {
-        //                    type = 0;
-
-        //                    continue;
-        //                }
-
-        //                // remove Name: from line if it exists
-
-        //                if (inp.StartsWith("name:"))
-        //                {
-        //                    inp = inp.Remove(0, 5);
-        //                    inputstring = inputstring.Remove(0, 5);
-        //                }
-
-        //                // if there are any odd characters in the name, just skip it
-
-        //                if (inp.IndexOfAny(anyOf) != -1 || inputstring.IndexOfAny(anyOf) != -1)
-        //                    continue;
-
-        //                switch (zoneName)
-        //                {
-        //                    case "global":
-        //                        if (type == 1)
-        //                        {
-        //                            AddToAlerts(GlobalHunt, inputstring);
-        //                        }
-        //                        else if (type == 2)
-        //                        {
-        //                            AddToAlerts(GlobalCaution, inputstring);
-        //                        }
-        //                        else if (type == 3)
-        //                        {
-        //                            AddToAlerts(GlobalAlert, inputstring);
-        //                        }
-        //                        break;
-        //                    default:
-        //                        if (type == 1)
-        //                        {
-        //                            AddToAlerts(Hunt, inputstring);
-        //                        }
-        //                        else if (type == 2)
-        //                        {
-        //                            AddToAlerts(Caution, inputstring);
-        //                        }
-        //                        else if (type == 3)
-        //                        {
-        //                            AddToAlerts(Alert, inputstring);
-        //                        }
-
-        //                        break;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    sw.Close();
-        //}
-
         public void ReadNewAlertFile(string zoneName)
         {
             int type = 0;
@@ -196,7 +80,7 @@ namespace myseq
             try
             {
                 string filterFile;
-                string filterDir = Settings.Instance.FilterDir;
+                string filterDir = Settings.Default.FilterDir;
                 zoneName = zoneName.ToLower();
 
                 filterFile = Path.Combine(filterDir, $"{zoneName}.xml");
@@ -363,7 +247,7 @@ namespace myseq
             {
                 string filterFile;
 
-                string filterDir = Settings.Instance.FilterDir;
+                string filterDir = Settings.Default.FilterDir;
 
                 zoneName = zoneName.ToLower();
 
@@ -571,20 +455,7 @@ namespace myseq
             if (zoneName.Length > 0)
 
             {
-                //// read in old 4.xx alerts
-
-                //ReadAlertFile("global", true);
-
-                //ReadAlertFile("global", false);
-
-                //ReadAlertFile(zoneName, true);
-
-                //ReadAlertFile(zoneName, false);
-
-                // read in new 5.xx alerts
-
                 ReadNewAlertFile(zoneName);
-
                 ReadNewAlertFile("global");
             }
         }
@@ -626,7 +497,7 @@ namespace myseq
 
         public void EditAlertFile(string zoneName)
         {
-            string filterDir = Settings.Instance.FilterDir;
+            string filterDir = Settings.Default.FilterDir;
 
             if ((zoneName?.Length) != 0)
             {

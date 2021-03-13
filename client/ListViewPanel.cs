@@ -1,3 +1,4 @@
+using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
@@ -19,7 +20,7 @@ namespace myseq
 
         private Filters filters;
 
-        private frmMain f1;
+        private FrmMain f1;
 
         private TextBox txtSpawnList;
 
@@ -120,7 +121,7 @@ namespace myseq
             listView.Location = new Point(0, 24);
         }
 
-        public void SetComponents(EQData eq,MapCon mapCon, Filters filters,frmMain f1)
+        public void SetComponents(EQData eq,MapCon mapCon, Filters filters,FrmMain f1)
 
         {
             this.eq = eq;
@@ -784,7 +785,7 @@ namespace myseq
             if (searchname.Length > 0)
 
             {
-                var searchURL = string.Format(Settings.Instance.SearchString, searchname);
+                var searchURL = string.Format(Settings.Default.SearchString, searchname);
 
                 System.Diagnostics.Process.Start(searchURL);
             }
@@ -828,7 +829,7 @@ namespace myseq
         private void toolStriConcolor_Click(object sender, EventArgs e)
         {
             //mobname;
-            Settings.Instance.LevelOverride = moblevel;
+            Settings.Default.LevelOverride = moblevel;
             f1.gconLevel = moblevel;
             f1.gConBaseName = mobname;
         }

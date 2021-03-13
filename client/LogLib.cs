@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using myseq.Properties;
 
 namespace Structures
 {
@@ -38,7 +39,7 @@ namespace Structures
         {
             if (logLevel <= maxLogLevel && logLevel > LogLevel.Off)
             {
-                    string logpath = Settings.Instance.LogDir;
+                    string logpath = Settings.Default.LogDir;
                     string logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";
 
                     if (!Directory.Exists(logpath)) Directory.CreateDirectory(logpath);

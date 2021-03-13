@@ -1,6 +1,5 @@
 // Class Files
 
-using SocketSystem;
 using Structures;
 using System;
 using System.Threading;
@@ -52,14 +51,14 @@ namespace myseq
 
         private EQData eq;
 
-        private frmMain f1; // TODO: get rid of this
+        private FrmMain f1; // TODO: get rid of this
 
         public void UpdateHidden()
         {
             update_hidden = true;
         }
 
-        public EQCommunications(EQData eq,frmMain f1)
+        public EQCommunications(EQData eq,FrmMain f1)
 
         {
             this.eq = eq;

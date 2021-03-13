@@ -11,7 +11,7 @@ namespace Structures
 
     [StructLayout(LayoutKind.Sequential, Pack=1)]
 
-    public class SPAWNINFO
+    public partial class SPAWNINFO
     {
         public SPAWNINFO() {}
 
@@ -68,26 +68,6 @@ namespace Structures
                 m_isPlayer = true;
 
             Guild = BitConverter.ToInt32(b, 100 + offset);
-        }
-
-        public enum PacketType {
-
-            Spawn = 0,
-
-            Target = 1,
-
-            Zone = 4,
-
-            GroundItem = 5,
-
-            GetProcessInfo = 6,
-
-            SetProcess = 7,
-
-            World = 8,
-
-            Player = 253
-
         }
 
         public string Name = "";
