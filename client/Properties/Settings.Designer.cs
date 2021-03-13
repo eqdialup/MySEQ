@@ -1681,6 +1681,7 @@ namespace myseq.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
         public global::System.Drawing.Color SelectedAddMapText {
             get {
                 return ((global::System.Drawing.Color)(this["SelectedAddMapText"]));
