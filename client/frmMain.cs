@@ -1332,7 +1332,7 @@ namespace myseq
             this.mnuBackgroungColor.Name = "mnuBackgroungColor";
             this.mnuBackgroungColor.Size = new Size(197, 22);
             this.mnuBackgroungColor.Text = "Map Background Color";
-            this.mnuBackgroungColor.Click += new EventHandler(this.mnuBackgroungColor_Click);
+            this.mnuBackgroungColor.Click += new EventHandler(this.mnuBackgroundColor_Click);
             // 
             // mnuChangeFont
             // 
@@ -4697,18 +4697,15 @@ namespace myseq
             }
         }
 
-        private void mnuBackgroungColor_Click(object sender, EventArgs e)
+        private void mnuBackgroundColor_Click(object sender, EventArgs e)
 
         {
-            if(colorPicker.ShowDialog() != DialogResult.Cancel)
+            if (colorPicker.ShowDialog() != DialogResult.Cancel && colorPicker.Color != Settings.Default.BackColor)
 
             {
-                if (colorPicker.Color != Settings.Default.BackColor)
-                {
-                    Settings.Default.BackColor = colorPicker.Color;
+                Settings.Default.BackColor = colorPicker.Color;
 
-                    resetMapPens();
-                }
+                resetMapPens();
             }
         }
 
@@ -5476,7 +5473,6 @@ namespace myseq
                 return;
             }
 
-            mapBox.updateColorBoxes();
             addTextFormLocation = mapBox.Location;
             if (mapBox.ShowDialog() == DialogResult.OK)
             {
@@ -5510,7 +5506,13 @@ namespace myseq
                             $"{Environment.NewLine}{Environment.NewLine}{soe_maptext}", "Write label to map file?",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
                         {
+                            try{
                             File.AppendAllText(mapnameWithLabels, soe_maptext);
+                                }
+                            catch (ArgumentNullException accVexc)
+                            {
+                                MessageBox.Show($"Access Violation {accVexc}", "Error");
+                                    }
                         }
                         else
                             eq.DeleteMapText(work);

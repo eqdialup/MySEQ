@@ -417,7 +417,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SelectedAddMapText" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Red</Value>
     </Setting>
     <Setting Name="ShowLayer1" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
