@@ -1684,7 +1684,7 @@ namespace myseq
 
                     DrawMap(DrawOpts);
 
-                    if ((DrawOpts & DrawOptions.SpawnTrails) != DrawOptions.DrawNone)
+                    if ((DrawOpts & DrawOptions.SpawnTrails) != DrawOptions.None)
                         DrawSpawnTrails();
 
                     if (eq.Zoning)
@@ -1693,23 +1693,23 @@ namespace myseq
                     }
                     else
                     {
-                        if ((DrawOpts & DrawOptions.Player) != DrawOptions.DrawNone)
+                        if ((DrawOpts & DrawOptions.Player) != DrawOptions.None)
                             DrawPlayer(playerx, playery, SpawnSize, SpawnSizeOffset, DrawOpts);
                     }
 
-                    if ((DrawOpts & DrawOptions.Spawns) != DrawOptions.DrawNone)
+                    if ((DrawOpts & DrawOptions.Spawns) != DrawOptions.None)
                         DrawCorpses(pZ);
 
-                    if ((DrawOpts & DrawOptions.GroundItems) != DrawOptions.DrawNone)
+                    if ((DrawOpts & DrawOptions.GroundItems) != DrawOptions.None)
                         DrawGroundItems(pZ);
 
-                    if ((DrawOpts & DrawOptions.SpawnTimers) != DrawOptions.DrawNone)
+                    if ((DrawOpts & DrawOptions.SpawnTimers) != DrawOptions.None)
                         DrawSpawnTimers();
 
                     if (Settings.Default.SpawnDrawSize > 1)
                         bkgBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-                    if ((DrawOpts & DrawOptions.Spawns) != DrawOptions.DrawNone)
+                    if ((DrawOpts & DrawOptions.Spawns) != DrawOptions.None)
                         DrawSpawns(pX, pY, pZ, playerx, playery, DrawOpts);
 
                     // Collect mob trails, every 8th pass - approx once every 1 sec
@@ -1727,7 +1727,7 @@ namespace myseq
 
                     // [42!] Draw a line to an arbitrary spot.
 
-                    if ((selectedX != -1) && ((DrawOpts & DrawOptions.SpotLine)!=DrawOptions.DrawNone))
+                    if ((selectedX != -1) && ((DrawOpts & DrawOptions.SpotLine)!=DrawOptions.None))
 
                     {
                         Pen myPen = new Pen(new SolidBrush(Color.White))
@@ -1830,9 +1830,9 @@ namespace myseq
 
             string gName;
 
-            bool ShowRings = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.DrawNone;
+            bool ShowRings = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.None;
 
-            bool DrawDirection = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.DrawNone;
+            bool DrawDirection = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None;
 
             if ((eq.selectedID == 99999) && (eq.SpawnX == -1))
             {
@@ -2000,7 +2000,7 @@ namespace myseq
             sp.filtered = false;
             if (eq.conColors[sp.Level] != null)
             {
-                if ((DrawOpts & DrawOptions.DirectionLines) != DrawOptions.DrawNone)
+                if ((DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None)
                     DrawDirectionLines(sp, x, y);
 
                 // Draw Other Players 
@@ -2245,7 +2245,7 @@ namespace myseq
             {
                 // Draw Zone Map
 
-                if (eq.longname != "" && ((DrawOpts & DrawOptions.DrawMap) != DrawOptions.DrawNone))
+                if (eq.longname != "" && ((DrawOpts & DrawOptions.DrawMap) != DrawOptions.None))
 
                 {
                     if (!Settings.Default.DepthFilter || (Settings.Default.DepthFilter && !Settings.Default.FilterMapLines))
@@ -2333,7 +2333,7 @@ namespace myseq
             try {
                 // Draw gridline...
 
-                if ((DrawOpts & DrawOptions.GridLines) != DrawOptions.DrawNone)
+                if ((DrawOpts & DrawOptions.GridLines) != DrawOptions.None)
 
                 {
                     int gx, gy, label;
@@ -2391,7 +2391,7 @@ namespace myseq
                     }
                 }
 
-                if ((DrawOpts & DrawOptions.ZoneText) != DrawOptions.DrawNone)
+                if ((DrawOpts & DrawOptions.ZoneText) != DrawOptions.None)
 
                 {
                     // Draw Zone Text
@@ -2532,7 +2532,7 @@ namespace myseq
                 {
                     // Draw Player Heading Line
 
-                    if ((DrawOpts & DrawOptions.DirectionLines) != DrawOptions.DrawNone)
+                    if ((DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None)
 
                     {
                         if (xHead >= 0 && xHead < 512)
@@ -2882,7 +2882,7 @@ namespace myseq
 
             // check that map text doesn't change extents
 
-            if ((DrawOpts & DrawOptions.ZoneText) != DrawOptions.DrawNone)
+            if ((DrawOpts & DrawOptions.ZoneText) != DrawOptions.None)
 
             {
                 float factor = 1;
@@ -2894,7 +2894,7 @@ namespace myseq
                 if (m_ratio > 0)
                     factor = 1 / m_ratio;
 
-                if ((DrawOpts & DrawOptions.GridLines) != DrawOptions.DrawNone)
+                if ((DrawOpts & DrawOptions.GridLines) != DrawOptions.None)
 
                 {
                     // drawing gridlines, so account for grid labels

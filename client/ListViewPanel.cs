@@ -696,7 +696,7 @@ namespace myseq
         private void mnuAddHuntFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Global Alert Filters", "Add name to Hunt list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Hunt list:", mobname))
                 AddFilter(filters.GlobalHunt, "global");
         }
 
@@ -712,49 +712,49 @@ namespace myseq
         private void mnuAddCautionFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Global Alert Filters", "Add name to Caution list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Caution list:", mobname))
                 AddFilter(filters.GlobalCaution, "global");
         }
 
         private void mnuAddDangerFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Global Alert Filters", "Add name to Danger list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Danger list:", mobname))
                 AddFilter(filters.GlobalDanger, "global");
         }
 
         private void mnuAddAlertFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Global Alert Filters", "Add name to Rare list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Rare list:", mobname))
                 AddFilter(filters.GlobalAlert, "global");
         }
 
         private void mnuAddZoneHuntFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", mobname))
+            if (f1.DialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", mobname))
                 AddFilter(filters.Hunt, f1.curZone);
         }
 
         private void mnuAddZoneCautionFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", mobname))
+            if (f1.DialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", mobname))
                 AddFilter(filters.Caution, f1.curZone);
         }
 
         private void mnuAddZoneDangerFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", mobname))
+            if (f1.DialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", mobname))
                 AddFilter(filters.Danger, f1.curZone);
         }
 
         private void mnuAddZoneAlertFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", mobname))
+            if (f1.DialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", mobname))
                 AddFilter(filters.Alert, f1.curZone);
         }
 

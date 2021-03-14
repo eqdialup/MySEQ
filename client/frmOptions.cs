@@ -2331,7 +2331,7 @@ namespace myseq
 		public DrawOptions GetDrawOptions()
 
 		{
-			DrawOptions DrawOpts = DrawOptions.DrawNone;
+			DrawOptions DrawOpts = DrawOptions.None;
 
 			if (chkMap.Checked) DrawOpts|=DrawOptions.DrawMap;
 
@@ -2363,29 +2363,29 @@ namespace myseq
 		public void SetFgDrawOptions(DrawOptions DrawOpts)
 
 		{
-			chkMap.Checked = (DrawOpts & DrawOptions.DrawMap) != DrawOptions.DrawNone;
+			chkMap.Checked = (DrawOpts & DrawOptions.DrawMap) != DrawOptions.None;
 
-			chkAddjust.Checked = (DrawOpts & DrawOptions.Readjust) != DrawOptions.DrawNone;
+			chkAddjust.Checked = (DrawOpts & DrawOptions.Readjust) != DrawOptions.None;
 
-			chkPlayer.Checked = (DrawOpts & DrawOptions.Player) != DrawOptions.DrawNone;
+			chkPlayer.Checked = (DrawOpts & DrawOptions.Player) != DrawOptions.None;
 
-			chkLineToPoint.Checked = (DrawOpts & DrawOptions.SpotLine) != DrawOptions.DrawNone;
+			chkLineToPoint.Checked = (DrawOpts & DrawOptions.SpotLine) != DrawOptions.None;
 
-			chkSpawns.Checked = (DrawOpts & DrawOptions.Spawns) != DrawOptions.DrawNone;
+			chkSpawns.Checked = (DrawOpts & DrawOptions.Spawns) != DrawOptions.None;
 
-			chkTrails.Checked = (DrawOpts & DrawOptions.SpawnTrails) != DrawOptions.DrawNone;
+			chkTrails.Checked = (DrawOpts & DrawOptions.SpawnTrails) != DrawOptions.None;
 
-			chkGround.Checked = (DrawOpts & DrawOptions.GroundItems) != DrawOptions.DrawNone;
+			chkGround.Checked = (DrawOpts & DrawOptions.GroundItems) != DrawOptions.None;
 
-			chkTimers.Checked = (DrawOpts & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
+			chkTimers.Checked = (DrawOpts & DrawOptions.SpawnTimers) != DrawOptions.None;
 
-			chkDirection.Checked = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.DrawNone;
+			chkDirection.Checked = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None;
 
-			chkHighlight.Checked = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.DrawNone;
+			chkHighlight.Checked = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.None;
 
-			chkGrid.Checked = (DrawOpts & DrawOptions.GridLines) != DrawOptions.DrawNone;
+			chkGrid.Checked = (DrawOpts & DrawOptions.GridLines) != DrawOptions.None;
 
-			chkText.Checked = (DrawOpts & DrawOptions.ZoneText) != DrawOptions.DrawNone;
+			chkText.Checked = (DrawOpts & DrawOptions.ZoneText) != DrawOptions.None;
 		}
 
 		private void butPlayerBorder_Click(object sender, EventArgs e)

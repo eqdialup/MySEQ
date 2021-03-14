@@ -80,7 +80,7 @@ namespace myseq
 
                 pSocketClient = null;
             }
-            catch (Exception pException) {LogLib.WriteLine($"Error with StopListening(): {pException.Message}");}
+            catch (Exception pException) {LogLib.WriteLine($"Error: StopListening: {pException.Message}");}
         }
 
         public bool ConnectToServer(string ServerAddress, int ServerPort, bool errMsg = true)
@@ -139,7 +139,7 @@ namespace myseq
             // Process the packet
 
             try {ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);}
-            catch (Exception pException) {LogLib.WriteLine("Error with ProcessPacket: " + pException.Message);}
+            catch (Exception pException) {LogLib.WriteLine("Error: ProcessPacket: " + pException.Message);}
         }
 
         //********************************************************************
@@ -154,7 +154,7 @@ namespace myseq
                 else
                     f1.StopListening();
             }
-            catch (Exception pException) {LogLib.WriteLine($"Error with CloseHandler(): {pException.Message}");}
+            catch (Exception pException) {LogLib.WriteLine($"Error: CloseHandler: {pException.Message}");}
         }
 
         //********************************************************************
@@ -210,7 +210,7 @@ namespace myseq
                     }
                 }
             }
-            catch (Exception ex) {LogLib.WriteLine("Error in timPackets_Tick: ", ex);}
+            catch (Exception ex) {LogLib.WriteLine("Error: timPackets_Tick: ", ex);}
         }
 
         public void CharRefresh()
@@ -276,7 +276,7 @@ namespace myseq
                             {
                                 PacketCopy(packet, SIZE_OF_PACKET);
                             }
-                            catch (Exception ex) {LogLib.WriteLine("Error in ProcessPacket() Copy Incomplete packet buffer: " ,ex);}
+                            catch (Exception ex) {LogLib.WriteLine("Error: ProcessPacket: Copy Incomplete packet buffer: " ,ex);}
 
                             incompleteCount = 0;
 
@@ -300,7 +300,7 @@ namespace myseq
                     f1.ProcessGroundItemList();
                 }
             }
-            catch (Exception ex) {LogLib.WriteLine("Error in ProcessPacket(): ", ex);}
+            catch (Exception ex) {LogLib.WriteLine("Error: ProcessPacket: ", ex);}
 
             if (numProcessed < numPackets)
             {
@@ -315,7 +315,7 @@ namespace myseq
                 // Finished proceessing the request
                 FinalizeProcess();
 
-                f1.checkMobs();
+                f1.CheckMobs();
                 f1.mapCon.Invalidate();
             }
         }
@@ -348,7 +348,7 @@ namespace myseq
             }
             catch (Exception ex)
             {
-                LogLib.WriteLine("Error in ProcessPacket(): Copy to Incomplete Buffer: ", ex);
+                LogLib.WriteLine("Error: ProcessPacket(): Copy to Incomplete Buffer: ", ex);
                 LogLib.WriteLine($"Packet Size: {packet.Length} Offset: {offset}");
                 LogLib.WriteLine($"Buffer Size: {incompletebuffer.Length} Incomplete Size: {incompleteCount}");
             }
