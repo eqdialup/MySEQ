@@ -1,69 +1,72 @@
+using System;
 namespace Structures
 {
+    [Flags]
     public enum DrawOptions
     {
-        DrawMap = 0x00000001,       // Do we want to draw the map?
+        /// <summary>
+        /// Maximum savings - all enabled
+        /// </summary>
+        None = 0x00000000,
 
-        Readjust = 0x00000002,       // Readjust?
+        DrawMap = 0x00000001,
 
-        Player = 0x00000004,       // Draw the player?
+        Readjust = 0x00000002,
 
-        SpotLine = 0x00000008,       // Draw the shift-click line?
+        Player = 0x00000004,
 
-        Spawns = 0x00000010,       // Draw all spawns?
+        SpotLine = 0x00000008,
 
-        SpawnTrails = 0x00000020,       // Draw the mob trails?
+        Spawns = 0x00000010,
 
-        GroundItems = 0x00000040,       // Draw the ground items?
+        SpawnTrails = 0x00000020,
 
-        SpawnTimers = 0x00000080,       // Draw the spawn timers?
+        GroundItems = 0x00000040,
 
-        DirectionLines = 0x00000100,       // Draw Direction lines (direction lines and such)
+        SpawnTimers = 0x00000080,
 
-        SpawnRings = 0x00000200,       // Draw Shopkeeper(etc) rings around mobs
+        DirectionLines = 0x00000100,
 
-        GridLines = 0x00000400,       // Draw grid lines
+        SpawnRings = 0x00000200,
 
-        ZoneText = 0x00000800,       // Draw zone text
-
-        //
-
-        DrawAll = 0x0fffffff,
-
-        DrawNormal = DrawMap           // Standard, nice, savings
-
-                              + Readjust
-
-                              + Player
-
-                              + SpotLine
-
-                              + Spawns
-
-                              + GroundItems
-
-                              + SpawnTimers
-
-                              + DirectionLines
-
-                              + GridLines
-
-                              + ZoneText,
-
-        DrawLess = DrawNormal        // Takes away more uncritically things
-
-                              - DirectionLines
-
-                              - GroundItems
-
-                              - SpawnTimers
-
-                              - ZoneText,
+        GridLines = 0x00000400,
 
         DrawEvenLess = DrawLess          // Takes away substantially
 
-                              - Readjust,
+                                      - Readjust,
 
-        DrawNone = 0x00000000,       // Maximum savings - all enabled
+        DrawLess = DrawNormal        // Takes away more uncritically things
+
+                                      - DirectionLines
+
+                                      - GroundItems
+
+                                      - SpawnTimers
+
+                                      - ZoneText,
+
+        ZoneText = 0x00000800,
+
+        DrawNormal = DrawMap           // Standard, nice, savings
+
+                                      + Readjust
+
+                                      + Player
+
+                                      + SpotLine
+
+                                      + Spawns
+
+                                      + GroundItems
+
+                                      + SpawnTimers
+
+                                      + DirectionLines
+
+                                      + GridLines
+
+                                      + ZoneText,
+
+        DrawAll = 0x0fffffff,
     };
 }

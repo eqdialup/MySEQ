@@ -28,7 +28,7 @@ namespace Structures
             return Encoding.ASCII.GetString(b, start, i);
         }
 
-        public void frombytes(byte []b, int offset)
+        public void Frombytes(byte []b, int offset)
 
         {
             Name = BytesToString(b, 0 + offset, 30);

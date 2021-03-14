@@ -118,7 +118,7 @@ namespace myseq
             catch (Exception ex) {LogLib.WriteLine("Error with ClearMap:", ex);}
         }
 
-        public void loadDummyMap(string mapname)
+        public void LoadDummyMap(string mapname)
 
         {
             OnExitMap();
@@ -137,7 +137,7 @@ namespace myseq
             OnEnterMap();
         }
 
-        public bool loadMap(string filename)
+        public bool LoadMap(string filename)
         {
             eq.mobsTimers.ResetTimers();
 
@@ -158,7 +158,6 @@ namespace myseq
                 eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
                 OnEnterMap();
             }
-
 
             return rc;
         }

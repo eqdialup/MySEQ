@@ -2137,7 +2137,7 @@ namespace myseq
                             mob.Guild = si.Guild;
 
                             if (si.Guild > 0)
-                                li.SubItems[17].Text = guildNumToString(si.Guild);
+                                li.SubItems[17].Text = GuildNumToString(si.Guild);
                             else
                                 li.SubItems[17].Text = "";
                         }
@@ -2364,7 +2364,7 @@ namespace myseq
                             offhandName = ItemNumToString(si.Offhand);
 
                         // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
-                        if (!(si.isLDONObject || si.isEventController || si.isFamiliar || si.isMount || si.isMerc && si.OwnerID != 0))
+                        if (!(si.isLDONObject || si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
                         {
                             /* ************************************* *
                             * ************* ALERTS **************** *
@@ -2592,7 +2592,7 @@ namespace myseq
 
                         item1.SubItems.Add(sd.ToString("#.000"));
 
-                        item1.SubItems.Add(guildNumToString(si.Guild));
+                        item1.SubItems.Add(GuildNumToString(si.Guild));
 
                         item1.SubItems.Add(RegexHelper.FixMobName(si.Name));
 
@@ -2934,7 +2934,7 @@ namespace myseq
             }
         }
 
-        public string guildNumToString(int num)
+        public string GuildNumToString(int num)
         {
             if (guildList.ContainsKey(num))
             {

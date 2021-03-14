@@ -15,7 +15,7 @@ namespace myseq
     /// <summary>
     /// Summary description for frmOptions.
     /// </summary>
-    public class frmOptions : Form
+    public class FrmOptions : Form
     {
         private ColorDialog colorOptionPicker;
 
@@ -280,16 +280,17 @@ namespace myseq
         public CheckBox chkShowCharName;
         private Button cmdCancel;
 
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private Container components = null;
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private Container components = null;
 
-		public frmOptions()  {
-			//
-			// Required for Windows Form Designer support
-			//
-			InitializeComponent();
+        public FrmOptions()
+        {
+            //
+            // Required for Windows Form Designer support
+            //
+            InitializeComponent();
 
             foreach (string styleName in Enum.GetNames(typeof(HatchStyle)))
             {
@@ -299,7 +300,7 @@ namespace myseq
             cmbHatch.SelectedText = Settings.Default.HatchIndex;
 
             cmbAlertSound.SelectedText = Settings.Default.AlertSound;
-            
+
             txtIPAddress1.Text = Settings.Default.IPAddress1;
 
             txtIPAddress2.Text = Settings.Default.IPAddress2;
@@ -330,7 +331,7 @@ namespace myseq
 
             optHuntNone.Checked = Settings.Default.NoneOnHunt;
 
-            optHuntBeep.Checked =  Settings.Default.BeepOnHunt;
+            optHuntBeep.Checked = Settings.Default.BeepOnHunt;
 
             optHuntSpeak.Checked = Settings.Default.TalkOnHunt;
 
@@ -435,29 +436,31 @@ namespace myseq
             chkSelectSpawnList.Checked = Settings.Default.AutoSelectSpawnList;
 
             SetFgDrawOptions(Settings.Default.DrawOptions);
-		}
+        }
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )  {
-			if( disposing )  {
-				components?.Dispose();
-			}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+            }
 
-			base.Dispose( disposing );
-		}
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
 
-		{
-            ComponentResourceManager resources = new ComponentResourceManager(typeof(frmOptions));
+        {
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(FrmOptions));
             cmdCommand = new Button();
             colorOptionPicker = new ColorDialog();
             tabColors = new TabPage();
@@ -629,7 +632,7 @@ namespace myseq
             cmdCommand.Size = new Size(85, 23);
             cmdCommand.TabIndex = 0;
             cmdCommand.Text = "&Save";
-            cmdCommand.Click += new EventHandler(cmdCommand_Click);
+            cmdCommand.Click += new EventHandler(CmdCommand_Click);
             // 
             // tabColors
             // 
@@ -659,7 +662,7 @@ namespace myseq
             picGridLabelColor.Size = new Size(104, 24);
             picGridLabelColor.TabIndex = 13;
             picGridLabelColor.TabStop = false;
-            picGridLabelColor.Click += new EventHandler(cmdGridLabelColor_Click);
+            picGridLabelColor.Click += new EventHandler(CmdGridLabelColor_Click);
             // 
             // cmdGridLabelColor
             // 
@@ -668,7 +671,7 @@ namespace myseq
             cmdGridLabelColor.Size = new Size(136, 24);
             cmdGridLabelColor.TabIndex = 12;
             cmdGridLabelColor.Text = "Grid Label Color";
-            cmdGridLabelColor.Click += new EventHandler(cmdGridLabelColor_Click);
+            cmdGridLabelColor.Click += new EventHandler(CmdGridLabelColor_Click);
             // 
             // picPlayerBorder
             // 
@@ -678,7 +681,7 @@ namespace myseq
             picPlayerBorder.Size = new Size(104, 24);
             picPlayerBorder.TabIndex = 11;
             picPlayerBorder.TabStop = false;
-            picPlayerBorder.Click += new EventHandler(butPlayerBorder_Click);
+            picPlayerBorder.Click += new EventHandler(ButPlayerBorder_Click);
             // 
             // butPlayerBorder
             // 
@@ -687,7 +690,7 @@ namespace myseq
             butPlayerBorder.Size = new Size(136, 24);
             butPlayerBorder.TabIndex = 10;
             butPlayerBorder.Text = "PC Highlight Color";
-            butPlayerBorder.Click += new EventHandler(butPlayerBorder_Click);
+            butPlayerBorder.Click += new EventHandler(ButPlayerBorder_Click);
             // 
             // picListBackgroundColor
             // 
@@ -697,7 +700,7 @@ namespace myseq
             picListBackgroundColor.Size = new Size(104, 24);
             picListBackgroundColor.TabIndex = 7;
             picListBackgroundColor.TabStop = false;
-            picListBackgroundColor.Click += new EventHandler(cmdListBackgroundColor_Click);
+            picListBackgroundColor.Click += new EventHandler(CmdListBackgroundColor_Click);
             // 
             // cmdListBackgroundColor
             // 
@@ -706,7 +709,7 @@ namespace myseq
             cmdListBackgroundColor.Size = new Size(136, 24);
             cmdListBackgroundColor.TabIndex = 6;
             cmdListBackgroundColor.Text = "List Background";
-            cmdListBackgroundColor.Click += new EventHandler(cmdListBackgroundColor_Click);
+            cmdListBackgroundColor.Click += new EventHandler(CmdListBackgroundColor_Click);
             // 
             // picRangeCircleColor
             // 
@@ -716,7 +719,7 @@ namespace myseq
             picRangeCircleColor.Size = new Size(104, 24);
             picRangeCircleColor.TabIndex = 5;
             picRangeCircleColor.TabStop = false;
-            picRangeCircleColor.Click += new EventHandler(cmdRangeCircleColor_Click);
+            picRangeCircleColor.Click += new EventHandler(CmdRangeCircleColor_Click);
             // 
             // cmdRangeCircleColor
             // 
@@ -725,7 +728,7 @@ namespace myseq
             cmdRangeCircleColor.Size = new Size(136, 24);
             cmdRangeCircleColor.TabIndex = 2;
             cmdRangeCircleColor.Text = "Range Circle";
-            cmdRangeCircleColor.Click += new EventHandler(cmdRangeCircleColor_Click);
+            cmdRangeCircleColor.Click += new EventHandler(CmdRangeCircleColor_Click);
             // 
             // picGridColor
             // 
@@ -735,7 +738,7 @@ namespace myseq
             picGridColor.Size = new Size(104, 24);
             picGridColor.TabIndex = 3;
             picGridColor.TabStop = false;
-            picGridColor.Click += new EventHandler(cmdGridColor_Click);
+            picGridColor.Click += new EventHandler(CmdGridColor_Click);
             // 
             // cmdGridColor
             // 
@@ -744,7 +747,7 @@ namespace myseq
             cmdGridColor.Size = new Size(136, 24);
             cmdGridColor.TabIndex = 1;
             cmdGridColor.Text = "Grid";
-            cmdGridColor.Click += new EventHandler(cmdGridColor_Click);
+            cmdGridColor.Click += new EventHandler(CmdGridColor_Click);
             // 
             // picMapBackgroundColor
             // 
@@ -754,7 +757,7 @@ namespace myseq
             picMapBackgroundColor.Size = new Size(104, 24);
             picMapBackgroundColor.TabIndex = 1;
             picMapBackgroundColor.TabStop = false;
-            picMapBackgroundColor.Click += new EventHandler(cmdMapBackgroundColor_Click);
+            picMapBackgroundColor.Click += new EventHandler(CmdMapBackgroundColor_Click);
             // 
             // cmdMapBackgroundColor
             // 
@@ -763,7 +766,7 @@ namespace myseq
             cmdMapBackgroundColor.Size = new Size(136, 24);
             cmdMapBackgroundColor.TabIndex = 0;
             cmdMapBackgroundColor.Text = "Map Background";
-            cmdMapBackgroundColor.Click += new EventHandler(cmdMapBackgroundColor_Click);
+            cmdMapBackgroundColor.Click += new EventHandler(CmdMapBackgroundColor_Click);
             // 
             // tabFolders
             // 
@@ -795,7 +798,7 @@ namespace myseq
             cmdSpawnTimers.Size = new Size(24, 23);
             cmdSpawnTimers.TabIndex = 40;
             cmdSpawnTimers.Text = "...";
-            cmdSpawnTimers.Click += new EventHandler(cmdSpawnTimers_Click);
+            cmdSpawnTimers.Click += new EventHandler(CmdSpawnTimers_Click);
             // 
             // txtTimerDir
             // 
@@ -852,7 +855,7 @@ namespace myseq
             cmdLogDir.Size = new Size(24, 23);
             cmdLogDir.TabIndex = 37;
             cmdLogDir.Text = "...";
-            cmdLogDir.Click += new EventHandler(cmdLogDir_Click);
+            cmdLogDir.Click += new EventHandler(CmdLogDir_Click);
             // 
             // lblLogDir
             // 
@@ -869,7 +872,7 @@ namespace myseq
             cmdFilterDirBrowse.Size = new Size(24, 23);
             cmdFilterDirBrowse.TabIndex = 34;
             cmdFilterDirBrowse.Text = "...";
-            cmdFilterDirBrowse.Click += new EventHandler(cmdFilterDirBrowse_Click);
+            cmdFilterDirBrowse.Click += new EventHandler(CmdFilterDirBrowse_Click);
             // 
             // lblFilterDir
             // 
@@ -887,7 +890,7 @@ namespace myseq
             cmdCfgDirBrowse.Size = new Size(24, 23);
             cmdCfgDirBrowse.TabIndex = 31;
             cmdCfgDirBrowse.Text = "...";
-            cmdCfgDirBrowse.Click += new EventHandler(cmdCfgDirBrowse_Click);
+            cmdCfgDirBrowse.Click += new EventHandler(CmdCfgDirBrowse_Click);
             // 
             // lblCfgDir
             // 
@@ -904,7 +907,7 @@ namespace myseq
             cmdMapDirBrowse.Size = new Size(24, 23);
             cmdMapDirBrowse.TabIndex = 28;
             cmdMapDirBrowse.Text = "...";
-            cmdMapDirBrowse.Click += new EventHandler(cmdMapDirBrowse_Click);
+            cmdMapDirBrowse.Click += new EventHandler(CmdMapDirBrowse_Click);
             // 
             // lblMapDir
             // 
@@ -1355,7 +1358,7 @@ namespace myseq
             0,
             0,
             0});
-            pvpLevels.ValueChanged += new EventHandler(pvpLevels_ValueChanged);
+            pvpLevels.ValueChanged += new EventHandler(PvpLevels_ValueChanged);
             // 
             // groupBox1
             // 
@@ -1387,7 +1390,7 @@ namespace myseq
             cmbAlertSound.Name = "cmbAlertSound";
             cmbAlertSound.Size = new Size(133, 21);
             cmbAlertSound.TabIndex = 54;
-            cmbAlertSound.SelectionChangeCommitted += new EventHandler(cmbAlertSound_SelectionChangeCommitted);
+            cmbAlertSound.SelectionChangeCommitted += new EventHandler(CmbAlertSound_SelectionChangeCommitted);
             // 
             // cmbHatch
             // 
@@ -1397,7 +1400,7 @@ namespace myseq
             cmbHatch.Size = new Size(133, 21);
             cmbHatch.TabIndex = 53;
             cmbHatch.Tag = "";
-            cmbHatch.SelectionChangeCommitted += new EventHandler(cmbHatch_SelectionChangeCommitted);
+            cmbHatch.SelectionChangeCommitted += new EventHandler(CmbHatch_SelectionChangeCommitted);
             // 
             // label4
             // 
@@ -1624,7 +1627,7 @@ namespace myseq
             0,
             0,
             0});
-            spnSpawnSize.ValueChanged += new EventHandler(spnSpawnSize_ValueChanged);
+            spnSpawnSize.ValueChanged += new EventHandler(SpnSpawnSize_ValueChanged);
             // 
             // chkShowTargetInfo
             // 
@@ -2003,18 +2006,16 @@ namespace myseq
             gbServer.PerformLayout();
             tabOptions.ResumeLayout(false);
             ResumeLayout(false);
-		}
+        }
 
-		#endregion
+        #endregion
 
-		private void cmdCommand_Click(object sender, EventArgs e)
+        private void CmdCommand_Click(object sender, EventArgs e)
         {
-
             if (chkSaveOnExit.Checked)  // This checkbox actually DO something now. 
-                {
+            {
                 SaveSettings();
-                }
-
+            }
 
             bool done = true;
 
@@ -2071,29 +2072,29 @@ namespace myseq
         {
             // Set the Settings
 
-                Settings.Default.IPAddress1 = txtIPAddress1.Text;
+            Settings.Default.IPAddress1 = txtIPAddress1.Text;
 
-                Settings.Default.IPAddress2 = txtIPAddress2.Text;
+            Settings.Default.IPAddress2 = txtIPAddress2.Text;
 
-                Settings.Default.IPAddress3 = txtIPAddress3.Text;
+            Settings.Default.IPAddress3 = txtIPAddress3.Text;
 
-                Settings.Default.IPAddress4 = txtIPAddress4.Text;
+            Settings.Default.IPAddress4 = txtIPAddress4.Text;
 
-                Settings.Default.IPAddress5 = txtIPAddress5.Text;
+            Settings.Default.IPAddress5 = txtIPAddress5.Text;
 
-                Settings.Default.Port = int.Parse(txtPortNo.Text);
+            Settings.Default.Port = int.Parse(txtPortNo.Text);
 
-                Settings.Default.LevelOverride = (int)spnOverrideLevel.Value;
+            Settings.Default.LevelOverride = (int)spnOverrideLevel.Value;
 
-                Settings.Default.SaveOnExit = chkSaveOnExit.Checked;
+            Settings.Default.SaveOnExit = chkSaveOnExit.Checked;
 
-                Settings.Default.UpdateDelay = (int)spnUpdateDelay.Value;
+            Settings.Default.UpdateDelay = (int)spnUpdateDelay.Value;
 
-                Settings.Default.CorpseAlerts = chkCorpsesAlerts.Checked;
+            Settings.Default.CorpseAlerts = chkCorpsesAlerts.Checked;
 
-                Settings.Default.BackColor = picMapBackgroundColor.BackColor;
+            Settings.Default.BackColor = picMapBackgroundColor.BackColor;
 
-                Settings.Default.PCBorderColor = picPlayerBorder.BackColor;
+            Settings.Default.PCBorderColor = picPlayerBorder.BackColor;
 
             Settings.Default.PrefixStars = chkPrefixAlerts.Checked;
 
@@ -2209,113 +2210,113 @@ namespace myseq
             Settings.Default.Save();
         }
 
-        private void cmdMapBackgroundColor_Click(object sender, EventArgs e)
+        private void CmdMapBackgroundColor_Click(object sender, EventArgs e)
 
-		{
-			colorOptionPicker.Color = picMapBackgroundColor.BackColor;
+        {
+            colorOptionPicker.Color = picMapBackgroundColor.BackColor;
 
-			if(colorOptionPicker.ShowDialog() != DialogResult.Cancel)
+            if (colorOptionPicker.ShowDialog() != DialogResult.Cancel)
 
-			{
-				picMapBackgroundColor.BackColor = colorOptionPicker.Color;
-			}
-		}
+            {
+                picMapBackgroundColor.BackColor = colorOptionPicker.Color;
+            }
+        }
 
-		private void cmdListBackgroundColor_Click(object sender, EventArgs e)
+        private void CmdListBackgroundColor_Click(object sender, EventArgs e)
 
-		{
-			colorOptionPicker.Color = picListBackgroundColor.BackColor;
+        {
+            colorOptionPicker.Color = picListBackgroundColor.BackColor;
 
-			if(colorOptionPicker.ShowDialog() != DialogResult.Cancel)
+            if (colorOptionPicker.ShowDialog() != DialogResult.Cancel)
 
-			{
-				Settings.Default.ListBackColor = colorOptionPicker.Color;
+            {
+                Settings.Default.ListBackColor = colorOptionPicker.Color;
 
-				picListBackgroundColor.BackColor = colorOptionPicker.Color;
-			}
-		}
+                picListBackgroundColor.BackColor = colorOptionPicker.Color;
+            }
+        }
 
-		private void cmdGridColor_Click(object sender, EventArgs e)
+        private void CmdGridColor_Click(object sender, EventArgs e)
 
-		{
-			colorOptionPicker.Color = picGridColor.BackColor;
+        {
+            colorOptionPicker.Color = picGridColor.BackColor;
 
-			if(colorOptionPicker.ShowDialog() != DialogResult.Cancel)
+            if (colorOptionPicker.ShowDialog() != DialogResult.Cancel)
 
-			{
-				Settings.Default.GridColor = colorOptionPicker.Color;
+            {
+                Settings.Default.GridColor = colorOptionPicker.Color;
 
-				picGridColor.BackColor = colorOptionPicker.Color;
-			}
-		}
+                picGridColor.BackColor = colorOptionPicker.Color;
+            }
+        }
 
-		private void cmdRangeCircleColor_Click(object sender, EventArgs e)
+        private void CmdRangeCircleColor_Click(object sender, EventArgs e)
 
-		{
-			colorOptionPicker.Color = picRangeCircleColor.BackColor;
+        {
+            colorOptionPicker.Color = picRangeCircleColor.BackColor;
 
-			if(colorOptionPicker.ShowDialog() != DialogResult.Cancel)
+            if (colorOptionPicker.ShowDialog() != DialogResult.Cancel)
 
-			{
-				Settings.Default.RangeCircleColor  = colorOptionPicker.Color;
+            {
+                Settings.Default.RangeCircleColor = colorOptionPicker.Color;
 
-				picRangeCircleColor.BackColor = colorOptionPicker.Color;
-			}
-		}
+                picRangeCircleColor.BackColor = colorOptionPicker.Color;
+            }
+        }
 
-		private void cmdMapDirBrowse_Click(object sender, EventArgs e)
+        private void CmdMapDirBrowse_Click(object sender, EventArgs e)
 
-		{
-			fldrBrowser.Description = "Map Directory";
+        {
+            fldrBrowser.Description = "Map Directory";
 
             fldrBrowser.SelectedPath = Settings.Default.MapDir;
 
-			fldrBrowser.ShowDialog();
+            fldrBrowser.ShowDialog();
 
-			if (fldrBrowser.SelectedPath.Trim() != "")
-				txtMapDir.Text = fldrBrowser.SelectedPath;
-		}
+            if (fldrBrowser.SelectedPath.Trim() != "")
+                txtMapDir.Text = fldrBrowser.SelectedPath;
+        }
 
-		private void cmdCfgDirBrowse_Click(object sender, EventArgs e)
+        private void CmdCfgDirBrowse_Click(object sender, EventArgs e)
 
-		{
-			fldrBrowser.Description = "Config Directory";
+        {
+            fldrBrowser.Description = "Config Directory";
 
             fldrBrowser.SelectedPath = Settings.Default.CfgDir;
 
-			fldrBrowser.ShowDialog();
+            fldrBrowser.ShowDialog();
 
             if (fldrBrowser.SelectedPath.Trim() != "")
                 txtCfgDir.Text = fldrBrowser.SelectedPath;
-		}
+        }
 
-		private void cmdFilterDirBrowse_Click(object sender, EventArgs e)
+        private void CmdFilterDirBrowse_Click(object sender, EventArgs e)
 
-		{
+        {
             fldrBrowser.Description = "Filter Directory";
 
             fldrBrowser.SelectedPath = Settings.Default.FilterDir;
 
-			fldrBrowser.ShowDialog();
+            fldrBrowser.ShowDialog();
 
             if (fldrBrowser.SelectedPath.Trim() != "")
                 txtFilterDir.Text = fldrBrowser.SelectedPath;
-		}
+        }
 
-		private void cmdLogDir_Click(object sender, EventArgs e)
+        private void CmdLogDir_Click(object sender, EventArgs e)
 
-		{
+        {
             fldrBrowser.Description = "Log Directory";
 
             fldrBrowser.SelectedPath = Settings.Default.LogDir;
 
-			fldrBrowser.ShowDialog();
+            fldrBrowser.ShowDialog();
 
             if (fldrBrowser.SelectedPath.Trim() != "")
                 txtLogDir.Text = fldrBrowser.SelectedPath;
-		}
+        }
 
-        private void cmdSpawnTimers_Click(object sender, EventArgs e)
+        private void CmdSpawnTimers_Click(object sender, EventArgs e)
 
         {
             fldrBrowser.Description = "Timers Directory";
@@ -2328,79 +2329,79 @@ namespace myseq
                 txtTimerDir.Text = fldrBrowser.SelectedPath;
         }
 
-		public DrawOptions GetDrawOptions()
+        public DrawOptions GetDrawOptions()
 
-		{
-			DrawOptions DrawOpts = DrawOptions.DrawNone;
+        {
+            DrawOptions DrawOpts = DrawOptions.None;
 
-			if (chkMap.Checked) DrawOpts|=DrawOptions.DrawMap;
+            if (chkMap.Checked) DrawOpts |= DrawOptions.DrawMap;
 
-			if (chkAddjust.Checked) DrawOpts|=DrawOptions.Readjust;
+            if (chkAddjust.Checked) DrawOpts |= DrawOptions.Readjust;
 
-			if (chkPlayer.Checked) DrawOpts|=DrawOptions.Player;
+            if (chkPlayer.Checked) DrawOpts |= DrawOptions.Player;
 
-			if (chkLineToPoint.Checked) DrawOpts|=DrawOptions.SpotLine;
+            if (chkLineToPoint.Checked) DrawOpts |= DrawOptions.SpotLine;
 
-			if (chkSpawns.Checked) DrawOpts|=DrawOptions.Spawns;
+            if (chkSpawns.Checked) DrawOpts |= DrawOptions.Spawns;
 
-			if (chkTrails.Checked) DrawOpts|=DrawOptions.SpawnTrails;
+            if (chkTrails.Checked) DrawOpts |= DrawOptions.SpawnTrails;
 
-			if (chkGround.Checked) DrawOpts|=DrawOptions.GroundItems;
+            if (chkGround.Checked) DrawOpts |= DrawOptions.GroundItems;
 
-			if (chkTimers.Checked) DrawOpts|=DrawOptions.SpawnTimers;
+            if (chkTimers.Checked) DrawOpts |= DrawOptions.SpawnTimers;
 
-			if (chkDirection.Checked) DrawOpts|=DrawOptions.DirectionLines;
+            if (chkDirection.Checked) DrawOpts |= DrawOptions.DirectionLines;
 
-			if (chkHighlight.Checked) DrawOpts|=DrawOptions.SpawnRings;
+            if (chkHighlight.Checked) DrawOpts |= DrawOptions.SpawnRings;
 
-			if (chkGrid.Checked) DrawOpts|=DrawOptions.GridLines;
+            if (chkGrid.Checked) DrawOpts |= DrawOptions.GridLines;
 
-			if (chkText.Checked) DrawOpts|=DrawOptions.ZoneText;
+            if (chkText.Checked) DrawOpts |= DrawOptions.ZoneText;
 
-			return DrawOpts;
-		}
+            return DrawOpts;
+        }
 
-		public void SetFgDrawOptions(DrawOptions DrawOpts)
+        public void SetFgDrawOptions(DrawOptions DrawOpts)
 
-		{
-			chkMap.Checked = (DrawOpts & DrawOptions.DrawMap) != DrawOptions.DrawNone;
+        {
+            chkMap.Checked = (DrawOpts & DrawOptions.DrawMap) != DrawOptions.None;
 
-			chkAddjust.Checked = (DrawOpts & DrawOptions.Readjust) != DrawOptions.DrawNone;
+            chkAddjust.Checked = (DrawOpts & DrawOptions.Readjust) != DrawOptions.None;
 
-			chkPlayer.Checked = (DrawOpts & DrawOptions.Player) != DrawOptions.DrawNone;
+            chkPlayer.Checked = (DrawOpts & DrawOptions.Player) != DrawOptions.None;
 
-			chkLineToPoint.Checked = (DrawOpts & DrawOptions.SpotLine) != DrawOptions.DrawNone;
+            chkLineToPoint.Checked = (DrawOpts & DrawOptions.SpotLine) != DrawOptions.None;
 
-			chkSpawns.Checked = (DrawOpts & DrawOptions.Spawns) != DrawOptions.DrawNone;
+            chkSpawns.Checked = (DrawOpts & DrawOptions.Spawns) != DrawOptions.None;
 
-			chkTrails.Checked = (DrawOpts & DrawOptions.SpawnTrails) != DrawOptions.DrawNone;
+            chkTrails.Checked = (DrawOpts & DrawOptions.SpawnTrails) != DrawOptions.None;
 
-			chkGround.Checked = (DrawOpts & DrawOptions.GroundItems) != DrawOptions.DrawNone;
+            chkGround.Checked = (DrawOpts & DrawOptions.GroundItems) != DrawOptions.None;
 
-			chkTimers.Checked = (DrawOpts & DrawOptions.SpawnTimers) != DrawOptions.DrawNone;
+            chkTimers.Checked = (DrawOpts & DrawOptions.SpawnTimers) != DrawOptions.None;
 
-			chkDirection.Checked = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.DrawNone;
+            chkDirection.Checked = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None;
 
-			chkHighlight.Checked = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.DrawNone;
+            chkHighlight.Checked = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.None;
 
-			chkGrid.Checked = (DrawOpts & DrawOptions.GridLines) != DrawOptions.DrawNone;
+            chkGrid.Checked = (DrawOpts & DrawOptions.GridLines) != DrawOptions.None;
 
-			chkText.Checked = (DrawOpts & DrawOptions.ZoneText) != DrawOptions.DrawNone;
-		}
+            chkText.Checked = (DrawOpts & DrawOptions.ZoneText) != DrawOptions.None;
+        }
 
-		private void butPlayerBorder_Click(object sender, EventArgs e)
+        private void ButPlayerBorder_Click(object sender, EventArgs e)
 
-		{
-			colorOptionPicker.Color = picPlayerBorder.BackColor;
+        {
+            colorOptionPicker.Color = picPlayerBorder.BackColor;
 
             if (colorOptionPicker.ShowDialog() != DialogResult.Cancel)
 
-			{
-    			picPlayerBorder.BackColor = colorOptionPicker.Color;
-			}
-		}
+            {
+                picPlayerBorder.BackColor = colorOptionPicker.Color;
+            }
+        }
 
-        private void cmbAlertSound_SelectionChangeCommitted(object sender, EventArgs e)
+        private void CmbAlertSound_SelectionChangeCommitted(object sender, EventArgs e)
 
         {
             Settings.Default.AlertSound = cmbAlertSound.SelectedItem.ToString();
@@ -2440,13 +2441,9 @@ namespace myseq
             }
         }
 
-        private void cmbHatch_SelectionChangeCommitted(object sender, EventArgs e)
+        private void CmbHatch_SelectionChangeCommitted(object sender, EventArgs e) => Settings.Default.HatchIndex = cmbHatch.SelectedItem.ToString();
 
-        {
-            Settings.Default.HatchIndex = cmbHatch.SelectedItem.ToString();
-        }
-
-        private void cmdGridLabelColor_Click(object sender, EventArgs e)
+        private void CmdGridLabelColor_Click(object sender, EventArgs e)
 
         {
             colorOptionPicker.Color = picGridLabelColor.BackColor;
@@ -2460,17 +2457,9 @@ namespace myseq
             }
         }
 
-        private void spnSpawnSize_ValueChanged(object sender, EventArgs e)
+        private void SpnSpawnSize_ValueChanged(object sender, EventArgs e) => Settings.Default.SpawnDrawSize = (int)spnSpawnSize.Value;
 
-        {
-            Settings.Default.SpawnDrawSize = (int)spnSpawnSize.Value;
-        }
-
-        private void pvpLevels_ValueChanged(object sender, EventArgs e)
-
-        {
-            Settings.Default.PVPLevels = (int)pvpLevels.Value;
-        }
-	}
+        private void PvpLevels_ValueChanged(object sender, EventArgs e) => Settings.Default.PVPLevels = (int)pvpLevels.Value;
+    }
 }
 

@@ -94,7 +94,7 @@ namespace myseq
                 // Disconnect the client from the server
                 Disconnect();
             }
-            catch (Exception ex) { LogLib.WriteLine("Error in CSocketClient.Dispose(): ", ex); }
+            catch (Exception ex) { LogLib.WriteLine("Error CSocketClient.Dispose(): ", ex); }
         }
 
         // Private Methods
@@ -116,7 +116,7 @@ namespace myseq
                     {
                         // A message came in send it to the MessageHandler
                         try { GetMessageHandler(this, iBytesRecieved); }
-                        catch (Exception ex) { LogLib.WriteLine("Error with GetMessageHandler() in CSocketClient.ReceiveComplete(): ", ex); }
+                        catch (Exception ex) { LogLib.WriteLine("Error GetMessageHandler - CSocketClient.ReceiveComplete(): ", ex); }
 
                         // Wait for a new message
                         Receive();
@@ -132,7 +132,7 @@ namespace myseq
             {
                 // The connection must have dropped call the CloseHandler
                 try { GetCloseHandler(this); }
-                catch (Exception ex) { LogLib.WriteLine("Error in CSocketClient.ReceiveComplete(): ", ex); }
+                catch (Exception ex) { LogLib.WriteLine("Error CSocketClient.ReceiveComplete(): ", ex); }
 
                 // Dispose of the class
                 Dispose();
@@ -153,7 +153,7 @@ namespace myseq
                     LogLib.WriteLine("CSocketClient.SendComplete(): GetNetworkStream.EndWrite()", LogLevel.Debug);
                 }
             }
-            catch (Exception ex) { LogLib.WriteLine("Error in CSocketClient.SendComplete(): ", ex); }
+            catch (Exception ex) { LogLib.WriteLine("Error CSocketClient.SendComplete(): ", ex); }
         }
 
         // Public Methods
@@ -215,7 +215,7 @@ namespace myseq
             }
             else
             {
-                LogLib.WriteLine("Error in CSocketClient.Send(Byte[]): Socket Closed");
+                LogLib.WriteLine("Error CSocketClient.Send(Byte[]): Socket Closed");
             }
         }
         //********************************************************************
@@ -229,7 +229,7 @@ namespace myseq
             }
             else
             {
-                LogLib.WriteLine("Error in CSocketClient.Receive(): Socket Closed");
+                LogLib.WriteLine("Error CSocketClient.Receive(): Socket Closed");
             }
         }
     }

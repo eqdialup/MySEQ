@@ -16,7 +16,6 @@ namespace myseq
             {
                 string s = $"Uncaught exception in Main(): {e.Message}";
 
-                
                 LogLib.WriteLine(s);
 
                 MessageBox.Show(s);
