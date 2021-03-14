@@ -422,7 +422,7 @@ namespace myseq
 
             cmdLookup.Top = top;
 
-            mapCon.onResize();
+            mapCon.OnResize();
 
             mapCon.Invalidate();
         }

@@ -127,7 +127,7 @@ namespace myseq
 
             eq.ClearMapStructures();
 
-            mapCon.SetDistinctPens();
+//            mapCon.SetDistinctPens();
 
             eq.shortname = mapname;
 
@@ -147,7 +147,7 @@ namespace myseq
 
             eq.ClearMapStructures();
 
-            mapCon.SetDistinctPens();
+//            mapCon.SetDistinctPens();
 
             bool rc = eq.LoadMapInternal(filename);
 
@@ -175,7 +175,7 @@ namespace myseq
 
                 eq.ClearMapStructures();
 
-                mapCon.SetDistinctPens();
+//                mapCon.SetDistinctPens();
             }
 
             bool rc = eq.LoadLoYMapInternal(filename);

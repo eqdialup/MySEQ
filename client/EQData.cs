@@ -1,3 +1,4 @@
+using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
@@ -6,7 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using myseq.Properties;
+using System.Media;
 
 namespace myseq
 {
@@ -142,15 +143,9 @@ namespace myseq
         private bool filter4;
         private bool filter5;
 
-        public void EnablePlayAlerts()
-        {
-            playAlerts = true;
-        }
+        public void EnablePlayAlerts() => playAlerts = true;
 
-        public void DisablePlayAlerts()
-        {
-            playAlerts = false;
-        }
+        public void DisablePlayAlerts() => playAlerts = false;
 
         public void MarkLookups(string name, bool filterMob = false)
         {
@@ -343,68 +338,37 @@ namespace myseq
                 mobtrails.Add(work);
         }
 
-        public Hashtable GetMobsReadonly()
-        {
-            return mobs;
-        }
+        public Hashtable GetMobsReadonly() => mobs;
 
-        public ArrayList GetMobTrailsReadonly()
-        {
-            return mobtrails;
-        }
+        public ArrayList GetMobTrailsReadonly() => mobtrails;
 
-        public ArrayList GetLinesReadonly()
-        {
-            return lines;
-        }
+        public ArrayList GetLinesReadonly() => lines;
 
-        public ArrayList GetTextsReadonly()
-        {
-            return texts;
-        }
+        public ArrayList GetTextsReadonly() => texts;
 
-        public ArrayList GetItemsReadonly()
-        {
-            return itemcollection;
-        }
+        public ArrayList GetItemsReadonly() => itemcollection;
 
         public void PlayAlertSound()
         {
-            switch (Settings.Default.AlertSound)
+            if (Settings.Default.AlertSound == "Asterisk")
             {
-                case "Asterisk":
-
-                    System.Media.SystemSounds.Asterisk.Play();
-
-                    break;
-
-                case "Beep":
-
-                    System.Media.SystemSounds.Beep.Play();
-
-                    break;
-
-                case "Exclamation":
-
-                    System.Media.SystemSounds.Exclamation.Play();
-
-                    break;
-
-                case "Hand":
-
-                    System.Media.SystemSounds.Hand.Play();
-
-                    break;
-
-                case "Question":
-
-                    System.Media.SystemSounds.Question.Play();
-
-                    break;
-
-                default:
-
-                    break;
+                SystemSounds.Asterisk.Play();
+            }
+            else if (Settings.Default.AlertSound == "Beep")
+            {
+                SystemSounds.Beep.Play();
+            }
+            else if (Settings.Default.AlertSound == "Exclamation")
+            {
+                SystemSounds.Exclamation.Play();
+            }
+            else if (Settings.Default.AlertSound == "Hand")
+            {
+                SystemSounds.Hand.Play();
+            }
+            else if (Settings.Default.AlertSound == "Question")
+            {
+                SystemSounds.Question.Play();
             }
         }
 
@@ -665,10 +629,7 @@ namespace myseq
             return null;
         }
 
-        public SPAWNINFO GetSelectedMob()
-        {
-            return (SPAWNINFO)mobs[(uint)selectedID];
-        }
+        public SPAWNINFO GetSelectedMob() => (SPAWNINFO)mobs[(uint)selectedID];
 
         public void InitLookups()
         {
@@ -1430,8 +1391,7 @@ namespace myseq
             string tok;
             if ((tok = Getnexttoken(ref temp, '_')) != null)
             {
-                IFormatProvider NumFormat = new CultureInfo("en-US");
-                int lookupid = int.Parse(tok, NumFormat);
+                int lookupid = int.Parse(tok, new CultureInfo("en-US"));
 
                 // We got this far, so we have a valid item to add
 
@@ -1453,8 +1413,7 @@ namespace myseq
             string tok;
             if ((tok = Getnexttoken(ref temp, '_')) != null)
             {
-                IFormatProvider NumFormat = new CultureInfo("en-US");
-                int lookupid = int.Parse(tok, NumFormat);
+                int lookupid = int.Parse(tok, new CultureInfo("en-US"));
 
                 // We got this far, so we have a valid item to add
                 if (guildList.ContainsKey(lookupid))
@@ -1874,10 +1833,6 @@ namespace myseq
                     if (update_hidden)
                         mob.refresh = 100;
 
-                    // keep a reference to the listview item to speed up lookups.
-
-                    ListViewItem li = mob.listitem;
-
                     // some of these should not change often, so only check every 10 times through
                     if (mob.refresh > 10)
                     {
@@ -1948,12 +1903,11 @@ namespace myseq
                         if (mob.Type != si.Type)
                         {
                             mob.Type = si.Type;
-
-                            li.SubItems[8].Text = PrettyNames.GetSpawnType(si.Type);
+                            mob.listitem.SubItems[8].Text = PrettyNames.GetSpawnType(si.Type);
 
                             if (si.Type == 2 || si.Type == 3)
                             {
-                                li.ForeColor = Color.Gray;
+                                mob.listitem.ForeColor = Color.Gray;
 
                                 mob.isCorpse = true;
 
@@ -1970,30 +1924,30 @@ namespace myseq
                             }
                             else if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
                             {
-                                li.ForeColor = Color.DarkOrchid;
+                                mob.listitem.ForeColor = Color.DarkOrchid;
                                 si.isEventController = true;
                             }
                             else if (si.Class == 62)
                             {
-                                li.ForeColor = Color.Gray;
+                                mob.listitem.ForeColor = Color.Gray;
                                 si.isLDONObject = true;
                             }
                             else
                             {
-                                li.ForeColor = conColors[si.Level].Color;
+                                mob.listitem.ForeColor = conColors[si.Level].Color;
 
-                                if (li.ForeColor == Color.Maroon)
+                                if (mob.listitem.ForeColor == Color.Maroon)
                                 {
-                                    li.ForeColor = Color.Red;
+                                    mob.listitem.ForeColor = Color.Red;
                                 }
                                 else if (SpawnList.listView.BackColor == Color.White)
                                 {
                                     // Change the colors to be more visible on white if the background is white
 
-                                    if (li.ForeColor == Color.White)
-                                        li.ForeColor = Color.Black;
-                                    else if (li.ForeColor == Color.Yellow)
-                                        li.ForeColor = Color.Goldenrod;
+                                    if (mob.listitem.ForeColor == Color.White)
+                                        mob.listitem.ForeColor = Color.Black;
+                                    else if (mob.listitem.ForeColor == Color.Yellow)
+                                        mob.listitem.ForeColor = Color.Goldenrod;
                                 }
                             }
                         }
@@ -2002,67 +1956,39 @@ namespace myseq
 
                         if ((si.Name.Length > 0) && (string.Compare(mob.Name, si.Name) != 0))
                         {
-                            string newname = RegexHelper.FixMobName(si.Name);
-
-                            string oldname = RegexHelper.FixMobName(mob.Name);
-
-                            // use replace so that we dont loose the alert prefixes.
-
-                            li.Text = li.Text.Replace(oldname, newname);
-
-                            if (!si.IsPlayer() && (si.Type == 2 || si.Type == 3))
-                            {
-                                // Corpses - lose alerts on map
-
-                                si.isCorpse = true;
-
-                                si.isHunt = false;
-
-                                si.isCaution = false;
-
-                                si.isDanger = false;
-
-                                si.isAlert = false;
-
-                                // moved the type change before this.  So now only trigger kills
-                                // for name changes of corpses.
-                                mobsTimers.Kill(mob);
-                            }
-
-                            mob.Name = si.Name;
+                            NameChngOrDead(si, mob);
                         }
 
                         if (mob.Level != si.Level)
                         {
                             mob.Level = si.Level;
-
-                            li.SubItems[1].Text = si.Level.ToString();
+                            mob.listitem.SubItems[1].Text = si.Level.ToString();
 
                             // update forecolor
                             if (mob.Type == 2 || mob.Type == 3 || mob.isLDONObject)
                             {
-                                li.ForeColor = Color.Gray;
+                                mob.listitem.ForeColor = Color.Gray;
                             }
                             else if (mob.isEventController)
                             {
-                                li.ForeColor = Color.DarkOrchid;
+                                mob.listitem.ForeColor = Color.DarkOrchid;
                             }
                             else
                             {
-                                li.ForeColor = conColors[mob.Level].Color;
+                                mob.listitem.ForeColor = conColors[mob.Level].Color;
 
-                                if (li.ForeColor == Color.Maroon)
+                                if (mob.listitem.ForeColor == Color.Maroon)
                                 {
-                                    li.ForeColor = Color.Red;
+                                    mob.listitem.ForeColor = Color.Red;
                                 }
                                 else if (SpawnList.listView.BackColor == Color.White)
                                 {
                                     // Change the colors to be more visible on white if the background is white
 
-                                    if (li.ForeColor == Color.White)
-                                        li.ForeColor = Color.Black;
-                                    else if (li.ForeColor == Color.Yellow)
-                                        li.ForeColor = Color.Goldenrod;
+                                    if (mob.listitem.ForeColor == Color.White)
+                                        mob.listitem.ForeColor = Color.Black;
+                                    else if (mob.listitem.ForeColor == Color.Yellow)
+                                        mob.listitem.ForeColor = Color.Goldenrod;
                                 }
                             }
                         }
@@ -2070,29 +1996,25 @@ namespace myseq
                         if (mob.Class != si.Class)
                         {
                             mob.Class = si.Class;
-
-                            li.SubItems[2].Text = ClassNumToString(si.Class);
+                            mob.listitem.SubItems[2].Text = ClassNumToString(si.Class);
                         }
 
                         if (mob.Primary != si.Primary)
                         {
                             mob.Primary = si.Primary;
-
-                            li.SubItems[3].Text = si.Primary > 0 ? ItemNumToString(si.Primary) : "";
+                            mob.listitem.SubItems[3].Text = si.Primary > 0 ? ItemNumToString(si.Primary) : "";
                         }
 
                         if (mob.Offhand != si.Offhand)
                         {
                             mob.Offhand = si.Offhand;
-
-                            li.SubItems[4].Text = si.Offhand > 0 ? ItemNumToString(si.Offhand) : "";
+                            mob.listitem.SubItems[4].Text = si.Offhand > 0 ? ItemNumToString(si.Offhand) : "";
                         }
 
                         if (mob.Race != si.Race)
                         {
                             mob.Race = si.Race;
-
-                            li.SubItems[5].Text = RaceNumtoString(si.Race);
+                            mob.listitem.SubItems[5].Text = RaceNumtoString(si.Race);
                         }
 
                         if (mob.OwnerID != si.OwnerID)
@@ -2100,7 +2022,7 @@ namespace myseq
                             mob.OwnerID = si.OwnerID;
                             if (mob.OwnerID == 0)
                             {
-                                li.SubItems[6].Text = "";
+                                mob.listitem.SubItems[6].Text = "";
                                 mob.isPet = false;
                             }
                             else if (mobs.ContainsKey(mob.OwnerID))
@@ -2110,17 +2032,17 @@ namespace myseq
                                 if (owner.IsPlayer())
                                 {
                                     mob.isPet = true;
-                                    li.ForeColor = Color.Gray;
+                                    mob.listitem.ForeColor = Color.Gray;
                                 }
                                 else
                                 {
                                     mob.isPet = false;
                                 }
-                                li.SubItems[6].Text = RegexHelper.FixMobName(owner.Name);
+                                mob.listitem.SubItems[6].Text = RegexHelper.FixMobName(owner.Name);
                             }
                             else
                             {
-                                li.SubItems[6].Text = mob.OwnerID.ToString();
+                                mob.listitem.SubItems[6].Text = mob.OwnerID.ToString();
                                 mob.isPet = false;
                             }
                         }
@@ -2128,8 +2050,7 @@ namespace myseq
                         if (mob.Hide != si.Hide)
                         {
                             mob.Hide = si.Hide;
-
-                            li.SubItems[9].Text = PrettyNames.GetHideStatus(si.Hide);
+                            mob.listitem.SubItems[9].Text = PrettyNames.GetHideStatus(si.Hide);
                         }
 
                         if (mob.Guild != si.Guild)
@@ -2137,9 +2058,9 @@ namespace myseq
                             mob.Guild = si.Guild;
 
                             if (si.Guild > 0)
-                                li.SubItems[17].Text = GuildNumToString(si.Guild);
+                                mob.listitem.SubItems[17].Text = GuildNumToString(si.Guild);
                             else
-                                li.SubItems[17].Text = "";
+                                mob.listitem.SubItems[17].Text = "";
                         }
 
                         mob.refresh = 0;
@@ -2168,7 +2089,6 @@ namespace myseq
                         }
 
                         // update these for all but selected mob, so they do not refresh for all mobs
-
                         mob.Z = si.Z;
                     }
 
@@ -2179,8 +2099,7 @@ namespace myseq
                     if (mob.SpeedRun != si.SpeedRun)
                     {
                         mob.SpeedRun = si.SpeedRun;
-
-                        li.SubItems[10].Text = si.SpeedRun.ToString();
+                        mob.listitem.SubItems[10].Text = si.SpeedRun.ToString();
                     }
 
                     if ((mob.X != si.X) || (mob.Y != si.Y) || (mob.Z != si.Z))
@@ -2192,30 +2111,22 @@ namespace myseq
                             CheckMapMinMax(si);
 
                         mob.X = si.X;
-
-                        li.SubItems[14].Text = si.Y.ToString();
+                        mob.listitem.SubItems[14].Text = si.Y.ToString();
 
                         mob.Y = si.Y;
-
-                        li.SubItems[13].Text = si.X.ToString();
+                        mob.listitem.SubItems[13].Text = si.X.ToString();
 
                         mob.Z = si.Z;
+                        mob.listitem.SubItems[15].Text = si.Z.ToString();
 
-                        li.SubItems[15].Text = si.Z.ToString();
-
-                        float sd = (float)Math.Sqrt(((si.X - playerinfo.X) * (si.X - playerinfo.X)) +
-
-                            ((si.Y - playerinfo.Y) * (si.Y - playerinfo.Y)) +
-
-                            ((si.Z - playerinfo.Z) * (si.Z - playerinfo.Z)));
+                        var sd = SpawnDistance(si);
 
                         if (Settings.Default.FollowOption == FollowOption.Target)
                             f1.ReAdjust();
-
-                        li.SubItems[16].Text = sd.ToString("#.000");
+                        mob.listitem.SubItems[16].Text = sd.ToString("#.000");
                     }
 
-                    if (listReAdd) newSpawns.Add(li);
+                    if (listReAdd) newSpawns.Add(mob.listitem);
                 } // end of if found
 
                 // If it's not already in there, add it
@@ -2239,104 +2150,98 @@ namespace myseq
 
                         if (!Settings.Default.ShowPlayers) si.hidden = true;
                     }
+                    else if (si.Type == 2 || si.Type == 3)
+                    {
+                        // Corpses
+
+                        si.isCorpse = true;
+
+                        if (!CorpseAlerts)
+                        {
+                            si.isHunt = false;
+
+                            si.isCaution = false;
+
+                            si.isDanger = false;
+
+                            si.isAlert = false;
+                        }
+
+                        if ((si.Name.IndexOf("_") == -1) && (si.Name.IndexOf("a ") != 0) && (si.Name.IndexOf("an ") != 0))
+                        {
+                            si.m_isPlayer = true;
+
+                            if (!Settings.Default.ShowPCCorpses) si.hidden = true;
+
+                            if (si.Name.Length > 0 && CheckMyCorpse(si.Name))
+                            {
+                                si.m_isMyCorpse = true;
+
+                                si.hidden = !Settings.Default.ShowMyCorpse;
+                            }
+                        }
+                        else if (!Settings.Default.ShowCorpses) si.hidden = true;
+                    }
                     else
                     {
-                        if (si.Type == 2 || si.Type == 3)
+                        // non-corpse, non-player spawn (aka NPC)
+
+                        if (!Settings.Default.ShowNPCs) si.hidden = true;
+
+                        if (si.OwnerID > 0)
                         {
-                            // Corpses
+                            SPAWNINFO owner;
 
-                            si.isCorpse = true;
-
-                            if (!CorpseAlerts)
+                            if (mobs.ContainsKey(si.OwnerID))
                             {
-                                si.isHunt = false;
-
-                                si.isCaution = false;
-
-                                si.isDanger = false;
-
-                                si.isAlert = false;
-                            }
-
-                            if ((si.Name.IndexOf("_") == -1) && (si.Name.IndexOf("a ") != 0) && (si.Name.IndexOf("an ") != 0))
-                            {
-                                si.m_isPlayer = true;
-
-                                if (!Settings.Default.ShowPCCorpses) si.hidden = true;
-
-                                if (si.Name.Length > 0 && CheckMyCorpse(si.Name))
+                                owner = (SPAWNINFO)mobs[si.OwnerID];
+                                if (owner.IsPlayer())
                                 {
-                                    si.m_isMyCorpse = true;
-
-                                    si.hidden = !Settings.Default.ShowMyCorpse;
+                                    si.isPet = true;
+                                    if (!Settings.Default.ShowPets) si.hidden = true;
                                 }
                             }
                             else
                             {
-                                if (!Settings.Default.ShowCorpses) si.hidden = true;
+                                // we didnt find owner, so set to 0
+                                // so we can check again next update
+                                si.OwnerID = 0;
                             }
                         }
-                        else
+
+                        if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
                         {
-                            // non-corpse, non-player spawn (aka NPC)
+                            si.isEventController = true;
+                            if (!Settings.Default.ShowInvis)
+                                si.hidden = true;
+                        }
+                        else if (si.Class == 62)
+                        {
+                            si.isLDONObject = true;
+                        }
 
-                            if (!Settings.Default.ShowNPCs) si.hidden = true;
+                        // Mercenary Identification - Only do it once now
 
-                            if (si.OwnerID > 0)
-                            {
-                                SPAWNINFO owner;
+                        if (!string.IsNullOrEmpty(si.Lastname))
+                        {
+                            if (RegexHelper.IsMerc(si.Lastname))
+                                si.isMerc = true;
+                        }
+                        else if (RegexHelper.IsMount(si.Name)) // Mounts
+                        {
+                            si.isMount = true;
 
-                                if (mobs.ContainsKey(si.OwnerID))
-                                {
-                                    owner = (SPAWNINFO)mobs[si.OwnerID];
-                                    if (owner.IsPlayer())
-                                    {
-                                        si.isPet = true;
-                                        if (!Settings.Default.ShowPets) si.hidden = true;
-                                    }
-                                }
-                                else
-                                {
-                                    // we didnt find owner, so set to 0
-                                    // so we can check again next update
-                                    si.OwnerID = 0;
-                                }
-                            }
+                            if (!Settings.Default.ShowMounts) si.hidden = true;
+                        }
+                        else if (RegexHelper.IsFamiliar(si.Name))
+                        {
+                            // reset these, if match a familiar
+                            si.isPet = false;
+                            si.hidden = false;
 
-                            if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
-                            {
-                                si.isEventController = true;
-                                if (!Settings.Default.ShowInvis)
-                                    si.hidden = true;
-                            }
-                            else if (si.Class == 62)
-                            {
-                                si.isLDONObject = true;
-                            }
+                            si.isFamiliar = true;
 
-                            // Mercenary Identification - Only do it once now
-
-                            if (!string.IsNullOrEmpty(si.Lastname))
-                            {
-                                if (RegexHelper.IsMerc(si.Lastname))
-                                    si.isMerc = true;
-                            }
-                            else if (RegexHelper.IsMount(si.Name)) // Mounts
-                            {
-                                si.isMount = true;
-
-                                if (!Settings.Default.ShowMounts) si.hidden = true;
-                            }
-                            else if (RegexHelper.IsFamiliar(si.Name))
-                            {
-                                // reset these, if match a familiar
-                                si.isPet = false;
-                                si.hidden = false;
-
-                                si.isFamiliar = true;
-
-                                if (!Settings.Default.ShowFamiliars) si.hidden = true;
-                            }
+                            if (!Settings.Default.ShowFamiliars) si.hidden = true;
                         }
                     }
 
@@ -2344,327 +2249,365 @@ namespace myseq
 
                     if (si.Name.Length > 0)
                     {
-                        string mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
-
-                        string matchmobname = RegexHelper.FixMobNameMatch(mobname);
-
-                        if (matchmobname.Length < 2)
-                            matchmobname = mobname;
-
-                        string mobnameWithInfo = mobname;
-
-                        string primaryName = "";
-
-                        if (si.Primary > 0 || si.Offhand > 0)
-                            primaryName = ItemNumToString(si.Primary);
-
-                        string offhandName = "";
-
-                        if (si.Offhand > 0)
-                            offhandName = ItemNumToString(si.Offhand);
-
-                        // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
-                        if (!(si.isLDONObject || si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
-                        {
-                            /* ************************************* *
-                            * ************* ALERTS **************** *
-                            * ************************************* */
-
-                            // [hunt]
-
-                            if (filters.Hunt.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Hunt, matchmobname, Settings.Default.NoneOnHunt,
-
-                                    Settings.Default.TalkOnHunt, "Hunt Mob",
-                                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                                    Settings.Default.BeepOnHunt, MatchFullTextH))
-                            {
-                                alert = true;
-                                if (PrefixStars)
-                                {
-                                    mobnameWithInfo = HuntPrefix + " " + mobnameWithInfo;
-                                }
-
-                                if (AffixStars)
-                                {
-                                    mobnameWithInfo += " " + HuntPrefix;
-                                }
-
-                                si.isHunt = true;
-                            }
-                            if (filters.GlobalHunt.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalHunt, matchmobname, Settings.Default.NoneOnHunt,
-
-                                    Settings.Default.TalkOnHunt, "Hunt Mob",
-                                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                                    Settings.Default.BeepOnHunt, MatchFullTextH))
-                            {
-                                alert = true;
-                                if (PrefixStars)
-                                {
-                                    mobnameWithInfo = HuntPrefix + " " + mobnameWithInfo;
-                                }
-
-                                if (AffixStars)
-                                {
-                                    mobnameWithInfo += " " + HuntPrefix;
-                                }
-                                si.isHunt = true;
-                            }
-
-                            // [caution]
-                            if (filters.Caution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Caution, matchmobname, Settings.Default.NoneOnCaution,
-
-                                    Settings.Default.TalkOnCaution, "Caution Mob",
-                                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-                                    Settings.Default.BeepOnCaution, MatchFullTextC))
-                            {
-                                alert = MarkCaution(ref mobnameWithInfo);
-                                si.isCaution = true;
-                            }
-                            if (filters.GlobalCaution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalCaution, matchmobname, Settings.Default.NoneOnCaution,
-
-                                    Settings.Default.TalkOnCaution, "Caution Mob",
-                                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-                                    Settings.Default.BeepOnCaution, MatchFullTextC))
-                            {
-                                alert = true;
-
-                                si.isCaution = true;
-
-                                if (PrefixStars)
-                                    mobnameWithInfo = CautionPrefix + " " + mobnameWithInfo;
-
-                                if (AffixStars)
-                                    mobnameWithInfo += " " + CautionPrefix;
-                            }
-
-                            // [danger]
-                            if (filters.Danger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, Settings.Default.NoneOnDanger,
-
-                                    Settings.Default.TalkOnDanger, "Danger Mob",
-
-                                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-
-                                    Settings.Default.BeepOnDanger, MatchFullTextD))
-                            {
-                                alert = MarkDanger(ref mobnameWithInfo);
-                                si.isDanger = true;
-                            }
-                            if (filters.GlobalDanger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalDanger, matchmobname, Settings.Default.NoneOnDanger,
-
-                                    Settings.Default.TalkOnDanger, "Danger Mob",
-
-                                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-
-                                    Settings.Default.BeepOnDanger, MatchFullTextD))
-                            {
-                                alert = MarkDanger(ref mobnameWithInfo);
-                                si.isDanger = true;
-                            }
-
-                            // [rare]
-                            if (filters.Alert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Alert, matchmobname, Settings.Default.NoneOnAlert,
-                                    Settings.Default.TalkOnAlert, "Rare Mob",
-                                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-                                    Settings.Default.BeepOnAlert, MatchFullTextA))
-                            {
-                                alert = true;
-
-                                si.isAlert = true;
-
-                                if (PrefixStars)
-                                    mobnameWithInfo = AlertPrefix + " " + mobnameWithInfo;
-
-                                if (AffixStars)
-                                    mobnameWithInfo += " " + AlertPrefix;
-                            }
-                            if (filters.GlobalAlert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalAlert, matchmobname, Settings.Default.NoneOnAlert,
-                                    Settings.Default.TalkOnAlert, "Rare Mob",
-                                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-                                    Settings.Default.BeepOnAlert, MatchFullTextA))
-                            {
-                                alert = true;
-                                if (PrefixStars)
-                                {
-                                    mobnameWithInfo = AlertPrefix + " " + mobnameWithInfo;
-                                }
-                                if (AffixStars)
-                                {
-                                    mobnameWithInfo += " " + AlertPrefix;
-                                }
-
-                                si.isAlert = true;
-                            }
-                            // [Email]
-                            if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, false, false, "", false, "", !si.isAlert && !si.isCaution && !si.isDanger && !si.isHunt, true))
-                            {
-                                alert = true;
-                                // Flag on map as an alert mob
-                                si.isAlert = true;
-                            }
-
-                            // [Wielded Items]
-                            // Acts like a hunt mob.
-                            if (filters.WieldedItems.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.WieldedItems, primaryName, Settings.Default.NoneOnHunt,
-                                    Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
-                                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                                    Settings.Default.BeepOnHunt, MatchFullTextH))
-                            {
-                                alert = true;
-                                if (PrefixStars)
-                                {
-                                    mobnameWithInfo = HuntPrefix + "W" + mobnameWithInfo;
-                                }
-
-                                if (AffixStars)
-                                {
-                                    mobnameWithInfo += " " + HuntPrefix;
-                                }
-
-                                si.isHunt = true;
-                            }
-
-                            // [Offhand]
-                            // Acts like a hunt mob.
-                            if (filters.WieldedItems.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.WieldedItems, offhandName,
-                                Settings.Default.NoneOnHunt,
-                                    Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
-                                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                                    Settings.Default.BeepOnHunt, MatchFullTextH))
-                            {
-                                alert = true;
-                                if (PrefixStars)
-                                {
-                                    mobnameWithInfo = HuntPrefix + "O " + mobnameWithInfo;
-                                }
-                                if (AffixStars)
-                                {
-                                    mobnameWithInfo += " " + HuntPrefix;
-                                }
-                                si.isAlert = true;
-                            }
-
-                            LookupBoxMatch(si, f1);
-                        }
-
-                        ListViewItem item1 = new ListViewItem(mobnameWithInfo);
-
-                        item1.SubItems.Add(si.Level.ToString());
-
-                        item1.SubItems.Add(ClassNumToString(si.Class));
-
-                        if (si.Primary > 0)
-                            item1.SubItems.Add(ItemNumToString(si.Primary));
-                        else
-                            item1.SubItems.Add("");
-
-                        if (si.Offhand > 0)
-                            item1.SubItems.Add(ItemNumToString(si.Offhand));
-                        else
-                            item1.SubItems.Add("");
-
-                        item1.SubItems.Add(RaceNumtoString(si.Race));
-
-                        OwnerFlag(si, item1);
-
-                        item1.SubItems.Add(si.Lastname);
-
-                        item1.SubItems.Add(PrettyNames.GetSpawnType(si.Type));
-
-                        item1.SubItems.Add(PrettyNames.GetHideStatus(si.Hide));
-
-                        item1.SubItems.Add(si.SpeedRun.ToString());
-
-                        item1.SubItems.Add(si.SpawnID.ToString());
-
-                        item1.SubItems.Add(DateTime.Now.ToLongTimeString());
-
-                        item1.SubItems.Add(si.X.ToString("#.000"));
-
-                        item1.SubItems.Add(si.Y.ToString("#.000"));
-
-                        item1.SubItems.Add(si.Z.ToString("#.000"));
-
-                        float sd = (float)Math.Sqrt(((si.X - playerinfo.X) * (si.X - playerinfo.X)) +
-
-                            ((si.Y - playerinfo.Y) * (si.Y - playerinfo.Y)) +
-
-                            ((si.Z - playerinfo.Z) * (si.Z - playerinfo.Z)));
-
-                        item1.SubItems.Add(sd.ToString("#.000"));
-
-                        item1.SubItems.Add(GuildNumToString(si.Guild));
-
-                        item1.SubItems.Add(RegexHelper.FixMobName(si.Name));
-
-                        if (si.Type == 2 || si.Type == 3 || si.isLDONObject)
-                        {
-                            item1.ForeColor = Color.Gray;
-                        }
-                        else if (si.isEventController)
-                        {
-                            item1.ForeColor = Color.DarkOrchid;
-                        }
-                        else
-                        {
-                            item1.ForeColor = conColors[si.Level].Color;
-
-                            if (item1.ForeColor == Color.Maroon)
-                                item1.ForeColor = Color.Red;
-
-                            // Change the colors to be more visible on white if the background is white
-
-                            if (SpawnList.listView.BackColor == Color.White)
-                            {
-                                if (item1.ForeColor == Color.White)
-                                    item1.ForeColor = Color.Black;
-                                else if (item1.ForeColor == Color.Yellow)
-                                    item1.ForeColor = Color.Goldenrod;
-                            }
-                        }
-
-                        if (alert)
-                            item1.Font = Settings.Default.ListFont;
-
-                        si.gone = 0;
-
-                        si.refresh = rnd.Next(0, 10);
-
-                        si.listitem = item1;
-
-                        try { mobs.Add(si.SpawnID, si); }
-                        catch (Exception ex) { LogLib.WriteLine("Error adding " + si.Name + " to mobs hashtable: ", ex); }
-
-                        // Add it to the spawn list if it's not supposed to be hidden
-                        if (!si.hidden) newSpawns.Add(item1);
+                        alert = IsSpawnInFilterLists(si, f1, SpawnList, filters, alert);
                     }
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawns(): ", ex); }
+        }
 
-            bool MarkCaution(ref string mobnameWithInfo)
+        private bool IsSpawnInFilterLists(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters, bool alert)
+        {
+            string mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
+
+            string matchmobname = RegexHelper.FixMobNameMatch(mobname);
+
+            if (matchmobname.Length < 2)
+                matchmobname = mobname;
+
+            string mobnameWithInfo = mobname;
+
+            string primaryName = "";
+
+            if (si.Primary > 0 || si.Offhand > 0)
+                primaryName = ItemNumToString(si.Primary);
+
+            string offhandName = "";
+
+            if (si.Offhand > 0)
+                offhandName = ItemNumToString(si.Offhand);
+
+            // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
+            if (!(si.isLDONObject || si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
             {
-                var alert = true;
-                si.isCaution = true;
+                /* ************************************* *
+                * ************* ALERTS **************** *
+                * ************************************* */
 
-                if (PrefixStars)
-                    mobnameWithInfo = CautionPrefix + " " + mobnameWithInfo;
+                // [hunt]
 
-                if (AffixStars)
-                    mobnameWithInfo += " " + CautionPrefix;
-                return alert;
+                if (filters.Hunt.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Hunt, matchmobname, Settings.Default.NoneOnHunt,
+
+                        Settings.Default.TalkOnHunt, "Hunt Mob",
+                        Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                        Settings.Default.BeepOnHunt, MatchFullTextH))
+                {
+                    alert = true;
+                    if (PrefixStars)
+                    {
+                        mobnameWithInfo = HuntPrefix + " " + mobnameWithInfo;
+                    }
+
+                    if (AffixStars)
+                    {
+                        mobnameWithInfo += " " + HuntPrefix;
+                    }
+
+                    si.isHunt = true;
+                }
+                if (filters.GlobalHunt.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalHunt, matchmobname, Settings.Default.NoneOnHunt,
+
+                        Settings.Default.TalkOnHunt, "Hunt Mob",
+                        Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                        Settings.Default.BeepOnHunt, MatchFullTextH))
+                {
+                    alert = true;
+                    if (PrefixStars)
+                    {
+                        mobnameWithInfo = HuntPrefix + " " + mobnameWithInfo;
+                    }
+
+                    if (AffixStars)
+                    {
+                        mobnameWithInfo += " " + HuntPrefix;
+                    }
+                    si.isHunt = true;
+                }
+
+                // [caution]
+                if (filters.Caution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Caution, matchmobname, Settings.Default.NoneOnCaution,
+
+                        Settings.Default.TalkOnCaution, "Caution Mob",
+                        Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
+                        Settings.Default.BeepOnCaution, MatchFullTextC))
+                {
+                    alert = true;
+                    si.isCaution = true;
+
+                    if (PrefixStars)
+                        mobnameWithInfo = CautionPrefix + " " + mobnameWithInfo;
+
+                    if (AffixStars)
+                        mobnameWithInfo += " " + CautionPrefix;
+                    si.isCaution = true;
+                }
+                if (filters.GlobalCaution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalCaution, matchmobname, Settings.Default.NoneOnCaution,
+
+                        Settings.Default.TalkOnCaution, "Caution Mob",
+                        Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
+                        Settings.Default.BeepOnCaution, MatchFullTextC))
+                {
+                    alert = true;
+
+                    si.isCaution = true;
+
+                    if (PrefixStars)
+                        mobnameWithInfo = CautionPrefix + " " + mobnameWithInfo;
+
+                    if (AffixStars)
+                        mobnameWithInfo += " " + CautionPrefix;
+                }
+
+                // [danger]
+                if (filters.Danger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, Settings.Default.NoneOnDanger,
+
+                        Settings.Default.TalkOnDanger, "Danger Mob",
+
+                        Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
+
+                        Settings.Default.BeepOnDanger, MatchFullTextD))
+                {
+                    alert = true;
+
+                    if (PrefixStars)
+                        mobnameWithInfo = DangerPrefix + " " + mobnameWithInfo;
+
+                    if (AffixStars)
+                        mobnameWithInfo += " " + DangerPrefix;
+                    si.isDanger = true;
+                }
+                if (filters.GlobalDanger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalDanger, matchmobname, Settings.Default.NoneOnDanger,
+
+                        Settings.Default.TalkOnDanger, "Danger Mob",
+
+                        Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
+
+                        Settings.Default.BeepOnDanger, MatchFullTextD))
+                {
+                    alert = true;
+
+                    if (PrefixStars)
+                        mobnameWithInfo = DangerPrefix + " " + mobnameWithInfo;
+
+                    if (AffixStars)
+                        mobnameWithInfo += " " + DangerPrefix;
+                    si.isDanger = true;
+                }
+
+                // [rare]
+                if (filters.Alert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Alert, matchmobname, Settings.Default.NoneOnAlert,
+                        Settings.Default.TalkOnAlert, "Rare Mob",
+                        Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
+                        Settings.Default.BeepOnAlert, MatchFullTextA))
+                {
+                    alert = true;
+
+                    si.isAlert = true;
+
+                    if (PrefixStars)
+                        mobnameWithInfo = AlertPrefix + " " + mobnameWithInfo;
+
+                    if (AffixStars)
+                        mobnameWithInfo += " " + AlertPrefix;
+                }
+                if (filters.GlobalAlert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalAlert, matchmobname, Settings.Default.NoneOnAlert,
+                        Settings.Default.TalkOnAlert, "Rare Mob",
+                        Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
+                        Settings.Default.BeepOnAlert, MatchFullTextA))
+                {
+                    alert = true;
+                    if (PrefixStars)
+                    {
+                        mobnameWithInfo = AlertPrefix + " " + mobnameWithInfo;
+                    }
+                    if (AffixStars)
+                    {
+                        mobnameWithInfo += " " + AlertPrefix;
+                    }
+
+                    si.isAlert = true;
+                }
+                // [Email]
+                if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, false, false, "", false, "", !si.isAlert && !si.isCaution && !si.isDanger && !si.isHunt, true))
+                {
+                    alert = true;
+                    // Flag on map as an alert mob
+                    si.isAlert = true;
+                }
+
+                // [Wielded Items]
+                // Acts like a hunt mob.
+                if (filters.WieldedItems.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.WieldedItems, primaryName, Settings.Default.NoneOnHunt,
+                        Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
+                        Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                        Settings.Default.BeepOnHunt, MatchFullTextH))
+                {
+                    alert = true;
+                    if (PrefixStars)
+                    {
+                        mobnameWithInfo = HuntPrefix + "W" + mobnameWithInfo;
+                    }
+
+                    if (AffixStars)
+                    {
+                        mobnameWithInfo += " " + HuntPrefix;
+                    }
+
+                    si.isHunt = true;
+                }
+
+                // [Offhand]
+                // Acts like a hunt mob.
+                if (filters.WieldedItems.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.WieldedItems, offhandName,
+                    Settings.Default.NoneOnHunt,
+                        Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
+                        Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                        Settings.Default.BeepOnHunt, MatchFullTextH))
+                {
+                    alert = true;
+                    if (PrefixStars)
+                    {
+                        mobnameWithInfo = HuntPrefix + "O " + mobnameWithInfo;
+                    }
+                    if (AffixStars)
+                    {
+                        mobnameWithInfo += " " + HuntPrefix;
+                    }
+                    si.isAlert = true;
+                }
+
+                LookupBoxMatch(si, f1);
             }
 
-            bool MarkDanger(ref string mobnameWithInfo)
+            ListViewItem item1 = new ListViewItem(mobnameWithInfo);
+
+            item1.SubItems.Add(si.Level.ToString());
+
+            item1.SubItems.Add(ClassNumToString(si.Class));
+
+            if (si.Primary > 0)
+                item1.SubItems.Add(ItemNumToString(si.Primary));
+            else
+                item1.SubItems.Add("");
+
+            if (si.Offhand > 0)
+                item1.SubItems.Add(ItemNumToString(si.Offhand));
+            else
+                item1.SubItems.Add("");
+
+            item1.SubItems.Add(RaceNumtoString(si.Race));
+
+            OwnerFlag(si, item1);
+
+            item1.SubItems.Add(si.Lastname);
+
+            item1.SubItems.Add(PrettyNames.GetSpawnType(si.Type));
+
+            item1.SubItems.Add(PrettyNames.GetHideStatus(si.Hide));
+
+            item1.SubItems.Add(si.SpeedRun.ToString());
+
+            item1.SubItems.Add(si.SpawnID.ToString());
+
+            item1.SubItems.Add(DateTime.Now.ToLongTimeString());
+
+            item1.SubItems.Add(si.X.ToString("#.000"));
+
+            item1.SubItems.Add(si.Y.ToString("#.000"));
+
+            item1.SubItems.Add(si.Z.ToString("#.000"));
+
+            float sd = (float)Math.Sqrt(((si.X - playerinfo.X) * (si.X - playerinfo.X)) +
+
+                ((si.Y - playerinfo.Y) * (si.Y - playerinfo.Y)) +
+
+                ((si.Z - playerinfo.Z) * (si.Z - playerinfo.Z)));
+
+            item1.SubItems.Add(sd.ToString("#.000"));
+
+            item1.SubItems.Add(GuildNumToString(si.Guild));
+
+            item1.SubItems.Add(RegexHelper.FixMobName(si.Name));
+
+            if (si.Type == 2 || si.Type == 3 || si.isLDONObject)
             {
-                var alert = true;
-
-                if (PrefixStars)
-                    mobnameWithInfo = DangerPrefix + " " + mobnameWithInfo;
-
-                if (AffixStars)
-                    mobnameWithInfo += " " + DangerPrefix;
-                return alert;
+                item1.ForeColor = Color.Gray;
             }
+            else if (si.isEventController)
+            {
+                item1.ForeColor = Color.DarkOrchid;
+            }
+            else
+            {
+                item1.ForeColor = conColors[si.Level].Color;
+
+                if (item1.ForeColor == Color.Maroon)
+                    item1.ForeColor = Color.Red;
+
+                // Change the colors to be more visible on white if the background is white
+
+                if (SpawnList.listView.BackColor == Color.White)
+                {
+                    if (item1.ForeColor == Color.White)
+                        item1.ForeColor = Color.Black;
+                    else if (item1.ForeColor == Color.Yellow)
+                        item1.ForeColor = Color.Goldenrod;
+                }
+            }
+
+            if (alert)
+                item1.Font = Settings.Default.ListFont;
+
+            si.gone = 0;
+
+            si.refresh = rnd.Next(0, 10);
+
+            si.listitem = item1;
+
+            try { mobs.Add(si.SpawnID, si); }
+            catch (Exception ex) { LogLib.WriteLine("Error adding " + si.Name + " to mobs hashtable: ", ex); }
+
+            // Add it to the spawn list if it's not supposed to be hidden
+            if (!si.hidden) newSpawns.Add(item1);
+            return alert;
+        }
+
+        private float SpawnDistance(SPAWNINFO si)
+        {
+            return (float)Math.Sqrt(((si.X - playerinfo.X) * (si.X - playerinfo.X)) +
+
+                ((si.Y - playerinfo.Y) * (si.Y - playerinfo.Y)) +
+
+                ((si.Z - playerinfo.Z) * (si.Z - playerinfo.Z)));
+        }
+
+        private void NameChngOrDead(SPAWNINFO si, SPAWNINFO mob)
+        {
+            string newname = RegexHelper.FixMobName(si.Name);
+
+            string oldname = RegexHelper.FixMobName(mob.Name);
+            mob.listitem.Text = mob.listitem.Text.Replace(oldname, newname);
+
+            if (!si.IsPlayer() && (si.Type == 2 || si.Type == 3))
+            {
+                // Corpses - lose alerts on map
+
+                si.isCorpse = true;
+
+                si.isHunt = false;
+
+                si.isCaution = false;
+
+                si.isDanger = false;
+
+                si.isAlert = false;
+
+                // moved the type change before this.  So now only trigger kills
+                // for name changes of corpses.
+                mobsTimers.Kill(mob);
+            }
+
+            mob.Name = si.Name;
         }
 
         private static void LookupBoxMatch(SPAWNINFO si, FrmMain f1)
@@ -2739,38 +2682,36 @@ namespace myseq
             {
                 foreach (SPAWNINFO si in mobs.Values)
                 {
-                    ListViewItem li = si.listitem;
-
-                    if (li != null)
+                    if (si.listitem != null)
                     {
                         if (si.Type == 2 || si.Type == 3 || si.isLDONObject)
                         {
-                            li.ForeColor = Color.Gray;
+                            si.listitem.ForeColor = Color.Gray;
                         }
                         else if (si.isEventController)
                         {
-                            li.ForeColor = Color.DarkOrchid;
+                            si.listitem.ForeColor = Color.DarkOrchid;
                         }
                         else
                         {
-                            li.ForeColor = conColors[si.Level].Color;
+                            si.listitem.ForeColor = conColors[si.Level].Color;
 
-                            if (li.ForeColor == Color.Maroon)
-                                li.ForeColor = Color.Red;
+                            if (si.listitem.ForeColor == Color.Maroon)
+                                si.listitem.ForeColor = Color.Red;
 
                             // Change the colors to be more visible on white if the background is white
 
                             if (Settings.Default.ListBackColor == Color.White)
                             {
-                                if (li.ForeColor == Color.White)
-                                    li.ForeColor = Color.Black;
-                                else if (li.ForeColor == Color.Yellow)
-                                    li.ForeColor = Color.Goldenrod;
+                                if (si.listitem.ForeColor == Color.White)
+                                    si.listitem.ForeColor = Color.Black;
+                                else if (si.listitem.ForeColor == Color.Yellow)
+                                    si.listitem.ForeColor = Color.Goldenrod;
                             }
 
-                            if (Settings.Default.ListBackColor == Color.Black && li.ForeColor == Color.Black)
+                            if (Settings.Default.ListBackColor == Color.Black && si.listitem.ForeColor == Color.Black)
                             {
-                                li.ForeColor = Color.White;
+                                si.listitem.ForeColor = Color.White;
                             }
                         }
                     }
@@ -2838,10 +2779,7 @@ namespace myseq
             }
         }
 
-        public bool CheckMyCorpse(string mobname)
-        {
-            return (mobname.Length < (playerinfo.Name.Length + 14)) && (mobname.IndexOf(playerinfo.Name) == 0);
-        }
+        public bool CheckMyCorpse(string mobname) => (mobname.Length < (playerinfo.Name.Length + 14)) && (mobname.IndexOf(playerinfo.Name) == 0);
 
         public void SaveMobs()
         {
@@ -2915,10 +2853,7 @@ namespace myseq
             }
         }
 
-        public string ClassNumToString(int num)
-        {
-            return ArrayIndextoStr(Classes, num);
-        }
+        public string ClassNumToString(int num) => ArrayIndextoStr(Classes, num);
 
         public string ItemNumToString(int num)
         {
@@ -2961,7 +2896,6 @@ namespace myseq
         public void BeginProcessPacket()
         {
             newSpawns.Clear();
-
             newGroundItems.Clear();
         }
 
@@ -3140,6 +3074,38 @@ namespace myseq
 
         #endregion ProcessPlayer
 
+        public void Clear()
+        {
+            mobs.Clear();
+            itemcollection.Clear();
+            mobtrails.Clear();
+        }
+
+        public void CollectMobTrails()
+        {
+            // Collect Mob Trails
+
+            foreach (SPAWNINFO sp in GetMobsReadonly().Values)
+            {
+                if (sp.Type == 1)
+                {
+                    // Setup NPCs Trails
+
+                    //add point to mobtrails arraylist if not already there
+
+                    MobTrailPoint work = new MobTrailPoint
+                    {
+                        x = (int)sp.X,
+
+                        y = (int)sp.Y
+                    };
+
+                    AddMobTrailPoint(work);
+                }
+            }
+        }
+
+        #region ColorOperations
         public void FillConColors(FrmMain f1)
         {
             try
@@ -3585,16 +3551,6 @@ namespace myseq
                 }
             }
         }
-
-        public void Clear()
-        {
-            mobs.Clear();
-
-            itemcollection.Clear();
-
-            mobtrails.Clear();
-        }
-
         public void CalculateMapLinePens()
         {
             if (lines == null)
@@ -3621,33 +3577,6 @@ namespace myseq
                 t.draw_pen = new Pen(t.draw_color.Color);
             }
         }
-
-        public void CollectMobTrails()
-        {
-            // Collect Mob Trails
-
-            foreach (SPAWNINFO sp in GetMobsReadonly().Values)
-            {
-                if (sp.Type == 1)
-                {
-                    // Setup NPCs Trails
-
-                    //add point to mobtrails arraylist if not already there
-
-                    MobTrailPoint work = new MobTrailPoint
-                    {
-                        x = (int)sp.X,
-
-                        y = (int)sp.Y
-                    };
-
-                    AddMobTrailPoint(work);
-                }
-            }
-        }
-
-        #region ColorCheck between Foreground and Background
-
         private int GetColorDiff(Color foreColor, Color backColor)
         {
             int lColDiff, lTmp;

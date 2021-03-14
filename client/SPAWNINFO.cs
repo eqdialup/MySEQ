@@ -7,8 +7,6 @@ using System.Windows.Forms;
 namespace Structures
 
 {
-    #region SPAWNINFO class
-
     [StructLayout(LayoutKind.Sequential, Pack=1)]
 
     public partial class SPAWNINFO
@@ -164,7 +162,5 @@ namespace Structures
 
         public bool IsPlayer() {return m_isPlayer;}
     }
-
-#endregion
 }
 

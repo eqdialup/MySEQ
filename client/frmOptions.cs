@@ -622,9 +622,9 @@ namespace myseq
             gbServer.SuspendLayout();
             tabOptions.SuspendLayout();
             SuspendLayout();
-            // 
+            //
             // cmdCommand
-            // 
+            //
             cmdCommand.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
             cmdCommand.DialogResult = System.Windows.Forms.DialogResult.OK;
             cmdCommand.Location = new Point(83, 410);
@@ -633,9 +633,9 @@ namespace myseq
             cmdCommand.TabIndex = 0;
             cmdCommand.Text = "&Save";
             cmdCommand.Click += new EventHandler(CmdCommand_Click);
-            // 
+            //
             // tabColors
-            // 
+            //
             tabColors.Controls.Add(picGridLabelColor);
             tabColors.Controls.Add(cmdGridLabelColor);
             tabColors.Controls.Add(picPlayerBorder);
@@ -653,9 +653,9 @@ namespace myseq
             tabColors.Size = new Size(266, 375);
             tabColors.TabIndex = 3;
             tabColors.Text = "Colors";
-            // 
+            //
             // picGridLabelColor
-            // 
+            //
             picGridLabelColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             picGridLabelColor.Location = new Point(152, 164);
             picGridLabelColor.Name = "picGridLabelColor";
@@ -663,18 +663,18 @@ namespace myseq
             picGridLabelColor.TabIndex = 13;
             picGridLabelColor.TabStop = false;
             picGridLabelColor.Click += new EventHandler(CmdGridLabelColor_Click);
-            // 
+            //
             // cmdGridLabelColor
-            // 
+            //
             cmdGridLabelColor.Location = new Point(8, 164);
             cmdGridLabelColor.Name = "cmdGridLabelColor";
             cmdGridLabelColor.Size = new Size(136, 24);
             cmdGridLabelColor.TabIndex = 12;
             cmdGridLabelColor.Text = "Grid Label Color";
             cmdGridLabelColor.Click += new EventHandler(CmdGridLabelColor_Click);
-            // 
+            //
             // picPlayerBorder
-            // 
+            //
             picPlayerBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             picPlayerBorder.Location = new Point(152, 134);
             picPlayerBorder.Name = "picPlayerBorder";
@@ -682,18 +682,18 @@ namespace myseq
             picPlayerBorder.TabIndex = 11;
             picPlayerBorder.TabStop = false;
             picPlayerBorder.Click += new EventHandler(ButPlayerBorder_Click);
-            // 
+            //
             // butPlayerBorder
-            // 
+            //
             butPlayerBorder.Location = new Point(8, 134);
             butPlayerBorder.Name = "butPlayerBorder";
             butPlayerBorder.Size = new Size(136, 24);
             butPlayerBorder.TabIndex = 10;
             butPlayerBorder.Text = "PC Highlight Color";
             butPlayerBorder.Click += new EventHandler(ButPlayerBorder_Click);
-            // 
+            //
             // picListBackgroundColor
-            // 
+            //
             picListBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             picListBackgroundColor.Location = new Point(152, 104);
             picListBackgroundColor.Name = "picListBackgroundColor";
@@ -701,18 +701,18 @@ namespace myseq
             picListBackgroundColor.TabIndex = 7;
             picListBackgroundColor.TabStop = false;
             picListBackgroundColor.Click += new EventHandler(CmdListBackgroundColor_Click);
-            // 
+            //
             // cmdListBackgroundColor
-            // 
+            //
             cmdListBackgroundColor.Location = new Point(8, 104);
             cmdListBackgroundColor.Name = "cmdListBackgroundColor";
             cmdListBackgroundColor.Size = new Size(136, 24);
             cmdListBackgroundColor.TabIndex = 6;
             cmdListBackgroundColor.Text = "List Background";
             cmdListBackgroundColor.Click += new EventHandler(CmdListBackgroundColor_Click);
-            // 
+            //
             // picRangeCircleColor
-            // 
+            //
             picRangeCircleColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             picRangeCircleColor.Location = new Point(152, 72);
             picRangeCircleColor.Name = "picRangeCircleColor";
@@ -720,18 +720,18 @@ namespace myseq
             picRangeCircleColor.TabIndex = 5;
             picRangeCircleColor.TabStop = false;
             picRangeCircleColor.Click += new EventHandler(CmdRangeCircleColor_Click);
-            // 
+            //
             // cmdRangeCircleColor
-            // 
+            //
             cmdRangeCircleColor.Location = new Point(8, 72);
             cmdRangeCircleColor.Name = "cmdRangeCircleColor";
             cmdRangeCircleColor.Size = new Size(136, 24);
             cmdRangeCircleColor.TabIndex = 2;
             cmdRangeCircleColor.Text = "Range Circle";
             cmdRangeCircleColor.Click += new EventHandler(CmdRangeCircleColor_Click);
-            // 
+            //
             // picGridColor
-            // 
+            //
             picGridColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             picGridColor.Location = new Point(152, 40);
             picGridColor.Name = "picGridColor";
@@ -739,18 +739,18 @@ namespace myseq
             picGridColor.TabIndex = 3;
             picGridColor.TabStop = false;
             picGridColor.Click += new EventHandler(CmdGridColor_Click);
-            // 
+            //
             // cmdGridColor
-            // 
+            //
             cmdGridColor.Location = new Point(8, 40);
             cmdGridColor.Name = "cmdGridColor";
             cmdGridColor.Size = new Size(136, 24);
             cmdGridColor.TabIndex = 1;
             cmdGridColor.Text = "Grid";
             cmdGridColor.Click += new EventHandler(CmdGridColor_Click);
-            // 
+            //
             // picMapBackgroundColor
-            // 
+            //
             picMapBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             picMapBackgroundColor.Location = new Point(152, 8);
             picMapBackgroundColor.Name = "picMapBackgroundColor";
@@ -758,18 +758,18 @@ namespace myseq
             picMapBackgroundColor.TabIndex = 1;
             picMapBackgroundColor.TabStop = false;
             picMapBackgroundColor.Click += new EventHandler(CmdMapBackgroundColor_Click);
-            // 
+            //
             // cmdMapBackgroundColor
-            // 
+            //
             cmdMapBackgroundColor.Location = new Point(8, 8);
             cmdMapBackgroundColor.Name = "cmdMapBackgroundColor";
             cmdMapBackgroundColor.Size = new Size(136, 24);
             cmdMapBackgroundColor.TabIndex = 0;
             cmdMapBackgroundColor.Text = "Map Background";
             cmdMapBackgroundColor.Click += new EventHandler(CmdMapBackgroundColor_Click);
-            // 
+            //
             // tabFolders
-            // 
+            //
             tabFolders.Controls.Add(cmdSpawnTimers);
             tabFolders.Controls.Add(txtTimerDir);
             tabFolders.Controls.Add(txtLogDir);
@@ -790,100 +790,100 @@ namespace myseq
             tabFolders.Size = new Size(266, 375);
             tabFolders.TabIndex = 4;
             tabFolders.Text = "Folders";
-            // 
+            //
             // cmdSpawnTimers
-            // 
+            //
             cmdSpawnTimers.Location = new Point(232, 184);
             cmdSpawnTimers.Name = "cmdSpawnTimers";
             cmdSpawnTimers.Size = new Size(24, 23);
             cmdSpawnTimers.TabIndex = 40;
             cmdSpawnTimers.Text = "...";
             cmdSpawnTimers.Click += new EventHandler(CmdSpawnTimers_Click);
-            // 
+            //
             // txtTimerDir
-            // 
+            //
             txtTimerDir.BackColor = System.Drawing.Color.White;
             txtTimerDir.Location = new Point(8, 184);
             txtTimerDir.Name = "txtTimerDir";
             txtTimerDir.Size = new Size(216, 20);
             txtTimerDir.TabIndex = 39;
-            // 
+            //
             // txtLogDir
-            // 
+            //
             txtLogDir.BackColor = System.Drawing.Color.White;
             txtLogDir.Location = new Point(8, 144);
             txtLogDir.Name = "txtLogDir";
             txtLogDir.Size = new Size(216, 20);
             txtLogDir.TabIndex = 36;
-            // 
+            //
             // txtFilterDir
-            // 
+            //
             txtFilterDir.BackColor = System.Drawing.Color.White;
             txtFilterDir.Location = new Point(8, 104);
             txtFilterDir.Name = "txtFilterDir";
             txtFilterDir.Size = new Size(216, 20);
             txtFilterDir.TabIndex = 33;
-            // 
+            //
             // txtCfgDir
-            // 
+            //
             txtCfgDir.BackColor = System.Drawing.Color.White;
             txtCfgDir.Location = new Point(8, 64);
             txtCfgDir.Name = "txtCfgDir";
             txtCfgDir.Size = new Size(216, 20);
             txtCfgDir.TabIndex = 30;
-            // 
+            //
             // txtMapDir
-            // 
+            //
             txtMapDir.BackColor = System.Drawing.Color.White;
             txtMapDir.Location = new Point(8, 24);
             txtMapDir.Name = "txtMapDir";
             txtMapDir.Size = new Size(216, 20);
             txtMapDir.TabIndex = 27;
-            // 
+            //
             // lblSpawnTimers
-            // 
+            //
             lblSpawnTimers.Location = new Point(8, 168);
             lblSpawnTimers.Name = "lblSpawnTimers";
             lblSpawnTimers.Size = new Size(144, 16);
             lblSpawnTimers.TabIndex = 38;
             lblSpawnTimers.Text = "Spawn Timers";
-            // 
+            //
             // cmdLogDir
-            // 
+            //
             cmdLogDir.Location = new Point(232, 144);
             cmdLogDir.Name = "cmdLogDir";
             cmdLogDir.Size = new Size(24, 23);
             cmdLogDir.TabIndex = 37;
             cmdLogDir.Text = "...";
             cmdLogDir.Click += new EventHandler(CmdLogDir_Click);
-            // 
+            //
             // lblLogDir
-            // 
+            //
             lblLogDir.Location = new Point(8, 128);
             lblLogDir.Name = "lblLogDir";
             lblLogDir.Size = new Size(144, 16);
             lblLogDir.TabIndex = 35;
             lblLogDir.Text = "Log Folder";
-            // 
+            //
             // cmdFilterDirBrowse
-            // 
+            //
             cmdFilterDirBrowse.Location = new Point(232, 104);
             cmdFilterDirBrowse.Name = "cmdFilterDirBrowse";
             cmdFilterDirBrowse.Size = new Size(24, 23);
             cmdFilterDirBrowse.TabIndex = 34;
             cmdFilterDirBrowse.Text = "...";
             cmdFilterDirBrowse.Click += new EventHandler(CmdFilterDirBrowse_Click);
-            // 
+            //
             // lblFilterDir
-            // 
+            //
             lblFilterDir.Location = new Point(8, 88);
             lblFilterDir.Name = "lblFilterDir";
             lblFilterDir.Size = new Size(144, 16);
             lblFilterDir.TabIndex = 32;
             lblFilterDir.Text = "Filter Folder";
-            // 
+            //
             // cmdCfgDirBrowse
-            // 
+            //
             cmdCfgDirBrowse.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             cmdCfgDirBrowse.Location = new Point(232, 64);
             cmdCfgDirBrowse.Name = "cmdCfgDirBrowse";
@@ -891,34 +891,34 @@ namespace myseq
             cmdCfgDirBrowse.TabIndex = 31;
             cmdCfgDirBrowse.Text = "...";
             cmdCfgDirBrowse.Click += new EventHandler(CmdCfgDirBrowse_Click);
-            // 
+            //
             // lblCfgDir
-            // 
+            //
             lblCfgDir.Location = new Point(8, 48);
             lblCfgDir.Name = "lblCfgDir";
             lblCfgDir.Size = new Size(144, 16);
             lblCfgDir.TabIndex = 29;
             lblCfgDir.Text = "Config Folder";
-            // 
+            //
             // cmdMapDirBrowse
-            // 
+            //
             cmdMapDirBrowse.Location = new Point(232, 24);
             cmdMapDirBrowse.Name = "cmdMapDirBrowse";
             cmdMapDirBrowse.Size = new Size(24, 23);
             cmdMapDirBrowse.TabIndex = 28;
             cmdMapDirBrowse.Text = "...";
             cmdMapDirBrowse.Click += new EventHandler(CmdMapDirBrowse_Click);
-            // 
+            //
             // lblMapDir
-            // 
+            //
             lblMapDir.Location = new Point(8, 8);
             lblMapDir.Name = "lblMapDir";
             lblMapDir.Size = new Size(144, 16);
             lblMapDir.TabIndex = 26;
             lblMapDir.Text = "Map Folder";
-            // 
+            //
             // tabAlerts
-            // 
+            //
             tabAlerts.Controls.Add(grpDanger);
             tabAlerts.Controls.Add(grpAlert);
             tabAlerts.Controls.Add(grpCaution);
@@ -931,9 +931,9 @@ namespace myseq
             tabAlerts.Size = new Size(266, 375);
             tabAlerts.TabIndex = 1;
             tabAlerts.Text = "Filters";
-            // 
+            //
             // grpDanger
-            // 
+            //
             grpDanger.Controls.Add(optDangerPlay);
             grpDanger.Controls.Add(optDangerSpeak);
             grpDanger.Controls.Add(optDangerBeep);
@@ -948,33 +948,33 @@ namespace myseq
             grpDanger.TabIndex = 23;
             grpDanger.TabStop = false;
             grpDanger.Text = "Danger";
-            // 
+            //
             // optDangerPlay
-            // 
+            //
             optDangerPlay.Location = new Point(8, 55);
             optDangerPlay.Name = "optDangerPlay";
             optDangerPlay.Size = new Size(80, 16);
             optDangerPlay.TabIndex = 18;
             optDangerPlay.Text = "Play Wav";
-            // 
+            //
             // optDangerSpeak
-            // 
+            //
             optDangerSpeak.Location = new Point(167, 35);
             optDangerSpeak.Name = "optDangerSpeak";
             optDangerSpeak.Size = new Size(72, 16);
             optDangerSpeak.TabIndex = 17;
             optDangerSpeak.Text = "Speak";
-            // 
+            //
             // optDangerBeep
-            // 
+            //
             optDangerBeep.Location = new Point(88, 35);
             optDangerBeep.Name = "optDangerBeep";
             optDangerBeep.Size = new Size(72, 16);
             optDangerBeep.TabIndex = 16;
             optDangerBeep.Text = "Beep";
-            // 
+            //
             // optDangerNone
-            // 
+            //
             optDangerNone.Checked = true;
             optDangerNone.Location = new Point(8, 35);
             optDangerNone.Name = "optDangerNone";
@@ -982,41 +982,41 @@ namespace myseq
             optDangerNone.TabIndex = 15;
             optDangerNone.TabStop = true;
             optDangerNone.Text = "None";
-            // 
+            //
             // txtDangerAudioFile
-            // 
+            //
             txtDangerAudioFile.Location = new Point(88, 55);
             txtDangerAudioFile.Name = "txtDangerAudioFile";
             txtDangerAudioFile.Size = new Size(152, 20);
             txtDangerAudioFile.TabIndex = 19;
-            // 
+            //
             // txtDangerPrefix
-            // 
+            //
             txtDangerPrefix.Location = new Point(88, 11);
             txtDangerPrefix.MaxLength = 5;
             txtDangerPrefix.Name = "txtDangerPrefix";
             txtDangerPrefix.Size = new Size(32, 20);
             txtDangerPrefix.TabIndex = 13;
             txtDangerPrefix.Text = "[D]";
-            // 
+            //
             // lblDangerPrefix
-            // 
+            //
             lblDangerPrefix.Location = new Point(8, 14);
             lblDangerPrefix.Name = "lblDangerPrefix";
             lblDangerPrefix.Size = new Size(79, 16);
             lblDangerPrefix.TabIndex = 12;
             lblDangerPrefix.Text = "Prefix/Suffix:";
-            // 
+            //
             // chkDangerMatchFull
-            // 
+            //
             chkDangerMatchFull.Location = new Point(136, 11);
             chkDangerMatchFull.Name = "chkDangerMatchFull";
             chkDangerMatchFull.Size = new Size(104, 24);
             chkDangerMatchFull.TabIndex = 14;
             chkDangerMatchFull.Text = "Match Full Text";
-            // 
+            //
             // grpAlert
-            // 
+            //
             grpAlert.Controls.Add(optAlertPlay);
             grpAlert.Controls.Add(optAlertSpeak);
             grpAlert.Controls.Add(optAlertBeep);
@@ -1031,33 +1031,33 @@ namespace myseq
             grpAlert.TabIndex = 20;
             grpAlert.TabStop = false;
             grpAlert.Text = "Rare";
-            // 
+            //
             // optAlertPlay
-            // 
+            //
             optAlertPlay.Location = new Point(8, 55);
             optAlertPlay.Name = "optAlertPlay";
             optAlertPlay.Size = new Size(80, 16);
             optAlertPlay.TabIndex = 27;
             optAlertPlay.Text = "Play Wav";
-            // 
+            //
             // optAlertSpeak
-            // 
+            //
             optAlertSpeak.Location = new Point(168, 35);
             optAlertSpeak.Name = "optAlertSpeak";
             optAlertSpeak.Size = new Size(72, 16);
             optAlertSpeak.TabIndex = 26;
             optAlertSpeak.Text = "Speak";
-            // 
+            //
             // optAlertBeep
-            // 
+            //
             optAlertBeep.Location = new Point(88, 35);
             optAlertBeep.Name = "optAlertBeep";
             optAlertBeep.Size = new Size(72, 16);
             optAlertBeep.TabIndex = 25;
             optAlertBeep.Text = "Beep";
-            // 
+            //
             // optAlertNone
-            // 
+            //
             optAlertNone.Checked = true;
             optAlertNone.Location = new Point(8, 35);
             optAlertNone.Name = "optAlertNone";
@@ -1065,41 +1065,41 @@ namespace myseq
             optAlertNone.TabIndex = 24;
             optAlertNone.TabStop = true;
             optAlertNone.Text = "None";
-            // 
+            //
             // txtAlertAudioFile
-            // 
+            //
             txtAlertAudioFile.Location = new Point(88, 55);
             txtAlertAudioFile.Name = "txtAlertAudioFile";
             txtAlertAudioFile.Size = new Size(152, 20);
             txtAlertAudioFile.TabIndex = 28;
-            // 
+            //
             // txtAlertPrefix
-            // 
+            //
             txtAlertPrefix.Location = new Point(88, 11);
             txtAlertPrefix.MaxLength = 5;
             txtAlertPrefix.Name = "txtAlertPrefix";
             txtAlertPrefix.Size = new Size(32, 20);
             txtAlertPrefix.TabIndex = 22;
             txtAlertPrefix.Text = "[R]";
-            // 
+            //
             // lblAlertPrefix
-            // 
+            //
             lblAlertPrefix.Location = new Point(8, 14);
             lblAlertPrefix.Name = "lblAlertPrefix";
             lblAlertPrefix.Size = new Size(79, 16);
             lblAlertPrefix.TabIndex = 21;
             lblAlertPrefix.Text = "Prefix/Suffix:";
-            // 
+            //
             // chkAlertMatchFull
-            // 
+            //
             chkAlertMatchFull.Location = new Point(136, 11);
             chkAlertMatchFull.Name = "chkAlertMatchFull";
             chkAlertMatchFull.Size = new Size(104, 24);
             chkAlertMatchFull.TabIndex = 23;
             chkAlertMatchFull.Text = "Match Full Text";
-            // 
+            //
             // grpCaution
-            // 
+            //
             grpCaution.Controls.Add(optCautionPlay);
             grpCaution.Controls.Add(optCautionSpeak);
             grpCaution.Controls.Add(optCautionBeep);
@@ -1114,33 +1114,33 @@ namespace myseq
             grpCaution.TabIndex = 11;
             grpCaution.TabStop = false;
             grpCaution.Text = "Caution";
-            // 
+            //
             // optCautionPlay
-            // 
+            //
             optCautionPlay.Location = new Point(8, 55);
             optCautionPlay.Name = "optCautionPlay";
             optCautionPlay.Size = new Size(80, 16);
             optCautionPlay.TabIndex = 18;
             optCautionPlay.Text = "Play Wav";
-            // 
+            //
             // optCautionSpeak
-            // 
+            //
             optCautionSpeak.Location = new Point(168, 38);
             optCautionSpeak.Name = "optCautionSpeak";
             optCautionSpeak.Size = new Size(72, 16);
             optCautionSpeak.TabIndex = 17;
             optCautionSpeak.Text = "Speak";
-            // 
+            //
             // optCautionBeep
-            // 
+            //
             optCautionBeep.Location = new Point(88, 35);
             optCautionBeep.Name = "optCautionBeep";
             optCautionBeep.Size = new Size(72, 16);
             optCautionBeep.TabIndex = 16;
             optCautionBeep.Text = "Beep";
-            // 
+            //
             // optCautionNone
-            // 
+            //
             optCautionNone.Checked = true;
             optCautionNone.Location = new Point(8, 35);
             optCautionNone.Name = "optCautionNone";
@@ -1148,41 +1148,41 @@ namespace myseq
             optCautionNone.TabIndex = 15;
             optCautionNone.TabStop = true;
             optCautionNone.Text = "None";
-            // 
+            //
             // txtCautionAudioFile
-            // 
+            //
             txtCautionAudioFile.Location = new Point(88, 55);
             txtCautionAudioFile.Name = "txtCautionAudioFile";
             txtCautionAudioFile.Size = new Size(152, 20);
             txtCautionAudioFile.TabIndex = 19;
-            // 
+            //
             // txtCautionPrefix
-            // 
+            //
             txtCautionPrefix.Location = new Point(88, 11);
             txtCautionPrefix.MaxLength = 5;
             txtCautionPrefix.Name = "txtCautionPrefix";
             txtCautionPrefix.Size = new Size(32, 20);
             txtCautionPrefix.TabIndex = 13;
             txtCautionPrefix.Text = "[C]";
-            // 
+            //
             // lblCautionPrefix
-            // 
+            //
             lblCautionPrefix.Location = new Point(8, 14);
             lblCautionPrefix.Name = "lblCautionPrefix";
             lblCautionPrefix.Size = new Size(80, 16);
             lblCautionPrefix.TabIndex = 12;
             lblCautionPrefix.Text = "Prefix/Suffix:";
-            // 
+            //
             // chkCautionMatchFull
-            // 
+            //
             chkCautionMatchFull.Location = new Point(136, 11);
             chkCautionMatchFull.Name = "chkCautionMatchFull";
             chkCautionMatchFull.Size = new Size(104, 24);
             chkCautionMatchFull.TabIndex = 14;
             chkCautionMatchFull.Text = "Match Full Text";
-            // 
+            //
             // grpHunt
-            // 
+            //
             grpHunt.Controls.Add(optHuntPlay);
             grpHunt.Controls.Add(optHuntSpeak);
             grpHunt.Controls.Add(optHuntBeep);
@@ -1197,33 +1197,33 @@ namespace myseq
             grpHunt.TabIndex = 2;
             grpHunt.TabStop = false;
             grpHunt.Text = "Hunt";
-            // 
+            //
             // optHuntPlay
-            // 
+            //
             optHuntPlay.Location = new Point(8, 55);
             optHuntPlay.Name = "optHuntPlay";
             optHuntPlay.Size = new Size(80, 16);
             optHuntPlay.TabIndex = 9;
             optHuntPlay.Text = "Play Wav";
-            // 
+            //
             // optHuntSpeak
-            // 
+            //
             optHuntSpeak.Location = new Point(168, 35);
             optHuntSpeak.Name = "optHuntSpeak";
             optHuntSpeak.Size = new Size(72, 16);
             optHuntSpeak.TabIndex = 8;
             optHuntSpeak.Text = "Speak";
-            // 
+            //
             // optHuntBeep
-            // 
+            //
             optHuntBeep.Location = new Point(88, 35);
             optHuntBeep.Name = "optHuntBeep";
             optHuntBeep.Size = new Size(72, 16);
             optHuntBeep.TabIndex = 7;
             optHuntBeep.Text = "Beep";
-            // 
+            //
             // optHuntNone
-            // 
+            //
             optHuntNone.Checked = true;
             optHuntNone.Location = new Point(8, 35);
             optHuntNone.Name = "optHuntNone";
@@ -1231,41 +1231,41 @@ namespace myseq
             optHuntNone.TabIndex = 6;
             optHuntNone.TabStop = true;
             optHuntNone.Text = "None";
-            // 
+            //
             // txtHuntAudioFile
-            // 
+            //
             txtHuntAudioFile.Location = new Point(88, 55);
             txtHuntAudioFile.Name = "txtHuntAudioFile";
             txtHuntAudioFile.Size = new Size(152, 20);
             txtHuntAudioFile.TabIndex = 10;
-            // 
+            //
             // txtHuntPrefix
-            // 
+            //
             txtHuntPrefix.Location = new Point(88, 11);
             txtHuntPrefix.MaxLength = 5;
             txtHuntPrefix.Name = "txtHuntPrefix";
             txtHuntPrefix.Size = new Size(32, 20);
             txtHuntPrefix.TabIndex = 4;
             txtHuntPrefix.Text = "[H]";
-            // 
+            //
             // lblHuntPrefix
-            // 
+            //
             lblHuntPrefix.Location = new Point(8, 14);
             lblHuntPrefix.Name = "lblHuntPrefix";
             lblHuntPrefix.Size = new Size(80, 16);
             lblHuntPrefix.TabIndex = 3;
             lblHuntPrefix.Text = "Prefix/Suffix:";
-            // 
+            //
             // chkHuntMatchFull
-            // 
+            //
             chkHuntMatchFull.Location = new Point(136, 11);
             chkHuntMatchFull.Name = "chkHuntMatchFull";
             chkHuntMatchFull.Size = new Size(104, 24);
             chkHuntMatchFull.TabIndex = 5;
             chkHuntMatchFull.Text = "Match Full Text";
-            // 
+            //
             // chkAffixAlerts
-            // 
+            //
             chkAffixAlerts.Checked = true;
             chkAffixAlerts.CheckState = System.Windows.Forms.CheckState.Checked;
             chkAffixAlerts.Location = new Point(4, 22);
@@ -1273,9 +1273,9 @@ namespace myseq
             chkAffixAlerts.Size = new Size(112, 24);
             chkAffixAlerts.TabIndex = 1;
             chkAffixAlerts.Text = "Attach Suffix Text";
-            // 
+            //
             // chkPrefixAlerts
-            // 
+            //
             chkPrefixAlerts.Checked = true;
             chkPrefixAlerts.CheckState = System.Windows.Forms.CheckState.Checked;
             chkPrefixAlerts.Location = new Point(4, 3);
@@ -1283,9 +1283,9 @@ namespace myseq
             chkPrefixAlerts.Size = new Size(120, 24);
             chkPrefixAlerts.TabIndex = 0;
             chkPrefixAlerts.Text = "Attach Prefix Text";
-            // 
+            //
             // chkCorpsesAlerts
-            // 
+            //
             chkCorpsesAlerts.Checked = true;
             chkCorpsesAlerts.CheckState = System.Windows.Forms.CheckState.Checked;
             chkCorpsesAlerts.Location = new Point(152, 3);
@@ -1293,9 +1293,9 @@ namespace myseq
             chkCorpsesAlerts.Size = new Size(100, 24);
             chkCorpsesAlerts.TabIndex = 24;
             chkCorpsesAlerts.Text = "Match Corpses";
-            // 
+            //
             // tabMap
-            // 
+            //
             tabMap.Controls.Add(FadedLines);
             tabMap.Controls.Add(lblFadedLines);
             tabMap.Controls.Add(lblPVPLevels);
@@ -1312,9 +1312,9 @@ namespace myseq
             tabMap.Size = new Size(266, 375);
             tabMap.TabIndex = 2;
             tabMap.Text = "Map";
-            // 
+            //
             // FadedLines
-            // 
+            //
             FadedLines.Location = new Point(175, 99);
             FadedLines.Name = "FadedLines";
             FadedLines.Size = new Size(64, 20);
@@ -1324,26 +1324,26 @@ namespace myseq
             0,
             0,
             0});
-            // 
+            //
             // lblFadedLines
-            // 
+            //
             lblFadedLines.AutoSize = true;
             lblFadedLines.Location = new Point(6, 99);
             lblFadedLines.Name = "lblFadedLines";
             lblFadedLines.Size = new Size(139, 13);
             lblFadedLines.TabIndex = 60;
             lblFadedLines.Text = "Dynamic Alpha Faded Lines";
-            // 
+            //
             // lblPVPLevels
-            // 
+            //
             lblPVPLevels.Location = new Point(6, 76);
             lblPVPLevels.Name = "lblPVPLevels";
             lblPVPLevels.Size = new Size(142, 16);
             lblPVPLevels.TabIndex = 58;
             lblPVPLevels.Text = "PVP Level Range:";
-            // 
+            //
             // pvpLevels
-            // 
+            //
             pvpLevels.Location = new Point(175, 74);
             pvpLevels.Minimum = new decimal(new int[] {
             1,
@@ -1359,9 +1359,9 @@ namespace myseq
             0,
             0});
             pvpLevels.ValueChanged += new EventHandler(PvpLevels_ValueChanged);
-            // 
+            //
             // groupBox1
-            // 
+            //
             groupBox1.Controls.Add(cmbAlertSound);
             groupBox1.Controls.Add(cmbHatch);
             groupBox1.Controls.Add(label4);
@@ -1376,9 +1376,9 @@ namespace myseq
             groupBox1.TabIndex = 57;
             groupBox1.TabStop = false;
             groupBox1.Text = "Proximity Alert Settings";
-            // 
+            //
             // cmbAlertSound
-            // 
+            //
             cmbAlertSound.FormattingEnabled = true;
             cmbAlertSound.Items.AddRange(new object[] {
             "Asterisk",
@@ -1391,9 +1391,9 @@ namespace myseq
             cmbAlertSound.Size = new Size(133, 21);
             cmbAlertSound.TabIndex = 54;
             cmbAlertSound.SelectionChangeCommitted += new EventHandler(CmbAlertSound_SelectionChangeCommitted);
-            // 
+            //
             // cmbHatch
-            // 
+            //
             cmbHatch.FormattingEnabled = true;
             cmbHatch.Location = new Point(104, 42);
             cmbHatch.Name = "cmbHatch";
@@ -1401,33 +1401,33 @@ namespace myseq
             cmbHatch.TabIndex = 53;
             cmbHatch.Tag = "";
             cmbHatch.SelectionChangeCommitted += new EventHandler(CmbHatch_SelectionChangeCommitted);
-            // 
+            //
             // label4
-            // 
+            //
             label4.Location = new Point(4, 70);
             label4.Name = "label4";
             label4.Size = new Size(103, 16);
             label4.TabIndex = 58;
             label4.Text = "Alert Sound";
-            // 
+            //
             // label2
-            // 
+            //
             label2.Location = new Point(4, 45);
             label2.Name = "label2";
             label2.Size = new Size(103, 16);
             label2.TabIndex = 57;
             label2.Text = "Hatch Pattern";
-            // 
+            //
             // chkColorRangeCircle
-            // 
+            //
             chkColorRangeCircle.Location = new Point(7, 20);
             chkColorRangeCircle.Name = "chkColorRangeCircle";
             chkColorRangeCircle.Size = new Size(108, 16);
             chkColorRangeCircle.TabIndex = 5;
             chkColorRangeCircle.Text = "Range Circle";
-            // 
+            //
             // spnRangeCircle
-            // 
+            //
             spnRangeCircle.Location = new Point(173, 19);
             spnRangeCircle.Maximum = new decimal(new int[] {
             1000,
@@ -1442,9 +1442,9 @@ namespace myseq
             0,
             0,
             0});
-            // 
+            //
             // numMinAlertLevel
-            // 
+            //
             numMinAlertLevel.Location = new Point(172, 91);
             numMinAlertLevel.Maximum = new decimal(new int[] {
             255,
@@ -1464,17 +1464,17 @@ namespace myseq
             0,
             0,
             0});
-            // 
+            //
             // label1
-            // 
+            //
             label1.Location = new Point(4, 93);
             label1.Name = "label1";
             label1.Size = new Size(142, 16);
             label1.TabIndex = 56;
             label1.Text = "Minimum Alert Level";
-            // 
+            //
             // groupBox2
-            // 
+            //
             groupBox2.Controls.Add(chkMap);
             groupBox2.Controls.Add(chkPlayer);
             groupBox2.Controls.Add(chkSpawns);
@@ -1493,121 +1493,121 @@ namespace myseq
             groupBox2.TabIndex = 52;
             groupBox2.TabStop = false;
             groupBox2.Text = "Map Drawing Settings";
-            // 
+            //
             // chkMap
-            // 
+            //
             chkMap.Location = new Point(142, 53);
             chkMap.Name = "chkMap";
             chkMap.Size = new Size(94, 20);
             chkMap.TabIndex = 30;
             chkMap.Text = "Draw Map";
-            // 
+            //
             // chkPlayer
-            // 
+            //
             chkPlayer.Location = new Point(142, 70);
             chkPlayer.Name = "chkPlayer";
             chkPlayer.Size = new Size(94, 20);
             chkPlayer.TabIndex = 50;
             chkPlayer.Text = "Draw Player";
-            // 
+            //
             // chkSpawns
-            // 
+            //
             chkSpawns.Location = new Point(142, 36);
             chkSpawns.Name = "chkSpawns";
             chkSpawns.Size = new Size(94, 20);
             chkSpawns.TabIndex = 43;
             chkSpawns.Text = "Draw Spawns";
-            // 
+            //
             // chkAddjust
-            // 
+            //
             chkAddjust.Location = new Point(6, 19);
             chkAddjust.Name = "chkAddjust";
             chkAddjust.Size = new Size(121, 20);
             chkAddjust.TabIndex = 29;
             chkAddjust.Text = "Readjust Map";
-            // 
+            //
             // chkGround
-            // 
+            //
             chkGround.Location = new Point(142, 104);
             chkGround.Name = "chkGround";
             chkGround.Size = new Size(111, 20);
             chkGround.TabIndex = 51;
             chkGround.Text = "Ground Spawns";
-            // 
+            //
             // chkTrails
-            // 
+            //
             chkTrails.Location = new Point(6, 87);
             chkTrails.Name = "chkTrails";
             chkTrails.Size = new Size(130, 20);
             chkTrails.TabIndex = 45;
             chkTrails.Text = "Spawn Trails";
-            // 
+            //
             // chkHighlight
-            // 
+            //
             chkHighlight.Location = new Point(6, 104);
             chkHighlight.Name = "chkHighlight";
             chkHighlight.Size = new Size(130, 20);
             chkHighlight.TabIndex = 49;
             chkHighlight.Text = "Highlight Merchants";
-            // 
+            //
             // chkGrid
-            // 
+            //
             chkGrid.Location = new Point(6, 36);
             chkGrid.Name = "chkGrid";
             chkGrid.Size = new Size(130, 20);
             chkGrid.TabIndex = 37;
             chkGrid.Text = "Show Gridlines";
-            // 
+            //
             // chkTimers
-            // 
+            //
             chkTimers.Location = new Point(142, 19);
             chkTimers.Name = "chkTimers";
             chkTimers.Size = new Size(116, 20);
             chkTimers.TabIndex = 47;
             chkTimers.Text = "Spawn Timers";
-            // 
+            //
             // chkText
-            // 
+            //
             chkText.Location = new Point(6, 70);
             chkText.Name = "chkText";
             chkText.Size = new Size(130, 20);
             chkText.TabIndex = 41;
             chkText.Text = "Show Zone Text";
-            // 
+            //
             // chkDirection
-            // 
+            //
             chkDirection.Location = new Point(142, 87);
             chkDirection.Name = "chkDirection";
             chkDirection.Size = new Size(109, 20);
             chkDirection.TabIndex = 46;
             chkDirection.Text = "Heading Lines";
-            // 
+            //
             // chkLineToPoint
-            // 
+            //
             chkLineToPoint.Location = new Point(6, 53);
             chkLineToPoint.Name = "chkLineToPoint";
             chkLineToPoint.Size = new Size(130, 20);
             chkLineToPoint.TabIndex = 42;
             chkLineToPoint.Text = "Draw Line to Point";
-            // 
+            //
             // lblSpawnSize
-            // 
+            //
             lblSpawnSize.Location = new Point(6, 51);
             lblSpawnSize.Name = "lblSpawnSize";
             lblSpawnSize.Size = new Size(142, 16);
             lblSpawnSize.TabIndex = 20;
             lblSpawnSize.Text = "Spawn Draw Size:";
-            // 
+            //
             // chkSelectSpawnList
-            // 
+            //
             chkSelectSpawnList.Location = new Point(8, 32);
             chkSelectSpawnList.Name = "chkSelectSpawnList";
             chkSelectSpawnList.Size = new Size(248, 16);
             chkSelectSpawnList.TabIndex = 4;
             chkSelectSpawnList.Text = "Auto Select Spawn in the Spawn List";
-            // 
+            //
             // spnSpawnSize
-            // 
+            //
             spnSpawnSize.Location = new Point(175, 49);
             spnSpawnSize.Maximum = new decimal(new int[] {
             12,
@@ -1628,25 +1628,25 @@ namespace myseq
             0,
             0});
             spnSpawnSize.ValueChanged += new EventHandler(SpnSpawnSize_ValueChanged);
-            // 
+            //
             // chkShowTargetInfo
-            // 
+            //
             chkShowTargetInfo.Location = new Point(8, 12);
             chkShowTargetInfo.Name = "chkShowTargetInfo";
             chkShowTargetInfo.Size = new Size(248, 16);
             chkShowTargetInfo.TabIndex = 3;
             chkShowTargetInfo.Text = "Show Target Information Window";
-            // 
+            //
             // chkDrawFoV
-            // 
+            //
             chkDrawFoV.Location = new Point(8, -24);
             chkDrawFoV.Name = "chkDrawFoV";
             chkDrawFoV.Size = new Size(248, 16);
             chkDrawFoV.TabIndex = 2;
             chkDrawFoV.Text = "Draw Field of View (FoV)";
-            // 
+            //
             // tabGeneral
-            // 
+            //
             tabGeneral.Controls.Add(chkShowCharName);
             tabGeneral.Controls.Add(txtSearchString);
             tabGeneral.Controls.Add(lblSearch);
@@ -1666,9 +1666,9 @@ namespace myseq
             tabGeneral.Size = new Size(266, 375);
             tabGeneral.TabIndex = 0;
             tabGeneral.Text = "General";
-            // 
+            //
             // chkShowCharName
-            // 
+            //
             chkShowCharName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             chkShowCharName.Checked = true;
             chkShowCharName.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -1677,39 +1677,39 @@ namespace myseq
             chkShowCharName.Size = new Size(114, 24);
             chkShowCharName.TabIndex = 27;
             chkShowCharName.Text = "Show Char Name";
-            // 
+            //
             // txtSearchString
-            // 
+            //
             txtSearchString.Location = new Point(61, 344);
             txtSearchString.Name = "txtSearchString";
             txtSearchString.Size = new Size(195, 20);
             txtSearchString.TabIndex = 26;
-            // 
+            //
             // lblSearch
-            // 
+            //
             lblSearch.Location = new Point(8, 347);
             lblSearch.Name = "lblSearch";
             lblSearch.Size = new Size(47, 17);
             lblSearch.TabIndex = 25;
             lblSearch.Text = "Search:";
-            // 
+            //
             // spnLogLevel
-            // 
+            //
             spnLogLevel.Location = new Point(192, 256);
             spnLogLevel.Name = "spnLogLevel";
             spnLogLevel.Size = new Size(64, 20);
             spnLogLevel.TabIndex = 21;
-            // 
+            //
             // lblLogLevel
-            // 
+            //
             lblLogLevel.Location = new Point(8, 256);
             lblLogLevel.Name = "lblLogLevel";
             lblLogLevel.Size = new Size(136, 16);
             lblLogLevel.TabIndex = 20;
             lblLogLevel.Text = "Error Logging Level:";
-            // 
+            //
             // chkShowZoneName
-            // 
+            //
             chkShowZoneName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             chkShowZoneName.Checked = true;
             chkShowZoneName.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -1718,9 +1718,9 @@ namespace myseq
             chkShowZoneName.Size = new Size(114, 24);
             chkShowZoneName.TabIndex = 24;
             chkShowZoneName.Text = "Show Zone Name";
-            // 
+            //
             // spnOverrideLevel
-            // 
+            //
             spnOverrideLevel.Location = new Point(192, 208);
             spnOverrideLevel.Maximum = new decimal(new int[] {
             255,
@@ -1740,9 +1740,9 @@ namespace myseq
             0,
             0,
             0});
-            // 
+            //
             // spnUpdateDelay
-            // 
+            //
             spnUpdateDelay.Location = new Point(192, 232);
             spnUpdateDelay.Maximum = new decimal(new int[] {
             1000,
@@ -1762,32 +1762,32 @@ namespace myseq
             0,
             0,
             0});
-            // 
+            //
             // txtWindowName
-            // 
+            //
             txtWindowName.Location = new Point(8, 296);
             txtWindowName.Name = "txtWindowName";
             txtWindowName.Size = new Size(248, 20);
             txtWindowName.TabIndex = 23;
-            // 
+            //
             // lblWindowName
-            // 
+            //
             lblWindowName.Location = new Point(8, 280);
             lblWindowName.Name = "lblWindowName";
             lblWindowName.Size = new Size(144, 16);
             lblWindowName.TabIndex = 22;
             lblWindowName.Text = "Window Title:";
-            // 
+            //
             // lblOverridelevel
-            // 
+            //
             lblOverridelevel.Location = new Point(8, 208);
             lblOverridelevel.Name = "lblOverridelevel";
             lblOverridelevel.Size = new Size(136, 16);
             lblOverridelevel.TabIndex = 14;
             lblOverridelevel.Text = "Override Level:";
-            // 
+            //
             // gbServer
-            // 
+            //
             gbServer.Controls.Add(txtIPAddress5);
             gbServer.Controls.Add(lblIPAddress5);
             gbServer.Controls.Add(txtIPAddress4);
@@ -1806,109 +1806,109 @@ namespace myseq
             gbServer.TabIndex = 0;
             gbServer.TabStop = false;
             gbServer.Text = "Server";
-            // 
+            //
             // txtIPAddress5
-            // 
+            //
             txtIPAddress5.Location = new Point(128, 112);
             txtIPAddress5.Name = "txtIPAddress5";
             txtIPAddress5.Size = new Size(112, 20);
             txtIPAddress5.TabIndex = 10;
-            // 
+            //
             // lblIPAddress5
-            // 
+            //
             lblIPAddress5.Location = new Point(8, 112);
             lblIPAddress5.Name = "lblIPAddress5";
             lblIPAddress5.Size = new Size(120, 16);
             lblIPAddress5.TabIndex = 9;
             lblIPAddress5.Text = "IP Address 5: (Ctrl + 5)";
-            // 
+            //
             // txtIPAddress4
-            // 
+            //
             txtIPAddress4.Location = new Point(128, 88);
             txtIPAddress4.Name = "txtIPAddress4";
             txtIPAddress4.Size = new Size(112, 20);
             txtIPAddress4.TabIndex = 8;
-            // 
+            //
             // lblIPAddress4
-            // 
+            //
             lblIPAddress4.Location = new Point(8, 88);
             lblIPAddress4.Name = "lblIPAddress4";
             lblIPAddress4.Size = new Size(120, 16);
             lblIPAddress4.TabIndex = 7;
             lblIPAddress4.Text = "IP Address 4: (Ctrl + 4)";
-            // 
+            //
             // txtIPAddress3
-            // 
+            //
             txtIPAddress3.Location = new Point(128, 64);
             txtIPAddress3.Name = "txtIPAddress3";
             txtIPAddress3.Size = new Size(112, 20);
             txtIPAddress3.TabIndex = 6;
-            // 
+            //
             // lblIPAddress3
-            // 
+            //
             lblIPAddress3.Location = new Point(8, 64);
             lblIPAddress3.Name = "lblIPAddress3";
             lblIPAddress3.Size = new Size(120, 16);
             lblIPAddress3.TabIndex = 5;
             lblIPAddress3.Text = "IP Address 3: (Ctrl + 3)";
-            // 
+            //
             // txtIPAddress2
-            // 
+            //
             txtIPAddress2.Location = new Point(128, 40);
             txtIPAddress2.Name = "txtIPAddress2";
             txtIPAddress2.Size = new Size(112, 20);
             txtIPAddress2.TabIndex = 4;
-            // 
+            //
             // lblIPAddress2
-            // 
+            //
             lblIPAddress2.Location = new Point(8, 40);
             lblIPAddress2.Name = "lblIPAddress2";
             lblIPAddress2.Size = new Size(120, 16);
             lblIPAddress2.TabIndex = 3;
             lblIPAddress2.Text = "IP Address 2: (Ctrl + 2)";
-            // 
+            //
             // txtPortNo
-            // 
+            //
             txtPortNo.Location = new Point(128, 136);
             txtPortNo.Name = "txtPortNo";
             txtPortNo.Size = new Size(112, 20);
             txtPortNo.TabIndex = 12;
             txtPortNo.Text = "5555";
-            // 
+            //
             // txtIPAddress1
-            // 
+            //
             txtIPAddress1.Location = new Point(128, 16);
             txtIPAddress1.Name = "txtIPAddress1";
             txtIPAddress1.Size = new Size(112, 20);
             txtIPAddress1.TabIndex = 2;
             txtIPAddress1.Text = "localhost";
-            // 
+            //
             // lblIPAddress1
-            // 
+            //
             lblIPAddress1.Location = new Point(8, 16);
             lblIPAddress1.Name = "lblIPAddress1";
             lblIPAddress1.Size = new Size(120, 16);
             lblIPAddress1.TabIndex = 1;
             lblIPAddress1.Text = "IP Address 1: (Ctrl + 1)";
-            // 
+            //
             // lbltxtPortNo
-            // 
+            //
             lbltxtPortNo.Location = new Point(8, 136);
             lbltxtPortNo.Name = "lbltxtPortNo";
             lbltxtPortNo.Size = new Size(120, 16);
             lbltxtPortNo.TabIndex = 11;
             lbltxtPortNo.Text = "Port:";
-            // 
+            //
             // lblUpdateDelay
-            // 
+            //
             lblUpdateDelay.Location = new Point(8, 232);
             lblUpdateDelay.Name = "lblUpdateDelay";
             lblUpdateDelay.Size = new Size(136, 16);
             lblUpdateDelay.TabIndex = 16;
             lblUpdateDelay.Text = "Update Delay (mS):";
-            // 
+            //
             // chkSaveOnExit
-            // 
+            //
             chkSaveOnExit.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             chkSaveOnExit.Checked = true;
             chkSaveOnExit.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -1917,9 +1917,9 @@ namespace myseq
             chkSaveOnExit.Size = new Size(197, 24);
             chkSaveOnExit.TabIndex = 13;
             chkSaveOnExit.Text = "Save Preferences On Exit:";
-            // 
+            //
             // tabOptions
-            // 
+            //
             tabOptions.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom
             | AnchorStyles.Left
             | AnchorStyles.Right);
@@ -1934,16 +1934,16 @@ namespace myseq
             tabOptions.SelectedIndex = 0;
             tabOptions.Size = new Size(274, 401);
             tabOptions.TabIndex = 1;
-            // 
+            //
             // tabPage1
-            // 
+            //
             tabPage1.Location = new Point(4, 22);
             tabPage1.Name = "tabPage1";
             tabPage1.Size = new Size(264, 374);
             tabPage1.TabIndex = 5;
-            // 
+            //
             // cmdCancel
-            // 
+            //
             cmdCancel.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
             cmdCancel.DialogResult = DialogResult.Cancel;
             cmdCancel.Location = new Point(176, 410);
@@ -1951,9 +1951,9 @@ namespace myseq
             cmdCancel.Size = new Size(85, 23);
             cmdCancel.TabIndex = 2;
             cmdCancel.Text = "Cancel";
-            // 
+            //
             // frmOptions
-            // 
+            //
             AcceptButton = cmdCommand;
             AutoScaleBaseSize = new Size(5, 13);
             AutoSize = true;
@@ -2008,11 +2008,11 @@ namespace myseq
             ResumeLayout(false);
         }
 
-        #endregion
+        #endregion Windows Form Designer generated code
 
         private void CmdCommand_Click(object sender, EventArgs e)
         {
-            if (chkSaveOnExit.Checked)  // This checkbox actually DO something now. 
+            if (chkSaveOnExit.Checked)  // This checkbox actually DO something now.
             {
                 SaveSettings();
             }
@@ -2025,7 +2025,10 @@ namespace myseq
                 {
                     Directory.CreateDirectory(txtMapDir.Text);
                 }
-                else done = false;
+                else
+                {
+                    done = false;
+                }
             }
 
             if (!Directory.Exists(txtFilterDir.Text) && DialogResult.Yes == DirBox("Filters"))
@@ -2039,7 +2042,10 @@ namespace myseq
                 {
                     Directory.CreateDirectory(txtCfgDir.Text);
                 }
-                else done = false;
+                else
+                {
+                    done = false;
+                }
             }
 
             if (!Directory.Exists(txtLogDir.Text))
@@ -2048,7 +2054,10 @@ namespace myseq
                 {
                     Directory.CreateDirectory(txtLogDir.Text);
                 }
-                else done = false;
+                else
+                {
+                    done = false;
+                }
             }
 
             if (!Directory.Exists(txtTimerDir.Text))
@@ -2057,7 +2066,10 @@ namespace myseq
                 {
                     Directory.CreateDirectory(txtTimerDir.Text);
                 }
-                else done = false;
+                else
+                {
+                    done = false;
+                }
             }
 
             if (done) Hide();
@@ -2462,4 +2474,3 @@ namespace myseq
         private void PvpLevels_ValueChanged(object sender, EventArgs e) => Settings.Default.PVPLevels = (int)pvpLevels.Value;
     }
 }
-

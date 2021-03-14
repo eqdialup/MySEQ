@@ -1858,5 +1858,17 @@ namespace myseq.Properties {
                 this["IPAddress5"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EmailAlerts {
+            get {
+                return ((bool)(this["EmailAlerts"]));
+            }
+            set {
+                this["EmailAlerts"] = value;
+            }
+        }
     }
 }

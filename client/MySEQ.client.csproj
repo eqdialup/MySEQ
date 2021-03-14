@@ -148,6 +148,12 @@
     <Compile Include="frmDialogBox.Designer.cs">
       <DependentUpon>frmDialogBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -185,6 +191,7 @@
     <Compile Include="DrawOptions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SmtpSettings.cs" />
     <Compile Include="SPAWNINFO.cs" />
     <Compile Include="SPAWNTIMER.cs" />
     <Compile Include="Structures.cs">
@@ -229,6 +236,9 @@
     <EmbeddedResource Include="frmDialogBox.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmDialogBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>

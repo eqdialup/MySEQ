@@ -402,9 +402,6 @@ namespace myseq
             InitializeComponent();
 
             LogLib.maxLogLevel = LogLevel.DefaultMaxLevel;
-
-            string myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
-
             LoadPrefs();
 
             LogLib.WriteLine("MySEQ Open Version: " + Version);
@@ -459,6 +456,7 @@ namespace myseq
 
             string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "positions.xml");
 
+            string myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
             // This in the application data folder.
             string newConfigFile = Path.Combine(myPath, "positions.xml");
 
@@ -5306,7 +5304,7 @@ namespace myseq
             if (mapCon != null)
 
             {
-                mapCon.SetDistinctPens();
+//                mapCon.SetDistinctPens();
 
                 mapCon.Invalidate();
             }
