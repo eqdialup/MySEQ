@@ -355,6 +355,11 @@ namespace myseq
                 }
             }
             // Put in offsets for use when drawing text on map, for duplicate text at same location
+            OptimizeText();
+        }
+
+        private void OptimizeText()
+        {
             int index = 0;
             foreach (MapText tex1 in eq.texts)
             {
@@ -373,20 +378,14 @@ namespace myseq
 
         public float CalcDotProduct(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
         {
-            double lenV1;
-
-            double lenV2;
-
-            double lenV3;
-
             if ((x1 == x2 && y1 == y2 && z1 == z2) || (x2 == x3 && y2 == y3 && z2 == z3))
                 return 1.0f;
 
-            lenV1 = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)) + ((z2 - z1) * (z2 - z1)));
+            double lenV1 = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)) + ((z2 - z1) * (z2 - z1)));
 
-            lenV2 = Math.Sqrt(((x3 - x2) * (x3 - x2)) + ((y3 - y2) * (y3 - y2)) + ((z3 - z2) * (z3 - z2)));
+            double lenV2 = Math.Sqrt(((x3 - x2) * (x3 - x2)) + ((y3 - y2) * (y3 - y2)) + ((z3 - z2) * (z3 - z2)));
 
-            lenV3 = Math.Sqrt(((x3 - x1) * (x3 - x1)) + ((y3 - y1) * (y3 - y1)) + ((z3 - z1) * (z3 - z1)));
+            double lenV3 = Math.Sqrt(((x3 - x1) * (x3 - x1)) + ((y3 - y1) * (y3 - y1)) + ((z3 - z1) * (z3 - z1)));
 
             return (float)(lenV3 / (lenV1 + lenV2));
         }

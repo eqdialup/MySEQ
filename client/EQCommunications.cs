@@ -1,11 +1,11 @@
 // Class Files
 
-using Structures;
+using myseq;
 using System;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace myseq
+namespace Structures
 
 {
     [Flags]
@@ -59,7 +59,7 @@ namespace myseq
             update_hidden = true;
         }
 
-        public EQCommunications(EQData eq,FrmMain f1)
+        public EQCommunications(EQData eq, FrmMain f1)
 
         {
             this.eq = eq;
@@ -81,14 +81,16 @@ namespace myseq
 
                 pSocketClient = null;
             }
-            catch (Exception pException) {LogLib.WriteLine($"Error: StopListening: {pException.Message}");}
+            catch (Exception pException) { LogLib.WriteLine($"Error: StopListening: {pException.Message}"); }
         }
 
         public bool ConnectToServer(string ServerAddress, int ServerPort, bool errMsg = true)
 
         {
-            try {
-                if (pSocketClient != null) {
+            try
+            {
+                if (pSocketClient != null)
+                {
                     Thread.Sleep(2000);
 
                     pSocketClient.Dispose();
@@ -105,14 +107,14 @@ namespace myseq
 
                 // Establish a connection to the server
                 mbGetProcessInfo = true;
-                pSocketClient.Connect(ServerAddress,(short) ServerPort);
+                pSocketClient.Connect(ServerAddress, (short)ServerPort);
 
                 return true;
             }
             catch (Exception pException)
 
             {
-                string msg = $"{ServConErr} {pException.Message}";
+                var msg = $"{ServConErr} {pException.Message}";
 
                 LogLib.WriteLine(msg);
 
@@ -139,8 +141,8 @@ namespace myseq
         {
             // Process the packet
 
-            try {ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);}
-            catch (Exception pException) {LogLib.WriteLine("Error: ProcessPacket: " + pException.Message);}
+            try { ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes); }
+            catch (Exception pException) { LogLib.WriteLine("Error: ProcessPacket: " + pException.Message); }
         }
 
         //********************************************************************
@@ -149,13 +151,14 @@ namespace myseq
         /// <param name="pSocket"> The SocketClient object the message came from </param>
         private void CloseHandler(CSocketClient pSocket)
         {
-            try {
+            try
+            {
                 if (f1 == null)
                     StopListening();
                 else
                     f1.StopListening();
             }
-            catch (Exception pException) {LogLib.WriteLine($"Error: CloseHandler: {pException.Message}");}
+            catch (Exception pException) { LogLib.WriteLine($"Error: CloseHandler: {pException.Message}"); }
         }
 
         //********************************************************************
@@ -211,14 +214,14 @@ namespace myseq
                     }
                 }
             }
-            catch (Exception ex) {LogLib.WriteLine("Error: timPackets_Tick: ", ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error: timPackets_Tick: ", ex); }
         }
 
         public void CharRefresh()
         {
             if (pSocketClient != null)
             {
-                    mbGetProcessInfo = true;
+                mbGetProcessInfo = true;
             }
         }
 
@@ -230,16 +233,17 @@ namespace myseq
 
         public bool CanSwitchChars()
         {
-            return (newProcessID == 0) && (!mbGetProcessInfo);
+            return newProcessID == 0 && !mbGetProcessInfo;
         }
 
         private void ProcessPacket(byte[] packet, int bytes)
         {
-            int offset = 0;
+            var offset = 0;
 
             const int SIZE_OF_PACKET = 100; //104 on new server
 
-            try {
+            try
+            {
                 if (bytes > 0)
 
                 {
@@ -263,7 +267,7 @@ namespace myseq
 
                     eq.BeginProcessPacket(); //clears spawn&ground arrays
 
-                    for (; (offset + SIZE_OF_PACKET) <= bytes; offset += SIZE_OF_PACKET)
+                    for (; offset + SIZE_OF_PACKET <= bytes; offset += SIZE_OF_PACKET)
 
                     {
                         SPAWNINFO si = new SPAWNINFO();
@@ -277,11 +281,12 @@ namespace myseq
                             {
                                 PacketCopy(packet, SIZE_OF_PACKET);
                             }
-                            catch (Exception ex) {LogLib.WriteLine("Error: ProcessPacket: Copy Incomplete packet buffer: " ,ex);}
+                            catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: Copy Incomplete packet buffer: ", ex); }
 
                             incompleteCount = 0;
 
-                            if (incompletebuffer.Length == 0) {
+                            if (incompletebuffer.Length == 0)
+                            {
                                 numPackets = 0;
                                 break;
                             }
@@ -293,7 +298,7 @@ namespace myseq
                             si.Frombytes(packet, offset);
                         }
 
-                        numProcessed ++;
+                        numProcessed++;
                         f1.ProcessPacket(si, update_hidden);
                     }
 
@@ -301,7 +306,7 @@ namespace myseq
                     f1.ProcessGroundItemList();
                 }
             }
-            catch (Exception ex) {LogLib.WriteLine("Error: ProcessPacket: ", ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: ", ex); }
 
             if (numProcessed < numPackets)
             {
@@ -332,7 +337,7 @@ namespace myseq
             // Make sure that the incomplete buffer is actually empty
             if (incompletebuffer.Length > 0)
             {
-                for (int pp = 0; pp < incompletebuffer.Length; pp++)
+                for (var pp = 0; pp < incompletebuffer.Length; pp++)
                 {
                     incompletebuffer[pp] = 0;
                 }

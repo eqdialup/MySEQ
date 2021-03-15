@@ -1,8 +1,7 @@
-using Structures;
 using System;
 using System.Net.Sockets;
 
-namespace myseq
+namespace Structures
 {
     //========================================================================
     /// <summary> This class abstracts a socket </summary>
