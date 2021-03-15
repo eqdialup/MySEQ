@@ -30,9 +30,9 @@ namespace myseq
 
         private ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
 
-        private ArrayList xlabels = new ArrayList();
+//        private ArrayList xlabels = new ArrayList();
 
-        private ArrayList ylabels = new ArrayList();
+//        private ArrayList ylabels = new ArrayList();
 
         private bool playAlerts;
 
@@ -52,7 +52,7 @@ namespace myseq
 
         // Mobs
 
-        private ArrayList itemcollection = new ArrayList();          // Hold the items that are on the ground
+        private readonly ArrayList itemcollection = new ArrayList();          // Hold the items that are on the ground
 
         private Hashtable mobs = new Hashtable();           // Holds the details of the mobs in the current zone.
 
@@ -1437,8 +1437,8 @@ namespace myseq
         {
             lines.Clear();
             texts.Clear();
-            xlabels.Clear();
-            ylabels.Clear();
+//            xlabels.Clear();
+//            ylabels.Clear();
             CalcExtents();
         }
 
@@ -3557,24 +3557,24 @@ namespace myseq
                 return;
 
             Pen darkpen = new Pen(Color.Black);
-            foreach (MapLine line in lines)
+            foreach (MapLine mapline in lines)
             {
                 if (Settings.Default.ForceDistinct)
                 {
-                    line.draw_color = GetDistinctColor(darkpen);
-                    line.fade_color = new Pen(Color.FromArgb(Settings.Default.FadedLines * 255 / 100, line.draw_color.Color));
+                    mapline.draw_color = GetDistinctColor(darkpen);
+                    mapline.fade_color = new Pen(Color.FromArgb(Settings.Default.FadedLines * 255 / 100, mapline.draw_color.Color));
                 }
                 else
                 {
-                    line.draw_color = GetDistinctColor(new Pen(line.color.Color));
-                    line.fade_color = new Pen(Color.FromArgb(Settings.Default.FadedLines * 255 / 100, line.draw_color.Color));
+                    mapline.draw_color = GetDistinctColor(new Pen(mapline.color.Color));
+                    mapline.fade_color = new Pen(Color.FromArgb(Settings.Default.FadedLines * 255 / 100, mapline.draw_color.Color));
                 }
             }
             SolidBrush distinctbrush = new SolidBrush(Color.Black);
-            foreach (MapText t in texts)
+            foreach (MapText maptxt in texts)
             {
-                t.draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(distinctbrush) : GetDistinctColor(t.color);
-                t.draw_pen = new Pen(t.draw_color.Color);
+                maptxt.draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(distinctbrush) : GetDistinctColor(maptxt.color);
+                maptxt.draw_pen = new Pen(maptxt.draw_color.Color);
             }
         }
         private int GetColorDiff(Color foreColor, Color backColor)
