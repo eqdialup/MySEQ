@@ -48,7 +48,7 @@ namespace Structures
 
         private int numProcessed; // No. of Packets already processed        
 
-        private byte[] incompletebuffer = new byte[2048];
+        private readonly byte[] incompletebuffer = new byte[2048];
 
         private readonly EQData eq;
 

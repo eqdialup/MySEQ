@@ -30,10 +30,6 @@ namespace myseq
 
         private ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
 
-//        private ArrayList xlabels = new ArrayList();
-
-//        private ArrayList ylabels = new ArrayList();
-
         private bool playAlerts;
 
         // Max + Min map coordinates - define the bounds of the zone
@@ -217,118 +213,48 @@ namespace myseq
                 sp.lookupNumber = "";
                 if (search0.Length > 1)
                 {
-                    bool levelCheck = false;
-                    if (search0.Length > 2 && string.Equals(search0.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        int.TryParse(search0.Substring(2), out var searchLevel);
-                        if (searchLevel != 0 && (sp.Level == searchLevel))
-                        {
-                            levelCheck = true;
-                        }
-                    }
-                    if (levelCheck || RegexHelper.GetRegex(search0).Match(sp.Name).Success)
-                    {
-                        sp.isLookup = true;
-                        sp.lookupNumber = "1";
-                        sp.hidden = false;
-                        if (filter0) { sp.hidden = true; }
-                    }
+                    SubLookup(sp, search0, "1");
                 }
                 if (search1.Length > 1)
                 {
-                    bool levelCheck = false;
-                    if (search1.Length > 2 && string.Equals(search1.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        int.TryParse(search1.Substring(2), out var searchLevel);
-                        if (searchLevel != 0 && (sp.Level == searchLevel))
-                        {
-                            levelCheck = true;
-                        }
-                    }
-                    if (levelCheck || RegexHelper.GetRegex(search1).Match(sp.Name).Success)
-                    {
-                        sp.isLookup = true;
-                        sp.lookupNumber = "2";
-                        sp.hidden = false;
-                        if (filter1) { sp.hidden = true; }
-                    }
+                    SubLookup(sp, search1, "2");
                 }
                 if (search2.Length > 1)
                 {
-                    bool levelCheck = false;
-                    if (search2.Length > 2 && string.Equals(search2.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        int.TryParse(search2.Substring(2), out var searchLevel);
-                        if (searchLevel != 0 && (sp.Level == searchLevel))
-                        {
-                            levelCheck = true;
-                        }
-                    }
-                    if (levelCheck || RegexHelper.GetRegex(search2).Match(sp.Name).Success)
-                    {
-                        sp.isLookup = true;
-                        sp.lookupNumber = "3";
-                        sp.hidden = false;
-                        if (filter2) { sp.hidden = true; }
-                    }
+                    SubLookup(sp, search2, "3");
                 }
                 if (search3.Length > 1)
                 {
-                    bool levelCheck = false;
-                    if (search3.Length > 2 && string.Equals(search3.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        int.TryParse(search3.Substring(2), out var searchLevel);
-                        if (searchLevel != 0 && (sp.Level == searchLevel))
-                        {
-                            levelCheck = true;
-                        }
-                    }
-                    if (levelCheck || RegexHelper.GetRegex(search3).Match(sp.Name).Success)
-                    {
-                        sp.isLookup = true;
-                        sp.lookupNumber = "4";
-                        sp.hidden = false;
-                        if (filter3) { sp.hidden = true; }
-                    }
+                    SubLookup(sp, search3, "4");
                 }
                 if (search4.Length > 1)
                 {
-                    bool levelCheck = false;
-                    if (search4.Length > 2 && string.Equals(search4.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        int.TryParse(search4.Substring(2), out var searchLevel);
-                        if (searchLevel != 0 && (sp.Level == searchLevel))
-                        {
-                            levelCheck = true;
-                        }
-                    }
-                    if (levelCheck || RegexHelper.GetRegex(search4).Match(sp.Name).Success)
-                    {
-                        sp.isLookup = true;
-                        sp.lookupNumber = "5";
-                        sp.hidden = false;
-                        if (filter4) { sp.hidden = true; }
-                    }
+                    SubLookup(sp, search4, "5");
                 }
                 if (search5.Length > 1)
                 {
-                    bool levelCheck = false;
-                    if (search5.Length > 2 && string.Equals(search5.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        int.TryParse(search5.Substring(2), out var searchLevel);
-                        if (searchLevel != 0 && (sp.Level == searchLevel))
-                        {
-                            levelCheck = true;
-                        }
-                    }
-                    if (levelCheck || RegexHelper.GetRegex(search5).Match(sp.Name).Success)
-                    {
-                        sp.isLookup = true;
-                        sp.lookupNumber = "6";
-                        sp.hidden = false;
-                        if (filter5) { sp.hidden = true; }
-                    }
+                    SubLookup(sp, search5, "6");
                 }
+            }
+        }
+        //Reusing the code here, since it's all the same
+        private void SubLookup(SPAWNINFO sp, string search, string ln)
+        {
+            bool levelCheck = false;
+            if (search.Length > 2 && string.Equals(search.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
+            {
+                int.TryParse(search.Substring(2), out var searchLevel);
+                if (searchLevel != 0 && (sp.Level == searchLevel))
+                {
+                    levelCheck = true;
+                }
+            }
+            if (levelCheck || RegexHelper.GetRegex(search).Match(sp.Name).Success)
+            {
+                sp.isLookup = true;
+                sp.lookupNumber = ln;
+                sp.hidden = false;
+                if (filter5) { sp.hidden = true; }
             }
         }
 
@@ -1437,8 +1363,6 @@ namespace myseq
         {
             lines.Clear();
             texts.Clear();
-//            xlabels.Clear();
-//            ylabels.Clear();
             CalcExtents();
         }
 
@@ -2791,7 +2715,7 @@ namespace myseq
 
             StreamWriter sw = new StreamWriter(filename, false);
 
-            sw.Write("Name	Level	Class	Race	Lastname	Type	Invis	Run Speed	SpawnID	X	Y	Z	Heading");
+            sw.Write("Name\tLevel\t Class\tRace\tLastname\tType\tInvis\tRun\tSpeed\tSpawnID\tX\tY\tZ\tHeading");
 
             foreach (SPAWNINFO si in mobs.Values)
             {

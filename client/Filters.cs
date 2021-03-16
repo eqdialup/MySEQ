@@ -191,53 +191,58 @@ namespace myseq
                         if (inputstring.IndexOfAny(anyOf) != -1)
                             continue;
 
-                        if (zoneName == "global")
-                        {
-                            switch (type)
-                            {
-                                case 1:
-                                    AddToAlerts(GlobalHunt, inputstring);
-                                    break;
-                                case 2:
-                                    AddToAlerts(GlobalCaution, inputstring);
-                                    break;
-                                case 3:
-                                    AddToAlerts(GlobalDanger, inputstring);
-                                    break;
-                                case 4:
-                                    AddToAlerts(GlobalAlert, inputstring);
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            switch (type)
-                            {
-                                case 1:
-                                    AddToAlerts(Hunt, inputstring);
-                                    break;
-                                case 2:
-                                    AddToAlerts(Caution, inputstring);
-                                    break;
-                                case 3:
-                                    AddToAlerts(Danger, inputstring);
-                                    break;
-                                case 4:
-                                    AddToAlerts(Alert, inputstring);
-                                    break;
-                                case 5:
-                                    AddToAlerts(EmailAlert, inputstring);
-                                    break;
-                                case 6:
-                                    AddToAlerts(WieldedItems, inputstring);
-                                    break;
-                            }
-                        }
+                        DetermineType(zoneName, type, inputstring);
                     }
                 }
             }
 
             sw.Close();
+        }
+
+        private void DetermineType(string zoneName, int type, string inputstring)
+        {
+            if (zoneName == "global")
+            {
+                switch (type)
+                {
+                    case 1:
+                        AddToAlerts(GlobalHunt, inputstring);
+                        break;
+                    case 2:
+                        AddToAlerts(GlobalCaution, inputstring);
+                        break;
+                    case 3:
+                        AddToAlerts(GlobalDanger, inputstring);
+                        break;
+                    case 4:
+                        AddToAlerts(GlobalAlert, inputstring);
+                        break;
+                }
+            }
+            else
+            {
+                switch (type)
+                {
+                    case 1:
+                        AddToAlerts(Hunt, inputstring);
+                        break;
+                    case 2:
+                        AddToAlerts(Caution, inputstring);
+                        break;
+                    case 3:
+                        AddToAlerts(Danger, inputstring);
+                        break;
+                    case 4:
+                        AddToAlerts(Alert, inputstring);
+                        break;
+                    case 5:
+                        AddToAlerts(EmailAlert, inputstring);
+                        break;
+                    case 6:
+                        AddToAlerts(WieldedItems, inputstring);
+                        break;
+                }
+            }
         }
 
         public void WriteAlertFile(string zoneName)

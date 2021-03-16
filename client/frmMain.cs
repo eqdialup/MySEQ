@@ -3443,14 +3443,10 @@ namespace myseq
         public void LoadPrefs()
 
         {
-            //SetGridInterval();
-
-//            Settings.Default.Load(filename);
-
             // Always want these off on starting up.
 
             Settings.Default.CollectMobTrails = false;
-//            Settings.Default.EmailAlerts = false;
+            //            Settings.Default.EmailAlerts = false;
             Settings.Default.DepthFilter = false;
 
             SetGridInterval();
@@ -3459,7 +3455,6 @@ namespace myseq
             if (Settings.Default.WindowState == FormWindowState.Maximized)
             {
                 Location = Settings.Default.WindowsLocation;
-                //this.Size = Settings.Default.WindowsSize;
                 StartPosition = FormStartPosition.Manual;
                 WindowState = FormWindowState.Maximized;
             }
@@ -3507,7 +3502,7 @@ namespace myseq
 
             mnuKeepCentered.Checked = mnuKeepCentered2.Checked = Settings.Default.KeepCentered;
 
-            mnuShowTargetInfo.Checked = mnuShowTargetInfo2.Checked =Settings.Default.ShowTargetInfo;
+            mnuShowTargetInfo.Checked = mnuShowTargetInfo2.Checked = Settings.Default.ShowTargetInfo;
 
             mnuSmallTargetInfo.Checked = mnuSmallTargetInfo2.Checked = Settings.Default.SmallTargetInfo;
 
@@ -3676,6 +3671,15 @@ namespace myseq
 
             LogLib.maxLogLevel = Settings.Default.MaxLogLevel;
 
+            CreateFolders();
+
+            DrawOpts = Settings.Default.DrawOptions;
+
+            timProcessTimers.Start();
+        }
+
+        private static void CreateFolders()
+        {
             if (Settings.Default.MapDir?.Length == 0 || !Directory.Exists(Settings.Default.MapDir))
 
             {
@@ -3730,10 +3734,6 @@ namespace myseq
                     Directory.CreateDirectory(Settings.Default.TimerDir);
                 }
             }
-
-            DrawOpts = Settings.Default.DrawOptions;
-
-            timProcessTimers.Start();
         }
 
         public void SavePrefs()//string filename
@@ -4034,74 +4034,6 @@ namespace myseq
                     mnuChar12.Visible = true;
                     mnuChar12.Checked = (CurrentProcess != null) && (CurrentProcess.ProcessID == PI.ProcessID);
                 }
-
-                //if (colProcesses.Count == 1)
-                //{
-                //    mnuChar2.Visible = false;
-                //    mnuChar2.Text = "Char 2";
-                //    mnuChar2.Checked = false;
-
-                //}
-                //else if (colProcesses.Count == 2)
-                //{
-                //    mnuChar3.Visible = false;
-                //    mnuChar3.Text = "Char 3";
-                //    mnuChar3.Checked = false;
-                //}
-                //else if (colProcesses.Count == 3)
-                //{
-                //    mnuChar4.Visible = false;
-                //    mnuChar4.Text = "Char 4";
-                //    mnuChar4.Checked = false;
-                //}
-                //else if (colProcesses.Count == 4)
-                //{
-                //    mnuChar5.Visible = false;
-                //    mnuChar5.Text = "Char 5";
-                //    mnuChar5.Checked = false;
-                //}
-                //else if (colProcesses.Count == 5)
-                //{
-                //    mnuChar6.Visible = false;
-                //    mnuChar6.Text = "Char 6";
-                //    mnuChar6.Checked = false;
-                //}
-                //else if (colProcesses.Count == 6)
-                //{
-                //    mnuChar7.Visible = false;
-                //    mnuChar7.Text = "Char 7";
-                //    mnuChar7.Checked = false;
-                //}
-                //else if (colProcesses.Count == 7)
-                //{
-                //    mnuChar8.Visible = false;
-                //    mnuChar8.Text = "Char 8";
-                //    mnuChar8.Checked = false;
-                //}
-                //else if (colProcesses.Count == 8)
-                //{
-                //    mnuChar9.Visible = false;
-                //    mnuChar9.Text = "Char 9";
-                //    mnuChar9.Checked = false;
-                //}
-                //else if (colProcesses.Count == 9)
-                //{
-                //    mnuChar10.Visible = false;
-                //    mnuChar10.Text = "Char 10";
-                //    mnuChar10.Checked = false;
-                //}
-                //else if (colProcesses.Count == 10)
-                //{
-                //    mnuChar11.Visible = false;
-                //    mnuChar11.Text = "Char 11";
-                //    mnuChar11.Checked = false;
-                //}
-                //else if (colProcesses.Count == 11)
-                //{
-                //    mnuChar12.Visible = false;
-                //    mnuChar12.Text = "Char 12";
-                //    mnuChar12.Checked = false;
-                //}
             }
         }
 
@@ -5300,14 +5232,7 @@ namespace myseq
         public void ResetMapPens()
         {
             eq.CalculateMapLinePens();
-
-            if (mapCon != null)
-
-            {
-//                mapCon.SetDistinctPens();
-
-                mapCon.Invalidate();
-            }
+                mapCon?.Invalidate();
         }
 
         public void ProcessPacket(SPAWNINFO si, bool update_hidden)

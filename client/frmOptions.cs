@@ -2014,7 +2014,7 @@ namespace myseq
         {
             if (chkSaveOnExit.Checked)  // This checkbox actually DO something now.
             {
-                SaveSettings();
+                Settings.Default.Save();//SaveSettings();
             }
 
             bool done = true;
@@ -2080,147 +2080,147 @@ namespace myseq
             }
         }
 
-        private void SaveSettings()
-        {
-            // Set the Settings
+        //private void SaveSettings()
+        //{
+        //    // Set the Settings
 
-            Settings.Default.IPAddress1 = txtIPAddress1.Text;
+        //    Settings.Default.IPAddress1 = txtIPAddress1.Text;
 
-            Settings.Default.IPAddress2 = txtIPAddress2.Text;
+        //    Settings.Default.IPAddress2 = txtIPAddress2.Text;
 
-            Settings.Default.IPAddress3 = txtIPAddress3.Text;
+        //    Settings.Default.IPAddress3 = txtIPAddress3.Text;
 
-            Settings.Default.IPAddress4 = txtIPAddress4.Text;
+        //    Settings.Default.IPAddress4 = txtIPAddress4.Text;
 
-            Settings.Default.IPAddress5 = txtIPAddress5.Text;
+        //    Settings.Default.IPAddress5 = txtIPAddress5.Text;
 
-            Settings.Default.Port = int.Parse(txtPortNo.Text);
+        //    Settings.Default.Port = int.Parse(txtPortNo.Text);
 
-            Settings.Default.LevelOverride = (int)spnOverrideLevel.Value;
+        //    Settings.Default.LevelOverride = (int)spnOverrideLevel.Value;
 
-            Settings.Default.SaveOnExit = chkSaveOnExit.Checked;
+        //    Settings.Default.SaveOnExit = chkSaveOnExit.Checked;
 
-            Settings.Default.UpdateDelay = (int)spnUpdateDelay.Value;
+        //    Settings.Default.UpdateDelay = (int)spnUpdateDelay.Value;
 
-            Settings.Default.CorpseAlerts = chkCorpsesAlerts.Checked;
+        //    Settings.Default.CorpseAlerts = chkCorpsesAlerts.Checked;
 
-            Settings.Default.BackColor = picMapBackgroundColor.BackColor;
+        //    Settings.Default.BackColor = picMapBackgroundColor.BackColor;
 
-            Settings.Default.PCBorderColor = picPlayerBorder.BackColor;
+        //    Settings.Default.PCBorderColor = picPlayerBorder.BackColor;
 
-            Settings.Default.PrefixStars = chkPrefixAlerts.Checked;
+        //    Settings.Default.PrefixStars = chkPrefixAlerts.Checked;
 
-            Settings.Default.AffixStars = chkAffixAlerts.Checked;
+        //    Settings.Default.AffixStars = chkAffixAlerts.Checked;
 
-            Settings.Default.HuntPrefix = txtHuntPrefix.Text;
+        //    Settings.Default.HuntPrefix = txtHuntPrefix.Text;
 
-            Settings.Default.MatchFullTextH = chkHuntMatchFull.Checked;  //hunt
+        //    Settings.Default.MatchFullTextH = chkHuntMatchFull.Checked;  //hunt
 
-            Settings.Default.NoneOnHunt = optHuntNone.Checked;
+        //    Settings.Default.NoneOnHunt = optHuntNone.Checked;
 
-            Settings.Default.BeepOnHunt = optHuntBeep.Checked;
+        //    Settings.Default.BeepOnHunt = optHuntBeep.Checked;
 
-            Settings.Default.TalkOnHunt = optHuntSpeak.Checked;
+        //    Settings.Default.TalkOnHunt = optHuntSpeak.Checked;
 
-            Settings.Default.PlayOnHunt = optHuntPlay.Checked;
+        //    Settings.Default.PlayOnHunt = optHuntPlay.Checked;
 
-            Settings.Default.HuntAudioFile = txtHuntAudioFile.Text;
+        //    Settings.Default.HuntAudioFile = txtHuntAudioFile.Text;
 
-            Settings.Default.CautionPrefix = txtCautionPrefix.Text;
+        //    Settings.Default.CautionPrefix = txtCautionPrefix.Text;
 
-            Settings.Default.MatchFullTextC = chkCautionMatchFull.Checked;  //Caution
+        //    Settings.Default.MatchFullTextC = chkCautionMatchFull.Checked;  //Caution
 
-            Settings.Default.NoneOnCaution = optCautionNone.Checked;
+        //    Settings.Default.NoneOnCaution = optCautionNone.Checked;
 
-            Settings.Default.BeepOnCaution = optCautionBeep.Checked;
+        //    Settings.Default.BeepOnCaution = optCautionBeep.Checked;
 
-            Settings.Default.TalkOnCaution = optCautionSpeak.Checked;
+        //    Settings.Default.TalkOnCaution = optCautionSpeak.Checked;
 
-            Settings.Default.PlayOnCaution = optCautionPlay.Checked;
+        //    Settings.Default.PlayOnCaution = optCautionPlay.Checked;
 
-            Settings.Default.CautionAudioFile = txtCautionAudioFile.Text;
+        //    Settings.Default.CautionAudioFile = txtCautionAudioFile.Text;
 
-            Settings.Default.DangerPrefix = txtDangerPrefix.Text;
+        //    Settings.Default.DangerPrefix = txtDangerPrefix.Text;
 
-            Settings.Default.MatchFullTextD = chkDangerMatchFull.Checked;  //Caution
+        //    Settings.Default.MatchFullTextD = chkDangerMatchFull.Checked;  //Caution
 
-            Settings.Default.NoneOnDanger = optDangerNone.Checked;
+        //    Settings.Default.NoneOnDanger = optDangerNone.Checked;
 
-            Settings.Default.BeepOnDanger = optDangerBeep.Checked;
+        //    Settings.Default.BeepOnDanger = optDangerBeep.Checked;
 
-            Settings.Default.TalkOnDanger = optDangerSpeak.Checked;
+        //    Settings.Default.TalkOnDanger = optDangerSpeak.Checked;
 
-            Settings.Default.PlayOnDanger = optDangerPlay.Checked;
+        //    Settings.Default.PlayOnDanger = optDangerPlay.Checked;
 
-            Settings.Default.DangerAudioFile = txtDangerAudioFile.Text;
+        //    Settings.Default.DangerAudioFile = txtDangerAudioFile.Text;
 
-            Settings.Default.AlertPrefix = txtAlertPrefix.Text;
+        //    Settings.Default.AlertPrefix = txtAlertPrefix.Text;
 
-            Settings.Default.MatchFullTextA = chkAlertMatchFull.Checked;  //Rare
+        //    Settings.Default.MatchFullTextA = chkAlertMatchFull.Checked;  //Rare
 
-            Settings.Default.NoneOnAlert = optAlertNone.Checked;
+        //    Settings.Default.NoneOnAlert = optAlertNone.Checked;
 
-            Settings.Default.BeepOnAlert = optAlertBeep.Checked;
+        //    Settings.Default.BeepOnAlert = optAlertBeep.Checked;
 
-            Settings.Default.TalkOnAlert = optAlertSpeak.Checked;
+        //    Settings.Default.TalkOnAlert = optAlertSpeak.Checked;
 
-            Settings.Default.PlayOnAlert = optAlertPlay.Checked;
+        //    Settings.Default.PlayOnAlert = optAlertPlay.Checked;
 
-            Settings.Default.AlertAudioFile = txtAlertAudioFile.Text;
+        //    Settings.Default.AlertAudioFile = txtAlertAudioFile.Text;
 
-            Settings.Default.RangeCircle = (int)spnRangeCircle.Value;
+        //    Settings.Default.RangeCircle = (int)spnRangeCircle.Value;
 
-            Settings.Default.DrawOptions = GetDrawOptions();
+        //    Settings.Default.DrawOptions = GetDrawOptions();
 
-            Settings.Default.ShowTargetInfo = chkShowTargetInfo.Checked;
+        //    Settings.Default.ShowTargetInfo = chkShowTargetInfo.Checked;
 
-            Settings.Default.ShowZoneName = chkShowZoneName.Checked;
+        //    Settings.Default.ShowZoneName = chkShowZoneName.Checked;
 
-            Settings.Default.ShowCharName = chkShowCharName.Checked;
+        //    Settings.Default.ShowCharName = chkShowCharName.Checked;
 
-            Settings.Default.DrawFoV = chkDrawFoV.Checked;
+        //    Settings.Default.DrawFoV = chkDrawFoV.Checked;
 
-            Settings.Default.ColorRangeCircle = chkColorRangeCircle.Checked;
+        //    Settings.Default.ColorRangeCircle = chkColorRangeCircle.Checked;
 
-            Settings.Default.AlertSound = cmbAlertSound.SelectedItem.ToString();
+        //    Settings.Default.AlertSound = cmbAlertSound.SelectedItem.ToString();
 
-            Settings.Default.HatchIndex = cmbHatch.SelectedItem.ToString();
+        //    Settings.Default.HatchIndex = cmbHatch.SelectedItem.ToString();
 
-            Settings.Default.SpawnDrawSize = (int)spnSpawnSize.Value;
+        //    Settings.Default.SpawnDrawSize = (int)spnSpawnSize.Value;
 
-            Settings.Default.FadedLines = (int)FadedLines.Value;
+        //    Settings.Default.FadedLines = (int)FadedLines.Value;
 
-            Settings.Default.PVPLevels = (int)pvpLevels.Value;
+        //    Settings.Default.PVPLevels = (int)pvpLevels.Value;
 
-            Settings.Default.MinAlertLevel = (int)numMinAlertLevel.Value;
+        //    Settings.Default.MinAlertLevel = (int)numMinAlertLevel.Value;
 
-            Settings.Default.TitleBar = txtWindowName.Text;
+        //    Settings.Default.TitleBar = txtWindowName.Text;
 
-            Settings.Default.SearchString = txtSearchString.Text;
+        //    Settings.Default.SearchString = txtSearchString.Text;
 
-            Settings.Default.MapDir = txtMapDir.Text;
+        //    Settings.Default.MapDir = txtMapDir.Text;
 
-            Settings.Default.FilterDir = txtFilterDir.Text;
+        //    Settings.Default.FilterDir = txtFilterDir.Text;
 
-            Settings.Default.CfgDir = txtCfgDir.Text;
+        //    Settings.Default.CfgDir = txtCfgDir.Text;
 
-            Settings.Default.LogDir = txtLogDir.Text;
+        //    Settings.Default.LogDir = txtLogDir.Text;
 
-            Settings.Default.TimerDir = txtTimerDir.Text;
+        //    Settings.Default.TimerDir = txtTimerDir.Text;
 
-            Settings.Default.AutoSelectSpawnList = chkSelectSpawnList.Checked;
+        //    Settings.Default.AutoSelectSpawnList = chkSelectSpawnList.Checked;
 
-            Settings.Default.OptionsWindowsLocation = Location;
+        //    Settings.Default.OptionsWindowsLocation = Location;
 
-            Settings.Default.OptionsWindowsSize = Size;
+        //    Settings.Default.OptionsWindowsSize = Size;
 
-            Settings.Default.MaxLogLevel = (LogLevel)spnLogLevel.Value;
+        //    Settings.Default.MaxLogLevel = (LogLevel)spnLogLevel.Value;
 
-            if (Settings.Default.CurrentIPAddress == 0 && txtIPAddress1.Text.Length > 0)
-                Settings.Default.CurrentIPAddress = 1;
+        //    if (Settings.Default.CurrentIPAddress == 0 && txtIPAddress1.Text.Length > 0)
+        //        Settings.Default.CurrentIPAddress = 1;
 
-            Settings.Default.Save();
-        }
+        //    Settings.Default.Save();
+        //}
 
         private void CmdMapBackgroundColor_Click(object sender, EventArgs e)
 

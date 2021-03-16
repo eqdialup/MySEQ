@@ -79,11 +79,6 @@ namespace myseq
             initialized = true;
         }
 
-        //public void NewMap()
-        //{
-        //    OnEnterMap();
-        //}
-
         public void ClearMap()
         {
             try {
@@ -127,8 +122,6 @@ namespace myseq
 
             eq.ClearMapStructures();
 
-//            mapCon.SetDistinctPens();
-
             eq.shortname = mapname;
 
             if (mapPane != null)
@@ -146,8 +139,6 @@ namespace myseq
             ClearMap();
 
             eq.ClearMapStructures();
-
-//            mapCon.SetDistinctPens();
 
             bool rc = eq.LoadMapInternal(filename);
 
@@ -175,7 +166,6 @@ namespace myseq
 
                 eq.ClearMapStructures();
 
-//                mapCon.SetDistinctPens();
             }
 
             bool rc = eq.LoadLoYMapInternal(filename);

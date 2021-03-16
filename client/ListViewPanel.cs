@@ -449,12 +449,7 @@ namespace myseq
                     smoblevel = listView.Items[sel[0]].SubItems[1].Text;
                     if (smoblevel.Length > 0)
                     {
-                        bool isNum = int.TryParse(smoblevel, out var Num);
-
-                        if (isNum)
-                        {
-                            moblevel = Num;
-                        }
+                        GetMobLevel();
                     }
                 }
                 else if (ListType == 1)
@@ -463,12 +458,7 @@ namespace myseq
                     smoblevel = listView.Items[sel[0]].SubItems[1].Text;
                     if (smoblevel.Length > 0)
                     {
-                        bool isNum = int.TryParse(smoblevel, out var Num);
-
-                        if (isNum)
-                        {
-                            moblevel = Num;
-                        }
+                        GetMobLevel();
                     }
                     mobname = RegexHelper.FixMobNameMatch(listView.Items[sel[0]].SubItems[0].Text);
                     mobname = mobname.Trim();
@@ -482,11 +472,11 @@ namespace myseq
             if ((sel.Count > 0) && (mobname.Length > 0))
 
             {
-                mnuAddGlobalFilter.Text = "Add '" + mobname + "' &Global Alert Filter";
+                mnuAddGlobalFilter.Text = $"Add '{mobname}' &Global Alert Filter";
 
-                mnuAddZoneFilter.Text = "'" + mobname + "'";
+                mnuAddZoneFilter.Text = $"'{mobname}'";
 
-                toolStriConcolor.Text = "Base Concolor on '" + mobname + "' (" + smoblevel + ")";
+                toolStriConcolor.Text = $"Base Concolor on '{mobname}' ({smoblevel})";
                 mnuAddZoneFilter.Visible = true;
 
                 menuItem3.Visible = true;
@@ -528,23 +518,10 @@ namespace myseq
                     f1.alertZ = float.Parse(listView.Items[sel[0]].SubItems[6].Text);
                     // search for a better name to use for this spawn point
                     SPAWNTIMER st = eq.FindListViewTimer(listView.Items[sel[0]]);
-                    //SPAWNTIMER st = eq.FindTimer(1.0f, float.Parse(listView.Items[sel[0]].SubItems[4].Text), float.Parse(listView.Items[sel[0]].SubItems[5].Text));
+
                     if (st != null)
                     {
-                        mnuStickyTimer.Checked = st.sticky;
-                        foreach (string name in st.AllNames.Split(','))
-                        {
-                            var bname = RegexHelper.TrimName(name);
-                            if (RegexHelper.RegexMatch(bname))
-                            {
-                                mobname = bname;
-                                mnuAddZoneFilter.Text = "'" + mobname + "'";
-                                f1.alertX = st.X;
-                                f1.alertY = st.Y;
-                                f1.alertZ = st.Z;
-                                break;
-                            }
-                        }
+                        StickyTimer(st);
                     }
                 }
             }
@@ -585,6 +562,33 @@ namespace myseq
                 mnuSearchAllakhazam.Enabled = false;
 
                 addMapLabelToolStripMenuItem.Enabled = false;
+            }
+        }
+
+        private void StickyTimer(SPAWNTIMER st)
+        {
+            mnuStickyTimer.Checked = st.sticky;
+            foreach (string name in st.AllNames.Split(','))
+            {
+                var bname = RegexHelper.TrimName(name);
+                if (RegexHelper.RegexMatch(bname))
+                {
+                    mobname = bname;
+                    mnuAddZoneFilter.Text = $"'{mobname}'";
+                    f1.alertX = st.X;
+                    f1.alertY = st.Y;
+                    f1.alertZ = st.Z;
+                    break;
+                }
+            }
+        }
+
+        private void GetMobLevel()
+        {
+            bool isNum = int.TryParse(smoblevel, out var Num);
+            if (isNum)
+            {
+                moblevel = Num;
             }
         }
 

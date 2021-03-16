@@ -1041,13 +1041,10 @@ namespace myseq
         public float CalcScreenCoordX(float mapCoordinateX)
         {
             // Formula Should be
-
             // Screen X =CenterScreenX + ((mapCoordinateX - MapCenterX) * m_ratio)
 
             // However Eq's Map coordinates are in the oposite sense to the screen
-
             // so we have to multiply the second portion by -1, which is the same
-
             // as changing the plus to a minus...
 
             //m_ratio = (ScreenWidth/MapWidth) * zoom (Calculated ahead of time in ReAdjust)
@@ -2514,11 +2511,16 @@ namespace myseq
             if (t.size == 2)
                 bkgBuffer.Graphics.DrawString(t.text, drawFont, t.draw_color, x_cord, y_cord - t.offset);
             else if (t.size == 1)
+            {
                 bkgBuffer.Graphics.DrawString(t.text, drawFont1, t.draw_color, x_cord, y_cord - t.offset);
+            }
             else
+            {
                 bkgBuffer.Graphics.DrawString(t.text, drawFont3, t.draw_color, x_cord, y_cord - t.offset);
+            }
             bkgBuffer.Graphics.DrawLine(t.draw_pen, x_cord - 1, y_cord, x_cord + 1, y_cord);
             bkgBuffer.Graphics.DrawLine(t.draw_pen, x_cord, y_cord - 1, x_cord, y_cord + 1);
+                
         }
 
         #endregion DrawMap
@@ -2543,11 +2545,7 @@ namespace myseq
                     if (Settings.Default.ColorRangeCircle)
 
                     {
-                        HatchStyle hs = (HatchStyle)Enum.Parse(typeof(HatchStyle), Settings.Default.HatchIndex, true);
-
-                        HatchBrush hatchBrush = new HatchBrush(hs, Settings.Default.RangeCircleColor, Color.Transparent);
-
-                        FillEllipse(hatchBrush, playerx - rCircleRadius, playery - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
+                        MakeRangeCircle(playerx, playery, rCircleRadius);
                     }
 
                     // Draw Red V in the Range Circle
@@ -2635,6 +2633,15 @@ namespace myseq
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in DrawPlayer(): ", ex); }
+        }
+
+        private void MakeRangeCircle(float playerx, float playery, float rCircleRadius)
+        {
+            HatchStyle hs = (HatchStyle)Enum.Parse(typeof(HatchStyle), Settings.Default.HatchIndex, true);
+
+            HatchBrush hatchBrush = new HatchBrush(hs, Settings.Default.RangeCircleColor, Color.Transparent);
+
+            FillEllipse(hatchBrush, playerx - rCircleRadius, playery - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
         }
 
         #endregion DrawPlayer
@@ -2963,51 +2970,55 @@ namespace myseq
             // check that map text doesn't change extents
 
             if ((DrawOpts & DrawOptions.ZoneText) != DrawOptions.None)
-
             {
-                float factor = 1;
-
-                float xlabel = 0;
-
-                float ylabel = 0;
-
-                if (m_ratio > 0)
-                    factor = 1 / m_ratio;
-
-                if ((DrawOpts & DrawOptions.GridLines) != DrawOptions.None)
-
-                {
-                    // drawing gridlines, so account for grid labels
-
-                    ylabel = drawFont.GetHeight() + 0;
-
-                    xlabel = bkgBuffer.Graphics.MeasureString("10000", drawFont).Width;
-                }
-
-                foreach (MapText t in eq.GetTextsReadonly())
-
-                {
-                    SizeF tf = bkgBuffer.Graphics.MeasureString(t.text, drawFont);
-                    if (t.size == 1)
-                        bkgBuffer.Graphics.MeasureString(t.text, drawFont1);
-                    else if (t.size == 3)
-                        bkgBuffer.Graphics.MeasureString(t.text, drawFont3);
-
-                    if ((t.x - ((tf.Width + xlabel) * factor)) < eq.minx)
-                        eq.minx = t.x - ((tf.Width + xlabel) / m_ratio);
-                    else if (t.x > eq.maxx)
-                        eq.maxx = t.x;
-
-                    if ((t.y + (t.offset * factor)) > eq.maxy)
-                        eq.maxy = t.y + (t.offset * factor);
-                    else if ((t.y - ((tf.Height + ylabel) * factor)) < eq.miny)
-                        eq.miny = t.y - ((tf.Height + ylabel) * factor);
-                }
-
-                ReAdjust();
+                VerifyTextExtents(DrawOpts);
             }
 
             Invalidate();
+        }
+
+        private void VerifyTextExtents(DrawOptions DrawOpts)
+        {
+            float factor = 1;
+
+            float xlabel = 0;
+
+            float ylabel = 0;
+
+            if (m_ratio > 0)
+                factor = 1 / m_ratio;
+
+            if ((DrawOpts & DrawOptions.GridLines) != DrawOptions.None)
+
+            {
+                // drawing gridlines, so account for grid labels
+
+                ylabel = drawFont.GetHeight() + 0;
+
+                xlabel = bkgBuffer.Graphics.MeasureString("10000", drawFont).Width;
+            }
+
+            foreach (MapText t in eq.GetTextsReadonly())
+
+            {
+                SizeF tf = bkgBuffer.Graphics.MeasureString(t.text, drawFont);
+                if (t.size == 1)
+                    bkgBuffer.Graphics.MeasureString(t.text, drawFont1);
+                else if (t.size == 3)
+                    bkgBuffer.Graphics.MeasureString(t.text, drawFont3);
+
+                if ((t.x - ((tf.Width + xlabel) * factor)) < eq.minx)
+                    eq.minx = t.x - ((tf.Width + xlabel) / m_ratio);
+                else if (t.x > eq.maxx)
+                    eq.maxx = t.x;
+
+                if ((t.y + (t.offset * factor)) > eq.maxy)
+                    eq.maxy = t.y + (t.offset * factor);
+                else if ((t.y - ((tf.Height + ylabel) * factor)) < eq.miny)
+                    eq.miny = t.y - ((tf.Height + ylabel) * factor);
+            }
+
+            ReAdjust();
         }
 
         public void Tick()
