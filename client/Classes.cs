@@ -41,12 +41,12 @@ namespace myseq
 
     public class ListBoxComparerSpawnList : IComparer
     {
-        public int Compare(object a, object b)
+        public int Compare(object x, object y)
 
         {
-            ListViewItem sa = (ListViewItem)a;
+            ListViewItem sa = (ListViewItem)x;
 
-            ListViewItem sb = (ListViewItem)b;
+            ListViewItem sb = (ListViewItem)y;
 
             int res = 0;
 
@@ -148,12 +148,12 @@ namespace myseq
     public class ListBoxComparerSpawnTimerList : IComparer
 
     {
-        public int Compare(object a, object b)
+        public int Compare(object x, object y)
 
         {
-            ListViewItem sa = (ListViewItem)a;
+            ListViewItem sa = (ListViewItem)x;
 
-            ListViewItem sb = (ListViewItem)b;
+            ListViewItem sb = (ListViewItem)y;
 
             int res = 0;
 
@@ -242,11 +242,11 @@ namespace myseq
 
     public class ListBoxComparerGroundItemsList : IComparer
     {
-        public int Compare(object a, object b)
+        public int Compare(object x, object y)
         {
-            ListViewItem sa = (ListViewItem)a;
+            ListViewItem sa = (ListViewItem)x;
 
-            ListViewItem sb = (ListViewItem)b;
+            ListViewItem sb = (ListViewItem)y;
 
             int res = 0;
 

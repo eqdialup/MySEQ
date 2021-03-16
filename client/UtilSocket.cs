@@ -123,7 +123,7 @@ namespace Structures
                     else
                     {
                         LogLib.WriteLine("CSocketClient.ReceiveComplete(): Shuting Down", LogLevel.Error);
-                        throw new Exception("Shut Down");
+                        throw new SocketException();
                     }
                 }
             }
