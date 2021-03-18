@@ -442,26 +442,11 @@ namespace myseq
             {
                 if (ListType == 0)
                 {
-                    mobname = RegexHelper.FilterMobName(listView.Items[sel[0]].SubItems[18].Text);
-                    mobname = mobname.Replace("_", " ");
-                    mobname = mobname.Trim();
-                    smoblevel = "";
-                    smoblevel = listView.Items[sel[0]].SubItems[1].Text;
-                    if (smoblevel.Length > 0)
-                    {
-                        GetMobLevel();
-                    }
+                    ListType0(sel);
                 }
                 else if (ListType == 1)
                 {
-                    smoblevel = "";
-                    smoblevel = listView.Items[sel[0]].SubItems[1].Text;
-                    if (smoblevel.Length > 0)
-                    {
-                        GetMobLevel();
-                    }
-                    mobname = RegexHelper.FixMobNameMatch(listView.Items[sel[0]].SubItems[0].Text);
-                    mobname = mobname.Trim();
+                    ListType1(sel);
                 }
                 else
                 {
@@ -527,42 +512,72 @@ namespace myseq
             }
             else
             {
-                // This is where we update the menu view if no selected item
-
-                mnuAddGlobalFilter.Text = "Add '' &Global Filter";
-
-                mnuAddZoneFilter.Text = "''";
-
-                mnuStickyTimer.Enabled = false;
-
-                mnuAddZoneFilter.Visible = false;
-
-                menuItem3.Visible = false;
-
-                mnuAddGlobalFilter.Enabled = false;
-
-                mnuAddZoneFilter.Enabled = false;
-
-                mnuAddZoneHuntFilter.Enabled = false;
-
-                mnuAddZoneCautionFilter.Enabled = false;
-
-                mnuAddZoneDangerFilter.Enabled = false;
-
-                mnuAddZoneRareFilter.Enabled = false;
-
-                //                addZoneEmailAlertFilter.Enabled = false;
-
-                mnuEditZoneFilters.Enabled = true;
-
-                mnuEditGlobalFilters.Enabled = true;
-
-                mnuReloadZoneFilters.Enabled = true;
-
-                mnuSearchAllakhazam.Enabled = false;
-
-                addMapLabelToolStripMenuItem.Enabled = false;
+                NoSelection();
             }
+        }
+
+        private void NoSelection()
+        {
+            // This is where we update the menu view if no selected item
+
+            mnuAddGlobalFilter.Text = "Add '' &Global Filter";
+
+            mnuAddZoneFilter.Text = "''";
+
+            mnuStickyTimer.Enabled = false;
+
+            mnuAddZoneFilter.Visible = false;
+
+            menuItem3.Visible = false;
+
+            mnuAddGlobalFilter.Enabled = false;
+
+            mnuAddZoneFilter.Enabled = false;
+
+            mnuAddZoneHuntFilter.Enabled = false;
+
+            mnuAddZoneCautionFilter.Enabled = false;
+
+            mnuAddZoneDangerFilter.Enabled = false;
+
+            mnuAddZoneRareFilter.Enabled = false;
+
+            //                addZoneEmailAlertFilter.Enabled = false;
+
+            mnuEditZoneFilters.Enabled = true;
+
+            mnuEditGlobalFilters.Enabled = true;
+
+            mnuReloadZoneFilters.Enabled = true;
+
+            mnuSearchAllakhazam.Enabled = false;
+
+            addMapLabelToolStripMenuItem.Enabled = false;
+        }
+
+        private void ListType0(ListView.SelectedIndexCollection sel)
+        {
+            mobname = RegexHelper.FilterMobName(listView.Items[sel[0]].SubItems[18].Text);
+            mobname = mobname.Replace("_", " ");
+            mobname = mobname.Trim();
+            smoblevel = "";
+            smoblevel = listView.Items[sel[0]].SubItems[1].Text;
+            if (smoblevel.Length > 0)
+            {
+                GetMobLevel();
+            }
+        }
+
+        private void ListType1(ListView.SelectedIndexCollection sel)
+        {
+            smoblevel = "";
+            smoblevel = listView.Items[sel[0]].SubItems[1].Text;
+            if (smoblevel.Length > 0)
+            {
+                GetMobLevel();
+            }
+            mobname = RegexHelper.FixMobNameMatch(listView.Items[sel[0]].SubItems[0].Text);
+            mobname = mobname.Trim();
         }
 
         private void StickyTimer(SPAWNTIMER st)

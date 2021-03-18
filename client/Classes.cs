@@ -233,7 +233,7 @@ namespace myseq
             Column = column;
         }
 
-        private ListView.ListViewItemCollection Spawns;
+        private readonly ListView.ListViewItemCollection Spawns;
 
         private bool Descending;
 
@@ -244,11 +244,11 @@ namespace myseq
     {
         public int Compare(object x, object y)
         {
-            ListViewItem sa = (ListViewItem)x;
+            var sa = (ListViewItem)x;
 
-            ListViewItem sb = (ListViewItem)y;
+            var sb = (ListViewItem)y;
 
-            int res = 0;
+            var res = 0;
 
             if (Column == 0)    // Description
             {

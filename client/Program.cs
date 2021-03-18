@@ -10,14 +10,12 @@ namespace myseq
         private static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetCompatibleTextRenderingDefault(true);
             try { Application.Run(new FrmMain()); }
             catch (NullReferenceException e)
             {
                 string s = $"Uncaught exception in Main(): {e.Message}";
-
                 LogLib.WriteLine(s);
-
                 MessageBox.Show(s);
                 Application.Exit();
             }

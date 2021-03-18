@@ -249,21 +249,7 @@ namespace Structures
                 {
                     // we have received some bytes, check if this is the beginning of a new packet or a chunk of an existing one.
 
-                    if (numPackets == 0)
-
-                    {
-                        // The first word in the data stream is the number of packets
-
-                        numPackets = BitConverter.ToInt32(packet, 0);
-                        offset = 4;
-                        f1.StartNewPackets();
-                    }
-                    else
-                    {
-                        // We havent finished processing packets, so check if we have any extra bytes stored in our incomplete buffer.
-
-                        offset = -incompleteCount;
-                    }
+                    offset = CheckStart(packet);
 
                     eq.BeginProcessPacket(); //clears spawn&ground arrays
 
@@ -308,6 +294,32 @@ namespace Structures
             }
             catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: ", ex); }
 
+            ProcessedPackets(packet, bytes, offset);
+        }
+
+        private int CheckStart(byte[] packet)
+        {
+            int offset;
+            if (numPackets == 0)
+            {
+                // The first word in the data stream is the number of packets
+
+                numPackets = BitConverter.ToInt32(packet, 0);
+                offset = 4;
+                f1.StartNewPackets();
+            }
+            else
+            {
+                // We havent finished processing packets, so check if we have any extra bytes stored in our incomplete buffer.
+
+                offset = -incompleteCount;
+            }
+
+            return offset;
+        }
+
+        private void ProcessedPackets(byte[] packet, int bytes, int offset)
+        {
             if (numProcessed < numPackets)
             {
                 if (offset < bytes)
