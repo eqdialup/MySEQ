@@ -165,7 +165,6 @@ namespace myseq
                 ClearMap();
 
                 eq.ClearMapStructures();
-
             }
 
             bool rc = eq.LoadLoYMapInternal(filename);

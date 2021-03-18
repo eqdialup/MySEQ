@@ -311,7 +311,7 @@ namespace myseq
                 }
                 SPAWNINFO sp = FindMobTimer(st.SpawnLoc);
 
-                selectedID = sp == null ? 99999 : (int)sp.SpawnID;
+                selectedID = sp == null ? 99999 : sp.SpawnID;
 
                 SpawnX = st.X;
 
@@ -365,7 +365,7 @@ namespace myseq
                     sp.listitem.Selected = true;
                 }
 
-                selectedID = (int)sp.SpawnID;
+                selectedID = sp.SpawnID;
 
                 SpawnX = -1.0f;
 
@@ -1678,11 +1678,9 @@ namespace myseq
         {
             try
             {
-                if (Settings.Default.AutoSelectEQTarget && EQSelectedID != (int)si.SpawnID)
+                if (Settings.Default.AutoSelectEQTarget && EQSelectedID != si.SpawnID)
                 {
-                    EQSelectedID = (int)si.SpawnID;
-
-                    selectedID = (int)si.SpawnID;
+                    EQSelectedID = selectedID = si.SpawnID;
 
                     SpawnX = -1.0f;
 
@@ -1763,117 +1761,13 @@ namespace myseq
                         // Update Hidden flags
                         if (update_hidden)
                         {
-                            if (mob.isCorpse)
-                            {
-                                if (mob.m_isPlayer)
-                                {
-                                    // My Corpse
-
-                                    if (mob.m_isMyCorpse)
-                                    {
-                                        si.hidden = !Settings.Default.ShowMyCorpse;
-                                    }
-                                    else
-                                    {
-                                        // Other Players Corpses
-
-                                        si.hidden = !Settings.Default.ShowPCCorpses;
-                                    }
-                                }
-                                else
-                                {
-                                    si.hidden = !Settings.Default.ShowCorpses;
-                                }
-                            }
-                            else if (mob.m_isPlayer)
-                            {
-                                si.hidden = !Settings.Default.ShowPlayers;
-                            }
-                            else
-                            {
-                                // non-corpse, non-player spawn (aka NPC)
-
-                                if (!Settings.Default.ShowNPCs) // hides all NPCs
-                                {
-                                    si.hidden = true;
-                                }
-                                else
-                                {
-                                    si.hidden = false;
-
-                                    if (si.isEventController && !Settings.Default.ShowInvis) // Invis Men
-
-                                        si.hidden = true;
-                                    else if (mob.isMount && !Settings.Default.ShowMounts) // Mounts
-
-                                        si.hidden = true;
-                                    else if (mob.isPet && !Settings.Default.ShowPets) // Pets
-
-                                        si.hidden = true;
-                                    else if (mob.isFamiliar && !Settings.Default.ShowFamiliars) // Familiars
-
-                                        si.hidden = true;
-                                }
-                            }
-
-                            if (si.hidden && !mob.hidden) mob.delFromList = true;
-
-                            if (!si.hidden && mob.hidden) listReAdd = true;
-
-                            mob.hidden = si.hidden;
+                            listReAdd = UpdateHidden(si, listReAdd, mob);
                         } // end update_hidden
 
                         // Update mob types
                         if (mob.Type != si.Type)
                         {
-                            mob.Type = si.Type;
-                            mob.listitem.SubItems[8].Text = PrettyNames.GetSpawnType(si.Type);
-
-                            if (si.Type == 2 || si.Type == 3)
-                            {
-                                mob.listitem.ForeColor = Color.Gray;
-
-                                mob.isCorpse = true;
-
-                                if (!CorpseAlerts)
-                                {
-                                    mob.isHunt = false;
-
-                                    mob.isCaution = false;
-
-                                    mob.isDanger = false;
-
-                                    mob.isAlert = false;
-                                }
-                            }
-                            else if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
-                            {
-                                mob.listitem.ForeColor = Color.DarkOrchid;
-                                si.isEventController = true;
-                            }
-                            else if (si.Class == 62)
-                            {
-                                mob.listitem.ForeColor = Color.Gray;
-                                si.isLDONObject = true;
-                            }
-                            else
-                            {
-                                mob.listitem.ForeColor = conColors[si.Level].Color;
-
-                                if (mob.listitem.ForeColor == Color.Maroon)
-                                {
-                                    mob.listitem.ForeColor = Color.Red;
-                                }
-                                else if (SpawnList.listView.BackColor == Color.White)
-                                {
-                                    // Change the colors to be more visible on white if the background is white
-
-                                    if (mob.listitem.ForeColor == Color.White)
-                                        mob.listitem.ForeColor = Color.Black;
-                                    else if (mob.listitem.ForeColor == Color.Yellow)
-                                        mob.listitem.ForeColor = Color.Goldenrod;
-                                }
-                            }
+                            UpdateMobTypes(si, SpawnList, mob);
                         }
 
                         // check if the mob name has changed - eg when a mob dies.
@@ -1994,7 +1888,7 @@ namespace myseq
 
                     // Set variables we dont want to trigger list update
 
-                    if (selectedID != (int)mob.SpawnID)
+                    if (selectedID != mob.SpawnID)
                     {
                         if (mob.X != si.X)
                         {
@@ -2031,23 +1925,7 @@ namespace myseq
                         // this should be the selected id
                         // ensure that map is big enough to show all spawns.
 
-                        if (mapPane?.scale.Value == 100M)
-                            CheckMapMinMax(si);
-
-                        mob.X = si.X;
-                        mob.listitem.SubItems[14].Text = si.Y.ToString();
-
-                        mob.Y = si.Y;
-                        mob.listitem.SubItems[13].Text = si.X.ToString();
-
-                        mob.Z = si.Z;
-                        mob.listitem.SubItems[15].Text = si.Z.ToString();
-
-                        var sd = SpawnDistance(si);
-
-                        if (Settings.Default.FollowOption == FollowOption.Target)
-                            f1.ReAdjust();
-                        mob.listitem.SubItems[16].Text = sd.ToString("#.000");
+                        AdjustMapForSpawns(si, f1, mapPane, mob);
                     }
 
                     if (listReAdd) newSpawns.Add(mob.listitem);
@@ -2077,98 +1955,15 @@ namespace myseq
                     else if (si.Type == 2 || si.Type == 3)
                     {
                         // Corpses
-
-                        si.isCorpse = true;
-
-                        if (!CorpseAlerts)
-                        {
-                            si.isHunt = false;
-
-                            si.isCaution = false;
-
-                            si.isDanger = false;
-
-                            si.isAlert = false;
-                        }
-
-                        if ((si.Name.IndexOf("_") == -1) && (si.Name.IndexOf("a ") != 0) && (si.Name.IndexOf("an ") != 0))
-                        {
-                            si.m_isPlayer = true;
-
-                            if (!Settings.Default.ShowPCCorpses) si.hidden = true;
-
-                            if (si.Name.Length > 0 && CheckMyCorpse(si.Name))
-                            {
-                                si.m_isMyCorpse = true;
-
-                                si.hidden = !Settings.Default.ShowMyCorpse;
-                            }
-                        }
-                        else if (!Settings.Default.ShowCorpses) si.hidden = true;
+                        HandleCorpses(si);
                     }
                     else
                     {
                         // non-corpse, non-player spawn (aka NPC)
 
-                        if (!Settings.Default.ShowNPCs) si.hidden = true;
-
-                        if (si.OwnerID > 0)
-                        {
-                            SPAWNINFO owner;
-
-                            if (mobs.ContainsKey(si.OwnerID))
-                            {
-                                owner = (SPAWNINFO)mobs[si.OwnerID];
-                                if (owner.IsPlayer())
-                                {
-                                    si.isPet = true;
-                                    if (!Settings.Default.ShowPets) si.hidden = true;
-                                }
-                            }
-                            else
-                            {
-                                // we didnt find owner, so set to 0
-                                // so we can check again next update
-                                si.OwnerID = 0;
-                            }
-                        }
-
-                        if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
-                        {
-                            si.isEventController = true;
-                            if (!Settings.Default.ShowInvis)
-                                si.hidden = true;
-                        }
-                        else if (si.Class == 62)
-                        {
-                            si.isLDONObject = true;
-                        }
-
-                        // Mercenary Identification - Only do it once now
-
-                        if (!string.IsNullOrEmpty(si.Lastname))
-                        {
-                            if (RegexHelper.IsMerc(si.Lastname))
-                                si.isMerc = true;
-                        }
-                        else if (RegexHelper.IsMount(si.Name)) // Mounts
-                        {
-                            si.isMount = true;
-
-                            if (!Settings.Default.ShowMounts) si.hidden = true;
-                        }
-                        else if (RegexHelper.IsFamiliar(si.Name))
-                        {
-                            // reset these, if match a familiar
-                            si.isPet = false;
-                            si.hidden = false;
-
-                            si.isFamiliar = true;
-
-                            if (!Settings.Default.ShowFamiliars) si.hidden = true;
-                        }
+                        HandleNPCs(si);
                     }
-
+                    /*-________________________________________________________*/
                     mobsTimers.Spawn(si);
 
                     if (si.Name.Length > 0)
@@ -2178,6 +1973,234 @@ namespace myseq
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawns(): ", ex); }
+        }
+
+        private void HandleNPCs(SPAWNINFO si)
+        {
+            if (!Settings.Default.ShowNPCs) si.hidden = true;
+
+            if (si.OwnerID > 0)
+            {
+                SPAWNINFO owner;
+
+                if (mobs.ContainsKey(si.OwnerID))
+                {
+                    owner = (SPAWNINFO)mobs[si.OwnerID];
+                    if (owner.IsPlayer())
+                    {
+                        si.isPet = true;
+                        if (!Settings.Default.ShowPets) si.hidden = true;
+                    }
+                }
+                else
+                {
+                    // we didnt find owner, so set to 0
+                    // so we can check again next update
+                    si.OwnerID = 0;
+                }
+            }
+
+            if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
+            {
+                si.isEventController = true;
+                if (!Settings.Default.ShowInvis)
+                    si.hidden = true;
+            }
+            else if (si.Class == 62)
+            {
+                si.isLDONObject = true;
+            }
+
+            // Mercenary Identification - Only do it once now
+
+            if (!string.IsNullOrEmpty(si.Lastname))
+            {
+                if (RegexHelper.IsMerc(si.Lastname))
+                    si.isMerc = true;
+            }
+            else if (RegexHelper.IsMount(si.Name)) // Mounts
+            {
+                si.isMount = true;
+
+                if (!Settings.Default.ShowMounts) si.hidden = true;
+            }
+            else if (RegexHelper.IsFamiliar(si.Name))
+            {
+                // reset these, if match a familiar
+                si.isPet = false;
+                si.hidden = false;
+
+                si.isFamiliar = true;
+
+                if (!Settings.Default.ShowFamiliars) si.hidden = true;
+            }
+        }
+
+        private void HandleCorpses(SPAWNINFO si)
+        {
+            si.isCorpse = true;
+
+            if (!CorpseAlerts)
+            {
+                si.isHunt = false;
+
+                si.isCaution = false;
+
+                si.isDanger = false;
+
+                si.isAlert = false;
+            }
+
+            if ((si.Name.IndexOf("_") == -1) && (si.Name.IndexOf("a ") != 0) && (si.Name.IndexOf("an ") != 0))
+            {
+                si.m_isPlayer = true;
+
+                if (!Settings.Default.ShowPCCorpses) si.hidden = true;
+
+                if (si.Name.Length > 0 && CheckMyCorpse(si.Name))
+                {
+                    si.m_isMyCorpse = true;
+
+                    si.hidden = !Settings.Default.ShowMyCorpse;
+                }
+            }
+            else if (!Settings.Default.ShowCorpses) si.hidden = true;
+        }
+
+        private void AdjustMapForSpawns(SPAWNINFO si, FrmMain f1, MapPane mapPane, SPAWNINFO mob)
+        {
+            if (mapPane?.scale.Value == 100M)
+                CheckMapMinMax(si);
+
+            mob.X = si.X;
+            mob.listitem.SubItems[14].Text = si.Y.ToString();
+
+            mob.Y = si.Y;
+            mob.listitem.SubItems[13].Text = si.X.ToString();
+
+            mob.Z = si.Z;
+            mob.listitem.SubItems[15].Text = si.Z.ToString();
+
+            var sd = SpawnDistance(si);
+
+            if (Settings.Default.FollowOption == FollowOption.Target)
+                f1.ReAdjust();
+            mob.listitem.SubItems[16].Text = sd.ToString("#.000");
+        }
+
+        private void UpdateMobTypes(SPAWNINFO si, ListViewPanel SpawnList, SPAWNINFO mob)
+        {
+            mob.Type = si.Type;
+            mob.listitem.SubItems[8].Text = PrettyNames.GetSpawnType(si.Type);
+
+            if (si.Type == 2 || si.Type == 3)
+            {
+                mob.listitem.ForeColor = Color.Gray;
+
+                mob.isCorpse = true;
+
+                if (!CorpseAlerts)
+                {
+                    mob.isHunt = false;
+
+                    mob.isCaution = false;
+
+                    mob.isDanger = false;
+
+                    mob.isAlert = false;
+                }
+            }
+            else if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
+            {
+                mob.listitem.ForeColor = Color.DarkOrchid;
+                si.isEventController = true;
+            }
+            else if (si.Class == 62)
+            {
+                mob.listitem.ForeColor = Color.Gray;
+                si.isLDONObject = true;
+            }
+            else
+            {
+                mob.listitem.ForeColor = conColors[si.Level].Color;
+
+                if (mob.listitem.ForeColor == Color.Maroon)
+                {
+                    mob.listitem.ForeColor = Color.Red;
+                }
+                else if (SpawnList.listView.BackColor == Color.White)
+                {
+                    // Change the colors to be more visible on white if the background is white
+
+                    if (mob.listitem.ForeColor == Color.White)
+                        mob.listitem.ForeColor = Color.Black;
+                    else if (mob.listitem.ForeColor == Color.Yellow)
+                        mob.listitem.ForeColor = Color.Goldenrod;
+                }
+            }
+        }
+
+        private static bool UpdateHidden(SPAWNINFO si, bool listReAdd, SPAWNINFO mob)
+        {
+            if (mob.isCorpse)
+            {
+                if (mob.m_isPlayer)
+                {
+                    // My Corpse
+
+                    if (mob.m_isMyCorpse)
+                    {
+                        si.hidden = !Settings.Default.ShowMyCorpse;
+                    }
+                    else
+                    {
+                        // Other Players Corpses
+
+                        si.hidden = !Settings.Default.ShowPCCorpses;
+                    }
+                }
+                else
+                {
+                    si.hidden = !Settings.Default.ShowCorpses;
+                }
+            }
+            else if (mob.m_isPlayer)
+            {
+                si.hidden = !Settings.Default.ShowPlayers;
+            }
+            else
+            {
+                // non-corpse, non-player spawn (aka NPC)
+
+                if (!Settings.Default.ShowNPCs) // hides all NPCs
+                {
+                    si.hidden = true;
+                }
+                else
+                {
+                    si.hidden = false;
+
+                    if (si.isEventController && !Settings.Default.ShowInvis) // Invis Men
+
+                        si.hidden = true;
+                    else if (mob.isMount && !Settings.Default.ShowMounts) // Mounts
+
+                        si.hidden = true;
+                    else if (mob.isPet && !Settings.Default.ShowPets) // Pets
+
+                        si.hidden = true;
+                    else if (mob.isFamiliar && !Settings.Default.ShowFamiliars) // Familiars
+
+                        si.hidden = true;
+                }
+            }
+
+            if (si.hidden && !mob.hidden) mob.delFromList = true;
+
+            if (!si.hidden && mob.hidden) listReAdd = true;
+
+            mob.hidden = si.hidden;
+            return listReAdd;
         }
 
         private bool IsSpawnInFilterLists(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters, bool alert)
@@ -2301,11 +2324,8 @@ namespace myseq
                     si.isDanger = true;
                 }
                 if (filters.GlobalDanger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalDanger, matchmobname, Settings.Default.NoneOnDanger,
-
                         Settings.Default.TalkOnDanger, "Danger Mob",
-
                         Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-
                         Settings.Default.BeepOnDanger, MatchFullTextD))
                 {
                     alert = true;
@@ -2403,6 +2423,18 @@ namespace myseq
                 LookupBoxMatch(si, f1);
             }
 
+            ListViewItem item1 = AddDetailsToList(si, SpawnList, alert, mobnameWithInfo);
+
+            try { mobs.Add(si.SpawnID, si); }
+            catch (Exception ex) { LogLib.WriteLine("Error adding " + si.Name + " to mobs hashtable: ", ex); }
+
+            // Add it to the spawn list if it's not supposed to be hidden
+            if (!si.hidden) newSpawns.Add(item1);
+            return alert;
+        }
+
+        private ListViewItem AddDetailsToList(SPAWNINFO si, ListViewPanel SpawnList, bool alert, string mobnameWithInfo)
+        {
             ListViewItem item1 = new ListViewItem(mobnameWithInfo);
 
             item1.SubItems.Add(si.Level.ToString());
@@ -2441,11 +2473,7 @@ namespace myseq
 
             item1.SubItems.Add(si.Z.ToString("#.000"));
 
-            float sd = (float)Math.Sqrt(((si.X - playerinfo.X) * (si.X - playerinfo.X)) +
-
-                ((si.Y - playerinfo.Y) * (si.Y - playerinfo.Y)) +
-
-                ((si.Z - playerinfo.Z) * (si.Z - playerinfo.Z)));
+            var sd = SpawnDistance(si);
 
             item1.SubItems.Add(sd.ToString("#.000"));
 
@@ -2487,13 +2515,7 @@ namespace myseq
             si.refresh = rnd.Next(0, 10);
 
             si.listitem = item1;
-
-            try { mobs.Add(si.SpawnID, si); }
-            catch (Exception ex) { LogLib.WriteLine("Error adding " + si.Name + " to mobs hashtable: ", ex); }
-
-            // Add it to the spawn list if it's not supposed to be hidden
-            if (!si.hidden) newSpawns.Add(item1);
-            return alert;
+            return item1;
         }
 
         private float SpawnDistance(SPAWNINFO si)
@@ -2688,7 +2710,7 @@ namespace myseq
             {
                 ThreadStart threadDelegate = new ThreadStart(new Talker
                 {
-                    speakText = $"{TalkDescr}, {RegexHelper.FixMobNameMatch(mobname)}, is up."
+                    SpeakingText = $"{TalkDescr}, {RegexHelper.FixMobNameMatch(mobname)}, is up."
                 }.SpeakText);
 
                 new Thread(threadDelegate).Start();
@@ -2755,7 +2777,7 @@ namespace myseq
             {
                 SPAWNINFO sp = FindMobTimer(st.SpawnLoc);
 
-                selectedID = sp == null ? 99999 : (int)sp.SpawnID;
+                selectedID = sp == null ? 99999 : sp.SpawnID;
 
                 SpawnX = st.X;
 
@@ -3113,368 +3135,390 @@ namespace myseq
             var ConColorsFile = Path.Combine(Settings.Default.CfgDir, "ConLevels.Ini");
             if (Settings.Default.SoDCon)
             {
-                YellowRange = 2;
-
-                GreyRange = (-1) * level;
-
-                if (level < 9)
-                {
-                    GreenRange = -3;
-
-                    CyanRange = -7;
-                }
-                else if (level < 13)
-                {
-                    GreenRange = -5;
-
-                    CyanRange = -3;
-                }
-                else if (level < 17)
-                {
-                    GreenRange = -6;
-
-                    CyanRange = -4;
-                }
-                else if (level < 21)
-                {
-                    GreenRange = -7;
-
-                    CyanRange = -5;
-                }
-                else if (level < 25)
-                {
-                    GreenRange = -8;
-
-                    CyanRange = -6;
-                }
-                else if (level < 29)
-                {
-                    GreenRange = -9;
-
-                    CyanRange = -7;
-                }
-                else if (level < 31)
-                {
-                    GreenRange = -10;
-
-                    CyanRange = -8;
-                }
-                else if (level < 33)
-                {
-                    GreenRange = -11;
-
-                    CyanRange = -8;
-                }
-                else if (level < 37)
-                {
-                    GreenRange = -12;
-
-                    CyanRange = -9;
-                }
-                else if (level < 41)
-                {
-                    GreenRange = -13;
-
-                    CyanRange = -10;
-                }
-                else if (level < 45)
-                {
-                    GreenRange = -15;
-
-                    CyanRange = -11;
-                }
-                else if (level < 49)
-                {
-                    GreenRange = -16;
-
-                    CyanRange = -12;
-                }
-                else if (level < 53)
-                {
-                    GreenRange = -17;
-
-                    CyanRange = -13;
-                }
-                else if (level < 55)
-                {
-                    GreenRange = -18;
-
-                    CyanRange = -14;
-                }
-                else if (level < 57)
-                {
-                    GreenRange = -19;
-
-                    CyanRange = -14;
-                }
-                else
-                {
-                    GreenRange = -20;
-
-                    CyanRange = -15;
-                }
+                SoDCon(level);
             }
 
             // If using SoF Con Colors
             else if (Settings.Default.SoFCon)
             {
-                YellowRange = 3;
-
-                CyanRange = -5;
-
-                if (level < 9)
-                {
-                    GreyRange = -3;
-
-                    GreenRange = -7;
-                }
-                else if (level < 10)
-                {
-                    GreyRange = -4;
-
-                    GreenRange = -3;
-                }
-                else if (level < 13)
-                {
-                    GreyRange = -5;
-
-                    GreenRange = -3;
-                }
-                else if (level < 17)
-                {
-                    GreyRange = -6;
-
-                    GreenRange = -4;
-                }
-                else if (level < 21)
-                {
-                    GreyRange = -7;
-
-                    GreenRange = -5;
-                }
-                else if (level < 25)
-                {
-                    GreyRange = -8;
-
-                    GreenRange = -6;
-                }
-                else if (level < 29)
-                {
-                    GreyRange = -9;
-
-                    GreenRange = -7;
-                }
-                else if (level < 31)
-                {
-                    GreyRange = -10;
-
-                    GreenRange = -8;
-                }
-                else if (level < 33)
-                {
-                    GreyRange = -11;
-
-                    GreenRange = -8;
-                }
-                else if (level < 37)
-                {
-                    GreyRange = -12;
-
-                    GreenRange = -9;
-                }
-                else if (level < 41)
-                {
-                    GreyRange = -13;
-
-                    GreenRange = -10;
-                }
-                else if (level < 45)
-                {
-                    GreyRange = -15;
-
-                    GreenRange = -11;
-                }
-                else if (level < 49)
-                {
-                    GreyRange = -16;
-
-                    GreenRange = -12;
-                }
-                else if (level < 53)
-                {
-                    GreyRange = -17;
-
-                    GreenRange = -13;
-                }
-                else if (level < 55)
-                {
-                    GreyRange = -18;
-
-                    GreenRange = -14;
-                }
-                else if (level < 57)
-                {
-                    GreyRange = -19;
-
-                    GreenRange = -14;
-                }
-                else
-                {
-                    GreyRange = -20;
-
-                    GreenRange = -15;
-                }
+                SoFCon(level);
             }
+
             else if (File.Exists(ConColorsFile))
             {
-                IniFile Ini = new IniFile(ConColorsFile);
-
-                string sIniValue = Ini.ReadValue("Con Levels", level.ToString(), "0/0/0");
-                var yellowLevels = Ini.ReadValue("Con Levels", "0", "3");
-                string[] ConLevels = sIniValue.Split('/');
-
-                GreyRange = Convert.ToInt32(ConLevels[0]) - level + 1;
-
-                GreenRange = Convert.ToInt32(ConLevels[1]) - level + 1;
-
-                CyanRange = Convert.ToInt32(ConLevels[2]) - level + 1;
-
-                YellowRange = Convert.ToInt32(yellowLevels);
+                ConLevelFile(level, ConColorsFile);
             }
             else if (Settings.Default.DefaultCon)
             {
                 // Using Default Con Colors
-
-                CyanRange = -5;
-
-                if (level < 16) // verified
-                {
-                    GreyRange = -5;
-
-                    GreenRange = -5;
-                }
-                else if (level < 19) // verified
-                {
-                    GreyRange = -6;
-
-                    GreenRange = -5;
-                }
-                else if (level < 21) // verified
-                {
-                    GreyRange = -7;
-
-                    GreenRange = -5;
-                }
-                else if (level < 22) // verified
-                {
-                    GreyRange = -7;
-
-                    GreenRange = -6;
-                }
-                else if (level < 25) // verified
-                {
-                    GreyRange = -8;
-
-                    GreenRange = -6;
-                }
-                else if (level < 28) // verified
-                {
-                    GreyRange = -9;
-
-                    GreenRange = -7;
-                }
-                else if (level < 29) // verified
-                {
-                    GreyRange = -10;
-
-                    GreenRange = -7;
-                }
-                else if (level < 31) // verified
-                {
-                    GreyRange = -10;
-
-                    GreenRange = -8;
-                }
-                else if (level < 33) // verified
-                {
-                    GreyRange = -11;
-
-                    GreenRange = -8;
-                }
-                else if (level < 34) // verified
-                {
-                    GreyRange = -11;
-
-                    GreenRange = -9;
-                }
-                else if (level < 37) // verified
-                {
-                    GreyRange = -12;
-
-                    GreenRange = -9;
-                }
-                else if (level < 40) // verified
-                {
-                    GreyRange = -13;
-
-                    GreenRange = -10;
-                }
-                else if (level < 41) // Verified
-                {
-                    GreyRange = -14;
-
-                    GreenRange = -10;
-                }
-                else if (level < 43) // Verified
-                {
-                    GreyRange = -14;
-
-                    GreenRange = -11;
-                }
-                else if (level < 45)  // Verified
-                {
-                    GreyRange = -15;
-
-                    GreenRange = -11;
-                }
-                else if (level < 46)  // Verified
-                {
-                    GreyRange = -15;
-
-                    GreenRange = -12;
-                }
-                else if (level < 49)  // Verified
-                {
-                    GreyRange = -16;
-
-                    GreenRange = -12;
-                }
-                else if (level < 51) // Verified at 50
-                {
-                    GreyRange = -17;
-
-                    GreenRange = -13;
-                }
-                else if (level < 53)
-                {
-                    GreyRange = -18;
-
-                    GreenRange = -14;
-                }
-                else if (level < 57)
-                {
-                    GreyRange = -20;
-
-                    GreenRange = -15;
-                }
-                else
-                {
-                    GreyRange = -21;
-
-                    GreenRange = -16;
-                }
+                DefaultCon(level);
             }
         }
+
+        private void DefaultCon(int level)
+        {
+            CyanRange = -5;
+
+            if (level < 16) // verified
+            {
+                GreyRange = -5;
+
+                GreenRange = -5;
+            }
+            else if (level < 19) // verified
+            {
+                GreyRange = -6;
+
+                GreenRange = -5;
+            }
+            else if (level < 21) // verified
+            {
+                GreyRange = -7;
+
+                GreenRange = -5;
+            }
+            else if (level < 22) // verified
+            {
+                GreyRange = -7;
+
+                GreenRange = -6;
+            }
+            else if (level < 25) // verified
+            {
+                GreyRange = -8;
+
+                GreenRange = -6;
+            }
+            else if (level < 28) // verified
+            {
+                GreyRange = -9;
+
+                GreenRange = -7;
+            }
+            else if (level < 29) // verified
+            {
+                GreyRange = -10;
+
+                GreenRange = -7;
+            }
+            else if (level < 31) // verified
+            {
+                GreyRange = -10;
+
+                GreenRange = -8;
+            }
+            else if (level < 33) // verified
+            {
+                GreyRange = -11;
+
+                GreenRange = -8;
+            }
+            else if (level < 34) // verified
+            {
+                GreyRange = -11;
+
+                GreenRange = -9;
+            }
+            else if (level < 37) // verified
+            {
+                GreyRange = -12;
+
+                GreenRange = -9;
+            }
+            else if (level < 40) // verified
+            {
+                GreyRange = -13;
+
+                GreenRange = -10;
+            }
+            else if (level < 41) // Verified
+            {
+                GreyRange = -14;
+
+                GreenRange = -10;
+            }
+            else if (level < 43) // Verified
+            {
+                GreyRange = -14;
+
+                GreenRange = -11;
+            }
+            else if (level < 45)  // Verified
+            {
+                GreyRange = -15;
+
+                GreenRange = -11;
+            }
+            else if (level < 46)  // Verified
+            {
+                GreyRange = -15;
+
+                GreenRange = -12;
+            }
+            else if (level < 49)  // Verified
+            {
+                GreyRange = -16;
+
+                GreenRange = -12;
+            }
+            else if (level < 51) // Verified at 50
+            {
+                GreyRange = -17;
+
+                GreenRange = -13;
+            }
+            else if (level < 53)
+            {
+                GreyRange = -18;
+
+                GreenRange = -14;
+            }
+            else if (level < 57)
+            {
+                GreyRange = -20;
+
+                GreenRange = -15;
+            }
+            else
+            {
+                GreyRange = -21;
+
+                GreenRange = -16;
+            }
+        }
+
+        private void ConLevelFile(int level, string ConColorsFile)
+        {
+
+            IniFile Ini = new IniFile(ConColorsFile);
+
+            string sIniValue = Ini.ReadValue("Con Levels", level.ToString(), "0/0/0");
+            var yellowLevels = Ini.ReadValue("Con Levels", "0", "3");
+            string[] ConLevels = sIniValue.Split('/');
+
+            GreyRange = Convert.ToInt32(ConLevels[0]) - level + 1;
+
+            GreenRange = Convert.ToInt32(ConLevels[1]) - level + 1;
+
+            CyanRange = Convert.ToInt32(ConLevels[2]) - level + 1;
+
+            YellowRange = Convert.ToInt32(yellowLevels);
+        }
+
+        private void SoFCon(int level)
+        {
+            YellowRange = 3;
+
+            CyanRange = -5;
+
+            if (level < 9)
+            {
+                GreyRange = -3;
+
+                GreenRange = -7;
+            }
+            else if (level < 10)
+            {
+                GreyRange = -4;
+
+                GreenRange = -3;
+            }
+            else if (level < 13)
+            {
+                GreyRange = -5;
+
+                GreenRange = -3;
+            }
+            else if (level < 17)
+            {
+                GreyRange = -6;
+
+                GreenRange = -4;
+            }
+            else if (level < 21)
+            {
+                GreyRange = -7;
+
+                GreenRange = -5;
+            }
+            else if (level < 25)
+            {
+                GreyRange = -8;
+
+                GreenRange = -6;
+            }
+            else if (level < 29)
+            {
+                GreyRange = -9;
+
+                GreenRange = -7;
+            }
+            else if (level < 31)
+            {
+                GreyRange = -10;
+
+                GreenRange = -8;
+            }
+            else if (level < 33)
+            {
+                GreyRange = -11;
+
+                GreenRange = -8;
+            }
+            else if (level < 37)
+            {
+                GreyRange = -12;
+
+                GreenRange = -9;
+            }
+            else if (level < 41)
+            {
+                GreyRange = -13;
+
+                GreenRange = -10;
+            }
+            else if (level < 45)
+            {
+                GreyRange = -15;
+
+                GreenRange = -11;
+            }
+            else if (level < 49)
+            {
+                GreyRange = -16;
+
+                GreenRange = -12;
+            }
+            else if (level < 53)
+            {
+                GreyRange = -17;
+
+                GreenRange = -13;
+            }
+            else if (level < 55)
+            {
+                GreyRange = -18;
+
+                GreenRange = -14;
+            }
+            else if (level < 57)
+            {
+                GreyRange = -19;
+
+                GreenRange = -14;
+            }
+            else
+            {
+                GreyRange = -20;
+
+                GreenRange = -15;
+            }
+        }
+
+        private void SoDCon(int level)
+        {
+            YellowRange = 2;
+
+            GreyRange = (-1) * level;
+
+            if (level < 9)
+            {
+                GreenRange = -3;
+
+                CyanRange = -7;
+            }
+            else if (level < 13)
+            {
+                GreenRange = -5;
+
+                CyanRange = -3;
+            }
+            else if (level < 17)
+            {
+                GreenRange = -6;
+
+                CyanRange = -4;
+            }
+            else if (level < 21)
+            {
+                GreenRange = -7;
+
+                CyanRange = -5;
+            }
+            else if (level < 25)
+            {
+                GreenRange = -8;
+
+                CyanRange = -6;
+            }
+            else if (level < 29)
+            {
+                GreenRange = -9;
+
+                CyanRange = -7;
+            }
+            else if (level < 31)
+            {
+                GreenRange = -10;
+
+                CyanRange = -8;
+            }
+            else if (level < 33)
+            {
+                GreenRange = -11;
+
+                CyanRange = -8;
+            }
+            else if (level < 37)
+            {
+                GreenRange = -12;
+
+                CyanRange = -9;
+            }
+            else if (level < 41)
+            {
+                GreenRange = -13;
+
+                CyanRange = -10;
+            }
+            else if (level < 45)
+            {
+                GreenRange = -15;
+
+                CyanRange = -11;
+            }
+            else if (level < 49)
+            {
+                GreenRange = -16;
+
+                CyanRange = -12;
+            }
+            else if (level < 53)
+            {
+                GreenRange = -17;
+
+                CyanRange = -13;
+            }
+            else if (level < 55)
+            {
+                GreenRange = -18;
+
+                CyanRange = -14;
+            }
+            else if (level < 57)
+            {
+                GreenRange = -19;
+
+                CyanRange = -14;
+            }
+            else
+            {
+                GreenRange = -20;
+
+                CyanRange = -15;
+            }
+        }
+
         public void CalculateMapLinePens()
         {
             if (lines == null)

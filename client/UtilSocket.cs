@@ -7,6 +7,8 @@ namespace Structures
     /// <summary> This class abstracts a socket </summary>
     public class CSocketClient
     {
+        private const int cbufferSize = 1048576;
+
         // Delegate Method Types
         /// <summary> DelType: Called when a message is received </summary>
         public delegate void MESSAGE_HANDLER(CSocketClient pSocket, int iNumberOfBytes);
@@ -16,6 +18,7 @@ namespace Structures
 
         /// <summary> RefType: A network stream object </summary>
         private NetworkStream GetNetworkStream { get; set; }
+
         /// <summary> RefType: A TcpClient object for socket connection </summary>
         private TcpClient GetTcpClient { get; set; }
 
@@ -32,13 +35,13 @@ namespace Structures
         private CLOSE_HANDLER GetCloseHandler { get; }
 
         /// <summary> SimType: Flag to indicate if the class has been disposed </summary>
-        private bool IsDisposed { get; set; }
+//        private bool IsDisposed { get; set; }
 
         /// <summary> RefType: The IpAddress the client is connect to </summary>
-        public string GetIpAddress { get; set; }
+//        public string GetIpAddress { get; set; }
 
         /// <summary> SimType: The Port to either connect to or listen on </summary>
-        public short GetPort { get; set; }
+//        public short GetPort { get; set; }
 
         /// <summary> SimType: A raw buffer to capture data comming off the socket </summary>
         public byte[] GetRawBuffer { get; set; }
@@ -47,7 +50,7 @@ namespace Structures
         public int GetSizeOfRawBuffer { get; set; }
 
         /// <summary> RefType: The socket for the client connection </summary>
-        public Socket GetClientSocket { get; set; }
+//        public Socket GetClientSocket { get; set; }
 
         // Constructor, Finalize, Dispose
         //********************************************************************
@@ -60,41 +63,42 @@ namespace Structures
         {
             // Create the raw buffer
             GetSizeOfRawBuffer = iSizeOfRawBuffer;
-            GetRawBuffer = new byte[GetSizeOfRawBuffer];
+            GetRawBuffer = new byte[iSizeOfRawBuffer];
 
             // Set the handler methods
             GetMessageHandler = pfnMessageHandler;
             GetCloseHandler = pfnCloseHandler;
 
             // Set the async socket method handlers
+
             GetCallbackReadMethod = new AsyncCallback(ReceiveComplete);
             GetCallbackWriteMethod = new AsyncCallback(SendComplete);
 
             // Init the dispose flag
-            IsDisposed = false;
+            //            IsDisposed = false;
         }
 
         //*******************************************************************
         /// <summary> Finialize </summary>
-        ~CSocketClient()
-        {
-            if (!IsDisposed)
-                Dispose();
-        }
+        //~CSocketClient()
+        //{
+        //    if (!IsDisposed)
+        //        Dispose();
+        //}
         //********************************************************************
         /// <summary> Dispose </summary>
-        public void Dispose()
-        {
-            try
-            {
-                // Flag that dispose has been called
-                IsDisposed = true;
+        //public void Dispose()
+        //{
+        //    try
+        //    {
+        //        // Flag that dispose has been called
+        //        IsDisposed = true;
 
-                // Disconnect the client from the server
-                Disconnect();
-            }
-            catch (Exception ex) { LogLib.WriteLine("Error CSocketClient.Dispose(): ", ex); }
-        }
+        //        // Disconnect the client from the server
+        //        Disconnect();
+        //    }
+        //    catch (Exception ex) { LogLib.WriteLine("Error CSocketClient.Dispose(): ", ex); }
+        //}
 
         // Private Methods
         //********************************************************************
@@ -132,9 +136,9 @@ namespace Structures
                 // The connection must have dropped call the CloseHandler
                 try { GetCloseHandler(this); }
                 catch (Exception ex) { LogLib.WriteLine("Error CSocketClient.ReceiveComplete(): ", ex); }
-
+                Disconnect();
                 // Dispose of the class
-                Dispose();
+                //                Dispose();
             }
         }
 
@@ -160,32 +164,23 @@ namespace Structures
         /// <summary> Function used to connect to a server </summary>
         /// <param name="strIpAddress"> RefType: The address to connect to </param>
         /// <param name="iPort"> SimType: The Port to connect to </param>
-        public void Connect(string strIpAddress, short iPort)
+        public void Connect(string strIpAddress, int iPort)
         {
-            try
+            if (GetNetworkStream == null)
             {
-                if (GetNetworkStream == null)
-                {
-                    // Set the Ipaddress and Port
-                    GetIpAddress = strIpAddress;
-                    GetPort = iPort;
+                // Attempt to establish a connection
+                GetTcpClient = new TcpClient(strIpAddress, iPort);
+                GetNetworkStream = GetTcpClient.GetStream();
 
-                    // Attempt to establish a connection
-                    GetTcpClient = new TcpClient(GetIpAddress, GetPort);
-                    GetNetworkStream = GetTcpClient.GetStream();
+                // Set these socket options
+                GetTcpClient.ReceiveBufferSize = cbufferSize;
+                GetTcpClient.SendBufferSize = cbufferSize;
+                GetTcpClient.NoDelay = true;
 
-                    // Set these socket options
-                    GetTcpClient.ReceiveBufferSize = 1048576;
-                    GetTcpClient.SendBufferSize = 1048576;
-                    GetTcpClient.NoDelay = true;
-                    GetTcpClient.LingerState = new LingerOption(false, 0);
-
-                    // Start to receive messages
-                    Receive();
-                }
+                Receive();
             }
-            catch (SocketException e) { throw new Exception(e.Message, e.InnerException); }
         }
+
         //********************************************************************
         /// <summary> Function used to disconnect from the server </summary>
         public void Disconnect()
@@ -195,12 +190,12 @@ namespace Structures
 
             GetTcpClient?.Close();
 
-            GetClientSocket?.Close();
+//            GetClientSocket?.Close();
 
             // Clean up the connection state
-            GetClientSocket = null;
-            GetNetworkStream = null;
-            GetTcpClient = null;
+            //GetClientSocket = null;
+            //GetNetworkStream = null;
+            //GetTcpClient = null;
         }
 
         /// <summary> Function to send a raw buffer to the server </summary>
@@ -217,6 +212,7 @@ namespace Structures
                 LogLib.WriteLine("Error CSocketClient.Send(Byte[]): Socket Closed");
             }
         }
+
         //********************************************************************
         /// <summary> Wait for a message to arrive </summary>
         public void Receive()
@@ -233,4 +229,3 @@ namespace Structures
         }
     }
 }
-
