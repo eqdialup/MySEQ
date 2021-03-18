@@ -1890,7 +1890,7 @@ namespace myseq
 
         private void DrawSpawns(float pX, float pY, float pZ, float playerx, float playery, DrawOptions DrawOpts)
         {
-            uint playerSpawnID = eq.playerinfo.SpawnID;
+            int playerSpawnID = eq.playerinfo.SpawnID;
 
             int RangeCircle = Settings.Default.RangeCircle;
 

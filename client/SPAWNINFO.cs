@@ -41,9 +41,9 @@ namespace Structures
 
             SpeedRun = BitConverter.ToSingle(b, 46 + offset);
 
-            SpawnID = BitConverter.ToUInt32(b, 50 + offset);
+            SpawnID = BitConverter.ToInt32(b, 50 + offset);
 
-            OwnerID = BitConverter.ToUInt32(b, 54 + offset);
+            OwnerID = BitConverter.ToInt32(b, 54 + offset);
 
             Type = b[58 + offset];
 
@@ -80,9 +80,9 @@ namespace Structures
 
         public float SpeedRun = 0;
 
-        public uint SpawnID = 0;
+        public int SpawnID = 0;
 
-        public uint OwnerID = 0;
+        public int OwnerID = 0;
 
         public byte Type = 0;
 

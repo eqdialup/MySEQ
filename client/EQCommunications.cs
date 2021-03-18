@@ -2,7 +2,6 @@
 
 using myseq;
 using System;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace Structures
@@ -77,7 +76,7 @@ namespace Structures
 
                 numPackets = numProcessed = 0;
 
-                pSocketClient?.Dispose();
+                pSocketClient?.Disconnect();
 
                 pSocketClient = null;
             }
@@ -89,14 +88,7 @@ namespace Structures
         {
             try
             {
-                if (pSocketClient != null)
-                {
-                    Thread.Sleep(2000);
-
-                    pSocketClient.Dispose();
-
-                    pSocketClient = null;
-                }
+                pSocketClient?.Disconnect();
 
                 // Instantiate a CSocketClient object
 
@@ -107,7 +99,7 @@ namespace Structures
 
                 // Establish a connection to the server
                 mbGetProcessInfo = true;
-                pSocketClient.Connect(ServerAddress, (short)ServerPort);
+                pSocketClient.Connect(ServerAddress, ServerPort);
 
                 return true;
             }
