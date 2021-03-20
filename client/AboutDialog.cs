@@ -6,6 +6,9 @@ namespace myseq
 {
     public partial class AboutDialog : Form
     {
+        private const string dockpanel = "https://dockpanelsuite.sourceforge.net";
+        private const string showeqforum = "https://www.showeq.net/forums/forum.php";
+
         public AboutDialog()
         {
             InitializeComponent();
@@ -84,9 +87,9 @@ namespace myseq
         #endregion
 
         private static void DockpanelClick(object sender, LinkLabelLinkClickedEventArgs e) =>
-            Process.Start("https://dockpanelsuite.sourceforge.net");
+            Process.Start(dockpanel);
 
         private static void ForumlinkClick(object sender, LinkLabelLinkClickedEventArgs e) =>
-            Process.Start("http://www.showeq.net/forums/forum.php");
+            Process.Start(showeqforum);
     }
 }

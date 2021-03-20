@@ -30,7 +30,7 @@ namespace myseq
 
         private ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
 
-        private bool playAlerts;
+//        private bool playAlerts;
 
         // Max + Min map coordinates - define the bounds of the zone
 
@@ -106,9 +106,9 @@ namespace myseq
 
         private string AlertPrefix = "";
 
-        private string[] Classes;
+//        private string[] Classes;
 
-        private string[] Races;
+//        private string[] Races;
 
         // Blech, some UI stuff... but at least it's shareable between several users
 
@@ -139,9 +139,9 @@ namespace myseq
         private bool filter4;
         private bool filter5;
 
-        public void EnablePlayAlerts() => playAlerts = true;
+        //public void EnablePlayAlerts() => playAlerts = true;
 
-        public void DisablePlayAlerts() => playAlerts = false;
+        //public void DisablePlayAlerts() => playAlerts = false;
 
         public void MarkLookups(string name, bool filterMob = false)
         {
@@ -559,9 +559,9 @@ namespace myseq
 
         public void InitLookups()
         {
-            Classes = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Classes.txt"));
+//            Classes = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Classes.txt"));
 
-            Races = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Races.txt"));
+//            Races = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Races.txt"));
 
             itemList.Clear();
 
@@ -1152,37 +1152,37 @@ namespace myseq
             return token;
         }
 
-        private string[] GetStrArrayFromTextFile(string filePath)
-        {
-            ArrayList arList = new ArrayList();
+        //private string[] GetStrArrayFromTextFile(string filePath)
+        //{
+        //    ArrayList arList = new ArrayList();
 
-            string line;
+        //    string line;
 
-            if (File.Exists(filePath))
-            {
-                FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        //    if (File.Exists(filePath))
+        //    {
+        //        FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-                StreamReader sr = new StreamReader(fs);
-                do
-                {
-                    line = sr.ReadLine();
+        //        StreamReader sr = new StreamReader(fs);
+        //        do
+        //        {
+        //            line = sr.ReadLine();
 
-                    if (line != null)
-                    {
-                        line = line.Trim();
+        //            if (line != null)
+        //            {
+        //                line = line.Trim();
 
-                        if (line != "" && line.Substring(0, 1) != "#")
-                            arList.Add(line);
-                    }
-                } while (line != null);
+        //                if (line != "" && line.Substring(0, 1) != "#")
+        //                    arList.Add(line);
+        //            }
+        //        } while (line != null);
 
-                sr.Close();
+        //        sr.Close();
 
-                fs.Close();
-            }
+        //        fs.Close();
+        //    }
 
-            return (string[])arList.ToArray(Type.GetType("System.String"));
-        }
+        //    return (string[])arList.ToArray(Type.GetType("System.String"));
+        //}
 
         private void ReadItemList(string filePath)
         {
@@ -1351,13 +1351,13 @@ namespace myseq
             return ActorDef;
         }
 
-        private string ArrayIndextoStr(string[] source, int index)
-        {
-            if (index < source.GetLowerBound(0) || index > source.GetUpperBound(0))
-                return $"{index}: Unknown";
-            else
-                return source[index];
-        }
+        //private string ArrayIndextoStr(string[] source, int index)
+        //{
+        //    if (index < source.GetLowerBound(0) || index > source.GetUpperBound(0))
+        //        return $"{index}: Unknown";
+        //    else
+        //        return source[index];
+        //}
 
         public void ClearMapStructures()
         {
@@ -1814,7 +1814,7 @@ namespace myseq
                         if (mob.Class != si.Class)
                         {
                             mob.Class = si.Class;
-                            mob.listitem.SubItems[2].Text = ClassNumToString(si.Class);
+                            mob.listitem.SubItems[2].Text = PrettyNames.GetClass(si.Class);
                         }
 
                         if (mob.Primary != si.Primary)
@@ -1832,7 +1832,7 @@ namespace myseq
                         if (mob.Race != si.Race)
                         {
                             mob.Race = si.Race;
-                            mob.listitem.SubItems[5].Text = RaceNumtoString(si.Race);
+                            mob.listitem.SubItems[5].Text = PrettyNames.GetRace(si.Race);
                         }
 
                         if (mob.OwnerID != si.OwnerID)
@@ -2439,7 +2439,7 @@ namespace myseq
 
             item1.SubItems.Add(si.Level.ToString());
 
-            item1.SubItems.Add(ClassNumToString(si.Class));
+            item1.SubItems.Add(PrettyNames.GetClass(si.Class));
 
             if (si.Primary > 0)
                 item1.SubItems.Add(ItemNumToString(si.Primary));
@@ -2451,7 +2451,7 @@ namespace myseq
             else
                 item1.SubItems.Add("");
 
-            item1.SubItems.Add(RaceNumtoString(si.Race));
+            item1.SubItems.Add(PrettyNames.GetRace(si.Race));
 
             OwnerFlag(si, item1);
 
@@ -2670,7 +2670,7 @@ namespace myseq
              bool BeepOnMatch, bool MatchFullText)
         {
             bool alert = false;
-
+            FrmMain f1 = null;
             foreach (string str in exps)
             {
                 bool matched = false;
@@ -2690,7 +2690,7 @@ namespace myseq
 
                 if (matched)
                 {
-                    if (!NoneOnMatch && playAlerts)
+                    if (!NoneOnMatch && f1.playAlerts)
                     {
                         AudioMatch(mobname, TalkOnMatch, TalkDescr, PlayOnMatch, AudioFile, BeepOnMatch);
                     }
@@ -2744,8 +2744,8 @@ namespace myseq
                 sw.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}",
                              si.Name,
                              si.Level,
-                             ClassNumToString(si.Class),
-                             RaceNumtoString(si.Race),
+                             PrettyNames.GetClass(si.Class),
+                             PrettyNames.GetRace(si.Race),
                              si.Lastname,
                              PrettyNames.GetSpawnType(si.Type),
                              PrettyNames.GetHideStatus(si.Hide),
@@ -2799,7 +2799,7 @@ namespace myseq
             }
         }
 
-        public string ClassNumToString(int num) => ArrayIndextoStr(Classes, num);
+//        public string ClassNumToString(int num) => ArrayIndextoStr(Classes, num);
 
         public string ItemNumToString(int num)
         {
@@ -2831,13 +2831,13 @@ namespace myseq
             }
         }
 
-        public string RaceNumtoString(int num)
-        {
-            if (num == 2250)
-                return "Interactive Object";
+        //public string RaceNumtoString(int num)
+        //{
+        //    if (num == 2250)
+        //        return "Interactive Object";
 
-            return ArrayIndextoStr(Races, num);
-        }
+        //    return ArrayIndextoStr(Races, num);
+        //}
 
         public void BeginProcessPacket()
         {
@@ -3143,7 +3143,6 @@ namespace myseq
             {
                 SoFCon(level);
             }
-
             else if (File.Exists(ConColorsFile))
             {
                 ConLevelFile(level, ConColorsFile);
@@ -3153,6 +3152,23 @@ namespace myseq
                 // Using Default Con Colors
                 DefaultCon(level);
             }
+        }
+
+        private void ConLevelFile(int level, string ConColorsFile)
+        {
+            IniFile Ini = new IniFile(ConColorsFile);
+
+            string sIniValue = Ini.ReadValue("Con Levels", level.ToString(), "0/0/0");
+            var yellowLevels = Ini.ReadValue("Con Levels", "0", "3");
+            string[] ConLevels = sIniValue.Split('/');
+
+            GreyRange = Convert.ToInt32(ConLevels[0]) - level + 1;
+
+            GreenRange = Convert.ToInt32(ConLevels[1]) - level + 1;
+
+            CyanRange = Convert.ToInt32(ConLevels[2]) - level + 1;
+
+            YellowRange = Convert.ToInt32(yellowLevels);
         }
 
         private void DefaultCon(int level)
@@ -3285,24 +3301,6 @@ namespace myseq
 
                 GreenRange = -16;
             }
-        }
-
-        private void ConLevelFile(int level, string ConColorsFile)
-        {
-
-            IniFile Ini = new IniFile(ConColorsFile);
-
-            string sIniValue = Ini.ReadValue("Con Levels", level.ToString(), "0/0/0");
-            var yellowLevels = Ini.ReadValue("Con Levels", "0", "3");
-            string[] ConLevels = sIniValue.Split('/');
-
-            GreyRange = Convert.ToInt32(ConLevels[0]) - level + 1;
-
-            GreenRange = Convert.ToInt32(ConLevels[1]) - level + 1;
-
-            CyanRange = Convert.ToInt32(ConLevels[2]) - level + 1;
-
-            YellowRange = Convert.ToInt32(yellowLevels);
         }
 
         private void SoFCon(int level)

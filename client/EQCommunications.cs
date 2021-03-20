@@ -104,12 +104,9 @@ namespace Structures
                 return true;
             }
             catch (Exception pException)
-
             {
                 var msg = $"{ServConErr} {pException.Message}";
-
                 LogLib.WriteLine(msg);
-
                 if (errMsg)
                 {
                     MessageBox.Show(
@@ -119,7 +116,6 @@ namespace Structures
                         buttons: MessageBoxButtons.OK,
                         icon: MessageBoxIcon.Error);
                 }
-
                 return false;
             }
         }
@@ -132,8 +128,10 @@ namespace Structures
         private void MessageHandlerClient(CSocketClient pSocket, int iNumberOfBytes)
         {
             // Process the packet
+            try {
+                ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);
+                }
 
-            try { ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes); }
             catch (Exception pException) { LogLib.WriteLine("Error: ProcessPacket: " + pException.Message); }
         }
 
@@ -143,14 +141,14 @@ namespace Structures
         /// <param name="pSocket"> The SocketClient object the message came from </param>
         private void CloseHandler(CSocketClient pSocket)
         {
-            try
-            {
+            //try
+            //{
                 if (f1 == null)
                     StopListening();
                 else
                     f1.StopListening();
-            }
-            catch (Exception pException) { LogLib.WriteLine($"Error: CloseHandler: {pException.Message}"); }
+            //}
+            //catch (Exception pException) { LogLib.WriteLine($"Error: CloseHandler: {pException.Message}"); }
         }
 
         //********************************************************************

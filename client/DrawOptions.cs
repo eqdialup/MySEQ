@@ -1,7 +1,6 @@
-using System;
+
 namespace Structures
 {
-    [Flags]
     public enum DrawOptions
     {
         /// <summary>

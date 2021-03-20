@@ -166,19 +166,20 @@ namespace Structures
         /// <param name="iPort"> SimType: The Port to connect to </param>
         public void Connect(string strIpAddress, int iPort)
         {
-            if (GetNetworkStream == null)
+            if (GetNetworkStream != null)
             {
-                // Attempt to establish a connection
-                GetTcpClient = new TcpClient(strIpAddress, iPort);
-                GetNetworkStream = GetTcpClient.GetStream();
-
-                // Set these socket options
-                GetTcpClient.ReceiveBufferSize = cbufferSize;
-                GetTcpClient.SendBufferSize = cbufferSize;
-                GetTcpClient.NoDelay = true;
-
-                Receive();
+                return;
             }
+            // Attempt to establish a connection
+            GetTcpClient = new TcpClient(strIpAddress, iPort);
+            GetNetworkStream = GetTcpClient.GetStream();
+
+            // Set these socket options
+            GetTcpClient.ReceiveBufferSize = cbufferSize;
+            GetTcpClient.SendBufferSize = cbufferSize;
+            GetTcpClient.NoDelay = true;
+
+            Receive();
         }
 
         //********************************************************************

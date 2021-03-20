@@ -358,6 +358,8 @@ namespace myseq
         private bool bFilter4 = false;
         private bool bFilter5 = false;
 
+        public bool playAlerts;
+
         public void StopListening()
 
         {
@@ -365,7 +367,7 @@ namespace myseq
 
             timPackets.Stop();
             timDelayAlerts.Stop();
-            eq.DisablePlayAlerts();
+            DisablePlayAlerts();
 
             comm.StopListening();
 
@@ -3841,7 +3843,7 @@ namespace myseq
         private void TimDelayPlay_Tick(object sender, EventArgs e)
         {
             // our alert sound/email delay interval has passed.
-            eq.EnablePlayAlerts();
+            EnablePlayAlerts();
             timDelayAlerts.Stop();
         }
 
@@ -4105,7 +4107,7 @@ namespace myseq
 
                 // Start Delay for doing spawn alerts.  This stops sounds and emails.
                 timDelayAlerts.Start();
-                eq.DisablePlayAlerts();
+                DisablePlayAlerts();
 
                 try
 
@@ -4487,7 +4489,7 @@ namespace myseq
         private void MnuRefreshSpawnList_Click(object sender, EventArgs e)
 
         {
-            eq.DisablePlayAlerts();
+            DisablePlayAlerts();
 
             eq.mobsTimers.ResetTimers();
 
@@ -4733,7 +4735,7 @@ namespace myseq
 
             timDelayAlerts.Start();
 
-            eq.DisablePlayAlerts();
+            DisablePlayAlerts();
 
             eq.mobsTimers.ResetTimers();
             map?.ClearMap();
@@ -5190,7 +5192,7 @@ namespace myseq
 
             timDelayAlerts.Start();
 
-            eq.DisablePlayAlerts();
+            DisablePlayAlerts();
 
             eq.mobsTimers.ResetTimers();
 
@@ -5198,35 +5200,35 @@ namespace myseq
 
             eq.mobsTimers.LoadTimers();
 
-            if (toolStripLookupBox.Text.Length > 0 && toolStripLookupBox.Text != "Mob Search")
-            {
-                eq.MarkLookups("0:" + toolStripLookupBox.Text, bFilter0);
-            }
+            //if (toolStripLookupBox.Text.Length > 0 && toolStripLookupBox.Text != "Mob Search")
+            //{
+            //    eq.MarkLookups("0:" + toolStripLookupBox.Text, bFilter0);
+            //}
 
-            if (toolStripLookupBox1.Text.Length > 0 && toolStripLookupBox1.Text != "Mob Search")
-            {
-                eq.MarkLookups("1:" + toolStripLookupBox1.Text, bFilter1);
-            }
+            //if (toolStripLookupBox1.Text.Length > 0 && toolStripLookupBox1.Text != "Mob Search")
+            //{
+            //    eq.MarkLookups("1:" + toolStripLookupBox1.Text, bFilter1);
+            //}
 
-            if (toolStripLookupBox2.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-            {
-                eq.MarkLookups("2:" + toolStripLookupBox2.Text, bFilter2);
-            }
+            //if (toolStripLookupBox2.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
+            //{
+            //    eq.MarkLookups("2:" + toolStripLookupBox2.Text, bFilter2);
+            //}
 
-            if (toolStripLookupBox3.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-            {
-                eq.MarkLookups("3:" + toolStripLookupBox3.Text, bFilter3);
-            }
+            //if (toolStripLookupBox3.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
+            //{
+            //    eq.MarkLookups("3:" + toolStripLookupBox3.Text, bFilter3);
+            //}
 
-            if (toolStripLookupBox4.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-            {
-                eq.MarkLookups("4:" + toolStripLookupBox4.Text, bFilter4);
-            }
+            //if (toolStripLookupBox4.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
+            //{
+            //    eq.MarkLookups("4:" + toolStripLookupBox4.Text, bFilter4);
+            //}
 
-            if (toolStripLookupBox5.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-            {
-                eq.MarkLookups("5:" + toolStripLookupBox5.Text, bFilter5);
-            }
+            //if (toolStripLookupBox5.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
+            //{
+            //    eq.MarkLookups("5:" + toolStripLookupBox5.Text, bFilter5);
+            //}
         }
 
         public void ResetMapPens()
@@ -6968,6 +6970,10 @@ namespace myseq
                 e.Handled = true;
             }
         }
+
+        public void EnablePlayAlerts() => playAlerts = true;
+
+        public void DisablePlayAlerts() => playAlerts = false;
     }
 }
 
