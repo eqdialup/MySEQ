@@ -1351,7 +1351,7 @@ namespace myseq
 
                 mobInfo.AppendFormat("Level {0} / {1}\n", si.Level.ToString(), PrettyNames.GetHideStatus(si.Hide));
 
-                mobInfo.AppendFormat("{0} / {1}\n", PrettyNames.GetRace(si.Race), PrettyNames.GetClass(si.Class));
+                mobInfo.AppendFormat("{0} / {1}\n", eq.GetRace(si.Race), eq.GetClass(si.Class));
 
                 mobInfo.AppendFormat("Speed: {0:f3}  Dist: {1:f0}\n", si.SpeedRun, sd);
 
@@ -1374,14 +1374,14 @@ namespace myseq
                     mobInfo.AppendFormat("Level: {0}\n", si.Level.ToString());
 
                 if (si.Primary > 0)
-                    mobInfo.AppendFormat("Class: {0}    Primary: {1} ({2})\n", PrettyNames.GetClass(si.Class), eq.ItemNumToString(si.Primary), si.Primary);
+                    mobInfo.AppendFormat("Class: {0}    Primary: {1} ({2})\n", eq.GetClass(si.Class), eq.ItemNumToString(si.Primary), si.Primary);
                 else
-                    mobInfo.AppendFormat("Class: {0}\n", PrettyNames.GetClass(si.Class));
+                    mobInfo.AppendFormat("Class: {0}\n", eq.GetClass(si.Class));
 
                 if (si.Offhand > 0)
-                    mobInfo.AppendFormat("Race: {0}    Offhand: {1} ({2})\n", PrettyNames.GetRace(si.Race), eq.ItemNumToString(si.Offhand), si.Offhand);
+                    mobInfo.AppendFormat("Race: {0}    Offhand: {1} ({2})\n", eq.GetRace(si.Race), eq.ItemNumToString(si.Offhand), si.Offhand);
                 else
-                    mobInfo.AppendFormat("Race: {0}\n", PrettyNames.GetRace(si.Race));
+                    mobInfo.AppendFormat("Race: {0}\n", eq.GetRace(si.Race));
 
                 mobInfo.AppendFormat("Speed: {0:f3}\n", si.SpeedRun);
 
