@@ -16,7 +16,7 @@ namespace myseq
     public class EQData
     {
         // player details
-        public SPAWNINFO playerinfo = new SPAWNINFO();
+        public SPAWNINFO gamerInfo = new SPAWNINFO();
 
         // Map details
         public string longname = "";
@@ -2522,11 +2522,11 @@ namespace myseq
 
         private float SpawnDistance(SPAWNINFO si)
         {
-            return (float)Math.Sqrt(((si.X - playerinfo.X) * (si.X - playerinfo.X)) +
+            return (float)Math.Sqrt(((si.X - gamerInfo.X) * (si.X - gamerInfo.X)) +
 
-                ((si.Y - playerinfo.Y) * (si.Y - playerinfo.Y)) +
+                ((si.Y - gamerInfo.Y) * (si.Y - gamerInfo.Y)) +
 
-                ((si.Z - playerinfo.Z) * (si.Z - playerinfo.Z)));
+                ((si.Z - gamerInfo.Z) * (si.Z - gamerInfo.Z)));
         }
 
         private void NameChngOrDead(SPAWNINFO si, SPAWNINFO mob)
@@ -2727,7 +2727,7 @@ namespace myseq
             }
         }
 
-        public bool CheckMyCorpse(string mobname) => (mobname.Length < (playerinfo.Name.Length + 14)) && (mobname.IndexOf(playerinfo.Name) == 0);
+        public bool CheckMyCorpse(string mobname) => (mobname.Length < (gamerInfo.Name.Length + 14)) && (mobname.IndexOf(gamerInfo.Name) == 0);
 
         public void SaveMobs()
         {
@@ -2943,53 +2943,53 @@ namespace myseq
             AlertPrefix = Settings.Default.AlertPrefix;
         }
 
-        #region ProcessPlayer
+        #region ProcessGamer
 
-        public void ProcessPlayer(SPAWNINFO si, FrmMain f1)
+        public void ProcessGamer(SPAWNINFO si, FrmMain f1)
         {
             try
             {
-                playerinfo.SpawnID = si.SpawnID;
+                gamerInfo.SpawnID = si.SpawnID;
 
-                if (playerinfo.Name != si.Name || playerinfo.Name?.Length == 0)
+                if (gamerInfo.Name != si.Name || gamerInfo.Name?.Length == 0)
                 {
-                    playerinfo.Name = si.Name;
-                    f1.SetCharSelection(playerinfo.Name);
+                    gamerInfo.Name = si.Name;
+                    f1.SetCharSelection(gamerInfo.Name);
                     f1.SetTitle();
                 }
 
-                playerinfo.Lastname = si.Lastname;
+                gamerInfo.Lastname = si.Lastname;
 
-                if ((playerinfo.X != si.X) || (playerinfo.Y != si.Y))
+                if ((gamerInfo.X != si.X) || (gamerInfo.Y != si.Y))
                 {
-                    playerinfo.X = si.X;
+                    gamerInfo.X = si.X;
 
-                    playerinfo.Y = si.Y;
+                    gamerInfo.Y = si.Y;
 
                     if (Settings.Default.FollowOption == FollowOption.Player)
                         f1.ReAdjust();
                 }
 
-                playerinfo.Z = si.Z;
+                gamerInfo.Z = si.Z;
 
-                playerinfo.Heading = si.Heading;
+                gamerInfo.Heading = si.Heading;
 
-                playerinfo.Hide = si.Hide;
+                gamerInfo.Hide = si.Hide;
 
-                playerinfo.SpeedRun = si.SpeedRun;
+                gamerInfo.SpeedRun = si.SpeedRun;
 
-                if (playerinfo.Level != si.Level)
+                if (gamerInfo.Level != si.Level)
                 {
                     if (f1.gConBaseName.Length > 0)
                     {
-                        if (si.Level > playerinfo.Level)
+                        if (si.Level > gamerInfo.Level)
                         {
-                            int diff = si.Level - playerinfo.Level;
+                            int diff = si.Level - gamerInfo.Level;
                             f1.gconLevel += diff;
                         }
                         else
                         {
-                            int diff = playerinfo.Level - si.Level;
+                            int diff = gamerInfo.Level - si.Level;
                             f1.gconLevel -= diff;
                         }
                         if (f1.gconLevel > 115)
@@ -3003,7 +3003,7 @@ namespace myseq
                         f1.gLastconLevel = f1.gconLevel;
                         Settings.Default.LevelOverride = f1.gconLevel;
                     }
-                    playerinfo.Level = si.Level;
+                    gamerInfo.Level = si.Level;
                     FillConColors(f1);
 
                     // update mob list con colors
@@ -3020,7 +3020,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessPlayer(): ", ex); }
         }
 
-        #endregion ProcessPlayer
+        #endregion ProcessGamer
 
         public void Clear()
         {
@@ -3065,7 +3065,7 @@ namespace myseq
                 if (Settings.Default.LevelOverride == -1)
                 {
                     f1.toolStripLevel.Text = "Auto";
-                    level = playerinfo.Level;
+                    level = gamerInfo.Level;
                 }
                 else
                 {

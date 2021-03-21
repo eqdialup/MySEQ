@@ -418,12 +418,6 @@ namespace myseq
             textBrush = greyBrush;
         }
 
-        public void SetInitialParams()
-
-        {
-            ReAdjust();
-        }
-
         public void ClearSelectedPoint()
 
         {
@@ -437,7 +431,7 @@ namespace myseq
 
             if (eq != null)
             {
-                SelectPoint?.Invoke(eq.playerinfo, x, y);
+                SelectPoint?.Invoke(eq.gamerInfo, x, y);
             }
         }
 
@@ -611,9 +605,9 @@ namespace myseq
 
         private float MouseDistance(float mousex, float mousey)
         {
-            return (float)Math.Sqrt(((mousey - eq.playerinfo.Y) * (mousey - eq.playerinfo.Y)) +
+            return (float)Math.Sqrt(((mousey - eq.gamerInfo.Y) * (mousey - eq.gamerInfo.Y)) +
 
-                ((mousex - eq.playerinfo.X) * (mousex - eq.playerinfo.X)));
+                ((mousex - eq.gamerInfo.X) * (mousex - eq.gamerInfo.X)));
         }
 
         private void MouseMapLoc(MouseEventArgs e, out float mousex, out float mousey)
@@ -959,8 +953,8 @@ namespace myseq
             }
             else if (Settings.Default.FollowOption == FollowOption.Player)
             {
-                m_mapCenterX = eq.playerinfo.X;
-                m_mapCenterY = eq.playerinfo.Y;
+                m_mapCenterX = eq.gamerInfo.X;
+                m_mapCenterY = eq.gamerInfo.Y;
             }
             else if (Settings.Default.FollowOption == FollowOption.Target)
             {
@@ -1248,12 +1242,12 @@ namespace myseq
 
                 if (SetColor)
                 {
-                    if (si.Level < (eq.GreyRange + eq.playerinfo.Level)) lblMobInfo.BackColor = Color.LightGray;
-                    else if (si.Level < (eq.GreenRange + eq.playerinfo.Level)) lblMobInfo.BackColor = Color.PaleGreen;
-                    else if (si.Level < (eq.CyanRange + eq.playerinfo.Level)) lblMobInfo.BackColor = Color.PowderBlue;
-                    else if (si.Level < eq.playerinfo.Level) lblMobInfo.BackColor = Color.DeepSkyBlue;
-                    else if (si.Level == eq.playerinfo.Level) lblMobInfo.BackColor = Color.White;
-                    else lblMobInfo.BackColor = si.Level <= eq.playerinfo.Level + eq.YellowRange ? Color.Yellow : Color.Red;
+                    if (si.Level < (eq.GreyRange + eq.gamerInfo.Level)) lblMobInfo.BackColor = Color.LightGray;
+                    else if (si.Level < (eq.GreenRange + eq.gamerInfo.Level)) lblMobInfo.BackColor = Color.PaleGreen;
+                    else if (si.Level < (eq.CyanRange + eq.gamerInfo.Level)) lblMobInfo.BackColor = Color.PowderBlue;
+                    else if (si.Level < eq.gamerInfo.Level) lblMobInfo.BackColor = Color.DeepSkyBlue;
+                    else if (si.Level == eq.gamerInfo.Level) lblMobInfo.BackColor = Color.White;
+                    else lblMobInfo.BackColor = si.Level <= eq.gamerInfo.Level + eq.YellowRange ? Color.Yellow : Color.Red;
 
                     if (si.isEventController)
                         lblMobInfo.BackColor = Color.Violet;
@@ -1397,11 +1391,11 @@ namespace myseq
 
         private float SpawnDistance(SPAWNINFO si)
         {
-            return (float)Math.Sqrt(((si.X - eq.playerinfo.X) * (si.X - eq.playerinfo.X)) +
+            return (float)Math.Sqrt(((si.X - eq.gamerInfo.X) * (si.X - eq.gamerInfo.X)) +
 
-                                ((si.Y - eq.playerinfo.Y) * (si.Y - eq.playerinfo.Y)) +
+                                ((si.Y - eq.gamerInfo.Y) * (si.Y - eq.gamerInfo.Y)) +
 
-                                ((si.Z - eq.playerinfo.Z) * (si.Z - eq.playerinfo.Z)));
+                                ((si.Z - eq.gamerInfo.Z) * (si.Z - eq.gamerInfo.Z)));
         }
 
         private string TimerInfo(SPAWNTIMER st)
@@ -1715,17 +1709,17 @@ namespace myseq
 
                     // Used to help reduce the number of calls to improve speed
 
-                    float pX = eq.playerinfo.X;
+                    float pX = eq.gamerInfo.X;
 
-                    float pY = eq.playerinfo.Y;
+                    float pY = eq.gamerInfo.Y;
 
-                    float pZ = eq.playerinfo.Z;
+                    float pZ = eq.gamerInfo.Z;
 
                     float playerx = CalcScreenCoordX(pX);
 
                     float playery = CalcScreenCoordY(pY);
 
-                    float realhead = eq.CalcRealHeading(eq.playerinfo);
+                    float realhead = eq.CalcRealHeading(eq.gamerInfo);
 
                     float dx = ((m_panOffsetX + m_screenCenterX) / -m_ratio) - m_mapCenterX;
 
@@ -1890,7 +1884,7 @@ namespace myseq
 
         private void DrawSpawns(float pX, float pY, float pZ, float playerx, float playery, DrawOptions DrawOpts)
         {
-            int playerSpawnID = eq.playerinfo.SpawnID;
+            int playerSpawnID = eq.gamerInfo.SpawnID;
 
             int RangeCircle = Settings.Default.RangeCircle;
 
@@ -2075,7 +2069,7 @@ namespace myseq
 
                 // Draw Other Players
 
-                var levelRange = ((Math.Abs(eq.playerinfo.Level - sp.Level) <= Settings.Default.PVPLevels) || (Settings.Default.PVPLevels == -1));
+                var levelRange = ((Math.Abs(eq.gamerInfo.Level - sp.Level) <= Settings.Default.PVPLevels) || (Settings.Default.PVPLevels == -1));
                 if (Settings.Default.ShowPVP && levelRange)
                 {
                     FillTriangle(eq.conColors[sp.Level], x, y, SelectSizeOffset);
@@ -2147,7 +2141,7 @@ namespace myseq
                 int minlevel = Settings.Default.MinAlertLevel;
 
                 if (minlevel == -1)
-                    minlevel = eq.playerinfo.Level + eq.GreyRange;
+                    minlevel = eq.gamerInfo.Level + eq.GreyRange;
 
                 if (sp.Level >= minlevel)
                 {
@@ -2405,8 +2399,8 @@ namespace myseq
 
         private void MinMaxFilter(out float minZ, out float maxZ)
         {
-            minZ = eq.playerinfo.Z - filterneg;
-            maxZ = eq.playerinfo.Z + filterpos;
+            minZ = eq.gamerInfo.Z - filterneg;
+            maxZ = eq.gamerInfo.Z + filterpos;
         }
 
         public void DrawMap(DrawOptions DrawOpts)
@@ -2533,7 +2527,7 @@ namespace myseq
             {
                 float x, y, x1, y1;
 
-                int xHead = (int)eq.playerinfo.Heading;
+                int xHead = (int)eq.gamerInfo.Heading;
 
                 // Draw Range Circle
 
@@ -2608,7 +2602,7 @@ namespace myseq
 
                 // Draw Player  (only if we actually have a player)
 
-                if (eq.playerinfo.SpawnID != 0)
+                if (eq.gamerInfo.SpawnID != 0)
 
                 {
                     // Draw Player Heading Line
@@ -2619,9 +2613,9 @@ namespace myseq
                         if (xHead >= 0 && xHead < 512)
 
                         {
-                            y1 = -(float)(xCos[xHead] * (eq.playerinfo.SpeedRun * m_ratio * 100));
+                            y1 = -(float)(xCos[xHead] * (eq.gamerInfo.SpeedRun * m_ratio * 100));
 
-                            x1 = -(float)(xSin[xHead] * (eq.playerinfo.SpeedRun * m_ratio * 100));
+                            x1 = -(float)(xSin[xHead] * (eq.gamerInfo.SpeedRun * m_ratio * 100));
 
                             DrawLine(whitePen, playerx, playery, playerx + x1, playery + y1);
                         }
@@ -2765,8 +2759,8 @@ namespace myseq
 
         private void GamerMapPos(out float playerx, out float playery)
         {
-            playerx = CalcScreenCoordX(eq.playerinfo.X);
-            playery = CalcScreenCoordY(eq.playerinfo.Y);
+            playerx = CalcScreenCoordX(eq.gamerInfo.X);
+            playery = CalcScreenCoordY(eq.gamerInfo.Y);
         }
 
         #endregion DrawSpawnTimers

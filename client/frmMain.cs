@@ -641,7 +641,7 @@ namespace myseq
 
             toolStripVersion.Text = Version;
 
-            mapCon.SetInitialParams();
+            ReAdjust();
 
             eq.InitLookups();
 
@@ -3328,13 +3328,12 @@ namespace myseq
         //}
 
         public void StartListening()
-
         {
             colProcesses?.Clear();
 
-            if (eq.playerinfo != null)
+            if (eq.gamerInfo != null)
             {
-                eq.playerinfo.Name = "";
+                eq.gamerInfo.Name = "";
             }
 
             if (mnuIPAddress1.Checked)
@@ -3436,9 +3435,9 @@ namespace myseq
                 Text += " - " + eq.longname;
             }
 
-            if (Settings.Default.ShowCharName && eq.playerinfo?.Name.Length > 1)
+            if (Settings.Default.ShowCharName && eq.gamerInfo?.Name.Length > 1)
             {
-                Text += " - " + eq.playerinfo.Name;
+                Text += " - " + eq.gamerInfo.Name;
             }
         }
 
@@ -3822,7 +3821,7 @@ namespace myseq
 
             Settings.Default.WindowState = WindowState;
 
-            mapCon?.ReAdjust();
+            ReAdjust();
         }
 
         public void CheckMobs()
@@ -4342,7 +4341,7 @@ namespace myseq
             {
                 // Set the default context menu, since we don't have a proper name to work with
                 ContextMenuStrip = mnuContext;
-                addMapTextToolStripMenuItem.Enabled = eq.longname.Length > 0 && eq.playerinfo?.Name.Length > 0;
+                addMapTextToolStripMenuItem.Enabled = eq.longname.Length > 0 && eq.gamerInfo?.Name.Length > 0;
                 mnuShowMenuBar.Visible = !Settings.Default.ShowMenuBar;
             }
         }
@@ -5178,10 +5177,7 @@ namespace myseq
             mnuKeepCentered.Checked = mnuKeepCentered2.Checked = Settings.Default.KeepCentered;
         }
 
-        public void ReAdjust()
-        {
-            mapCon?.ReAdjust();
-        }
+        public void ReAdjust() => mapCon?.ReAdjust();
 
         public void ReloadAlertFiles()
 
@@ -5265,7 +5261,7 @@ namespace myseq
 
                 case SPAWNINFO.PacketType.Player:
 
-                    eq.ProcessPlayer(si, this);
+                    eq.ProcessGamer(si, this);
 
                     break;
 
@@ -5296,12 +5292,6 @@ namespace myseq
                 case SPAWNINFO.PacketType.GetProcessInfo:
 
                     ProcessProcessInfo(si);
-
-                    if (eq.playerinfo?.Name.Length > 1)
-                    {
-                        SetCharSelection(eq.playerinfo.Name);
-                    }
-
                     break;
 
                 default:
@@ -6368,11 +6358,11 @@ namespace myseq
             // add map text, to where the player is currently located
             if (eq.longname.Length > 0)
             {
-                if (eq.playerinfo?.Name.Length > 0)
+                if (eq.gamerInfo?.Name.Length > 0)
                 {
-                    alertX = eq.playerinfo.X;
-                    alertY = eq.playerinfo.Y;
-                    alertZ = eq.playerinfo.Z;
+                    alertX = eq.gamerInfo.X;
+                    alertY = eq.gamerInfo.Y;
+                    alertZ = eq.gamerInfo.Z;
                     AddMapText("Text to Add");
                 }
             }

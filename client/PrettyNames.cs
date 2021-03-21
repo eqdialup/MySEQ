@@ -1,9 +1,4 @@
-﻿using myseq.Properties;
-using System;
-using System.Collections;
-using System.IO;
-
-namespace Structures
+﻿namespace Structures
 {
     public static class PrettyNames
     {
