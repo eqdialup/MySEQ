@@ -57,8 +57,6 @@ namespace myseq
 
         private SolidBrush gridBrush;
 
-        private Pen gPen;
-
         private Pen cPen = new Pen(new SolidBrush(Color.White));
 
         //        private Pen drawPen;
@@ -141,36 +139,13 @@ namespace myseq
         #region pens
 
         private readonly Pen redPen = new Pen(new SolidBrush(Color.Red));
-        private readonly Pen red2Pen = new Pen(new SolidBrush(Color.Red), 2);
-
-        //        private Pen topRedPen = new Pen(Color.FromArgb(64, Color.Red));
-
-        private readonly Pen orangePen = new Pen(new SolidBrush(Color.Orange));
-
-        //        private Pen topOrangePen = new Pen(Color.FromArgb(64, Color.Orange));
-
-        private readonly Pen bluePen = new Pen(new SolidBrush(Color.Blue));
-        //        private Pen blue2Pen = new Pen(new SolidBrush(Color.Blue), 2);
 
         private readonly Pen whitePen = new Pen(new SolidBrush(Color.White));
-        private readonly Pen white2Pen = new Pen(new SolidBrush(Color.White), 2);
-
-        private readonly Pen greenPen = new Pen(new SolidBrush(Color.Green));
 
         private readonly Pen green2Pen = new Pen(new SolidBrush(Color.LimeGreen), 2);
 
         private readonly Pen yellowPen = new Pen(new SolidBrush(Color.Yellow));
         private readonly Pen yellow2Pen = new Pen(new SolidBrush(Color.Yellow), 2);
-
-        //        private Pen topYelloPen = new Pen(Color.FromArgb(64, Color.Yellow));
-
-        private readonly Pen ltgrayPen = new Pen(new SolidBrush(Color.LightGray));
-
-        //private Pen topLtgrayPen = new Pen(Color.FromArgb(64, Color.LightGray));
-
-        //private Pen thickWhitePen = new Pen(new SolidBrush(Color.White),2);
-
-        //private Pen ltbluePen = new Pen(new SolidBrush(Color.LightSteelBlue), 1);
 
         private readonly Pen cyanPen = new Pen(new SolidBrush(Color.Cyan));
 
@@ -178,32 +153,11 @@ namespace myseq
 
         private readonly Pen purplePen = new Pen(new SolidBrush(Color.Purple));
 
-        //        private Pen lightPen = new Pen(new SolidBrush(Color.Gray));
-
-        //        private Pen darkPen = new Pen(new SolidBrush(Color.Gray));
-
-        //private Pen grayPen = new Pen(new SolidBrush(Color.Gray));
-
-        private Pen PCBorder = new Pen(new SolidBrush(Color.Fuchsia));
-
-        //        private SolidBrush distinctBrush = new SolidBrush(Color.Black);
-
-        //        private SolidBrush darkBrush = new SolidBrush(Color.Black);
+        private readonly Pen PCBorder = new Pen(new SolidBrush(Settings.Default.PCBorderColor));
 
         private readonly SolidBrush whiteBrush = new SolidBrush(Color.White);
 
-        private readonly SolidBrush purpleBrush = new SolidBrush(Color.Purple);
-
-        private readonly SolidBrush greyBrush = new SolidBrush(Color.LightGray);
-
-        private readonly SolidBrush grayBrush = new SolidBrush(Color.Gray);
-
-        //private SolidBrush redBrush = new SolidBrush(Color.Red);
-
-        //private SolidBrush yellowBrush = new SolidBrush(Color.Yellow);
-
-        private SolidBrush textBrush = new SolidBrush(Color.LightGray);
-
+        private SolidBrush textBrush;
         #endregion pens
 
         private FrmMain f1;          // Caution: this may be null
@@ -240,7 +194,6 @@ namespace myseq
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             gfxManager = BufferedGraphicsManager.Current;
-            //            drawPen = darkPen;
         }
 
         public void SetComponents(FrmMain f1, MapPane mapPane, EQData eq, EQMap map)
@@ -415,7 +368,7 @@ namespace myseq
                 xSin[p] = (float)Math.Sin(p / 512.0f * 2.0f * Math.PI);
             }
 
-            textBrush = greyBrush;
+            textBrush = new SolidBrush(Color.LightGray);
         }
 
         public void ClearSelectedPoint()
@@ -1086,12 +1039,6 @@ namespace myseq
             try { bkgBuffer.Graphics.DrawLine(pen, x1, y1, x2, y2); }
             catch (Exception ex) { LogLib.WriteLine($"Error with DrawLine({x1}, {y1}, {x2}, {y2}): ", ex); }
         }
-
-        //private void DrawIntLine(Pen pen, int x1, int y1, int x2, int y2)
-        //{
-        //    try { bkgBuffer.Graphics.DrawLine(pen, x1, y1, x2, y2); }
-        //    catch (Exception ex) { LogLib.WriteLine($"Error with DrawIntLine({x1}, {y1}, {x2}, {y2}): ", ex); }
-        //}
 
         private void DrawLines(Pen pen, PointF[] points)
 
@@ -1842,7 +1789,7 @@ namespace myseq
                             DrawRectangle(yellowPen, x - SpawnPlusSizeOffset + 0.5f, y - SpawnPlusSizeOffset + 0.5f, SpawnPlusSize, SpawnPlusSize);
 
                             if (Settings.Default.ShowPlayerCorpseNames && (sp.Name.Length > 0))
-                                DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, "");
+                                DrawSpawnNames(textBrush, $"{sp.Level}: {sp.Name}", sp.X, sp.Y, "");
 
                             sp.filtered = false;
                         }
@@ -1860,7 +1807,7 @@ namespace myseq
                             DrawLine(cyanPen, x, y - drawOffset, x, y + drawOffset);
 
                             if (Settings.Default.ShowNPCCorpseNames && (sp.Name.Length > 0))
-                                DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, "");
+                                DrawSpawnNames(textBrush, $"{sp.Level}: {sp.Name}", sp.X, sp.Y, "");
 
                             sp.filtered = false;
                         }
@@ -1960,7 +1907,7 @@ namespace myseq
                         {
                             if (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos)))
                             {
-                                FillEllipse(purpleBrush, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
+                                FillEllipse(new SolidBrush(Color.Purple), x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
                                 sp.filtered = false;
                             }
                             else
@@ -1972,7 +1919,7 @@ namespace myseq
                         {
                             if (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos)))
                             {
-                                FillEllipse(grayBrush, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
+                                FillEllipse(new SolidBrush(Color.Gray), x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
                                 sp.filtered = false;
                             }
                             else
@@ -2019,7 +1966,7 @@ namespace myseq
             sp.filtered = false;
 
             if (Settings.Default.ShowNPCNames && (sp.Name.Length > 0))
-                DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, gName);
+                DrawSpawnNames(textBrush, $"{sp.Level}: {sp.Name}", sp.X, sp.Y, gName);
             else if (Settings.Default.ShowNPCLevels && (sp.Name.Length > 0))
                 DrawSpawnNames(textBrush, sp.Level.ToString(), sp.X, sp.Y, gName);
 
@@ -2029,7 +1976,7 @@ namespace myseq
             // Draw NPCs
             if ((sp.isPet && !Settings.Default.ShowPVP) || sp.isFamiliar || sp.isMount)
             {
-                FillEllipse(grayBrush, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
+                FillEllipse(new SolidBrush(Color.Gray), x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
             }
             else if (eq.conColors[sp.Level] != null)
             {
@@ -2079,12 +2026,12 @@ namespace myseq
                     if (Settings.Default.ShowPCNames && (sp.Name.Length > 0)
                         && Settings.Default.ShowPCGuild && (gName.Length > 0))
                     {
-                        DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, gName);
+                        DrawSpawnNames(textBrush, $"{sp.Level}: {sp.Name}", sp.X, sp.Y, gName);
                     }
                     else
                         if (Settings.Default.ShowPCNames && (sp.Name.Length > 0))
                     {
-                        DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, gName);
+                        DrawSpawnNames(textBrush, $"{sp.Level}: {sp.Name}", sp.X, sp.Y, gName);
                     }
                     else
                     {
@@ -2125,9 +2072,9 @@ namespace myseq
                     }
 
                     if (Settings.Default.ShowPCNames && (sp.Name.Length > 0))
-                        DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + sp.Name, sp.X, sp.Y, gName);
+                        DrawSpawnNames(textBrush, $"{sp.Level}: {sp.Name}", sp.X, sp.Y, gName);
                     else if (Settings.Default.ShowPCGuild && (gName.Length > 0))
-                    { DrawSpawnNames(textBrush, sp.Level.ToString() + ": " + gName, sp.X, sp.Y, gName); }
+                    { DrawSpawnNames(textBrush, $"{sp.Level}: {gName}", sp.X, sp.Y, gName); }
                 }
             }
         }
@@ -2212,7 +2159,7 @@ namespace myseq
                 {
                     DrawEllipse(whitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
-                    DrawEllipse(greenPen, x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(new Pen(new SolidBrush(Color.Green)), x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
                 }
 
                 // Draw Ring around Guild Master
@@ -2230,7 +2177,7 @@ namespace myseq
                 {
                     DrawEllipse(whitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
-                    DrawEllipse(bluePen, x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(new Pen(new SolidBrush(Color.Blue)), x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
                 }
             }
         }
@@ -2252,12 +2199,12 @@ namespace myseq
                 // Draw Ring around Danger Mobs
 
                 if (sp.isDanger && (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos))))
-                    DrawEllipse(red2Pen, x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
 
                 // Draw Ring around Rare Mobs
 
                 if (sp.isAlert && (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos))))
-                    DrawEllipse(white2Pen, x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
             }
         }
 
@@ -2409,7 +2356,7 @@ namespace myseq
             try
             {
                 // Draw gridline...
-
+                Pen gPen = null;
                 if ((DrawOpts & DrawOptions.GridLines) != DrawOptions.None)
 
                 {
@@ -2521,7 +2468,7 @@ namespace myseq
 
         #region DrawPlayer
 
-        public void DrawPlayer(float playerx, float playery, float SpawnSize, float SpawnSizeOffset, DrawOptions DrawOpts)
+        public void DrawPlayer(float gamerX, float gamerY, float SpawnSize, float SpawnSizeOffset, DrawOptions DrawOpts)
         {
             try
             {
@@ -2539,7 +2486,7 @@ namespace myseq
                     if (Settings.Default.ColorRangeCircle)
 
                     {
-                        MakeRangeCircle(playerx, playery, rCircleRadius);
+                        MakeRangeCircle(gamerX, gamerY, rCircleRadius);
                     }
 
                     // Draw Red V in the Range Circle
@@ -2561,7 +2508,7 @@ namespace myseq
                             x = -(float)(xSin[xHead + 64 - 512] * rCircleRadius * 1.05);
                         }
 
-                        DrawLine(redPen, playerx, playery, playerx + x, playery + y);
+                        DrawLine(redPen, gamerX, gamerY, gamerX + x, gamerY + y);
 
                         if (xHead >= 64)
 
@@ -2577,7 +2524,7 @@ namespace myseq
                             x = -(float)(xSin[xHead - 64 + 512] * rCircleRadius * 1.05f);
                         }
 
-                        DrawLine(redPen, playerx, playery, playerx + x, playery + y);
+                        DrawLine(redPen, gamerX, gamerY, gamerX + x, gamerY + y);
 
                         // Draw Heading Line
 
@@ -2585,18 +2532,18 @@ namespace myseq
 
                         x = -(float)(xSin[xHead] * rCircleRadius);
 
-                        DrawLine(yellowPen, playerx, playery, playerx + x, playery + y);
+                        DrawLine(yellowPen, gamerX, gamerY, gamerX + x, gamerY + y);
                     }
 
                     if (m_rangechange)
 
                     {
                         if (flash)
-                            DrawEllipse(eq.GetDistinctColor(new Pen(Settings.Default.RangeCircleColor)), playerx - rCircleRadius, playery - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
+                            DrawEllipse(eq.GetDistinctColor(new Pen(Settings.Default.RangeCircleColor)), gamerX - rCircleRadius, gamerY - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
                     }
                     else
                     {
-                        DrawEllipse(eq.GetDistinctColor(new Pen(Settings.Default.RangeCircleColor)), playerx - rCircleRadius, playery - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
+                        DrawEllipse(eq.GetDistinctColor(new Pen(Settings.Default.RangeCircleColor)), gamerX - rCircleRadius, gamerY - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
                     }
                 }
 
@@ -2617,25 +2564,25 @@ namespace myseq
 
                             x1 = -(float)(xSin[xHead] * (eq.gamerInfo.SpeedRun * m_ratio * 100));
 
-                            DrawLine(whitePen, playerx, playery, playerx + x1, playery + y1);
+                            DrawLine(whitePen, gamerX, gamerY, gamerX + x1, gamerY + y1);
                         }
                     }
 
-                    FillRectangle(whiteBrush, playerx - SpawnSizeOffset, playery - SpawnSizeOffset, SpawnSize, SpawnSize);
+                    FillRectangle(whiteBrush, gamerX - SpawnSizeOffset, gamerY - SpawnSizeOffset, SpawnSize, SpawnSize);
 
-                    DrawRectangle(PCBorder, playerx - SpawnSizeOffset - 0.5f, playery - SpawnSizeOffset - 0.5f, SpawnSize + 1.0f, SpawnSize + 1.0f);
+                    DrawRectangle(PCBorder, gamerX - SpawnSizeOffset - 0.5f, gamerY - SpawnSizeOffset - 0.5f, SpawnSize + 1.0f, SpawnSize + 1.0f);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in DrawPlayer(): ", ex); }
         }
 
-        private void MakeRangeCircle(float playerx, float playery, float rCircleRadius)
+        private void MakeRangeCircle(float gamerx, float gamery, float rCircleRadius)
         {
             HatchStyle hs = (HatchStyle)Enum.Parse(typeof(HatchStyle), Settings.Default.HatchIndex, true);
 
             HatchBrush hatchBrush = new HatchBrush(hs, Settings.Default.RangeCircleColor, Color.Transparent);
 
-            FillEllipse(hatchBrush, playerx - rCircleRadius, playery - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
+            FillEllipse(hatchBrush, gamerx - rCircleRadius, gamery - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
         }
 
         #endregion DrawPlayer
@@ -2647,15 +2594,13 @@ namespace myseq
             try
 
             {
-                // Draw Spawn Timers
-
-                Pen pen;
-
                 DateTime now = DateTime.Now;
 
                 MinMaxFilter(out var minZ, out var maxZ);
 
-                pen = ltgrayPen;
+                // Draw Spawn Timers
+
+                Pen pen = new Pen(new SolidBrush(Color.LightGray));
 
                 foreach (SPAWNTIMER st in eq.mobsTimers.GetRespawned().Values)
 
@@ -2671,7 +2616,7 @@ namespace myseq
 
                     int checkTimer = st.SecondsUntilSpawn(now);
 
-                    pen = ltgrayPen;
+                    pen = new Pen(new SolidBrush(Color.LightGray));
 
                     bool canDraw = false;
 
@@ -2699,7 +2644,7 @@ namespace myseq
                         else if (checkTimer < 90)
 
                         {
-                            pen = orangePen;
+                            pen = new Pen(new SolidBrush(Color.Orange));
                         }
                         else if (checkTimer < 120)
 
@@ -2742,11 +2687,11 @@ namespace myseq
                     if ((st.X == eq.SpawnX) && (st.Y == eq.SpawnY))
 
                     {
-                        GamerMapPos(out var playerx, out var playery);
+                        GamerMapPos(out var gamerx, out var gamery);
 
-                        pen = bluePen;
+                        pen = new Pen(new SolidBrush(Color.Blue));
 
-                        DrawLine(pen, playerx, playery, stX, stY);
+                        DrawLine(pen, gamerx, gamery, stX, stY);
 
                         // Update the Spawn Information Window
 
@@ -2757,10 +2702,10 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in DrawSpawnTimers(): ", ex); }
         }
 
-        private void GamerMapPos(out float playerx, out float playery)
+        private void GamerMapPos(out float gamerx, out float gamery)
         {
-            playerx = CalcScreenCoordX(eq.gamerInfo.X);
-            playery = CalcScreenCoordY(eq.gamerInfo.Y);
+            gamerx = CalcScreenCoordX(eq.gamerInfo.X);
+            gamery = CalcScreenCoordY(eq.gamerInfo.Y);
         }
 
         #endregion DrawSpawnTimers
@@ -2816,30 +2761,32 @@ namespace myseq
 
                     if (flash)
                     {
-                        var Depthfilter = (!GroundItemDepthFilter || ((gi.Z > pZ - filterneg) && (gi.Z < pZ + filterpos)));
-
-                        // Draw Yellow Ring around Caution Ground Items
-                        if (gi.isCaution && Depthfilter)
-                            DrawEllipse(yellow2Pen, x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
-
-                        // Draw Red Ring around Danger Ground Items
-
-                        if (gi.isDanger && Depthfilter)
-                            DrawEllipse(red2Pen, x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
-
-                        // Draw White Ring around Rare Ground Items
-
-                        if (gi.isAlert && Depthfilter)
-                            DrawEllipse(white2Pen, x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
-
-                        // Draw Cyan Ring around Hunt Ground Items
-
-                        if (gi.isHunt && Depthfilter)
-                            DrawEllipse(green2Pen, x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
+                        FlashAlertGroundSpawns(pZ, GroundItemDepthFilter, x, y, gi);
                     }
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in DrawGroundItems(): ", ex); }
+        }
+
+        private void FlashAlertGroundSpawns(float pZ, bool GroundItemDepthFilter, float x, float y, GroundItem gi)
+        {
+            var Depthfilter = (!GroundItemDepthFilter || ((gi.Z > pZ - filterneg) && (gi.Z < pZ + filterpos)));
+
+            // Draw Yellow Ring around Caution Ground Items
+            if (gi.isCaution && Depthfilter)
+                DrawEllipse(new Pen(new SolidBrush(Color.Yellow), 2), x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
+
+            // Draw Red Ring around Danger Ground Items
+            if (gi.isDanger && Depthfilter)
+                DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
+
+            // Draw White Ring around Rare Ground Items
+            if (gi.isAlert && Depthfilter)
+                DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
+
+            // Draw Cyan Ring around Hunt Ground Items
+            if (gi.isHunt && Depthfilter)
+                DrawEllipse(new Pen(new SolidBrush(Color.Green), 2), x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
         }
 
         #endregion DrawGroundItems
@@ -3048,15 +2995,15 @@ namespace myseq
             SelectSizeOffset = SelectSize / 2.0f;
         }
 
-        public void UpdatePCBorder()
-        {
-            Color curPCBorder = Settings.Default.PCBorderColor;
+        //public void UpdatePCBorder()
+        //{
+        //    Color curPCBorder = Settings.Default.PCBorderColor;
 
-            if (curPCBorder != PCBorder.Color)
-            {
-                PCBorder = new Pen(new SolidBrush(Settings.Default.PCBorderColor));
-            }
-        }
+        //    if (curPCBorder != PCBorder.Color)
+        //    {
+        //        PCBorder = new Pen(new SolidBrush(Settings.Default.PCBorderColor));
+        //    }
+        //}
 
         private void MapCon_MouseDoubleClick(object sender, MouseEventArgs e)
 
@@ -3083,7 +3030,7 @@ namespace myseq
 
     #region Map Structures
 
-    public class MapPoint
+    public struct MapPoint
 
     {
         public int x;
@@ -3093,7 +3040,7 @@ namespace myseq
         public int z;
     }
 
-    public class MobTrailPoint
+    public struct MobTrailPoint
     {
         public int x;
 

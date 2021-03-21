@@ -2,7 +2,7 @@
 
 namespace Structures
 {
-    public class Talker
+    public struct Talker
     {
         public string SpeakingText { get; set; }
         public static SpVoice Speech { get; set; } = new SpVoice();
