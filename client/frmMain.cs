@@ -159,7 +159,7 @@ namespace myseq
         private ToolStripMenuItem mnuShowNPCCorpseNames;
         private ToolStripMenuItem mnuShowPCNames;
         private ToolStripMenuItem mnuShowPlayerCorpseNames;
-        private ToolStripMenuItem mnuShowPCGuild;
+//        private ToolStripMenuItem mnuShowPCGuild;
         private ToolStripMenuItem mnuSpawnCountdown;
         private ToolStripMenuItem mnuShowSpawnPoints;
         private ToolStripMenuItem mnuShowZoneText;
@@ -239,7 +239,7 @@ namespace myseq
         private ToolStripMenuItem mnuShowNPCCorpseNames2;
         private ToolStripMenuItem mnuShowPCNames2;
         private ToolStripMenuItem mnuShowPlayerCorpseNames2;
-        private ToolStripMenuItem mnuShowPCGuild2;
+//        private ToolStripMenuItem mnuShowPCGuild2;
         private ToolStripMenuItem mnuSpawnCountdown2;
         private ToolStripMenuItem mnuShowSpawnPoints2;
         private ToolStripMenuItem mnuShowZoneText2;
@@ -568,7 +568,7 @@ namespace myseq
 
             SpawnList.ColumnsAdd("Distance", Settings.Default.c14w, HorizontalAlignment.Left);
 
-            SpawnList.ColumnsAdd("Guild", Settings.Default.c14w, HorizontalAlignment.Left);
+//            SpawnList.ColumnsAdd("Guild", Settings.Default.c14w, HorizontalAlignment.Left);
 
             // Set the Font, Size, Style for the Spawn List Window
 
@@ -805,7 +805,7 @@ namespace myseq
             mnuShowNPCCorpseNames = new ToolStripMenuItem();
             mnuShowPCNames = new ToolStripMenuItem();
             mnuShowPlayerCorpseNames = new ToolStripMenuItem();
-            mnuShowPCGuild = new ToolStripMenuItem();
+//            mnuShowPCGuild = new ToolStripMenuItem();
             mnuSpawnCountdown = new ToolStripMenuItem();
             mnuShowSpawnPoints = new ToolStripMenuItem();
             mnuShowZoneText = new ToolStripMenuItem();
@@ -861,7 +861,7 @@ namespace myseq
             mnuShowNPCCorpseNames2 = new ToolStripMenuItem();
             mnuShowPCNames2 = new ToolStripMenuItem();
             mnuShowPlayerCorpseNames2 = new ToolStripMenuItem();
-            mnuShowPCGuild2 = new ToolStripMenuItem();
+//            mnuShowPCGuild2 = new ToolStripMenuItem();
             mnuSpawnCountdown2 = new ToolStripMenuItem();
             mnuShowSpawnPoints2 = new ToolStripMenuItem();
             mnuShowZoneText2 = new ToolStripMenuItem();
@@ -1778,7 +1778,7 @@ namespace myseq
             mnuShowNPCCorpseNames,
             mnuShowPCNames,
             mnuShowPlayerCorpseNames,
-            mnuShowPCGuild,
+//            mnuShowPCGuild,
             mnuSpawnCountdown,
             mnuShowSpawnPoints,
             mnuShowZoneText,
@@ -1833,11 +1833,11 @@ namespace myseq
             // 
             // mnuShowPCGuild
             // 
-            mnuShowPCGuild.Name = "mnuShowPCGuild";
-            mnuShowPCGuild.Size = new Size(186, 22);
-            mnuShowPCGuild.Text = "&Player Guild";
-            mnuShowPCGuild.ToolTipText = "Show Player Guild on map.";
-            mnuShowPCGuild.Click += new EventHandler(MnuShowPCGuild_Click);
+//            mnuShowPCGuild.Name = "mnuShowPCGuild";
+//            mnuShowPCGuild.Size = new Size(186, 22);
+//            mnuShowPCGuild.Text = "&Player Guild";
+//            mnuShowPCGuild.ToolTipText = "Show Player Guild on map.";
+////            mnuShowPCGuild.Click += new EventHandler(MnuShowPCGuild_Click);
             // 
             // mnuSpawnCountdown
             // 
@@ -2233,7 +2233,7 @@ namespace myseq
             mnuShowNPCCorpseNames2,
             mnuShowPCNames2,
             mnuShowPlayerCorpseNames2,
-            mnuShowPCGuild2,
+//            mnuShowPCGuild2,
             mnuSpawnCountdown2,
             mnuShowSpawnPoints2,
             mnuShowZoneText2,
@@ -2280,13 +2280,13 @@ namespace myseq
             mnuShowPlayerCorpseNames2.Size = new Size(186, 22);
             mnuShowPlayerCorpseNames2.Text = "Player Corpse &Names";
             mnuShowPlayerCorpseNames2.Click += new EventHandler(MnuShowPlayerCorpseNames_Click);
-            // 
-            // mnuShowPCGuild2
-            // 
-            mnuShowPCGuild2.Name = "mnuShowPCGuild2";
-            mnuShowPCGuild2.Size = new Size(186, 22);
-            mnuShowPCGuild2.Text = "&Player Guild";
-            mnuShowPCGuild2.Click += new EventHandler(MnuShowPCGuild_Click);
+            //// 
+            //// mnuShowPCGuild2
+            //// 
+            //mnuShowPCGuild2.Name = "mnuShowPCGuild2";
+            //mnuShowPCGuild2.Size = new Size(186, 22);
+            //mnuShowPCGuild2.Text = "&Player Guild";
+            //mnuShowPCGuild2.Click += new EventHandler(MnuShowPCGuild_Click);
             // 
             // mnuSpawnCountdown2
             // 
@@ -3578,7 +3578,7 @@ namespace myseq
 
             mnuShowNPCNames.Checked = mnuShowNPCNames2.Checked = Settings.Default.ShowNPCNames;
 
-            mnuShowPCGuild.Checked = mnuShowPCGuild2.Checked = Settings.Default.ShowPCGuild;
+//            mnuShowPCGuild.Checked = mnuShowPCGuild2.Checked = Settings.Default.ShowPCGuild;
 
             mnuSaveSpawnLog.Checked = Settings.Default.SaveSpawnLogs;
 
@@ -3885,7 +3885,7 @@ namespace myseq
         private void ProcessProcessInfo(SPAWNINFO si)
 
         {
-            ProcessInfo PI = new ProcessInfo((int)si.SpawnID, si.Name);
+            ProcessInfo PI = new ProcessInfo(si.SpawnID, si.Name);
 
             if (si.SpawnID==0)
 
@@ -4071,9 +4071,7 @@ namespace myseq
 
                 toolStripShortName.Text = fn.ToUpper();
 
-                string newzonename = fn.ToUpper().Trim();
-
-                curZone = newzonename;
+                curZone = fn.ToUpper().Trim();
 
                 string ZonesFile = Path.Combine(Settings.Default.CfgDir, "Zones.ini");
 
@@ -4617,16 +4615,12 @@ namespace myseq
         private void MnuGridColor_Click(object sender, EventArgs e)
 
         {
-            if(colorPicker.ShowDialog() != DialogResult.Cancel)
+            if (colorPicker.ShowDialog() != DialogResult.Cancel && Settings.Default.GridColor != colorPicker.Color)
 
             {
-                if (Settings.Default.GridColor != colorPicker.Color)
+                Settings.Default.GridColor = colorPicker.Color;
 
-                {
-                    Settings.Default.GridColor = colorPicker.Color;
-
-                    mapCon?.Invalidate();
-                }
+                mapCon?.Invalidate();
             }
         }
 
@@ -4688,23 +4682,11 @@ namespace myseq
             }
         }
 
-        private void MnuFollowNone_Click(object sender, EventArgs e)
+        private void MnuFollowNone_Click(object sender, EventArgs e) => SetFollowOption(FollowOption.None);
 
-        {
-            SetFollowOption(FollowOption.None);
-        }
+        private void MnuFollowPlayer_Click(object sender, EventArgs e) => SetFollowOption(FollowOption.Player);
 
-        private void MnuFollowPlayer_Click(object sender, EventArgs e)
-
-        {
-            SetFollowOption(FollowOption.Player);
-        }
-
-        private void MnuFollowTarget_Click(object sender, EventArgs e)
-
-        {
-            SetFollowOption(FollowOption.Target);
-        }
+        private void MnuFollowTarget_Click(object sender, EventArgs e) => SetFollowOption(FollowOption.Target);
 
         private void ToolStripCoPStatus_Click(object sender, EventArgs e)
         {
@@ -4723,30 +4705,24 @@ namespace myseq
         }
         private void MnuReloadAlerts_Click(object sender, EventArgs e)
         {
-            if (!bIsRunning)
+            if (bIsRunning)
             {
-                return;
+                filters.ClearArrays();
+
+                filters.LoadAlerts(curZone);
+
+                timDelayAlerts.Start();
+
+                DisablePlayAlerts();
+
+                eq.mobsTimers.ResetTimers();
+                map?.ClearMap();
+
+                eq.mobsTimers.LoadTimers();
             }
-
-            filters.ClearArrays();
-
-            filters.LoadAlerts(curZone);
-
-            timDelayAlerts.Start();
-
-            DisablePlayAlerts();
-
-            eq.mobsTimers.ResetTimers();
-            map?.ClearMap();
-
-            eq.mobsTimers.LoadTimers();
         }
 
-        private void MnuAddEditAlerts_Click(object sender, EventArgs e)
-
-        {
-            filters.EditAlertFile(curZone);
-        }
+        private void MnuAddEditAlerts_Click(object sender, EventArgs e) => filters.EditAlertFile(curZone);
 
         private void MnuSpawnListFont_Click(object sender, EventArgs e)
 
@@ -4882,11 +4858,7 @@ namespace myseq
             mnuAutoSelectEQTarget2.Checked = Settings.Default.AutoSelectEQTarget;
         }
 
-        private void MnuGlobalAlerts_Click(object sender, EventArgs e)
-
-        {
-            filters.EditAlertFile("global");
-        }
+        private void MnuGlobalAlerts_Click(object sender, EventArgs e) => filters.EditAlertFile("global");
 
         private void MnuShowNPCs_Click(object sender, EventArgs e)
 
@@ -5103,7 +5075,6 @@ namespace myseq
         }
 
         private void Restart()
-
         {
             comm.StopListening();
 
@@ -5195,36 +5166,6 @@ namespace myseq
             map.ClearMap();
 
             eq.mobsTimers.LoadTimers();
-
-            //if (toolStripLookupBox.Text.Length > 0 && toolStripLookupBox.Text != "Mob Search")
-            //{
-            //    eq.MarkLookups("0:" + toolStripLookupBox.Text, bFilter0);
-            //}
-
-            //if (toolStripLookupBox1.Text.Length > 0 && toolStripLookupBox1.Text != "Mob Search")
-            //{
-            //    eq.MarkLookups("1:" + toolStripLookupBox1.Text, bFilter1);
-            //}
-
-            //if (toolStripLookupBox2.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-            //{
-            //    eq.MarkLookups("2:" + toolStripLookupBox2.Text, bFilter2);
-            //}
-
-            //if (toolStripLookupBox3.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-            //{
-            //    eq.MarkLookups("3:" + toolStripLookupBox3.Text, bFilter3);
-            //}
-
-            //if (toolStripLookupBox4.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-            //{
-            //    eq.MarkLookups("4:" + toolStripLookupBox4.Text, bFilter4);
-            //}
-
-            //if (toolStripLookupBox5.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-            //{
-            //    eq.MarkLookups("5:" + toolStripLookupBox5.Text, bFilter5);
-            //}
         }
 
         public void ResetMapPens()
@@ -5536,20 +5477,6 @@ namespace myseq
             }
 
             Settings.Default.ShowLayer1 = mnuShowLayer1.Checked;
-
-            //string f = Settings.Default.MapDir + "\\" + eq.shortname;
-            //bool fm = false;
-            //if (loadmap(f + ".txt"))
-            //    fm = true;
-
-            //if (Settings.Default.ShowLayer1 && loadmap(f + "_1.txt"))
-            //    fm = true;
-
-            //if (Settings.Default.ShowLayer2 && loadmap(f + "_2.txt"))
-            //    fm = true;
-
-            //if (Settings.Default.ShowLayer3 && loadmap(f + "_3.txt"))
-            //    fm = true;
         }
 
         private void MnuShowLayer2_Click(object sender, EventArgs e)
@@ -5568,19 +5495,6 @@ namespace myseq
 
             Settings.Default.ShowLayer2 = mnuShowLayer2.Checked;
 
-            //string f = Settings.Default.MapDir + "\\" + eq.shortname;
-            //bool fm = false;
-            //if (loadmap(f + ".txt"))
-            //    fm = true;
-
-            //if (Settings.Default.ShowLayer1 && loadmap(f + "_1.txt"))
-            //    fm = true;
-
-            //if (Settings.Default.ShowLayer2 && loadmap(f + "_2.txt"))
-            //    fm = true;
-
-            //if (Settings.Default.ShowLayer3 && loadmap(f + "_3.txt"))
-            //    fm = true;
         }
 
         private void MnuShowLayer3_Click(object sender, EventArgs e)
@@ -5598,20 +5512,6 @@ namespace myseq
             }
 
             Settings.Default.ShowLayer3 = mnuShowLayer3.Checked;
-
-            //string f = Settings.Default.MapDir + "\\" + eq.shortname;
-            //bool fm = false;
-            //if (loadmap(f + ".txt"))
-            //    fm = true;
-
-            //if (Settings.Default.ShowLayer1 && loadmap(f + "_1.txt"))
-            //    fm = true;
-
-            //if (Settings.Default.ShowLayer2 && loadmap(f + "_2.txt"))
-            //    fm = true;
-
-            //if (Settings.Default.ShowLayer3 && loadmap(f + "_3.txt"))
-            //    fm = true;
         }
 
         private void MnuSodTitanium_Click(object sender, EventArgs e)
@@ -5709,14 +5609,14 @@ namespace myseq
             mnuShowPlayerCorpseNames2.Checked = Settings.Default.ShowPlayerCorpseNames;
         }
 
-        private void MnuShowPCGuild_Click(object sender, EventArgs e)
+        //private void MnuShowPCGuild_Click(object sender, EventArgs e)
 
-        {
-            Settings.Default.ShowPCGuild = !Settings.Default.ShowPCGuild;
+        //{
+        //    Settings.Default.ShowPCGuild = !Settings.Default.ShowPCGuild;
 
-            mnuShowPCGuild.Checked = Settings.Default.ShowPCGuild;
-            mnuShowPCGuild2.Checked = Settings.Default.ShowPCGuild;
-        }
+        //    mnuShowPCGuild.Checked = Settings.Default.ShowPCGuild;
+        //    mnuShowPCGuild2.Checked = Settings.Default.ShowPCGuild;
+        //}
 
         private void MnuFilterMapLines_Click(object sender, EventArgs e)
 
@@ -6153,9 +6053,7 @@ namespace myseq
         #endregion
 
         private void MnuAddMapLabel_Click(object sender, EventArgs e)
-        {
-            AddMapText(alertAddmobname);
-        }
+        => AddMapText(alertAddmobname);
 
         #region zoom
         private void ToolStripZoomIn_Click(object sender, EventArgs e)
@@ -6798,13 +6696,8 @@ namespace myseq
 
         #endregion
 
-        private void MnuFileMain_DropDownOpening(object sender, EventArgs e)
-        {
+        private void MnuFileMain_DropDownOpening(object sender, EventArgs e) => VisChar();
             // Update the Character Selection list
-            // colProcesses.Clear();
-
-            VisChar();
-        }
 
         private void VisChar()
         {
@@ -6859,32 +6752,21 @@ namespace myseq
             comm.CharRefresh();
         }
 
-        public void StartNewPackets()
-        {
-            processcount = 0;
-        }
+        public void StartNewPackets() => processcount = 0;
 
-// <summary>
-// These do almost exactly the same, can probaly remove and link all to one super method.
+        // <summary>
+        // These do almost exactly the same, can probaly remove and link all to one super method.
         private void ToolStripLevel_TextUpdate(object sender, EventArgs e)
         {
             string Str = toolStripLevel.Text.Trim();
-
-//            bool validnum = true; // only one operation, apply the false outcome directly.
-            if (!string.IsNullOrEmpty(Str)) // better filter than "if (Str.Length > 0)"
+            if (!string.IsNullOrEmpty(Str))
             {
                 bool isNum = int.TryParse(Str, out var Num);
                 if (isNum && (Num < 1 || Num > 115))
                 {
                     MessageBox.Show("1. Enter a number between 1-115 or select Auto");
-                    //                    validnum = false;
                 }
             }
-
-            //if (!validnum)
-            //{ 
-            //    MessageBox.Show("1. Enter a number between 1-115 or select Auto");
-            //} // 
         }
         private void ToolStripLevel_Leave(object sender, EventArgs e)
         {

@@ -2017,18 +2017,9 @@ namespace myseq
                 Settings.Default.Save();//SaveSettings();
             }
 
-            bool done = true;
-
-            if (!Directory.Exists(txtMapDir.Text))
+            if (!Directory.Exists(txtMapDir.Text) && DialogResult.Yes == DirBox("Map"))
             {
-                if (DialogResult.Yes == DirBox("Map"))
-                {
-                    Directory.CreateDirectory(txtMapDir.Text);
-                }
-                else
-                {
-                    done = false;
-                }
+                Directory.CreateDirectory(txtMapDir.Text);
             }
 
             if (!Directory.Exists(txtFilterDir.Text) && DialogResult.Yes == DirBox("Filters"))
@@ -2036,43 +2027,22 @@ namespace myseq
                 Directory.CreateDirectory(txtFilterDir.Text);
             }
 
-            if (!Directory.Exists(txtCfgDir.Text))
+            if (!Directory.Exists(txtCfgDir.Text) && DialogResult.Yes == DirBox("Config"))
             {
-                if (DialogResult.Yes == DirBox("Config"))
-                {
-                    Directory.CreateDirectory(txtCfgDir.Text);
-                }
-                else
-                {
-                    done = false;
-                }
+                Directory.CreateDirectory(txtCfgDir.Text);
             }
 
-            if (!Directory.Exists(txtLogDir.Text))
+            if (!Directory.Exists(txtLogDir.Text) && DialogResult.Yes == DirBox("Log"))
             {
-                if (DialogResult.Yes == DirBox("Log"))
-                {
-                    Directory.CreateDirectory(txtLogDir.Text);
-                }
-                else
-                {
-                    done = false;
-                }
+                Directory.CreateDirectory(txtLogDir.Text);
             }
 
-            if (!Directory.Exists(txtTimerDir.Text))
+            if (!Directory.Exists(txtTimerDir.Text) && DialogResult.Yes == DirBox("Spawn timer"))
             {
-                if (DialogResult.Yes == DirBox("Spawn timer"))
-                {
-                    Directory.CreateDirectory(txtTimerDir.Text);
-                }
-                else
-                {
-                    done = false;
-                }
+                Directory.CreateDirectory(txtTimerDir.Text);
             }
 
-            if (done) Hide();
+            Hide();
 
             DialogResult DirBox(string dir)
             {
@@ -2080,155 +2050,11 @@ namespace myseq
             }
         }
 
-        //private void SaveSettings()
-        //{
-        //    // Set the Settings
-
-        //    Settings.Default.IPAddress1 = txtIPAddress1.Text;
-
-        //    Settings.Default.IPAddress2 = txtIPAddress2.Text;
-
-        //    Settings.Default.IPAddress3 = txtIPAddress3.Text;
-
-        //    Settings.Default.IPAddress4 = txtIPAddress4.Text;
-
-        //    Settings.Default.IPAddress5 = txtIPAddress5.Text;
-
-        //    Settings.Default.Port = int.Parse(txtPortNo.Text);
-
-        //    Settings.Default.LevelOverride = (int)spnOverrideLevel.Value;
-
-        //    Settings.Default.SaveOnExit = chkSaveOnExit.Checked;
-
-        //    Settings.Default.UpdateDelay = (int)spnUpdateDelay.Value;
-
-        //    Settings.Default.CorpseAlerts = chkCorpsesAlerts.Checked;
-
-        //    Settings.Default.BackColor = picMapBackgroundColor.BackColor;
-
-        //    Settings.Default.PCBorderColor = picPlayerBorder.BackColor;
-
-        //    Settings.Default.PrefixStars = chkPrefixAlerts.Checked;
-
-        //    Settings.Default.AffixStars = chkAffixAlerts.Checked;
-
-        //    Settings.Default.HuntPrefix = txtHuntPrefix.Text;
-
-        //    Settings.Default.MatchFullTextH = chkHuntMatchFull.Checked;  //hunt
-
-        //    Settings.Default.NoneOnHunt = optHuntNone.Checked;
-
-        //    Settings.Default.BeepOnHunt = optHuntBeep.Checked;
-
-        //    Settings.Default.TalkOnHunt = optHuntSpeak.Checked;
-
-        //    Settings.Default.PlayOnHunt = optHuntPlay.Checked;
-
-        //    Settings.Default.HuntAudioFile = txtHuntAudioFile.Text;
-
-        //    Settings.Default.CautionPrefix = txtCautionPrefix.Text;
-
-        //    Settings.Default.MatchFullTextC = chkCautionMatchFull.Checked;  //Caution
-
-        //    Settings.Default.NoneOnCaution = optCautionNone.Checked;
-
-        //    Settings.Default.BeepOnCaution = optCautionBeep.Checked;
-
-        //    Settings.Default.TalkOnCaution = optCautionSpeak.Checked;
-
-        //    Settings.Default.PlayOnCaution = optCautionPlay.Checked;
-
-        //    Settings.Default.CautionAudioFile = txtCautionAudioFile.Text;
-
-        //    Settings.Default.DangerPrefix = txtDangerPrefix.Text;
-
-        //    Settings.Default.MatchFullTextD = chkDangerMatchFull.Checked;  //Caution
-
-        //    Settings.Default.NoneOnDanger = optDangerNone.Checked;
-
-        //    Settings.Default.BeepOnDanger = optDangerBeep.Checked;
-
-        //    Settings.Default.TalkOnDanger = optDangerSpeak.Checked;
-
-        //    Settings.Default.PlayOnDanger = optDangerPlay.Checked;
-
-        //    Settings.Default.DangerAudioFile = txtDangerAudioFile.Text;
-
-        //    Settings.Default.AlertPrefix = txtAlertPrefix.Text;
-
-        //    Settings.Default.MatchFullTextA = chkAlertMatchFull.Checked;  //Rare
-
-        //    Settings.Default.NoneOnAlert = optAlertNone.Checked;
-
-        //    Settings.Default.BeepOnAlert = optAlertBeep.Checked;
-
-        //    Settings.Default.TalkOnAlert = optAlertSpeak.Checked;
-
-        //    Settings.Default.PlayOnAlert = optAlertPlay.Checked;
-
-        //    Settings.Default.AlertAudioFile = txtAlertAudioFile.Text;
-
-        //    Settings.Default.RangeCircle = (int)spnRangeCircle.Value;
-
-        //    Settings.Default.DrawOptions = GetDrawOptions();
-
-        //    Settings.Default.ShowTargetInfo = chkShowTargetInfo.Checked;
-
-        //    Settings.Default.ShowZoneName = chkShowZoneName.Checked;
-
-        //    Settings.Default.ShowCharName = chkShowCharName.Checked;
-
-        //    Settings.Default.DrawFoV = chkDrawFoV.Checked;
-
-        //    Settings.Default.ColorRangeCircle = chkColorRangeCircle.Checked;
-
-        //    Settings.Default.AlertSound = cmbAlertSound.SelectedItem.ToString();
-
-        //    Settings.Default.HatchIndex = cmbHatch.SelectedItem.ToString();
-
-        //    Settings.Default.SpawnDrawSize = (int)spnSpawnSize.Value;
-
-        //    Settings.Default.FadedLines = (int)FadedLines.Value;
-
-        //    Settings.Default.PVPLevels = (int)pvpLevels.Value;
-
-        //    Settings.Default.MinAlertLevel = (int)numMinAlertLevel.Value;
-
-        //    Settings.Default.TitleBar = txtWindowName.Text;
-
-        //    Settings.Default.SearchString = txtSearchString.Text;
-
-        //    Settings.Default.MapDir = txtMapDir.Text;
-
-        //    Settings.Default.FilterDir = txtFilterDir.Text;
-
-        //    Settings.Default.CfgDir = txtCfgDir.Text;
-
-        //    Settings.Default.LogDir = txtLogDir.Text;
-
-        //    Settings.Default.TimerDir = txtTimerDir.Text;
-
-        //    Settings.Default.AutoSelectSpawnList = chkSelectSpawnList.Checked;
-
-        //    Settings.Default.OptionsWindowsLocation = Location;
-
-        //    Settings.Default.OptionsWindowsSize = Size;
-
-        //    Settings.Default.MaxLogLevel = (LogLevel)spnLogLevel.Value;
-
-        //    if (Settings.Default.CurrentIPAddress == 0 && txtIPAddress1.Text.Length > 0)
-        //        Settings.Default.CurrentIPAddress = 1;
-
-        //    Settings.Default.Save();
-        //}
-
         private void CmdMapBackgroundColor_Click(object sender, EventArgs e)
-
         {
             colorOptionPicker.Color = picMapBackgroundColor.BackColor;
 
             if (colorOptionPicker.ShowDialog() != DialogResult.Cancel)
-
             {
                 picMapBackgroundColor.BackColor = colorOptionPicker.Color;
             }

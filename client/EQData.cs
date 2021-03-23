@@ -5,9 +5,10 @@ using System.Collections;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Media;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Media;
 
 namespace myseq
 {
@@ -30,7 +31,7 @@ namespace myseq
 
         private ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
 
-//        private bool playAlerts;
+        //        private bool playAlerts;
 
         // Max + Min map coordinates - define the bounds of the zone
 
@@ -78,7 +79,7 @@ namespace myseq
 
         // Guild List by ID and Description loaded from file
 
-        public Hashtable guildList = new Hashtable();
+//        public Hashtable guildList = new Hashtable();
 
         // Mobs / Filters
 
@@ -106,13 +107,9 @@ namespace myseq
 
         private string AlertPrefix = "";
 
-//        private string[] Classes;
-
-//        private string[] Races;
-
         // Blech, some UI stuff... but at least it's shareable between several users
-
         public SolidBrush[] conColors = new SolidBrush[1000];
+
         public int GreenRange { get; set; }
 
         public int CyanRange { get; set; }
@@ -140,10 +137,6 @@ namespace myseq
         private bool filter3;
         private bool filter4;
         private bool filter5;
-
-        //public void EnablePlayAlerts() => playAlerts = true;
-
-        //public void DisablePlayAlerts() => playAlerts = false;
 
         public void MarkLookups(string name, bool filterMob = false)
         {
@@ -239,6 +232,7 @@ namespace myseq
                 }
             }
         }
+
         //Reusing the code here, since it's all the same
         private void SubLookup(SPAWNINFO sp, string search, bool filter, string ln)
         {
@@ -387,7 +381,7 @@ namespace myseq
             {
                 foreach (SPAWNINFO sp in mobs.Values)
                 {
-                    if (!sp.filtered && !sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isFamiliar && !sp.isMerc && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
+                    if (!sp.filtered && HiddenFamPet(sp) && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
                     {
                         return sp;
                     }
@@ -409,7 +403,7 @@ namespace myseq
             {
                 foreach (SPAWNINFO sp in mobs.Values)
                 {
-                    if (!sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isFamiliar && !sp.isMerc && !sp.m_isPlayer && !sp.isCorpse && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
+                    if (HiddenFamPet(sp) && !sp.m_isPlayer && !sp.isCorpse && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
                     {
                         return sp;
                     }
@@ -430,7 +424,7 @@ namespace myseq
             {
                 foreach (SPAWNINFO sp in mobs.Values)
                 {
-                    if (!sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isFamiliar && !sp.isMerc && !sp.isCorpse && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
+                    if (HiddenFamPet(sp) && !sp.isCorpse && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
                     {
                         return sp;
                     }
@@ -445,6 +439,8 @@ namespace myseq
                 return null;
             }
         }
+
+        private static bool HiddenFamPet(SPAWNINFO sp) => !sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isMerc;
 
         public SPAWNINFO FindMob(float delta, float x, float y)
         {
@@ -569,9 +565,9 @@ namespace myseq
 
             ReadItemList(Path.Combine(Settings.Default.CfgDir, "GroundItems.ini"));
 
-            guildList.Clear();
+            //guildList.Clear();
 
-            ReadGuildList(Path.Combine(Settings.Default.CfgDir, "Guilds.txt"));
+            //ReadGuildList(Path.Combine(Settings.Default.CfgDir, "Guilds.txt"));
 
             ColorChart.Initialise(Path.Combine(Settings.Default.CfgDir, "RGB.txt"));
         }
@@ -869,9 +865,7 @@ namespace myseq
                 if (bOK)
                 {
                     // add a z value if it exists
-                    work.z = (tok = Getnexttoken(ref line, ',')) != null
-                        ? int.Parse(tok, NumFormat)
-                        : -99999;
+                    work.z = (Getnexttoken(ref line, ',')) != null ? int.Parse(tok, NumFormat) : -99999;
 
                     texts.Add(work);
 
@@ -893,9 +887,6 @@ namespace myseq
         public bool LoadLoYMapInternal(string filename)
         {
             IFormatProvider NumFormat = new CultureInfo("en-US");
-
-            StreamReader tr;
-
             string line = "";
 
             string tok = "";
@@ -913,7 +904,9 @@ namespace myseq
                 return false;
             }
 
-            try { tr = new StreamReader(File.OpenRead(filename)); }
+
+            StreamReader streamReader;
+            try { streamReader = new StreamReader(File.OpenRead(filename)); }
             catch (FileNotFoundException)
             {
                 LogLib.WriteLine($"File not found loading {filename} in loadLoYMap");
@@ -925,7 +918,7 @@ namespace myseq
 
             int lineCount = 0;
 
-            while ((line = tr.ReadLine()) != null)
+            while ((line = streamReader.ReadLine()) != null)
             {
                 curLine++;
 
@@ -1108,7 +1101,7 @@ namespace myseq
 
             LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
 
-            tr.Close();
+            streamReader.Close();
 
             if (numtexts > 0 || lineCount > 0)
             {
@@ -1131,6 +1124,7 @@ namespace myseq
 
         public string Getnexttoken(ref string s, char seperator)
         {
+            var builder = new StringBuilder();
             int c = 0;
 
             string token = "";
@@ -1142,7 +1136,9 @@ namespace myseq
 
             while (c < s.Length && s[c] != seperator)
             {
-                token += s[c];
+                builder.Append(s[c]);
+                token = builder.ToString();
+                //token += s[c];
 
                 c++;
             }
@@ -1162,9 +1158,9 @@ namespace myseq
 
             if (File.Exists(filePath))
             {
-                FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-                StreamReader sr = new StreamReader(fs);
+                var sr = new StreamReader(fs);
                 do
                 {
                     line = sr.ReadLine();
@@ -1252,114 +1248,97 @@ namespace myseq
             fs.Close();
         }
 
-        private void ReadGuildList(string filePath)
-        {
-            string line = "";
+        //private void ReadGuildList(string filePath)
+        //{
+        //    string line = "";
 
-            IFormatProvider NumFormat = new CultureInfo("en-US");
+        //    IFormatProvider NumFormat = new CultureInfo("en-US");
 
-            if (!File.Exists(filePath))
-            {
-                // we did not find the Guild file
-                LogLib.WriteLine("Guild file not found", LogLevel.Warning);
-                return;
-            }
+        //    if (!File.Exists(filePath))
+        //    {
+        //        // we did not find the Guild file
+        //        LogLib.WriteLine("Guild file not found", LogLevel.Warning);
+        //        return;
+        //    }
 
-            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            StreamReader sr = new StreamReader(fs);
+        //    FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        //    StreamReader sr = new StreamReader(fs);
 
-            while (line != null)
-            {
-                line = sr.ReadLine();
+        //    while (line != null)
+        //    {
+        //        line = sr.ReadLine();
 
-                if (line != null)
-                {
-                    line = line.Trim();
+        //        if (line != null)
+        //        {
+        //            line = line.Trim();
 
-                    if (line.Length > 0 && (!line.StartsWith("[") && !line.StartsWith("#")))
-                    {
-                        ListItem thisitem = new ListItem();
+        //            if (line.Length > 0 && (!line.StartsWith("[") && !line.StartsWith("#")))
+        //            {
+        //                ListItem thisitem = new ListItem();
 
-                        string tok;
-                        if ((tok = Getnexttoken(ref line, '=')) != null)
-                        {
-                            thisitem.ActorDef = tok.ToUpper();
+        //                string tok;
+        //                if ((tok = Getnexttoken(ref line, '=')) != null)
+        //                {
+        //                    thisitem.ActorDef = tok.ToUpper();
 
-                            if ((tok = Getnexttoken(ref line, ',')) != null)
-                            {
-                                thisitem.Name = tok;
+        //                    if ((tok = Getnexttoken(ref line, ',')) != null)
+        //                    {
+        //                        thisitem.Name = tok;
 
-                                if ((tok = Getnexttoken(ref thisitem.ActorDef, '_')) != null)
-                                {
-                                    thisitem.ID = int.Parse(tok, NumFormat);
+        //                        if ((tok = Getnexttoken(ref thisitem.ActorDef, '_')) != null)
+        //                        {
+        //                            thisitem.ID = int.Parse(tok, NumFormat);
 
-                                    // We got this far, so we have a valid item to add
+        //                            // We got this far, so we have a valid item to add
 
-                                    if (!guildList.ContainsKey(thisitem.ID))
-                                    {
-                                        try { guildList.Add(thisitem.ID, thisitem); }
-                                        catch (Exception ex) { LogLib.WriteLine("Error adding " + thisitem.ID + " to Guilds hashtable: ", ex); }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            sr.Close();
-            fs.Close();
-        }
+        //                            if (!guildList.ContainsKey(thisitem.ID))
+        //                            {
+        //                                try { guildList.Add(thisitem.ID, thisitem); }
+        //                                catch (Exception ex) { LogLib.WriteLine("Error adding " + thisitem.ID + " to Guilds hashtable: ", ex); }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    sr.Close();
+        //    fs.Close();
+        //}
 
         public string GetItemDescription(string ActorDef)
         {
             // Remove the starting IT to get at ID number
-            string temp = ActorDef.Remove(0, 2);
+            var temp = ActorDef.Remove(0, 2);
 
             // Get description from list made using GroundItems.txt
             string tok;
             if ((tok = Getnexttoken(ref temp, '_')) != null)
             {
-                int lookupid = int.Parse(tok, new CultureInfo("en-US"));
+                var lookupid = int.Parse(tok, new CultureInfo("en-US"));
 
                 // We got this far, so we have a valid item to add
 
                 if (itemList.ContainsKey(lookupid))
                 {
-                    ListItem lis = (ListItem)itemList[lookupid];
-                    return lis.Name;
+                    return ((ListItem)itemList[lookupid]).Name;
                 }
             }
             return ActorDef;
         }
 
-        public string GetGuildDescription(string ActorDef)
-        {
-            // I know - ## NEEDS CLEANUP
-            string temp = ActorDef;
+        //public string GetGuildDescription(string guildDef)
+        //{
+        //    // I know - ## NEEDS CLEANUP
+        //    // Get description from list made using Guildlist.txt
+        //    string tok;
+        //    return (tok = Getnexttoken(ref guildDef, '_')) != null
+        //        && guildList.ContainsKey(int.Parse(tok, new CultureInfo("en-US")))
+        //        ? ((ListItem)guildList[int.Parse(tok, new CultureInfo("en-US"))]).Name
+        //        : guildDef;
+        //}
 
-            // Get description from list made using Guildlist.txt
-            string tok;
-            if ((tok = Getnexttoken(ref temp, '_')) != null)
-            {
-                int lookupid = int.Parse(tok, new CultureInfo("en-US"));
-
-                // We got this far, so we have a valid item to add
-                if (guildList.ContainsKey(lookupid))
-                {
-                    ListItem lis = (ListItem)guildList[lookupid];
-                    return lis.Name;
-                }
-            }
-            return ActorDef;
-        }
-
-        private string ArrayIndextoStr(string[] source, int index)
-        {
-            if (index < source.GetLowerBound(0) || index > source.GetUpperBound(0))
-                return $"{index}: Unknown";
-            else
-                return source[index];
-        }
+        private string ArrayIndextoStr(string[] source, int index) => index < source.GetLowerBound(0) || index > source.GetUpperBound(0) ? $"{index}: Unknown" : source[index];
 
         public void ClearMapStructures()
         {
@@ -1707,25 +1686,14 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessTarget(): ", ex); }
         }
 
-        public void ProcessWorld(SPAWNINFO si)
-        {
-            try
-            {
-                int gameDay = si.Level;
-
-                int gameHour = si.Type - 1;
-
-                int gameMin = si.Class;
-
-                int gameMonth = si.Hide;
-
-                int gameYear = si.Race;
-
-                gametime = new DateTime(gameYear, gameMonth, gameDay, gameHour, gameMin, 0);
-            }
-            catch (Exception ex) { LogLib.WriteLine("Error in ProcessWorld(): ", ex); }
-        }
-
+        public void ProcessWorld(SPAWNINFO si) => gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0); 
+        /*  yy/mm/dd/hh/min
+         * gameYear = si.Race
+         * gameMonth = si.Hide
+         * gameDay = si.Level
+         * gameHour = si.Type - 1
+         * gameMin = si.Class
+        */
         public void ProcessSpawns(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
         {
             CorpseAlerts = Settings.Default.CorpseAlerts;
@@ -1849,7 +1817,7 @@ namespace myseq
                             {
                                 SPAWNINFO owner = (SPAWNINFO)mobs[mob.OwnerID];
 
-                                if (owner.IsPlayer())
+                                if (owner.IsPlayer)
                                 {
                                     mob.isPet = true;
                                     mob.listitem.ForeColor = Color.Gray;
@@ -1873,15 +1841,15 @@ namespace myseq
                             mob.listitem.SubItems[9].Text = PrettyNames.GetHideStatus(si.Hide);
                         }
 
-                        if (mob.Guild != si.Guild)
-                        {
-                            mob.Guild = si.Guild;
+                        //if (mob.Guild != si.Guild)
+                        //{
+                        //    mob.Guild = si.Guild;
 
-                            if (si.Guild > 0)
-                                mob.listitem.SubItems[17].Text = GuildNumToString(si.Guild);
-                            else
-                                mob.listitem.SubItems[17].Text = "";
-                        }
+                        //    if (si.Guild > 0)
+                        //        mob.listitem.SubItems[17].Text = GuildNumToString(si.Guild);
+                        //    else
+                        //        mob.listitem.SubItems[17].Text = "";
+                        //}
 
                         mob.refresh = 0;
                     } // end refresh > 10
@@ -1965,12 +1933,12 @@ namespace myseq
 
                         HandleNPCs(si);
                     }
-                    /*-________________________________________________________*/
+
                     mobsTimers.Spawn(si);
 
                     if (si.Name.Length > 0)
                     {
-                        alert = IsSpawnInFilterLists(si, f1, SpawnList, filters, alert);
+                        IsSpawnInFilterLists(si, f1, SpawnList, filters, alert);
                     }
                 }
             }
@@ -1988,7 +1956,7 @@ namespace myseq
                 if (mobs.ContainsKey(si.OwnerID))
                 {
                     owner = (SPAWNINFO)mobs[si.OwnerID];
-                    if (owner.IsPlayer())
+                    if (owner.IsPlayer)
                     {
                         si.isPet = true;
                         if (!Settings.Default.ShowPets) si.hidden = true;
@@ -2066,7 +2034,10 @@ namespace myseq
                     si.hidden = !Settings.Default.ShowMyCorpse;
                 }
             }
-            else if (!Settings.Default.ShowCorpses) si.hidden = true;
+            else if (!Settings.Default.ShowCorpses)
+            {
+                si.hidden = true;
+            }
         }
 
         private void AdjustMapForSpawns(SPAWNINFO si, FrmMain f1, MapPane mapPane, SPAWNINFO mob)
@@ -2205,7 +2176,7 @@ namespace myseq
             return listReAdd;
         }
 
-        private bool IsSpawnInFilterLists(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters, bool alert)
+        private void IsSpawnInFilterLists(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters, bool alert)
         {
             string mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
 
@@ -2432,7 +2403,7 @@ namespace myseq
 
             // Add it to the spawn list if it's not supposed to be hidden
             if (!si.hidden) newSpawns.Add(item1);
-            return alert;
+            //            return alert;
         }
 
         private ListViewItem AddDetailsToList(SPAWNINFO si, ListViewPanel SpawnList, bool alert, string mobnameWithInfo)
@@ -2479,7 +2450,7 @@ namespace myseq
 
             item1.SubItems.Add(sd.ToString("#.000"));
 
-            item1.SubItems.Add(GuildNumToString(si.Guild));
+//            item1.SubItems.Add(GuildNumToString(si.Guild));
 
             item1.SubItems.Add(RegexHelper.FixMobName(si.Name));
 
@@ -2521,13 +2492,7 @@ namespace myseq
         }
 
         private float SpawnDistance(SPAWNINFO si)
-        {
-            return (float)Math.Sqrt(((si.X - gamerInfo.X) * (si.X - gamerInfo.X)) +
-
-                ((si.Y - gamerInfo.Y) * (si.Y - gamerInfo.Y)) +
-
-                ((si.Z - gamerInfo.Z) * (si.Z - gamerInfo.Z)));
-        }
+        => (float)Math.Sqrt(((si.X - gamerInfo.X) * (si.X - gamerInfo.X)) + ((si.Y - gamerInfo.Y) * (si.Y - gamerInfo.Y)) + ((si.Z - gamerInfo.Z) * (si.Z - gamerInfo.Z)));
 
         private void NameChngOrDead(SPAWNINFO si, SPAWNINFO mob)
         {
@@ -2536,7 +2501,7 @@ namespace myseq
             string oldname = RegexHelper.FixMobName(mob.Name);
             mob.listitem.Text = mob.listitem.Text.Replace(oldname, newname);
 
-            if (!si.IsPlayer() && (si.Type == 2 || si.Type == 3))
+            if (!si.IsPlayer && (si.Type == 2 || si.Type == 3))
             {
                 // Corpses - lose alerts on map
 
@@ -2733,9 +2698,7 @@ namespace myseq
         {
             DateTime dt = DateTime.Now;
 
-            string filename = $"{shortname} - ";
-
-            filename += $"{dt.Month}-{dt.Day}-{dt.Year} {dt.Hour}-{dt.Minute}.txt";
+            var filename = $"{shortname} - {dt.Month}-{dt.Day}-{dt.Year} {dt.Hour}.txt";
 
             StreamWriter sw = new StreamWriter(filename, false);
 
@@ -2765,9 +2728,7 @@ namespace myseq
         public void SetSelectedID(int id)
         {
             selectedID = id;
-
             SpawnX = -1.0f;
-
             SpawnY = -1.0f;
         }
 
@@ -2803,43 +2764,11 @@ namespace myseq
 
         public string GetClass(int num) => ArrayIndextoStr(Classes, num);
 
-        public string ItemNumToString(int num)
-        {
-            if (itemList.ContainsKey(num))
-            {
-                ListItem lis = (ListItem)itemList[num];
+        public string ItemNumToString(int num) => itemList.ContainsKey(num) ? ((ListItem)itemList[num]).Name : num.ToString();
 
-                return lis.Name;
-            }
-            else
-            {
-                return num.ToString();
-            }
-        }
+//        public string GuildNumToString(int num) => guildList.ContainsKey(num) ? ((ListItem)guildList[num]).Name : num.ToString();
 
-        public string GuildNumToString(int num)
-        {
-            if (guildList.ContainsKey(num))
-            {
-                ListItem lis = (ListItem)guildList[num];
-
-                return lis.Name;
-            }
-            else
-            {
-                if (num == 0) return "";
-
-                return num.ToString();
-            }
-        }
-
-        public string GetRace(int num)
-        {
-            if (num == 2250)
-                return "Interactive Object";
-
-            return ArrayIndextoStr(Races, num);
-        }
+        public string GetRace(int num) => num == 2250 ? "Interactive Object" : ArrayIndextoStr(Races, num);
 
         public void BeginProcessPacket()
         {
@@ -2857,7 +2786,7 @@ namespace myseq
                         SpawnList.listView.BeginUpdate();
                     ListViewItem[] items = new ListViewItem[newSpawns.Count];
 
-                    int d = 0;
+                    var d = 0;
 
                     foreach (ListViewItem i in newSpawns) items[d++] = i;
 
@@ -2899,22 +2828,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItemList(): ", ex); }
         }
 
-        public float CalcRealHeading(SPAWNINFO sp)
-        {
-            try
-            {
-                if (sp.Heading >= 0 && sp.Heading < 512)
-                    return sp.Heading / 512 * 360;
-                else
-                    return 0;
-            }
-            catch (Exception ex)
-            {
-                LogLib.WriteLine("Error with CalcRealHeading: ", ex);
-
-                return 0;
-            }
-        }
+        public float CalcRealHeading(SPAWNINFO sp) => sp.Heading >= 0 && sp.Heading < 512 ? sp.Heading / 512 * 360 : 0;
 
         public void LoadSpawnInfo()
         {
@@ -3054,81 +2968,77 @@ namespace myseq
         }
 
         #region ColorOperations
+
         public void FillConColors(FrmMain f1)
         {
-            try
+            int level;
+            int c = 0;
+
+            if (Settings.Default.LevelOverride == -1)
             {
-                int c = 0;
-
-                int level;
-
-                if (Settings.Default.LevelOverride == -1)
-                {
-                    f1.toolStripLevel.Text = "Auto";
-                    level = gamerInfo.Level;
-                }
-                else
-                {
-                    level = Settings.Default.LevelOverride;
-                    f1.toolStripLevel.Text = level.ToString();
-                }
-                YellowRange = 3;
-
-                CyanRange = -5;
-
-                GreenRange = (-1) * level;
-
-                GreyRange = (-1) * level;
-
-                // If using SoD/Titanium Con Colors
-                VersionColorVariation(level);
-
-                // Set the Grey Cons
-                for (c = 0; c < (GreyRange + level); c++)
-                {
-                    conColors[c] = new SolidBrush(Color.Gray);
-                }
-
-                // Set the Green Cons
-                for (; c < (GreenRange + level); c++)
-                {
-                    conColors[c] = new SolidBrush(Color.Lime);
-                }
-
-                // Set the Light Blue Cons
-                for (; c < (CyanRange + level); c++)
-                {
-                    conColors[c] = new SolidBrush(Color.Aqua);
-                }
-
-                // Set the Dark Blue Cons
-                for (; c < level; c++)
-                {
-                    conColors[c] = new SolidBrush(Color.Blue);
-                }
-
-                // Set the Same Level Con
-                conColors[c++] = new SolidBrush(Color.White);
-
-                // Yellow Cons
-                for (; c < (level + YellowRange + 1); c++)
-                {
-                    conColors[c] = new SolidBrush(Color.Yellow);
-                }
-
-                // 4 levels of bright red
-                conColors[c++] = new SolidBrush(Color.Red);
-                conColors[c++] = new SolidBrush(Color.Red);
-                conColors[c++] = new SolidBrush(Color.Red);
-                conColors[c++] = new SolidBrush(Color.Red);
-
-                // Set the remaining levels to dark red
-                for (; c < 1000; c++)
-                {
-                    conColors[c] = new SolidBrush(Color.Maroon);
-                }
+                f1.toolStripLevel.Text = "Auto";
+                level = gamerInfo.Level;
             }
-            catch { }
+            else
+            {
+                level = Settings.Default.LevelOverride;
+                f1.toolStripLevel.Text = level.ToString();
+            }
+            YellowRange = 3;
+
+            CyanRange = -5;
+
+            GreenRange = (-1) * level;
+
+            GreyRange = (-1) * level;
+
+            // If using SoD/Titanium Con Colors
+            VersionColorVariation(level);
+
+            // Set the Grey Cons
+            for (c = 0; c < (GreyRange + level); c++)
+            {
+                conColors[c] = new SolidBrush(Color.Gray);
+            }
+
+            // Set the Green Cons
+            for (; c < (GreenRange + level); c++)
+            {
+                conColors[c] = new SolidBrush(Color.Lime);
+            }
+
+            // Set the Light Blue Cons
+            for (; c < (CyanRange + level); c++)
+            {
+                conColors[c] = new SolidBrush(Color.Aqua);
+            }
+
+            // Set the Dark Blue Cons
+            for (; c < level; c++)
+            {
+                conColors[c] = new SolidBrush(Color.Blue);
+            }
+
+            // Set the Same Level Con
+            conColors[c++] = new SolidBrush(Color.White);
+
+            // Yellow Cons
+            for (; c < (level + YellowRange + 1); c++)
+            {
+                conColors[c] = new SolidBrush(Color.Yellow);
+            }
+
+            // 4 levels of bright red
+            conColors[c++] = new SolidBrush(Color.Red);
+            conColors[c++] = new SolidBrush(Color.Red);
+            conColors[c++] = new SolidBrush(Color.Red);
+            conColors[c++] = new SolidBrush(Color.Red);
+
+            // Set the remaining levels to dark red
+            for (; c < 1000; c++)
+            {
+                conColors[c] = new SolidBrush(Color.Maroon);
+            }
         }
 
         private void VersionColorVariation(int level)
@@ -3545,6 +3455,7 @@ namespace myseq
                 maptxt.draw_pen = new Pen(maptxt.draw_color.Color);
             }
         }
+
         private int GetColorDiff(Color foreColor, Color backColor)
         {
             int lColDiff, lTmp;
@@ -3564,18 +3475,7 @@ namespace myseq
             return Math.Max(lColDiff, lTmp);
         }
 
-        private Color GetInverseColor(Color foreColor)
-        {
-            short iFRed, iFGreen, iFBlue;
-
-            iFRed = foreColor.R;
-
-            iFGreen = foreColor.G;
-
-            iFBlue = foreColor.B;
-
-            return Color.FromArgb((int)(192 - (iFRed * 0.75)), (int)(192 - (iFGreen * 0.75)), (int)(192 - (iFBlue * 0.75)));
-        }
+        private Color GetInverseColor(Color foreColor) => Color.FromArgb((int)(192 - (foreColor.R * 0.75)), (int)(192 - (foreColor.G * 0.75)), (int)(192 - (foreColor.B * 0.75)));
 
         public Color GetDistinctColor(Color foreColor, Color backColor)
         {
@@ -3615,6 +3515,6 @@ namespace myseq
             return curBrush;
         }
 
-        #endregion ColorCheck between Foreground and Background
+        #endregion ColorOperations
     }
 }
