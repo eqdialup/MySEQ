@@ -103,7 +103,7 @@ namespace myseq
 
         private float SpawnPlusSize = 7.0f;
 
-        private float SpawnPlusSizeOffset = 3.5f;
+        private float PlusSzOZ = 3.5f;
 
         private float SelectSize = 9.0f;
 
@@ -1758,7 +1758,7 @@ namespace myseq
 
             bool NPCCorpseDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterNPCCorpses;
 
-            float drawOffset = SpawnPlusSizeOffset - 0.5f;
+            float drawOffset = PlusSzOZ - 0.5f;
 
             // Draw Spawns
 
@@ -1781,7 +1781,7 @@ namespace myseq
                     {
                         if (!PCCorpseDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos)))
                         {
-                            DrawRectangle(yellowPen, x - SpawnPlusSizeOffset + 0.5f, y - SpawnPlusSizeOffset + 0.5f, SpawnPlusSize, SpawnPlusSize);
+                            DrawRectangle(yellowPen, x - PlusSzOZ + 0.5f, y - PlusSzOZ + 0.5f, SpawnPlusSize, SpawnPlusSize);
 
                             if (Settings.Default.ShowPlayerCorpseNames && (sp.Name.Length > 0))
                                 DrawSpawnNames(textBrush, $"{sp.Level}: {sp.Name}", sp.X, sp.Y); //, gName);
@@ -1894,7 +1894,7 @@ namespace myseq
                         // Highlight Current Target
 
                         if (curTarget == sp.Name)
-                            FillRectangle(whiteBrush, x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
+                            FillRectangle(whiteBrush, x - PlusSzOZ - 1, y - PlusSzOZ - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
 
                         // Draw Invisible Mob - these are EQ trigger events
 
@@ -2043,9 +2043,9 @@ namespace myseq
                 }
                 else
                 {
-                    FillRectangle(eq.conColors[sp.Level], x - SpawnPlusSizeOffset + 0.5f, y - SpawnPlusSizeOffset + 0.5f, SpawnPlusSize, SpawnPlusSize);
+                    FillRectangle(eq.conColors[sp.Level], x - PlusSzOZ + 0.5f, y - PlusSzOZ + 0.5f, SpawnPlusSize, SpawnPlusSize);
 
-                    DrawRectangle(PCBorder, x - SpawnPlusSizeOffset + 0.5f, y - SpawnPlusSizeOffset + 0.5f, SpawnPlusSize, SpawnPlusSize);
+                    DrawRectangle(PCBorder, x - PlusSzOZ + 0.5f, y - PlusSzOZ + 0.5f, SpawnPlusSize, SpawnPlusSize);
 
                     // draw purple border around players
 
@@ -2056,13 +2056,13 @@ namespace myseq
                             // SoS Players
 
                             if (flash)
-                                DrawRectangle(purplePen, x - SpawnPlusSizeOffset - 0.5f, y - SpawnPlusSizeOffset - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
+                                DrawRectangle(purplePen, x - PlusSzOZ - 0.5f, y - PlusSzOZ - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
                         }
                         else
                         {
                             // Player is invis
 
-                            DrawRectangle(purplePen, x - SpawnPlusSizeOffset - 0.5f, y - SpawnPlusSizeOffset - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
+                            DrawRectangle(purplePen, x - PlusSzOZ - 0.5f, y - PlusSzOZ - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
                         }
                     }
 
@@ -2156,7 +2156,7 @@ namespace myseq
                 {
                     DrawEllipse(whitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
-                    DrawEllipse(new Pen(new SolidBrush(Color.Green)), x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(new Pen(new SolidBrush(Color.Green)), x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
                 }
 
                 // Draw Ring around Guild Master
@@ -2165,7 +2165,7 @@ namespace myseq
                 {
                     DrawEllipse(whitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
-                    DrawEllipse(redPen, x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(redPen, x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
                 }
 
                 // Draw Ring around Shopkeepers
@@ -2174,7 +2174,7 @@ namespace myseq
                 {
                     DrawEllipse(whitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
-                    DrawEllipse(new Pen(new SolidBrush(Color.Blue)), x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(new Pen(new SolidBrush(Color.Blue)), x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
                 }
             }
         }
@@ -2183,25 +2183,33 @@ namespace myseq
         {
             if (flash)
             {
-                // Draw Ring around Hunted Mobs
+                var x1 = x - PlusSzOZ;
+                var y1 = y - PlusSzOZ;
+                var above = (sp.Z < pZ + filterpos);
+                var below = (sp.Z > pZ - filterneg);
 
-                if ((sp.isHunt || sp.proxAlert) && (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos))))
-                    DrawEllipse(green2Pen, x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                // Draw Ring around Hunted Mobs
+                var notdepthfiltered = (!NPCDepthFilter || (below && above));
+
+                if ((sp.isHunt || sp.proxAlert) && notdepthfiltered)
+                    DrawEllipse(green2Pen, x1, y1, SpawnPlusSize, SpawnPlusSize);
 
                 // Draw Ring around Caution Mobs
 
-                if (sp.isCaution && (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos))))
-                    DrawEllipse(yellow2Pen, x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                if (sp.isCaution && notdepthfiltered)
+                    DrawEllipse(yellow2Pen, x1, y1, SpawnPlusSize, SpawnPlusSize);
 
                 // Draw Ring around Danger Mobs
 
-                if (sp.isDanger && (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos))))
-                    DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                if (sp.isDanger && notdepthfiltered)
+                    DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
 
                 // Draw Ring around Rare Mobs
 
-                if (sp.isAlert && (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos))))
-                    DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, SpawnPlusSize, SpawnPlusSize);
+                if (sp.isAlert && notdepthfiltered)
+                {
+                    DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                }
             }
         }
 
@@ -2609,7 +2617,7 @@ namespace myseq
 
                     float stY = (float)Math.Round(CalcScreenCoordY(st.Y), 0);
 
-                    float stOffset = SpawnPlusSizeOffset - 0.5f;
+                    float stOffset = PlusSzOZ - 0.5f;
 
                     int checkTimer = st.SecondsUntilSpawn(DateTime.Now);
 
@@ -2730,9 +2738,9 @@ namespace myseq
                     {
                         gi.filtered = false;
 
-                        DrawLine(yellowPen, x - SpawnPlusSizeOffset, y - SpawnPlusSizeOffset, x + SpawnPlusSizeOffset, y + SpawnPlusSizeOffset);
+                        DrawLine(yellowPen, x - PlusSzOZ, y - PlusSzOZ, x + PlusSzOZ, y + PlusSzOZ);
 
-                        DrawLine(yellowPen, x - SpawnPlusSizeOffset, y + SpawnPlusSizeOffset, x + SpawnPlusSizeOffset, y - SpawnPlusSizeOffset);
+                        DrawLine(yellowPen, x - PlusSzOZ, y + PlusSzOZ, x + PlusSzOZ, y - PlusSzOZ);
                     }
                     else
                     {
@@ -2770,7 +2778,7 @@ namespace myseq
             // Draw YellowGreen Ring around Caution Ground Items
             // ONE BLINK TO RULE THMEM ALL:
             if (gi.isCaution || gi.isAlert || gi.isDanger || gi.isHunt && Depthfilter)
-                DrawEllipse(new Pen(new SolidBrush(Color.YellowGreen), 2), x - SpawnPlusSizeOffset - 1, y - SpawnPlusSizeOffset - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
+                DrawEllipse(new Pen(new SolidBrush(Color.YellowGreen), 2), x - PlusSzOZ - 1, y - PlusSzOZ - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
 
             //// Draw Red Ring around Danger Ground Items
             //if (gi.isDanger && Depthfilter)
@@ -2984,7 +2992,7 @@ namespace myseq
 
             SpawnPlusSize = SpawnSize + 2.0f;
 
-            SpawnPlusSizeOffset = SpawnPlusSize / 2.0f;
+            PlusSzOZ = SpawnPlusSize / 2.0f;
 
             SelectSize = SpawnSize + 4.0f;
 
