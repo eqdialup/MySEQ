@@ -122,6 +122,7 @@ namespace myseq
         public bool Zoning { get; set; }
         public string[] Classes { get; private set; }
         public string[] Races { get; private set; }
+        public string GConBaseName { get; set; } = "";
 
         private const int ditchGone = 2;
         private const string dflt = "Mob Search";
@@ -2858,6 +2859,8 @@ namespace myseq
         }
 
         #region ProcessGamer
+        private int gLastconLevel = -1;
+        private int gconLevel;
 
         public void ProcessGamer(SPAWNINFO si, FrmMain f1)
         {
@@ -2891,31 +2894,31 @@ namespace myseq
                 gamerInfo.Hide = si.Hide;
 
                 gamerInfo.SpeedRun = si.SpeedRun;
-
+                gconLevel = Settings.Default.LevelOverride;
                 if (gamerInfo.Level != si.Level)
                 {
-                    if (f1.gConBaseName.Length > 0)
+                    if (GConBaseName.Length > 0)
                     {
                         if (si.Level > gamerInfo.Level)
                         {
                             int diff = si.Level - gamerInfo.Level;
-                            f1.gconLevel += diff;
+                            gconLevel += diff;
                         }
                         else
                         {
                             int diff = gamerInfo.Level - si.Level;
-                            f1.gconLevel -= diff;
+                            gconLevel -= diff;
                         }
-                        if (f1.gconLevel > 115)
-                            f1.gconLevel = 115;
-                        if (f1.gconLevel < 1)
-                            f1.gconLevel = -1;
-                        if (f1.gconLevel == -1)
-                        {
-                            f1.gConBaseName = "";
-                        }
-                        f1.gLastconLevel = f1.gconLevel;
-                        Settings.Default.LevelOverride = f1.gconLevel;
+                        if (gconLevel > 115)
+                            gconLevel = 115;
+                        if (gconLevel < 1)
+                            gconLevel = -1;
+                        //if (f1.gconLevel == -1)
+                        //{
+                        //    f1.gConBaseName = "";
+                        //}
+                        gLastconLevel = gconLevel;
+                        Settings.Default.LevelOverride = gconLevel;
                     }
                     gamerInfo.Level = si.Level;
                     FillConColors(f1);
@@ -2924,9 +2927,9 @@ namespace myseq
 
                     UpdateMobListColors();
                 }
-                if (f1.gLastconLevel != f1.gconLevel)
+                if (gLastconLevel != gconLevel)
                 {
-                    f1.gLastconLevel = f1.gconLevel;
+                    gLastconLevel = gconLevel;
                     FillConColors(f1);
                     UpdateMobListColors();
                 }

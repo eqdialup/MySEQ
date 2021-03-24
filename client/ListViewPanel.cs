@@ -557,7 +557,7 @@ namespace myseq
 
         private void ListType0(ListView.SelectedIndexCollection sel)
         {
-            mobname = RegexHelper.FilterMobName(listView.Items[sel[0]].SubItems[18].Text);
+            mobname = RegexHelper.FilterMobName(listView.Items[sel[0]].SubItems[17].Text);
             mobname = mobname.Replace("_", " ");
             mobname = mobname.Trim();
             smoblevel = "";
@@ -600,8 +600,7 @@ namespace myseq
 
         private void GetMobLevel()
         {
-            bool isNum = int.TryParse(smoblevel, out var Num);
-            if (isNum)
+            if (int.TryParse(smoblevel, out var Num))
             {
                 moblevel = Num;
             }
@@ -858,8 +857,8 @@ namespace myseq
         {
             //mobname;
             Settings.Default.LevelOverride = moblevel;
-            f1.gconLevel = moblevel;
-            f1.gConBaseName = mobname;
+            //f1.gconLevel = moblevel;
+            eq.GConBaseName = mobname;
         }
     }
 }

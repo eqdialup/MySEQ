@@ -17,17 +17,17 @@ namespace myseq
 
     public class FrmMain : Form
     {
-        public string Version = "";
+        public string Version = Application.ProductVersion;
 
-        public Filters filters = new Filters();
+        private Filters filters = new Filters();
 
         public string curZone = "map_pane";
 
-        public string currentIPAddress = "";
+        private string currentIPAddress = "";
 
-        public float rawScale = 1.0f;
+//        public float rawScale = 1.0f;
 
-        public string BaseTitle = "MySEQ Open";
+        private string BaseTitle = "MySEQ Open";
 
         private Point addTextFormLocation = new Point(0, 0);
 
@@ -49,11 +49,11 @@ namespace myseq
 
         public DrawOptions DrawOpts=DrawOptions.DrawNormal;
 
-        public ArrayList colProcesses = new ArrayList();
+        private ArrayList colProcesses = new ArrayList();
 
-        public ProcessInfo CurrentProcess = new ProcessInfo(0,"");
+        private ProcessInfo CurrentProcess = new ProcessInfo(0,"");
 
-        public int processcount = 0;
+        public int processcount;
 
         #region System Components
 
@@ -345,18 +345,22 @@ namespace myseq
 
         private ToolStripMenuItem mnuAutoConnect;
         public ToolStripComboBox toolStripLevel;
-        public int gLastconLevel = -1;
-        public int gconLevel = -1;
-        public string gConBaseName = "";
+
+// These are all in the realm of EQDATA, ProcessGamer region.
+// Classes communicate through the SETTINGS class.
+//        public int gLastconLevel = -1;
+//        public int gconLevel = -1;  
+//        public string gConBaseName = "";
+
         private ToolStripMenuItem toolStripBasecon;
 
-        private bool bIsRunning = false;
-        private bool bFilter0 = false;
-        private bool bFilter1 = false;
-        private bool bFilter2 = false;
-        private bool bFilter3 = false;
-        private bool bFilter4 = false;
-        private bool bFilter5 = false;
+        private bool bIsRunning;
+        private bool bFilter0;
+        private bool bFilter1;
+        private bool bFilter2;
+        private bool bFilter3;
+        private bool bFilter4;
+        private bool bFilter5;
 
         public bool playAlerts;
 
@@ -6265,6 +6269,7 @@ namespace myseq
                 }
             }
         }
+
         private IDockContent GetContentFromPersistString(string persistString)
         {
             if (persistString == "SpawnList")
@@ -6755,25 +6760,18 @@ namespace myseq
         public void StartNewPackets() => processcount = 0;
 
         // <summary>
-        // These do almost exactly the same, can probaly remove and link all to one super method.
+        // These do almost exactly the same, can link all to one method.
         private void ToolStripLevel_TextUpdate(object sender, EventArgs e)
         {
             string Str = toolStripLevel.Text.Trim();
-            if (!string.IsNullOrEmpty(Str))
-            {
-                bool isNum = int.TryParse(Str, out var Num);
-                if (isNum && (Num < 1 || Num > 115))
-                {
-                    MessageBox.Show("1. Enter a number between 1-115 or select Auto");
-                }
-            }
-        }
-        private void ToolStripLevel_Leave(object sender, EventArgs e)
-        {
-            string Str = toolStripLevel.Text.Trim();
 
+            ToolStripLevelCheck(Str);
+        }
+
+        private void ToolStripLevelCheck(string Str)
+        {
             bool validnum = true;
-            if (Str.Length > 0)
+            if (!string.IsNullOrEmpty(Str))
             {
                 bool isNum = int.TryParse(Str, out var Num);
 
@@ -6785,40 +6783,39 @@ namespace myseq
                 {
                     validnum = false;
                 }
+                else if (Str == "Auto")
+                {
+                    validnum = true;
+                    Settings.Default.LevelOverride = -1;
+                    toolStripLevel.Text = "Auto";
+                    }
                 else
                 {
                     toolStripLevel.Text = Num.ToString();
                     Settings.Default.LevelOverride = Num;
-                    gconLevel = Num;
+                    //gconLevel = Num;
                 }
             }
 
             if (!validnum)
             {
-                MessageBox.Show("2. Enter a number between 1-115 or Auto");
-            } else {
-                gConBaseName = "";
+                MessageBox.Show("Enter a number between 1-115 or Auto");
+                //} else {
+                //    gConBaseName = "";
             }
+        }
+
+        private void ToolStripLevel_Leave(object sender, EventArgs e)
+        {
+            string Str = toolStripLevel.Text.Trim();
+
+            ToolStripLevelCheck(Str);
         }
         private void ToolStripLevel_DropDownClosed(object sender, EventArgs e)
         {
-            string Str = toolStripLevel.SelectedItem.ToString();
+            var Str = toolStripLevel.SelectedItem.ToString();
 
-            if (!string.IsNullOrEmpty(Str))
-            {
-                bool isNum = int.TryParse(Str, out var Num);
-                gConBaseName = "";
-                if (isNum && Num >= 1 && Num <= 115)
-                {
-                    Settings.Default.LevelOverride = Num;
-                    gconLevel = Num;
-                }
-                else if (Str == "Auto")
-                {
-                    Settings.Default.LevelOverride = -1;
-                    gconLevel = Num;
-                }
-            }
+           ToolStripLevelCheck(Str);
         }
         private void ToolStripLevel_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -6826,17 +6823,7 @@ namespace myseq
             {
                 string Str = toolStripLevel.Text.Trim();
 
-                if (!string.IsNullOrEmpty(Str))
-                {
-                    bool isNum = int.TryParse(Str, out var Num);
-
-                    if (isNum && Num >= 1 && Num <= 115)
-                    {
-                        //do stuff
-                        Settings.Default.LevelOverride = Num;
-                        gconLevel = Num;
-                    }
-                }
+                ToolStripLevelCheck(Str);
                 toolStripScale.Focus();
 
                 e.Handled = true;
@@ -6848,6 +6835,3 @@ namespace myseq
         public void DisablePlayAlerts() => playAlerts = false;
     }
 }
-
-
-

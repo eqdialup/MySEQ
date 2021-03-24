@@ -170,6 +170,7 @@
     <Compile Include="MapCon.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="MapLine.cs" />
     <Compile Include="MapPane.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1628,6 +1628,8 @@ namespace myseq
                 {
                     DrawOptions DrawOpts = f1.DrawOpts;
 
+                    Graphics sg = pe.Graphics;
+
                     // Clear Map
 
                     bkgBuffer.Graphics.Clear(Settings.Default.BackColor);
@@ -1660,14 +1662,14 @@ namespace myseq
                     float dx = ((m_panOffsetX + m_screenCenterX) / -m_ratio) - m_mapCenterX;
 
                     float dy = ((m_panOffsetY + m_screenCenterY) / -m_ratio) - m_mapCenterY;
- 
+                    
+                    GraphicsState tState = bkgBuffer.Graphics.Save();
+
                     bkgBuffer.Graphics.ScaleTransform(-m_ratio, -m_ratio);
 
                     bkgBuffer.Graphics.TranslateTransform(dx, dy);
 
                     DrawMapLines(DrawOpts);
-
-                    GraphicsState tState = bkgBuffer.Graphics.Save();
 
                     bkgBuffer.Graphics.Restore(tState);
 
@@ -1722,7 +1724,7 @@ namespace myseq
 
                     // Setup GDI Drawing
 
-                    Graphics sg = pe.Graphics;
+                    
                     bkgBuffer.Render(sg);
                 }
             }
@@ -3021,77 +3023,4 @@ namespace myseq
             }
         }
     }
-
-    #region Map Structures
-
-    public struct MapPoint
-
-    {
-        public int x;
-
-        public int y;
-
-        public int z;
-    }
-
-    public struct MobTrailPoint
-    {
-        public int x;
-
-        public int y;
-    }
-
-    public class MapLine
-
-    {
-        public MapLine()
-        {
-            aPoints = new ArrayList();
-        }
-
-        public int maxZ;
-
-        public int minZ;
-
-        public string name = "";
-
-        public Pen color;
-
-        public Pen draw_color;
-
-        public Pen fade_color;
-
-        public ArrayList aPoints;
-
-        public PointF[] linePoints;
-
-        public MapPoint Point(int index)
-
-        {
-            return (MapPoint)aPoints[index];
-        }
-    }
-
-    public class MapText
-    {
-        public string text = "";
-
-        public int offset;
-
-        public SolidBrush color;
-
-        public SolidBrush draw_color;
-
-        public Pen draw_pen;
-
-        public int x;
-
-        public int y;
-
-        public int z;
-
-        public int size = 2;
-    }
-
-    #endregion Map Structures
 }
