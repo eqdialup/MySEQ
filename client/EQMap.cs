@@ -355,7 +355,7 @@ namespace myseq
                 int index2 = 0;
                 foreach (MapText tex2 in eq.texts)
                 {
-                    if (index2 > index && tex1.x == tex2.x && tex1.y == tex2.y && tex1.z == tex2.z && tex1.text != tex2.text)
+                    if (index2 > index && tex1.x == tex2.x && tex1.y == tex2.y && tex1.z == tex2.z && tex1.label != tex2.label)
                     {
                         tex2.offset = tex1.offset + (int)(2.0f * Settings.Default.MapLabel.Size);
                     }

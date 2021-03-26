@@ -136,14 +136,10 @@ namespace Structures
         /// <param name="pSocket"> The SocketClient object the message came from </param>
         private void CloseHandler(CSocketClient pSocket)
         {
-            //try
-            //{
                 if (f1 == null)
                     StopListening();
                 else
                     f1.StopListening();
-            //}
-            //catch (Exception pException) { LogLib.WriteLine($"Error: CloseHandler: {pException.Message}"); }
         }
 
         //********************************************************************

@@ -17,13 +17,12 @@ namespace myseq
     public struct MobTrailPoint
     {
         public int x;
-
         public int y;
     }
 
     public class MapText
     {
-        public string text = "";
+        public string label = "";
 
         public int offset;
 

@@ -2,6 +2,7 @@ using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -29,6 +30,7 @@ namespace myseq
 
         // Map data
         public ArrayList lines = maplinearray;//MapLine[MAX_LINES]
+
         private static readonly ArrayList maptextarray = new ArrayList();
         public ArrayList texts = maptextarray;//MapText[50]
 
@@ -82,7 +84,7 @@ namespace myseq
 
         // Guild List by ID and Description loaded from file
 
-//        public Hashtable guildList = new Hashtable();
+        //        public Hashtable guildList = new Hashtable();
 
         // Mobs / Filters
 
@@ -579,7 +581,9 @@ namespace myseq
             ColorChart.Initialise(Path.Combine(Settings.Default.CfgDir, "RGB.txt"));
         }
 
-        public bool LoadMapInternal(string filename)
+        #region showeq_map_format
+
+        public bool LoadMapInternal(string filename) //SHOWEQ format
         {
             // All Parse Routines MUST be passed this culture info so that they work
 
@@ -634,7 +638,7 @@ namespace myseq
             {
                 // ICK....
 
-                tok = walktheline(NumFormat, ref line);
+                Walktheline(NumFormat, ref line);
             }
             catch (Exception ex) { LogLib.WriteLine("Error in loadMap() Reading Map Header: ", ex); }
 
@@ -680,9 +684,9 @@ namespace myseq
 
                 return false;
             }
-        } // ShowEQ map
+        }
 
-        private string walktheline(IFormatProvider NumFormat, ref string line)
+        private void Walktheline(IFormatProvider NumFormat, ref string line)
         {
             string tok;
             if ((tok = Getnexttoken(ref line, ',')) != null)
@@ -712,14 +716,12 @@ namespace myseq
                     }
                 }
             }
-
-            return tok;
-        }
+        } // SHOWEQ
 
         private void ParseMLP(string filename, IFormatProvider NumFormat, ref int numtexts, ref int numlines, int curLine, ref string tok, ref string line)
         {
             if (tok == "M")
-            {
+            {// example format : M,line,white,2,-247,-371,850,-249,-366,870
                 MapLine work = new MapLine();
 
                 int numpoints = 0;
@@ -785,7 +787,7 @@ namespace myseq
                 }
             }
             else if (tok == "L")
-            {
+            {// example 
                 MapLine work = new MapLine();
 
                 int numpoints = 0;
@@ -849,13 +851,13 @@ namespace myseq
                 }
             }
             else if (tok == "P")
-            {
+            {// example P,Succor Point,white,-172,-821
                 MapText work = new MapText();
 
                 bool bOK = true;
 
                 if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.text = tok;
+                    work.label = tok;
                 else
                     bOK = false;
 
@@ -885,8 +887,9 @@ namespace myseq
                 }
             }
         }
+        #endregion showeq_map_format
 
-        public bool LoadLoYMapInternal(string filename)
+        public bool LoadLoYMapInternal(string filename) //SOE / ingame EQ format
         {
             IFormatProvider NumFormat = new CultureInfo("en-US");
             string line = "";
@@ -975,57 +978,21 @@ namespace myseq
 
                 MapPoint point2 = new MapPoint();
 
-                bool bOK = true;
+                string[] parsedLine = line.Split(",".ToCharArray());
 
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    point1.x = -(int)float.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    point1.y = -(int)float.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    point1.z = (int)float.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    point2.x = -(int)float.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    point2.y = -(int)float.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    point2.z = (int)float.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                int r = 0, g = 0, b = 0;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    r = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    g = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    b = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK)
+                if (parsedLine.Length == 9)
                 {
+                    point1.x = -(int)float.Parse(parsedLine[0], NumFormat);
+                    point1.y = -(int)float.Parse(parsedLine[1], NumFormat);
+                    point1.z = (int)float.Parse(parsedLine[2], NumFormat);
+
+                    point2.x = -(int)float.Parse(parsedLine[3], NumFormat);
+                    point2.y = -(int)float.Parse(parsedLine[4], NumFormat);
+                    point2.z = -(int)float.Parse(parsedLine[5], NumFormat);
+
+                    int r = int.Parse(parsedLine[6].PadRight(4).Substring(0, 3));
+                    int g = int.Parse(parsedLine[7].PadRight(4).Substring(0, 3));
+                    int b = int.Parse(parsedLine[8].PadRight(4).Substring(0, 3));
                     work.color = new Pen(new SolidBrush(Color.FromArgb(r, g, b)));
 
                     work.aPoints.Add(point1);
@@ -1048,84 +1015,32 @@ namespace myseq
                 }
             }
             else if (tok == "P")
-            {
+            {// string format "P 175.5915{0}, 894.8506{1}, 148.1645{2},  240{3}, 240{4}, 240{5},  2{6},  Tower{7}"
                 MapText work = new MapText();
+                string dataRecord = line;
+                string[] parsedline = dataRecord.Split(",".ToCharArray());
 
-                bool bOK = true;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.x = -(int)float.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.y = -(int)float.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                if (parsedline.Length >= 7)
                 {
-                    work.z = (int)float.Parse(tok, NumFormat);
-                }
-                else
-                {
-                    bOK = false;
-                }
-
-                int r = 0, g = 0, b = 0;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    r = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    g = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    b = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                work.color = new SolidBrush(Color.FromArgb(r, g, b));
-
-                if ((tok = Getnexttoken(ref line, ',')) != null)
-                {
-                    // This is text size
-                    // 1 - small
-                    // 2 - medium
-                    // 3 - large
-
-                    var text_size = int.Parse(tok, NumFormat);
-
-                    if (text_size > 0 && text_size <= 3)
-                        work.size = text_size;
-                }
-                else
-                {
-                    bOK = false;
-                }
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                {
-                    work.text = tok;
-                }
-                else
-                {
-                    bOK = false;
-                }
-
-                if (bOK)
-                {
-                    texts.Add(work);
-                    numtexts++;
+                    work.x = -(int)float.Parse(parsedline[0], NumFormat);
+                    work.y = -(int)float.Parse(parsedline[1], NumFormat);
+                    work.z = (int)float.Parse(parsedline[2], NumFormat);
+                    int r = int.Parse(parsedline[3], NumFormat);
+                    int g = int.Parse(parsedline[4], NumFormat);
+                    int b = int.Parse(parsedline[5], NumFormat);
+                    work.color = new SolidBrush(Color.FromArgb(r, g, b));
+                    work.size = int.Parse(parsedline[6], NumFormat);
+                    for (int i = 7; i < parsedline.Length; i++)
+                    {
+                        work.label = parsedline[i];
+                    }
                 }
                 else
                 {
                     LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
                 }
+                texts.Add(work);
+                numtexts++;
             }
         }
 
@@ -1145,8 +1060,6 @@ namespace myseq
             {
                 builder.Append(tokenstring[c]);
                 token = builder.ToString();
-                //token += s[c];
-
                 c++;
             }
 
@@ -1693,6 +1606,7 @@ namespace myseq
          * gameHour = si.Type - 1
          * gameMin = si.Class
         */
+
         public void ProcessSpawns(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
         {
             CorpseAlerts = Settings.Default.CorpseAlerts;
@@ -1871,7 +1785,7 @@ namespace myseq
 
                 if (!found && si.Name.Length > 0)
                 {
-//                    bool alert = false;
+                    //                    bool alert = false;
 
                     // ensure that map is big enough to show all spawns.
 
@@ -2470,7 +2384,7 @@ namespace myseq
 
             item1.SubItems.Add(sd.ToString("#.00"));
 
-//            item1.SubItems.Add(GuildNumToString(si.Guild));
+            //            item1.SubItems.Add(GuildNumToString(si.Guild));
 
             item1.SubItems.Add(RegexHelper.FixMobName(si.Name));
 
@@ -2786,7 +2700,7 @@ namespace myseq
 
         public string ItemNumToString(int num) => itemList.ContainsKey(num) ? ((ListItem)itemList[num]).Name : num.ToString();
 
-//        public string GuildNumToString(int num) => guildList.ContainsKey(num) ? ((ListItem)guildList[num]).Name : num.ToString();
+        //        public string GuildNumToString(int num) => guildList.ContainsKey(num) ? ((ListItem)guildList[num]).Name : num.ToString();
 
         public string GetRace(int num) => num == 2250 ? "Interactive Object" : ArrayIndextoStr(Races, num);
 
@@ -2870,6 +2784,7 @@ namespace myseq
         }
 
         #region ProcessGamer
+
         private int gLastconLevel = -1;
         private int gconLevel;
 

@@ -3,6 +3,7 @@
 using myseq.Properties;
 using Structures;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text;
@@ -10,7 +11,7 @@ using System.Windows.Forms;
 
 namespace myseq
 {
-    public enum FollowOption { None, Player, Target };
+    public enum FollowOption { None, Player, Target }
 
     public class MapCon : UserControl
     {
@@ -25,7 +26,7 @@ namespace myseq
 
         public Label lblMobInfo;
 
-        public Font drawFont;
+        public Font drawFont; //size 2
         public Font drawFont1;
         public Font drawFont3;
 
@@ -980,16 +981,16 @@ namespace myseq
         }
 
         public float CalcScreenCoordX(float mapCoordinateX) => x_adjust - (float)(mapCoordinateX * m_ratio);
-            // Formula Should be
-            // Screen X =CenterScreenX + ((mapCoordinateX - MapCenterX) * m_ratio)
+        // Formula Should be
+        // Screen X =CenterScreenX + ((mapCoordinateX - MapCenterX) * m_ratio)
 
-            // However Eq's Map coordinates are in the oposite sense to the screen
-            // so we have to multiply the second portion by -1, which is the same
-            // as changing the plus to a minus...
+        // However Eq's Map coordinates are in the oposite sense to the screen
+        // so we have to multiply the second portion by -1, which is the same
+        // as changing the plus to a minus...
 
-            //m_ratio = (ScreenWidth/MapWidth) * zoom (Calculated ahead of time in ReAdjust)
+        //m_ratio = (ScreenWidth/MapWidth) * zoom (Calculated ahead of time in ReAdjust)
 
-            //return m_panOffsetX + m_screenCenterX - ((mapCoordinateX - m_mapCenterX) * m_ratio);
+        //return m_panOffsetX + m_screenCenterX - ((mapCoordinateX - m_mapCenterX) * m_ratio);
         public float CalcScreenCoordY(float mapCoordinateY) => y_adjust - (float)(mapCoordinateY * m_ratio);
 
         private float ScreenToMapCoordX(float screenCoordX) => m_mapCenterX + ((m_panOffsetX + m_screenCenterX - screenCoordX) / m_ratio);
@@ -2428,15 +2429,15 @@ namespace myseq
             int y_cord = (int)CalcScreenCoordY(t.y);
             if (t.size == 2)
             {
-                bkgBuffer.Graphics.DrawString(t.text, drawFont, t.draw_color, x_cord, y_cord - t.offset);
+                bkgBuffer.Graphics.DrawString(t.label, drawFont, t.draw_color, x_cord, y_cord - t.offset);
             }
             else if (t.size == 1)
             {
-                bkgBuffer.Graphics.DrawString(t.text, drawFont1, t.draw_color, x_cord, y_cord - t.offset);
+                bkgBuffer.Graphics.DrawString(t.label, drawFont1, t.draw_color, x_cord, y_cord - t.offset);
             }
             else
             {
-                bkgBuffer.Graphics.DrawString(t.text, drawFont3, t.draw_color, x_cord, y_cord - t.offset);
+                bkgBuffer.Graphics.DrawString(t.label, drawFont3, t.draw_color, x_cord, y_cord - t.offset);
             }
             bkgBuffer.Graphics.DrawLine(t.draw_pen, x_cord - 1, y_cord, x_cord + 1, y_cord);
             bkgBuffer.Graphics.DrawLine(t.draw_pen, x_cord, y_cord - 1, x_cord, y_cord + 1);
@@ -2749,7 +2750,7 @@ namespace myseq
             var height = SpawnPlusSize + 2;
 
             // Draw Yellow Ring around Caution Ground Items
-            if (gi.isCaution || gi.isAlert || gi.isDanger || gi.isHunt && Depthfilter)
+            if (gi.isCaution && Depthfilter)
             {
                 DrawEllipse(new Pen(new SolidBrush(Color.Yellow), 2), x1, y1, width, height);
             }
@@ -2919,11 +2920,11 @@ namespace myseq
             foreach (MapText t in eq.GetTextsReadonly())
 
             {
-                SizeF tf = bkgBuffer.Graphics.MeasureString(t.text, drawFont);
+                SizeF tf = bkgBuffer.Graphics.MeasureString(t.label, drawFont);
                 if (t.size == 1)
-                    bkgBuffer.Graphics.MeasureString(t.text, drawFont1);
+                    bkgBuffer.Graphics.MeasureString(t.label, drawFont1);
                 else if (t.size == 3)
-                    bkgBuffer.Graphics.MeasureString(t.text, drawFont3);
+                    bkgBuffer.Graphics.MeasureString(t.label, drawFont3);
 
                 if ((t.x - ((tf.Width + xlabel) * factor)) < eq.minx)
                     eq.minx = t.x - ((tf.Width + xlabel) / m_ratio);

@@ -5315,7 +5315,7 @@ namespace myseq
                     if(mapnameWithLabels.EndsWith(".txt")) {
                         MapText work = new MapText
                         {
-                            text = new_text,
+                            label = new_text,
                             x = (int)alertX,
                             y = (int)alertY,
                             z = (int)alertZ,
@@ -5355,7 +5355,7 @@ namespace myseq
 
                         MapText work = new MapText
                         {
-                            text = new_text,
+                            label = new_text,
                             x = (int)alertX,
                             y = (int)alertY,
                             z = (int)alertZ,
