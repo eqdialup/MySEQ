@@ -76,7 +76,7 @@ namespace myseq
         private ToolStripMenuItem mnuStickyTimer;
         private ToolStripMenuItem toolStriConcolor;
 
-        private int ListType;
+        private readonly int ListType;
 
         // if 0, it's the SpawnList, 1 SpawnTimerList, 2 GroundItemList
 
@@ -97,15 +97,7 @@ namespace myseq
             listProperty.SetValue(listView, true, null);
         }
 
-        protected override string GetPersistString()
-        {
-            if (ListType == 0)
-                return "SpawnList";
-            else if (ListType == 1)
-                return "SpawnTimerList";
-            else
-                return "GroundSpawnList";
-        }
+        protected override string GetPersistString() => ListType == 0 ? "SpawnList" : ListType == 1 ? "SpawnTimerList" : "GroundSpawnList";
 
         public void HideSearchBox()
         {
@@ -560,7 +552,7 @@ namespace myseq
             mobname = RegexHelper.FilterMobName(listView.Items[sel[0]].SubItems[17].Text);
             mobname = mobname.Replace("_", " ");
             mobname = mobname.Trim();
-            smoblevel = "";
+            //smoblevel = "";
             smoblevel = listView.Items[sel[0]].SubItems[1].Text;
             if (smoblevel.Length > 0)
             {
@@ -808,7 +800,7 @@ namespace myseq
         {
             var searchname = RegexHelper.SearchName(mobname);
 
-            if (searchname.Length > 0)
+            if (!string.IsNullOrEmpty(searchname))
 
             {
                 var searchURL = string.Format(Settings.Default.SearchString, searchname);
@@ -862,4 +854,3 @@ namespace myseq
         }
     }
 }
-

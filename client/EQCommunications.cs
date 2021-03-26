@@ -38,9 +38,6 @@ namespace Structures
         private bool update_hidden;
 
         private bool mbGetProcessInfo;
-
-        public int newProcessID;
-
         private bool send_process;
 
         private int numPackets; // Total Packets expected
@@ -52,6 +49,8 @@ namespace Structures
         private readonly EQData eq;
 
         private readonly FrmMain f1; // TODO: get rid of this
+
+        public int NewProcessID { get; set; }
 
         public void UpdateHidden()
         {
@@ -128,11 +127,7 @@ namespace Structures
         private void MessageHandlerClient(CSocketClient pSocket, int iNumberOfBytes)
         {
             // Process the packet
-            try {
-                ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);
-                }
-
-            catch (Exception pException) { LogLib.WriteLine("Error: ProcessPacket: " + pException.Message); }
+            ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);
         }
 
         //********************************************************************
@@ -166,7 +161,7 @@ namespace Structures
             {
                 if (!RequestPending)
                 {
-                    if (newProcessID > 0 && !mbGetProcessInfo)
+                    if (NewProcessID > 0 && !mbGetProcessInfo)
                     {
                         if (!send_process)
                         {
@@ -178,9 +173,9 @@ namespace Structures
                         }
                         else
                         {
-                            SendData(BitConverter.GetBytes(newProcessID));
+                            SendData(BitConverter.GetBytes(NewProcessID));
                             send_process = false;
-                            newProcessID = 0;
+                            NewProcessID = 0;
                             mbGetProcessInfo = true;
                         }
                     }
@@ -194,7 +189,7 @@ namespace Structures
                                         | RequestType.GROUND_ITEMS
                                         | RequestType.WORLD);
 
-                        if (mbGetProcessInfo && newProcessID == 0)
+                        if (mbGetProcessInfo && NewProcessID == 0)
                         {
                             mbGetProcessInfo = false;
                             Request |= (int)RequestType.GET_PROCESSINFO;
@@ -210,21 +205,16 @@ namespace Structures
         public void CharRefresh()
         {
             if (pSocketClient != null)
-            {
                 mbGetProcessInfo = true;
-            }
         }
 
         public void SwitchCharacter(ProcessInfo PI)
         {
             if (PI?.ProcessID > 0)
-                newProcessID = PI.ProcessID;
+                NewProcessID = PI.ProcessID;
         }
 
-        public bool CanSwitchChars()
-        {
-            return newProcessID == 0 && !mbGetProcessInfo;
-        }
+        public bool CanSwitchChars() => NewProcessID == 0 && !mbGetProcessInfo;
 
         private void ProcessPacket(byte[] packet, int bytes)
         {
@@ -249,24 +239,19 @@ namespace Structures
                         SPAWNINFO si = new SPAWNINFO();
 
                         if (offset < 0)
-
                         {
                             // copy the missing chunk of the incomplete packet to the incomplete packet buffer
-
                             try
                             {
                                 PacketCopy(packet, SIZE_OF_PACKET);
                             }
                             catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: Copy Incomplete packet buffer: ", ex); }
-
                             incompleteCount = 0;
-
                             if (incompletebuffer.Length == 0)
                             {
                                 numPackets = 0;
                                 break;
                             }
-
                             si.Frombytes(incompletebuffer, 0);
                         }
                         else

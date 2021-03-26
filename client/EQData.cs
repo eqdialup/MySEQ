@@ -16,22 +16,25 @@ namespace myseq
 
     public class EQData
     {
+        private static readonly SPAWNINFO sPAWNINFO = new SPAWNINFO();
+
         // player details
-        public SPAWNINFO gamerInfo = new SPAWNINFO();
+        public SPAWNINFO gamerInfo = sPAWNINFO;
 
         // Map details
         public string longname = "";
 
         public string shortname = "";
+        private static readonly ArrayList maplinearray = new ArrayList();
 
         // Map data
-        public ArrayList lines = new ArrayList();//MapLine[MAX_LINES]
+        public ArrayList lines = maplinearray;//MapLine[MAX_LINES]
+        private static readonly ArrayList maptextarray = new ArrayList();
+        public ArrayList texts = maptextarray;//MapText[50]
 
-        public ArrayList texts = new ArrayList();//MapText[50]
+        private readonly ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
 
-        private ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
-
-        //        private bool playAlerts;
+        //        private bool playAlerts
 
         // Max + Min map coordinates - define the bounds of the zone
 
@@ -51,7 +54,7 @@ namespace myseq
 
         private readonly ArrayList itemcollection = new ArrayList();          // Hold the items that are on the ground
 
-        private Hashtable mobs = new Hashtable();           // Holds the details of the mobs in the current zone.
+        private readonly Hashtable mobs = new Hashtable();           // Holds the details of the mobs in the current zone.
 
         public MobsTimers mobsTimers = new MobsTimers();   // Manages the timers
 
@@ -107,9 +110,6 @@ namespace myseq
 
         private string AlertPrefix = "";
 
-        // Blech, some UI stuff... but at least it's shareable between several users
-        public SolidBrush[] conColors = new SolidBrush[1000];
-
         public int GreenRange { get; set; }
 
         public int CyanRange { get; set; }
@@ -123,6 +123,7 @@ namespace myseq
         public string[] Classes { get; private set; }
         public string[] Races { get; private set; }
         public string GConBaseName { get; set; } = "";
+        public SolidBrush[] ConColors { get; set; } = new SolidBrush[1000];
 
         private const int ditchGone = 2;
         private const string dflt = "Mob Search";
@@ -382,7 +383,9 @@ namespace myseq
             {
                 foreach (SPAWNINFO sp in mobs.Values)
                 {
-                    if (!sp.filtered && HiddenFamPet(sp) && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
+                    var dely = sp.Y < y + delta && sp.Y > y - delta;
+                    var delx = sp.X < x + delta && sp.X > x - delta;
+                    if (!sp.filtered && HiddenFamPet(sp) && delx && dely)
                     {
                         return sp;
                     }
@@ -404,7 +407,10 @@ namespace myseq
             {
                 foreach (SPAWNINFO sp in mobs.Values)
                 {
-                    if (HiddenFamPet(sp) && !sp.m_isPlayer && !sp.isCorpse && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
+                    var dely = sp.Y < y + delta && sp.Y > y - delta;
+                    var delx = sp.X < x + delta && sp.X > x - delta;
+
+                    if (HiddenFamPet(sp) && !sp.m_isPlayer && !sp.isCorpse && delx && dely)
                     {
                         return sp;
                     }
@@ -628,40 +634,12 @@ namespace myseq
             {
                 // ICK....
 
-                if ((tok = Getnexttoken(ref line, ',')) != null)
-                {
-                    minx = int.Parse(tok, NumFormat);
-
-                    if ((tok = Getnexttoken(ref line, ',')) != null)
-                    {
-                        miny = int.Parse(tok, NumFormat);
-
-                        if ((tok = Getnexttoken(ref line, ',')) != null)
-                        {
-                            minz = int.Parse(tok, NumFormat);
-
-                            if ((tok = Getnexttoken(ref line, ',')) != null)
-                            {
-                                maxx = int.Parse(tok, NumFormat);
-
-                                if ((tok = Getnexttoken(ref line, ',')) != null)
-                                {
-                                    maxy = int.Parse(tok, NumFormat);
-
-                                    if ((tok = Getnexttoken(ref line, ',')) != null)
-                                        maxz = int.Parse(tok, NumFormat);
-                                }
-                            }
-                        }
-                    }
-                }
+                tok = walktheline(NumFormat, ref line);
             }
             catch (Exception ex) { LogLib.WriteLine("Error in loadMap() Reading Map Header: ", ex); }
 
             // Now the bulk of the file....
-
             // Note A and Z are not implemented as they don't ever seem to be used...
-
             while ((line = tr.ReadLine()) != null)
             {
                 curLine++;
@@ -702,12 +680,45 @@ namespace myseq
 
                 return false;
             }
+        } // ShowEQ map
+
+        private string walktheline(IFormatProvider NumFormat, ref string line)
+        {
+            string tok;
+            if ((tok = Getnexttoken(ref line, ',')) != null)
+            {
+                minx = int.Parse(tok, NumFormat);
+
+                if ((tok = Getnexttoken(ref line, ',')) != null)
+                {
+                    miny = int.Parse(tok, NumFormat);
+
+                    if ((tok = Getnexttoken(ref line, ',')) != null)
+                    {
+                        minz = int.Parse(tok, NumFormat);
+
+                        if ((tok = Getnexttoken(ref line, ',')) != null)
+                        {
+                            maxx = int.Parse(tok, NumFormat);
+
+                            if ((tok = Getnexttoken(ref line, ',')) != null)
+                            {
+                                maxy = int.Parse(tok, NumFormat);
+
+                                if ((tok = Getnexttoken(ref line, ',')) != null)
+                                    maxz = int.Parse(tok, NumFormat);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return tok;
         }
 
         private void ParseMLP(string filename, IFormatProvider NumFormat, ref int numtexts, ref int numlines, int curLine, ref string tok, ref string line)
         {
-            if (tok == "Z") { } // Ignore the ZEM one
-            else if (tok == "M")
+            if (tok == "M")
             {
                 MapLine work = new MapLine();
 
@@ -875,23 +886,10 @@ namespace myseq
             }
         }
 
-        public void AddMapText(MapText work)
-        {
-            texts.Add(work);
-        }
-
-        public void DeleteMapText(MapText work)
-        {
-            texts.Remove(work);
-        }
-
         public bool LoadLoYMapInternal(string filename)
         {
             IFormatProvider NumFormat = new CultureInfo("en-US");
             string line = "";
-
-            string tok = "";
-
             int numtexts = 0;
 
             int numlines = 0;
@@ -904,7 +902,6 @@ namespace myseq
 
                 return false;
             }
-
 
             StreamReader streamReader;
             try { streamReader = new StreamReader(File.OpenRead(filename)); }
@@ -929,169 +926,14 @@ namespace myseq
 
                     if (line != "")
                     {
+                        string tok;
                         if ((tok = Getnexttoken(ref line, ' ')) == null)
                         {
                             LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
                         }
                         else
                         {
-                            if (tok == "L")
-                            {
-                                MapLine work = new MapLine();
-
-                                MapPoint point1 = new MapPoint();
-
-                                MapPoint point2 = new MapPoint();
-
-                                bool bOK = true;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    point1.x = -(int)float.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    point1.y = -(int)float.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    point1.z = (int)float.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    point2.x = -(int)float.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    point2.y = -(int)float.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    point2.z = (int)float.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                int r = 0, g = 0, b = 0;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    r = int.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    g = int.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    b = int.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK)
-                                {
-                                    work.color = new Pen(new SolidBrush(Color.FromArgb(r, g, b)));
-
-                                    work.aPoints.Add(point1);
-
-                                    work.aPoints.Add(point2);
-
-                                    work.linePoints = new PointF[2];
-
-                                    work.linePoints[0] = new PointF(point1.x, point1.y);
-
-                                    work.linePoints[1] = new PointF(point2.x, point2.y);
-
-                                    lines.Add(work);
-
-                                    numlines++;
-                                }
-                                else
-                                {
-                                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-                                }
-                            }
-                            else if (tok == "P")
-                            {
-                                MapText work = new MapText();
-
-                                bool bOK = true;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    work.x = -(int)float.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    work.y = -(int)float.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                {
-                                    work.z = (int)float.Parse(tok, NumFormat);
-                                }
-                                else
-                                {
-                                    bOK = false;
-                                }
-
-                                int r = 0, g = 0, b = 0;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    r = int.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    g = int.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    b = int.Parse(tok, NumFormat);
-                                else
-                                    bOK = false;
-
-                                work.color = new SolidBrush(Color.FromArgb(r, g, b));
-
-                                if ((tok = Getnexttoken(ref line, ',')) != null)
-                                {
-                                    // This is text size
-                                    // 1 - small
-                                    // 2 - medium
-                                    // 3 - large
-
-                                    var text_size = int.Parse(tok, NumFormat);
-
-                                    if (text_size > 0 && text_size <= 3)
-                                        work.size = text_size;
-                                }
-                                else
-                                {
-                                    bOK = false;
-                                }
-
-                                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                                    work.text = tok;
-                                else
-                                    bOK = false;
-
-                                if (bOK)
-                                {
-                                    texts.Add(work);
-
-                                    numtexts++;
-                                }
-                                else
-                                {
-                                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-                                }
-                            }
+                            ParseLP(filename, NumFormat, ref line, ref numtexts, ref numlines, curLine, ref tok);
                         }
                     }
                 }
@@ -1121,23 +963,187 @@ namespace myseq
             {
                 return false;
             }
+        } // LOY / EQ folder maps
+
+        private void ParseLP(string filename, IFormatProvider NumFormat, ref string line, ref int numtexts, ref int numlines, int curLine, ref string tok)
+        {
+            if (tok == "L")
+            {
+                MapLine work = new MapLine();
+
+                MapPoint point1 = new MapPoint();
+
+                MapPoint point2 = new MapPoint();
+
+                bool bOK = true;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    point1.x = -(int)float.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    point1.y = -(int)float.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    point1.z = (int)float.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    point2.x = -(int)float.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    point2.y = -(int)float.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    point2.z = (int)float.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                int r = 0, g = 0, b = 0;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    r = int.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    g = int.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    b = int.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK)
+                {
+                    work.color = new Pen(new SolidBrush(Color.FromArgb(r, g, b)));
+
+                    work.aPoints.Add(point1);
+
+                    work.aPoints.Add(point2);
+
+                    work.linePoints = new PointF[2];
+
+                    work.linePoints[0] = new PointF(point1.x, point1.y);
+
+                    work.linePoints[1] = new PointF(point2.x, point2.y);
+
+                    lines.Add(work);
+
+                    numlines++;
+                }
+                else
+                {
+                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
+                }
+            }
+            else if (tok == "P")
+            {
+                MapText work = new MapText();
+
+                bool bOK = true;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    work.x = -(int)float.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    work.y = -(int)float.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                {
+                    work.z = (int)float.Parse(tok, NumFormat);
+                }
+                else
+                {
+                    bOK = false;
+                }
+
+                int r = 0, g = 0, b = 0;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    r = int.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    g = int.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                    b = int.Parse(tok, NumFormat);
+                else
+                    bOK = false;
+
+                work.color = new SolidBrush(Color.FromArgb(r, g, b));
+
+                if ((tok = Getnexttoken(ref line, ',')) != null)
+                {
+                    // This is text size
+                    // 1 - small
+                    // 2 - medium
+                    // 3 - large
+
+                    var text_size = int.Parse(tok, NumFormat);
+
+                    if (text_size > 0 && text_size <= 3)
+                        work.size = text_size;
+                }
+                else
+                {
+                    bOK = false;
+                }
+
+                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+                {
+                    work.text = tok;
+                }
+                else
+                {
+                    bOK = false;
+                }
+
+                if (bOK)
+                {
+                    texts.Add(work);
+                    numtexts++;
+                }
+                else
+                {
+                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
+                }
+            }
         }
 
-        public string Getnexttoken(ref string s, char seperator)
+        public string Getnexttoken(ref string tokenstring, char seperator)
         {
             var builder = new StringBuilder();
             int c = 0;
 
             string token = "";
 
-            if (s.Length == 0)
+            if (tokenstring.Length == 0)
             {
                 return null;
             }
 
-            while (c < s.Length && s[c] != seperator)
+            while (c < tokenstring.Length && tokenstring[c] != seperator)
             {
-                builder.Append(s[c]);
+                builder.Append(tokenstring[c]);
                 token = builder.ToString();
                 //token += s[c];
 
@@ -1146,9 +1152,19 @@ namespace myseq
 
             c++;
 
-            s = c == s.Length + 1 ? "" : s.Substring(c, s.Length - c);
+            tokenstring = c == tokenstring.Length + 1 ? "" : tokenstring.Substring(c, tokenstring.Length - c);
 
             return token;
+        }
+
+        public void AddMapText(MapText work)
+        {
+            texts.Add(work);
+        }
+
+        public void DeleteMapText(MapText work)
+        {
+            texts.Remove(work);
         }
 
         private string[] GetStrArrayFromTextFile(string filePath)
@@ -1159,9 +1175,7 @@ namespace myseq
 
             if (File.Exists(filePath))
             {
-                var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-
-                var sr = new StreamReader(fs);
+                var sr = new StreamReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read));
                 do
                 {
                     line = sr.ReadLine();
@@ -1176,8 +1190,6 @@ namespace myseq
                 } while (line != null);
 
                 sr.Close();
-
-                fs.Close();
             }
 
             return (string[])arList.ToArray(Type.GetType("System.String"));
@@ -1480,20 +1492,6 @@ namespace myseq
             }
         }
 
-        private void CheckMapMinMax(SPAWNINFO si)
-        {
-            if (Settings.Default.AutoExpand)
-            {
-                if ((minx > si.X) && (si.X > -20000)) minx = si.X;
-
-                if ((maxx < si.X) && (si.X < 20000)) maxx = si.X;
-
-                if ((miny > si.Y) && (si.Y > -20000)) miny = si.Y;
-
-                if ((maxy < si.Y) && (si.Y < 20000)) maxy = si.Y;
-            }
-        }
-
         public void ProcessGroundItems(SPAWNINFO si, Filters filters)//, ListViewPanel GroundItemList)
         {
             try
@@ -1687,7 +1685,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessTarget(): ", ex); }
         }
 
-        public void ProcessWorld(SPAWNINFO si) => gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0); 
+        public void ProcessWorld(SPAWNINFO si) => gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0);
         /*  yy/mm/dd/hh/min
          * gameYear = si.Race
          * gameMonth = si.Hide
@@ -1748,39 +1746,7 @@ namespace myseq
                             NameChngOrDead(si, mob);
                         }
 
-                        if (mob.Level != si.Level)
-                        {
-                            mob.Level = si.Level;
-                            mob.listitem.SubItems[1].Text = si.Level.ToString();
-
-                            // update forecolor
-                            if (mob.Type == 2 || mob.Type == 3 || mob.isLDONObject)
-                            {
-                                mob.listitem.ForeColor = Color.Gray;
-                            }
-                            else if (mob.isEventController)
-                            {
-                                mob.listitem.ForeColor = Color.DarkOrchid;
-                            }
-                            else
-                            {
-                                mob.listitem.ForeColor = conColors[mob.Level].Color;
-
-                                if (mob.listitem.ForeColor == Color.Maroon)
-                                {
-                                    mob.listitem.ForeColor = Color.Red;
-                                }
-                                else if (SpawnList.listView.BackColor == Color.White)
-                                {
-                                    // Change the colors to be more visible on white if the background is white
-
-                                    if (mob.listitem.ForeColor == Color.White)
-                                        mob.listitem.ForeColor = Color.Black;
-                                    else if (mob.listitem.ForeColor == Color.Yellow)
-                                        mob.listitem.ForeColor = Color.Goldenrod;
-                                }
-                            }
-                        }
+                        MobLevelSetColor(si, SpawnList, mob);
 
                         if (mob.Class != si.Class)
                         {
@@ -1865,8 +1831,7 @@ namespace myseq
                         {
                             // ensure that map is big enough to show all spawns.
 
-                            if (mapPane?.scale.Value == 100M)
-                                CheckMapMinMax(si);
+                            CheckBigMap(si, mapPane);
 
                             mob.X = si.X;
 
@@ -1906,12 +1871,11 @@ namespace myseq
 
                 if (!found && si.Name.Length > 0)
                 {
-                    bool alert = false;
+//                    bool alert = false;
 
                     // ensure that map is big enough to show all spawns.
 
-                    if (mapPane?.scale.Value == 100M)
-                        CheckMapMinMax(si);
+                    CheckBigMap(si, mapPane);
 
                     // Set mob type info
 
@@ -1939,11 +1903,62 @@ namespace myseq
 
                     if (si.Name.Length > 0)
                     {
-                        IsSpawnInFilterLists(si, f1, SpawnList, filters, alert);
+                        IsSpawnInFilterLists(si, f1, SpawnList, filters);//, alert);
                     }
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawns(): ", ex); }
+        }
+
+        private void MobLevelSetColor(SPAWNINFO si, ListViewPanel SpawnList, SPAWNINFO mob)
+        {
+            if (mob.Level != si.Level)
+            {
+                mob.Level = si.Level;
+                mob.listitem.SubItems[1].Text = si.Level.ToString();
+
+                // update forecolor
+                if (mob.Type == 2 || mob.Type == 3 || mob.isLDONObject)
+                {
+                    mob.listitem.ForeColor = Color.Gray;
+                }
+                else if (mob.isEventController)
+                {
+                    mob.listitem.ForeColor = Color.DarkOrchid;
+                }
+                else
+                {
+                    mob.listitem.ForeColor = ConColors[mob.Level].Color;
+
+                    if (mob.listitem.ForeColor == Color.Maroon)
+                    {
+                        mob.listitem.ForeColor = Color.Red;
+                    }
+                    else if (SpawnList.listView.BackColor == Color.White)
+                    {
+                        // Change the colors to be more visible on white if the background is white
+
+                        if (mob.listitem.ForeColor == Color.White)
+                            mob.listitem.ForeColor = Color.Black;
+                        else if (mob.listitem.ForeColor == Color.Yellow)
+                            mob.listitem.ForeColor = Color.Goldenrod;
+                    }
+                }
+            }
+        }
+
+        private void CheckBigMap(SPAWNINFO si, MapPane mapPane)
+        {
+            if (mapPane?.scale.Value == 100M && Settings.Default.AutoExpand)
+            {
+                if ((minx > si.X) && (si.X > -20000)) minx = si.X;
+
+                if ((maxx < si.X) && (si.X < 20000)) maxx = si.X;
+
+                if ((miny > si.Y) && (si.Y > -20000)) miny = si.Y;
+
+                if ((maxy < si.Y) && (si.Y < 20000)) maxy = si.Y;
+            }
         }
 
         private void HandleNPCs(SPAWNINFO si)
@@ -2043,8 +2058,7 @@ namespace myseq
 
         private void AdjustMapForSpawns(SPAWNINFO si, FrmMain f1, MapPane mapPane, SPAWNINFO mob)
         {
-            if (mapPane?.scale.Value == 100M)
-                CheckMapMinMax(si);
+            CheckBigMap(si, mapPane);
 
             mob.X = si.X;
             mob.listitem.SubItems[14].Text = si.Y.ToString();
@@ -2096,7 +2110,7 @@ namespace myseq
             }
             else
             {
-                mob.listitem.ForeColor = conColors[si.Level].Color;
+                mob.listitem.ForeColor = ConColors[si.Level].Color;
 
                 if (mob.listitem.ForeColor == Color.Maroon)
                 {
@@ -2177,12 +2191,12 @@ namespace myseq
             return listReAdd;
         }
 
-        private void IsSpawnInFilterLists(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters, bool alert)
+        private void IsSpawnInFilterLists(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters)//, bool alert)
         {
             string mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
 
             string matchmobname = RegexHelper.FixMobNameMatch(mobname);
-
+            bool alert = false;
             if (matchmobname.Length < 2)
                 matchmobname = mobname;
 
@@ -2207,46 +2221,36 @@ namespace myseq
 
                 // [hunt]
 
-                if (filters.Hunt.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Hunt, matchmobname, Settings.Default.NoneOnHunt,
-
-                        Settings.Default.TalkOnHunt, "Hunt Mob",
-                        Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                        Settings.Default.BeepOnHunt, MatchFullTextH))
+                var corpse = !si.isCorpse || CorpseAlerts;
+                if (filters.Hunt.Count > 0 && corpse && FindMatches(
+                    filters.Hunt,
+                    matchmobname,
+                    Settings.Default.NoneOnHunt,
+                    Settings.Default.TalkOnHunt,
+                    "Hunt Mob",
+                    Settings.Default.PlayOnHunt,
+                    Settings.Default.HuntAudioFile,
+                    Settings.Default.BeepOnHunt,
+                    MatchFullTextH))
                 {
                     alert = true;
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = HuntPrefix + " " + mobnameWithInfo;
-                    }
-
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += " " + HuntPrefix;
-                    }
+                    mobnameWithInfo = huntpref(mobnameWithInfo);
 
                     si.isHunt = true;
                 }
-                if (filters.GlobalHunt.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalHunt, matchmobname, Settings.Default.NoneOnHunt,
+                if (filters.GlobalHunt.Count > 0 && !alert && corpse && FindMatches(filters.GlobalHunt, matchmobname, Settings.Default.NoneOnHunt,
 
                         Settings.Default.TalkOnHunt, "Hunt Mob",
                         Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
                         Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
                     alert = true;
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = HuntPrefix + " " + mobnameWithInfo;
-                    }
-
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += " " + HuntPrefix;
-                    }
+                    mobnameWithInfo = huntpref(mobnameWithInfo);
                     si.isHunt = true;
                 }
 
                 // [caution]
-                if (filters.Caution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Caution, matchmobname, Settings.Default.NoneOnCaution,
+                if (filters.Caution.Count > 0 && !alert && corpse && FindMatches(filters.Caution, matchmobname, Settings.Default.NoneOnCaution,
 
                         Settings.Default.TalkOnCaution, "Caution Mob",
                         Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
@@ -2262,7 +2266,7 @@ namespace myseq
                         mobnameWithInfo += " " + CautionPrefix;
                     si.isCaution = true;
                 }
-                if (filters.GlobalCaution.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalCaution, matchmobname, Settings.Default.NoneOnCaution,
+                if (filters.GlobalCaution.Count > 0 && !alert && corpse && FindMatches(filters.GlobalCaution, matchmobname, Settings.Default.NoneOnCaution,
 
                         Settings.Default.TalkOnCaution, "Caution Mob",
                         Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
@@ -2280,7 +2284,7 @@ namespace myseq
                 }
 
                 // [danger]
-                if (filters.Danger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, Settings.Default.NoneOnDanger,
+                if (filters.Danger.Count > 0 && !alert && corpse && FindMatches(filters.Danger, matchmobname, Settings.Default.NoneOnDanger,
 
                         Settings.Default.TalkOnDanger, "Danger Mob",
 
@@ -2297,7 +2301,7 @@ namespace myseq
                         mobnameWithInfo += " " + DangerPrefix;
                     si.isDanger = true;
                 }
-                if (filters.GlobalDanger.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalDanger, matchmobname, Settings.Default.NoneOnDanger,
+                if (filters.GlobalDanger.Count > 0 && !alert && corpse && FindMatches(filters.GlobalDanger, matchmobname, Settings.Default.NoneOnDanger,
                         Settings.Default.TalkOnDanger, "Danger Mob",
                         Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
                         Settings.Default.BeepOnDanger, MatchFullTextD))
@@ -2313,7 +2317,7 @@ namespace myseq
                 }
 
                 // [rare]
-                if (filters.Alert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.Alert, matchmobname, Settings.Default.NoneOnAlert,
+                if (filters.Alert.Count > 0 && !alert && corpse && FindMatches(filters.Alert, matchmobname, Settings.Default.NoneOnAlert,
                         Settings.Default.TalkOnAlert, "Rare Mob",
                         Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
                         Settings.Default.BeepOnAlert, MatchFullTextA))
@@ -2328,7 +2332,7 @@ namespace myseq
                     if (AffixStars)
                         mobnameWithInfo += " " + AlertPrefix;
                 }
-                if (filters.GlobalAlert.Count > 0 && !alert && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.GlobalAlert, matchmobname, Settings.Default.NoneOnAlert,
+                if (filters.GlobalAlert.Count > 0 && !alert && corpse && FindMatches(filters.GlobalAlert, matchmobname, Settings.Default.NoneOnAlert,
                         Settings.Default.TalkOnAlert, "Rare Mob",
                         Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
                         Settings.Default.BeepOnAlert, MatchFullTextA))
@@ -2355,7 +2359,7 @@ namespace myseq
 
                 // [Wielded Items]
                 // Acts like a hunt mob.
-                if (filters.WieldedItems.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.WieldedItems, primaryName, Settings.Default.NoneOnHunt,
+                if (filters.WieldedItems.Count > 0 && corpse && FindMatches(filters.WieldedItems, primaryName, Settings.Default.NoneOnHunt,
                         Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
                         Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
                         Settings.Default.BeepOnHunt, MatchFullTextH))
@@ -2363,12 +2367,12 @@ namespace myseq
                     alert = true;
                     if (PrefixStars)
                     {
-                        mobnameWithInfo = HuntPrefix + "W" + mobnameWithInfo;
+                        mobnameWithInfo = $"{HuntPrefix}W {mobnameWithInfo}";
                     }
 
                     if (AffixStars)
                     {
-                        mobnameWithInfo += " " + HuntPrefix;
+                        mobnameWithInfo += $" {HuntPrefix}";
                     }
 
                     si.isHunt = true;
@@ -2376,7 +2380,7 @@ namespace myseq
 
                 // [Offhand]
                 // Acts like a hunt mob.
-                if (filters.WieldedItems.Count > 0 && (!si.isCorpse || CorpseAlerts) && FindMatches(filters.WieldedItems, offhandName,
+                if (filters.WieldedItems.Count > 0 && corpse && FindMatches(filters.WieldedItems, offhandName,
                     Settings.Default.NoneOnHunt,
                         Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
                         Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
@@ -2385,11 +2389,11 @@ namespace myseq
                     alert = true;
                     if (PrefixStars)
                     {
-                        mobnameWithInfo = HuntPrefix + "O " + mobnameWithInfo;
+                        mobnameWithInfo = $"{HuntPrefix}O {mobnameWithInfo}";
                     }
                     if (AffixStars)
                     {
-                        mobnameWithInfo += " " + HuntPrefix;
+                        mobnameWithInfo += $" {HuntPrefix}";
                     }
                     si.isAlert = true;
                 }
@@ -2400,10 +2404,25 @@ namespace myseq
             ListViewItem item1 = AddDetailsToList(si, SpawnList, alert, mobnameWithInfo);
 
             try { mobs.Add(si.SpawnID, si); }
-            catch (Exception ex) { LogLib.WriteLine("Error adding " + si.Name + " to mobs hashtable: ", ex); }
+            catch (Exception ex) { LogLib.WriteLine($"Error adding {si.Name} to mobs hashtable: ", ex); }
 
             // Add it to the spawn list if it's not supposed to be hidden
             if (!si.hidden) newSpawns.Add(item1);
+
+            string huntpref(string mname)
+            {
+                if (PrefixStars)
+                {
+                    mname = HuntPrefix + " " + mname;
+                }
+
+                if (AffixStars)
+                {
+                    mname += " " + HuntPrefix;
+                }
+
+                return mname;
+            }
             //            return alert;
         }
 
@@ -2441,15 +2460,15 @@ namespace myseq
 
             item1.SubItems.Add(DateTime.Now.ToLongTimeString());
 
-            item1.SubItems.Add(si.X.ToString("#.000"));
+            item1.SubItems.Add(si.X.ToString("#.00"));
 
-            item1.SubItems.Add(si.Y.ToString("#.000"));
+            item1.SubItems.Add(si.Y.ToString("#.00"));
 
-            item1.SubItems.Add(si.Z.ToString("#.000"));
+            item1.SubItems.Add(si.Z.ToString("#.00"));
 
             var sd = SpawnDistance(si);
 
-            item1.SubItems.Add(sd.ToString("#.000"));
+            item1.SubItems.Add(sd.ToString("#.00"));
 
 //            item1.SubItems.Add(GuildNumToString(si.Guild));
 
@@ -2465,7 +2484,7 @@ namespace myseq
             }
             else
             {
-                item1.ForeColor = conColors[si.Level].Color;
+                item1.ForeColor = ConColors[si.Level].Color;
 
                 if (item1.ForeColor == Color.Maroon)
                     item1.ForeColor = Color.Red;
@@ -2481,8 +2500,8 @@ namespace myseq
                 }
             }
 
-            if (alert)
-                item1.Font = Settings.Default.ListFont;
+            //if (alert)
+            //    item1.Font = Settings.Default.ListFont;
 
             si.gone = 0;
 
@@ -2608,7 +2627,7 @@ namespace myseq
                         }
                         else
                         {
-                            si.listitem.ForeColor = conColors[si.Level].Color;
+                            si.listitem.ForeColor = ConColors[si.Level].Color;
 
                             if (si.listitem.ForeColor == Color.Maroon)
                                 si.listitem.ForeColor = Color.Red;
@@ -2791,11 +2810,7 @@ namespace myseq
 
                     foreach (ListViewItem i in newSpawns) items[d++] = i;
 
-                    try
-                    {
-                        SpawnList.listView.Items.AddRange(items);
-                    }
-                    catch (Exception ex) { LogLib.WriteLine("Error Loading SpawnList: ", ex); }
+                    SpawnList.listView.Items.AddRange(items);
 
                     newSpawns.Clear();
                     if (Zoning)
@@ -2817,11 +2832,7 @@ namespace myseq
 
                     foreach (ListViewItem i in newGroundItems) items[d++] = i;
 
-                    try
-                    {
-                        GroundItemList.listView.Items.AddRange(items);
-                    }
-                    catch (Exception ex) { LogLib.WriteLine("Error Loading GroundItem: ", ex); }
+                    GroundItemList.listView.Items.AddRange(items);
 
                     newGroundItems.Clear();
                 }
@@ -2868,24 +2879,17 @@ namespace myseq
             {
                 gamerInfo.SpawnID = si.SpawnID;
 
-                if (gamerInfo.Name != si.Name || gamerInfo.Name?.Length == 0)
-                {
-                    gamerInfo.Name = si.Name;
-                    f1.SetCharSelection(gamerInfo.Name);
-                    f1.SetTitle();
-                }
+                gamerInfo.Name = si.Name;
+                f1.SetCharSelection(gamerInfo.Name);
+                f1.SetTitle();
 
                 gamerInfo.Lastname = si.Lastname;
 
-                if ((gamerInfo.X != si.X) || (gamerInfo.Y != si.Y))
-                {
-                    gamerInfo.X = si.X;
+                gamerInfo.X = si.X;
+                gamerInfo.Y = si.Y;
 
-                    gamerInfo.Y = si.Y;
-
-                    if (Settings.Default.FollowOption == FollowOption.Player)
-                        f1.ReAdjust();
-                }
+                if (Settings.Default.FollowOption == FollowOption.Player)
+                    f1.ReAdjust();
 
                 gamerInfo.Z = si.Z;
 
@@ -2975,8 +2979,6 @@ namespace myseq
         public void FillConColors(FrmMain f1)
         {
             int level;
-            int c = 0;
-
             if (Settings.Default.LevelOverride == -1)
             {
                 f1.toolStripLevel.Text = "Auto";
@@ -2998,49 +3000,50 @@ namespace myseq
             // If using SoD/Titanium Con Colors
             VersionColorVariation(level);
 
+            int c;
             // Set the Grey Cons
             for (c = 0; c < (GreyRange + level); c++)
             {
-                conColors[c] = new SolidBrush(Color.Gray);
+                ConColors[c] = new SolidBrush(Color.Gray);
             }
 
             // Set the Green Cons
             for (; c < (GreenRange + level); c++)
             {
-                conColors[c] = new SolidBrush(Color.Lime);
+                ConColors[c] = new SolidBrush(Color.Lime);
             }
 
             // Set the Light Blue Cons
             for (; c < (CyanRange + level); c++)
             {
-                conColors[c] = new SolidBrush(Color.Aqua);
+                ConColors[c] = new SolidBrush(Color.Aqua);
             }
 
             // Set the Dark Blue Cons
             for (; c < level; c++)
             {
-                conColors[c] = new SolidBrush(Color.Blue);
+                ConColors[c] = new SolidBrush(Color.Blue);
             }
 
             // Set the Same Level Con
-            conColors[c++] = new SolidBrush(Color.White);
+            ConColors[c++] = new SolidBrush(Color.White);
 
             // Yellow Cons
             for (; c < (level + YellowRange + 1); c++)
             {
-                conColors[c] = new SolidBrush(Color.Yellow);
+                ConColors[c] = new SolidBrush(Color.Yellow);
             }
 
             // 4 levels of bright red
-            conColors[c++] = new SolidBrush(Color.Red);
-            conColors[c++] = new SolidBrush(Color.Red);
-            conColors[c++] = new SolidBrush(Color.Red);
-            conColors[c++] = new SolidBrush(Color.Red);
+            ConColors[c++] = new SolidBrush(Color.Red);
+            ConColors[c++] = new SolidBrush(Color.Red);
+            ConColors[c++] = new SolidBrush(Color.Red);
+            ConColors[c++] = new SolidBrush(Color.Red);
 
             // Set the remaining levels to dark red
             for (; c < 1000; c++)
             {
-                conColors[c] = new SolidBrush(Color.Maroon);
+                ConColors[c] = new SolidBrush(Color.Maroon);
             }
         }
 

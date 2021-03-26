@@ -19,13 +19,7 @@ namespace myseq
     {
         public string Version = Application.ProductVersion;
 
-        private Filters filters = new Filters();
-
-        public string curZone = "map_pane";
-
-        private string currentIPAddress = "";
-
-//        public float rawScale = 1.0f;
+        private readonly Filters filters = new Filters();
 
         private string BaseTitle = "MySEQ Open";
 
@@ -37,6 +31,11 @@ namespace myseq
 
         public ListViewPanel SpawnList = new ListViewPanel(0);
 
+        public string curZone = "map_pane";
+
+        private string currentIPAddress = "";
+
+//        public float rawScale = 1.0f;
         public ListViewPanel SpawnTimerList = new ListViewPanel(1);
 
         public ListViewPanel GroundItemList = new ListViewPanel(2);
@@ -49,7 +48,7 @@ namespace myseq
 
         public DrawOptions DrawOpts=DrawOptions.DrawNormal;
 
-        private ArrayList colProcesses = new ArrayList();
+        private readonly ArrayList colProcesses = new ArrayList();
 
         private ProcessInfo CurrentProcess = new ProcessInfo(0,"");
 
@@ -3368,14 +3367,13 @@ namespace myseq
 
             // Try to connect to the server         
 
-            if (!comm.ConnectToServer(currentIPAddress, Settings.Default.Port))
-
+            if (comm.ConnectToServer(currentIPAddress, Settings.Default.Port))
             {
-                return;
+                toolStripServerAddress.Text = currentIPAddress;
             }
             else
             {
-                toolStripServerAddress.Text = currentIPAddress;
+                return;
             }
 
             // Clear map
@@ -3434,14 +3432,14 @@ namespace myseq
         {
             Text = BaseTitle;
 
-            if (Settings.Default.ShowZoneName && eq.longname.Length > 0 && eq.longname != "map_pane")
+            if (Settings.Default.ShowZoneName && eq.longname.Length > 0)
             {
-                Text += " - " + eq.longname;
+                Text += $" - {eq.longname}";
             }
 
             if (Settings.Default.ShowCharName && eq.gamerInfo?.Name.Length > 1)
             {
-                Text += " - " + eq.gamerInfo.Name;
+                Text += $" - {eq.gamerInfo.Name}";
             }
         }
 
@@ -3496,12 +3494,9 @@ namespace myseq
             GroundItemList.listView.GridLines = Settings.Default.ShowListGridLines;
 
             mnuShowListSearchBox.Checked = Settings.Default.ShowListSearchBox;
-            if (!Settings.Default.ShowListSearchBox)
-            {
-                SpawnList.HideSearchBox();
-                SpawnTimerList.HideSearchBox();
-                GroundItemList.HideSearchBox();
-            }
+            SpawnList.HideSearchBox();
+            SpawnTimerList.HideSearchBox();
+            GroundItemList.HideSearchBox();
 
             SetFollowOption(Settings.Default.FollowOption);
 
@@ -3541,7 +3536,8 @@ namespace myseq
 
             mnuShowLookupNumber.Checked = Settings.Default.ShowLookupNumber;
 
-            mnuShowSpawnPoints.Checked = mnuShowSpawnPoints2.Checked = (Settings.Default.DrawOptions & DrawOptions.SpawnTimers) != DrawOptions.None;
+            mnuShowSpawnPoints.Checked = mnuShowSpawnPoints2.Checked = (Settings.Default.DrawOptions
+                & DrawOptions.SpawnTimers) != DrawOptions.None;
 
             mnuDepthFilter.Checked = mnuDepthFilter2.Checked = Settings.Default.DepthFilter;
 
@@ -3686,7 +3682,6 @@ namespace myseq
         private static void CreateFolders()
         {
             if (Settings.Default.MapDir?.Length == 0 || !Directory.Exists(Settings.Default.MapDir))
-
             {
                 Settings.Default.MapDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maps");
 
@@ -3741,10 +3736,7 @@ namespace myseq
             }
         }
 
-        public void SavePrefs()//string filename
-        {
-            Settings.Default.Save();
-        }
+        public void SavePrefs() => Settings.Default.Save();
 
         public bool Loadmap(string filename)
 
@@ -3805,7 +3797,6 @@ namespace myseq
         }
 
         private void FrmMain_Move(object sender, EventArgs e)
-
         {
             if (WindowState == FormWindowState.Normal)
 
@@ -3828,11 +3819,7 @@ namespace myseq
             ReAdjust();
         }
 
-        public void CheckMobs()
-
-        {
-            eq.CheckMobs(SpawnList, GroundItemList);
-        }
+        public void CheckMobs() => eq.CheckMobs(SpawnList, GroundItemList);
 
         private void TimPackets_Tick(object sender, EventArgs e)
 
@@ -3862,27 +3849,13 @@ namespace myseq
         }
 
         private void SpawnList_VisibleChanged(object sender, EventArgs e)
-
-        {
-            Settings.Default.ShowMobList = SpawnList.Visible;
-
-            mnuShowSpawnList.Checked = SpawnList.Visible;
-        }
+            => Settings.Default.ShowMobList = mnuShowSpawnList.Checked = SpawnList.Visible;
 
         private void SpawnTimerList_VisibleChanged(object sender, EventArgs e)
-
-        {
-            Settings.Default.ShowMobListTimer = SpawnTimerList.Visible;
-
-            mnuShowSpawnListTimer.Checked = SpawnTimerList.Visible;
-        }
+            => Settings.Default.ShowMobListTimer = mnuShowSpawnListTimer.Checked = SpawnTimerList.Visible;
 
         private void GroundItemList_VisibleChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ShowGroundItemList = GroundItemList.Visible;
-
-            mnuShowGroundItemList.Checked = GroundItemList.Visible;
-        }
+            => Settings.Default.ShowGroundItemList = mnuShowGroundItemList.Checked = GroundItemList.Visible;
 
         #region ProcessProcessInfo
 
@@ -3898,7 +3871,7 @@ namespace myseq
                 CurrentProcess = PI;
                 if (comm != null)
                 {
-                    comm.newProcessID = 0;
+                    comm.NewProcessID = 0;
                 }
             }
             else
@@ -4058,11 +4031,11 @@ namespace myseq
 
                 bool foundmap = false;
 
-                string f = Settings.Default.MapDir + "\\";
+                string f = $"{Settings.Default.MapDir}\\";
 
                 string fn = si.Name.Trim();
 
-                int location = fn.IndexOf("_", 0);
+                var location = fn.IndexOf("_", 0);
 
                 if (location > 0)
                 {
@@ -4082,17 +4055,13 @@ namespace myseq
                 if (File.Exists(ZonesFile))
                 {
                     IniFile Ini = new IniFile(ZonesFile);
-
-                    string sIniValue = "";
-
                     if (curZone.Length == 0)
                     {
                         mapPane.TabText = "map_pane";
                     }
                     else
                     {
-                        sIniValue = Ini.ReadValue("Zones", curZone, curZone.ToLower());
-                        mapPane.TabText = sIniValue;
+                        mapPane.TabText = Ini.ReadValue("Zones", curZone, curZone.ToLower());
                     }
                 }
                 else
@@ -4121,11 +4090,7 @@ namespace myseq
                         string ConfigFile = Path.Combine(myPath, "config.ini");
                         if (File.Exists(ConfigFile))
                         {
-                            IniFile ConIni = new IniFile(ConfigFile);
-
-//                            string strIniValue = "";
-
-                            var strIniValue = ConIni.ReadValue("Zones", curZone, "");
+                            var strIniValue = new IniFile(ConfigFile).ReadValue("Zones", curZone, "");
                             if (strIniValue.Length > 0)
                             {
                                 if ((strIniValue == "0" && Settings.Default.DepthFilter) ||
@@ -4180,7 +4145,9 @@ namespace myseq
                         foundmap = true;
 
                         mapnameWithLabels = f + ".map";
-                    } else {
+                    }
+                    else
+                    {
                         eq.Zoning = false;
                         // If it didn't work, try an SOE map
 
@@ -5051,15 +5018,15 @@ namespace myseq
         private void ResetMenu(int isCheck)
 
         {
-            mnuIPAddress1.Checked = false;
+            //mnuIPAddress1.Checked = false;
 
-            mnuIPAddress2.Checked = false;
+            //mnuIPAddress2.Checked = false;
 
-            mnuIPAddress3.Checked = false;
+            //mnuIPAddress3.Checked = false;
 
-            mnuIPAddress4.Checked = false;
+            //mnuIPAddress4.Checked = false;
 
-            mnuIPAddress5.Checked = false;
+            //mnuIPAddress5.Checked = false;
 
             Settings.Default.CurrentIPAddress = isCheck;
 
@@ -5498,7 +5465,6 @@ namespace myseq
             }
 
             Settings.Default.ShowLayer2 = mnuShowLayer2.Checked;
-
         }
 
         private void MnuShowLayer3_Click(object sender, EventArgs e)
