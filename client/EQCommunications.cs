@@ -1,17 +1,16 @@
 // Class Files
 
-using SocketSystem;
-using Structures;
+using myseq;
 using System;
-using System.Threading;
 using System.Windows.Forms;
 
-namespace myseq
+namespace Structures
 
 {
     [Flags]
     public enum RequestType
     {
+        None = 0,
         //Bit Flags determining what data to send to the client
         ZONE = 0x00000001,
         PLAYER = 0x00000002,
@@ -26,38 +25,39 @@ namespace myseq
     public class EQCommunications
 
     {
+        private const string ServConErr = "Server Connection Error";
+
         // Variables to store any incomplete packets till the next chunk arrives.
 
         private int incompleteCount = 0;
 
         private bool RequestPending;
 
-        private CSocketClient pSocketClient = null;
+        private CSocketClient pSocketClient;
 
-        private bool update_hidden = false;
+        private bool update_hidden;
 
-        private bool mbGetProcessInfo = false;
+        private bool mbGetProcessInfo;
+        private bool send_process;
 
-        public int newProcessID = 0;
+        private int numPackets; // Total Packets expected
 
-        private bool send_process = false;
+        private int numProcessed; // No. of Packets already processed        
 
-        private int numPackets = 0; // Total Packets expected
+        private readonly byte[] incompletebuffer = new byte[2048];
 
-        private int numProcessed = 0; // No. of Packets already processed        
+        private readonly EQData eq;
 
-        private byte[] incompletebuffer = new byte[2048];
+        private readonly FrmMain f1; // TODO: get rid of this
 
-        private EQData eq;
-
-        private frmMain f1; // TODO: get rid of this
+        public int NewProcessID { get; set; }
 
         public void UpdateHidden()
         {
             update_hidden = true;
         }
 
-        public EQCommunications(EQData eq,frmMain f1)
+        public EQCommunications(EQData eq, FrmMain f1)
 
         {
             this.eq = eq;
@@ -75,52 +75,46 @@ namespace myseq
 
                 numPackets = numProcessed = 0;
 
-                pSocketClient?.Dispose();
+                pSocketClient?.Disconnect();
 
                 pSocketClient = null;
             }
-            catch (Exception pException) {LogLib.WriteLine($"Error with StopListening(): {pException.Message}");}
+            catch (Exception pException) { LogLib.WriteLine($"Error: StopListening: {pException.Message}"); }
         }
 
         public bool ConnectToServer(string ServerAddress, int ServerPort, bool errMsg = true)
 
         {
-            try {
-                if (pSocketClient != null) {
-                    Thread.Sleep(2000);
-
-                    pSocketClient.Dispose();
-
-                    pSocketClient = null;
-                }
+            try
+            {
+                pSocketClient?.Disconnect();
 
                 // Instantiate a CSocketClient object
 
-                pSocketClient = new CSocketClient(100000, /*, null,*/
-
+                pSocketClient = new CSocketClient(100000,
                     new CSocketClient.MESSAGE_HANDLER(MessageHandlerClient),
-
                     new CSocketClient.CLOSE_HANDLER(CloseHandler)
-
-                    /*new CSocketClient.ERROR_HANDLER(ErrorHandler)*/
                     );
 
                 // Establish a connection to the server
                 mbGetProcessInfo = true;
-                pSocketClient.Connect(ServerAddress,(short) ServerPort);
+                pSocketClient.Connect(ServerAddress, ServerPort);
 
                 return true;
             }
             catch (Exception pException)
-
             {
-                string msg = $"Could not connect to the server: {pException.Message}";
-
+                var msg = $"{ServConErr} {pException.Message}";
                 LogLib.WriteLine(msg);
-
                 if (errMsg)
-                    MessageBox.Show($"{msg}\r\nTry selecting a different server!", "Server Connection Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
-
+                {
+                    MessageBox.Show(
+                        msg
+                        + "\r\nTry selecting a different server!",
+                        caption: ServConErr,
+                        buttons: MessageBoxButtons.OK,
+                        icon: MessageBoxIcon.Error);
+                }
                 return false;
             }
         }
@@ -133,9 +127,7 @@ namespace myseq
         private void MessageHandlerClient(CSocketClient pSocket, int iNumberOfBytes)
         {
             // Process the packet
-
-            try {ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);}
-            catch (Exception pException) {LogLib.WriteLine("Error with ProcessPacket: " + pException.Message);}
+            ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);
         }
 
         //********************************************************************
@@ -143,27 +135,14 @@ namespace myseq
         /// <summary> Called when a socket connection is closed </summary>
         /// <param name="pSocket"> The SocketClient object the message came from </param>
         private void CloseHandler(CSocketClient pSocket)
-
         {
-            try {
-                if (f1 != null)
-                    f1.StopListening();
-                else
+                if (f1 == null)
                     StopListening();
-            }
-            catch (Exception pException) {LogLib.WriteLine($"Error with CloseHandler(): {pException.Message}");}
+                else
+                    f1.StopListening();
         }
 
         //********************************************************************
-
-        /// <summary> Called when a socket error occurs </summary>
-        /// <param name="pSocket"> The SocketClient object the message came from </param>
-        /// <param name="pException"> The reason for the error </param>
-        //private void ErrorHandler(CSocketClient pSocket, Exception pException)
-        //{
-        //    LogLib.WriteLine("Error with ErrorHandler(): " + pException.Message);
-        //    MessageBox.Show (pException.Message);
-        //}
 
         private void SendData(byte[] data)
         {
@@ -178,7 +157,7 @@ namespace myseq
             {
                 if (!RequestPending)
                 {
-                    if (newProcessID > 0 && !mbGetProcessInfo)
+                    if (NewProcessID > 0 && !mbGetProcessInfo)
                     {
                         if (!send_process)
                         {
@@ -190,18 +169,23 @@ namespace myseq
                         }
                         else
                         {
-                            SendData(BitConverter.GetBytes(newProcessID));
+                            SendData(BitConverter.GetBytes(NewProcessID));
                             send_process = false;
-                            newProcessID = 0;
+                            NewProcessID = 0;
                             mbGetProcessInfo = true;
                         }
                     }
                     else
                     {
                         RequestPending = true;
-                        Request = (int)(RequestType.ZONE | RequestType.PLAYER | RequestType.TARGET | RequestType.MOBS | RequestType.GROUND_ITEMS | RequestType.WORLD);
+                        Request = (int)(RequestType.ZONE
+                                        | RequestType.PLAYER
+                                        | RequestType.TARGET
+                                        | RequestType.MOBS
+                                        | RequestType.GROUND_ITEMS
+                                        | RequestType.WORLD);
 
-                        if (mbGetProcessInfo && newProcessID == 0)
+                        if (mbGetProcessInfo && NewProcessID == 0)
                         {
                             mbGetProcessInfo = false;
                             Request |= (int)RequestType.GET_PROCESSINFO;
@@ -211,89 +195,67 @@ namespace myseq
                     }
                 }
             }
-            catch (Exception ex) {LogLib.WriteLine("Error in timPackets_Tick: ", ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error: timPackets_Tick: ", ex); }
         }
 
         public void CharRefresh()
         {
             if (pSocketClient != null)
-            {
-                    mbGetProcessInfo = true;
-            }
+                mbGetProcessInfo = true;
         }
 
         public void SwitchCharacter(ProcessInfo PI)
         {
             if (PI?.ProcessID > 0)
-                newProcessID = PI.ProcessID;
+                NewProcessID = PI.ProcessID;
         }
 
-        public bool CanSwitchChars()
-        {
-            return (newProcessID == 0) && (!mbGetProcessInfo);
-        }
+        public bool CanSwitchChars() => NewProcessID == 0 && !mbGetProcessInfo;
 
         private void ProcessPacket(byte[] packet, int bytes)
         {
-            int offset = 0;
+            var offset = 0;
 
             const int SIZE_OF_PACKET = 100; //104 on new server
 
-            try {
+            try
+            {
                 if (bytes > 0)
 
                 {
                     // we have received some bytes, check if this is the beginning of a new packet or a chunk of an existing one.
 
-                    if (numPackets == 0)
+                    offset = CheckStart(packet);
 
-                    {
-                        // The first word in the data stream is the number of packets
+                    eq.BeginProcessPacket(); //clears spawn&ground arrays
 
-                        numPackets = BitConverter.ToInt32(packet, 0);
-                        offset = 4;
-                        f1.StartNewPackets();
-                    }
-                    else
-                    {
-                        // We havent finished processing packets, so check if we have any extra bytes stored in our incomplete buffer.
-
-                        offset = -incompleteCount;
-                    }
-
-                    eq.BeginProcessPacket();
-
-                    for (; (offset + SIZE_OF_PACKET) <= bytes; offset += SIZE_OF_PACKET)
+                    for (; offset + SIZE_OF_PACKET <= bytes; offset += SIZE_OF_PACKET)
 
                     {
                         SPAWNINFO si = new SPAWNINFO();
 
                         if (offset < 0)
-
                         {
                             // copy the missing chunk of the incomplete packet to the incomplete packet buffer
-
-                            try {
-                                if (incompleteCount > 0 && packet.Length > 0)
-                                    Array.Copy(packet, 0, incompletebuffer, incompleteCount, SIZE_OF_PACKET - incompleteCount);
+                            try
+                            {
+                                PacketCopy(packet, SIZE_OF_PACKET);
                             }
-                            catch (Exception ex) {LogLib.WriteLine("Error in ProcessPacket() Copy Incomplete packet buffer: " ,ex);}
-
+                            catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: Copy Incomplete packet buffer: ", ex); }
                             incompleteCount = 0;
-
-                            if (incompletebuffer.Length == 0) {
+                            if (incompletebuffer.Length == 0)
+                            {
                                 numPackets = 0;
                                 break;
                             }
-
-                            si.frombytes(incompletebuffer, 0);
+                            si.Frombytes(incompletebuffer, 0);
                         }
                         else
                         {
-                            si.frombytes(packet, offset);
+                            si.Frombytes(packet, offset);
                         }
 
-                        numProcessed ++;
+                        numProcessed++;
                         f1.ProcessPacket(si, update_hidden);
                     }
 
@@ -301,55 +263,90 @@ namespace myseq
                     f1.ProcessGroundItemList();
                 }
             }
-            catch (Exception ex) {LogLib.WriteLine("Error in ProcessPacket(): ", ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: ", ex); }
 
+            ProcessedPackets(packet, bytes, offset);
+        }
+
+        private int CheckStart(byte[] packet)
+        {
+            int offset;
+            if (numPackets == 0)
+            {
+                // The first word in the data stream is the number of packets
+
+                numPackets = BitConverter.ToInt32(packet, 0);
+                offset = 4;
+                f1.StartNewPackets();
+            }
+            else
+            {
+                // We havent finished processing packets, so check if we have any extra bytes stored in our incomplete buffer.
+
+                offset = -incompleteCount;
+            }
+
+            return offset;
+        }
+
+        private void ProcessedPackets(byte[] packet, int bytes, int offset)
+        {
             if (numProcessed < numPackets)
-
             {
                 if (offset < bytes)
-
                 {
                     // Copy unprocessed bytes into the incomplete buffer
-
-                    incompleteCount = bytes - offset;
-
-                    try
-                    {
-                        Array.Copy(packet, offset, incompletebuffer, 0, incompleteCount);
-                    }
-                    catch (Exception ex)
-                    {
-                        LogLib.WriteLine("Error in ProcessPacket(): Copy to Incomplete Buffer: ", ex);
-                        LogLib.WriteLine($"Packet Size: {packet.Length} Offset: {offset}");
-                        LogLib.WriteLine($"Buffer Size: {incompletebuffer.Length} Incomplete Size: {incompleteCount}");
-                    }
+                    IncompleteCopy(packet, bytes, offset);
                 }
             }
             else
             {
                 // Finished proceessing the request
+                FinalizeProcess();
 
-                RequestPending = false;
-
-                if (update_hidden)
-                    update_hidden = false;
-
-                numPackets=numProcessed=0;
-
-                incompleteCount = 0;
-                // Make sure that the incomplete buffer is actually empty
-                if (incompletebuffer.Length > 0)
-                {
-                    for (int pp = 0; pp < incompletebuffer.Length; pp++)
-                    {
-                        incompletebuffer[pp] = 0;
-                    }
-                }
-
-                f1.checkMobs();
-
+                f1.CheckMobs();
                 f1.mapCon.Invalidate();
             }
+        }
+
+        private void FinalizeProcess()
+        {
+            RequestPending = false;
+            if (update_hidden)
+                update_hidden = false;
+            numPackets = numProcessed = 0;
+
+            incompleteCount = 0;
+            // Make sure that the incomplete buffer is actually empty
+            if (incompletebuffer.Length > 0)
+            {
+                for (var pp = 0; pp < incompletebuffer.Length; pp++)
+                {
+                    incompletebuffer[pp] = 0;
+                }
+            }
+        }
+
+        private void IncompleteCopy(byte[] packet, int bytes, int offset)
+        {
+            incompleteCount = bytes - offset;
+
+            try
+            {
+                Array.Copy(packet, offset, incompletebuffer, 0, incompleteCount);
+            }
+            catch (Exception ex)
+            {
+                LogLib.WriteLine("Error: ProcessPacket(): Copy to Incomplete Buffer: ", ex);
+                LogLib.WriteLine($"Packet Size: {packet.Length} Offset: {offset}");
+                LogLib.WriteLine($"Buffer Size: {incompletebuffer.Length} Incomplete Size: {incompleteCount}");
+            }
+        }
+
+        private void PacketCopy(byte[] packet, int SIZE_OF_PACKET)
+        {
+            if (incompleteCount > 0 && packet.Length > 0)
+                Array.Copy(packet, 0, incompletebuffer, incompleteCount, SIZE_OF_PACKET - incompleteCount);
         }
     }
 }

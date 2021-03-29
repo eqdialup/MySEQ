@@ -20,7 +20,7 @@ namespace Structures
 			NamedColors = new Hashtable();
 		}
 
-		private class NamedColor
+		private struct NamedColor
 		{
 			public string Name;
 			public Color Color;

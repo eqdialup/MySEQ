@@ -1,4 +1,3 @@
-
 using System.Windows.Forms;
 
 namespace Structures
@@ -7,43 +6,40 @@ namespace Structures
     #region GroundItem class
 
     public class GroundItem {
-        public float X;
+        public float X{ get; set; }
 
-        public float Y;
+        public float Y{ get; set; }
 
-        public float Z;
+        public float Z{ get; set; }
 
-        public bool isHunt;
+        public bool isHunt{ get; set; }
 
-        public bool isCaution;
+        public bool isCaution{ get; set; }
 
-        public bool isDanger;
+        public bool isDanger{ get; set; }
 
-        public bool isAlert;
+        public bool isAlert{ get; set; }
 
-        public string Name = "";
+        public string Name{ get; set; }
 
-        public string Desc = "";
+        public string Desc{ get; set; }
 
-        public ListViewItem listitem;
+        public ListViewItem listitem{ get; set; }
 
-        public int gone;
+        public int gone{ get; set; }
 
-        public bool filtered;
+        public bool filtered{ get; set; }
     }
 
     #endregion
 
     #region ListItem class
 
-    public class ListItem
-
+    public struct ListItem
     {
-        public string ActorDef = "";
-
-        public int ID = -1;
-
-        public string Name = "";
+        public string ActorDef;
+        public int ID {get; set; }
+        public string Name { get; set; }
     }
 
 #endregion

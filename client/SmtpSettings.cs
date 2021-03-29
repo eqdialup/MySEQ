@@ -1,34 +1,25 @@
 ﻿using System;
-
 using System.IO;
-
-using System.Text;
-
-using System.Security.Cryptography;
-
 using System.Reflection;
-
-using System.Windows.Forms;
-
 using System.Runtime.Serialization.Formatters.Soap;
+using System.Security.Cryptography;
+using System.Text;
+using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Structures
 
 {
-    #region SMTPSettings class
-
     [Serializable]
-
     public sealed class SmtpSettings
-
     {
         private volatile static SmtpSettings instance;
 
-        private static object syncObj = new object();
+        private static readonly object syncObj = new object();
 
         private string smtpPassword = "";
 
-        private string prefsDir = "";
+        private String prefsDir = "";
 
         public string SmtpServer { get; set; } = "";
 
@@ -36,7 +27,8 @@ namespace Structures
 
         public string SmtpUsername { get; set; } = "";
 
-        public string SmtpPassword {
+        public string SmtpPassword
+        {
             get
             {
                 if (smtpPassword?.Length == 0)
@@ -49,14 +41,17 @@ namespace Structures
                     return DecryptString(smtpPassword, asm.GetType().GUID.ToString());
                 }
             }
-            set {
+            set
+            {
                 if (value?.Length == 0)
                 {
                     smtpPassword = "";
-                }else{
+                }
+                else
+                {
                     Assembly asm = Assembly.GetExecutingAssembly();
 
-                smtpPassword =EncryptString(value, asm.GetType().GUID.ToString());
+                    smtpPassword = EncryptString(value, asm.GetType().GUID.ToString());
                 }
             }
         }
@@ -69,13 +64,15 @@ namespace Structures
 
         public string CCEmail { get; set; } = "";
 
-        public bool UseNetworkCredentials { get; set; } = false;
+        public bool UseNetworkCredentials { get; set; }
 
-        public bool UseSSL { get; set; } = false;
+        public bool UseSSL { get; set; }
 
         public bool SavePassword { get; set; } = false;
 
-        private SmtpSettings() {}
+        private SmtpSettings()
+        {
+        }
 
         public static SmtpSettings Instance
         {
@@ -84,19 +81,22 @@ namespace Structures
                 // only create a new instance if one doesn't already exist.
 
                 if (instance == null)
-
+                {
                     // use this lock to ensure that only one thread is access this block of code at once.
 
                     lock (syncObj)
+                    {
                         if (instance == null)
                             instance = new SmtpSettings();
+                    }
+                }
 
                 // return instance where it was just created or already existed.
 
                 return instance;
             }
 
-            set { instance = value; }
+            set => instance = value;
         }
 
         public void Save(string filename)
@@ -108,7 +108,8 @@ namespace Structures
 
             // Dont save password if we are not selecting to save it
             string curpass = "";
-            if (!Instance.SavePassword) {
+            if (!Instance.SavePassword)
+            {
                 curpass = Instance.SmtpPassword;
                 Instance.SmtpPassword = "";
             }
@@ -119,33 +120,35 @@ namespace Structures
 
             sf1.Serialize(fs, Instance);
 
-            if (!Instance.SavePassword) {
+            if (!Instance.SavePassword)
+            {
                 Instance.SmtpPassword = curpass;
-                curpass = "";
             }
 
             fs.Close();
 
-            string oldconfigFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "myseq.xml");
+            var oldconfigFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "myseq.xml");
             if (File.Exists(oldconfigFile))
                 File.Delete(oldconfigFile);
         }
 
-        public void Load(string filename) {
-            FileStream fs = null;
+        public void Load(string filename)
+        {
+            FileStream fs;
 
-            try {
-                fs = new FileStream(filename, FileMode.Open);
+            try
+            {
+                using (fs = new FileStream(filename, FileMode.Open))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(SmtpSettings));
 
-                SoapFormatter sf1 = new SoapFormatter();
-
-                Instance = (SmtpSettings)sf1.Deserialize(fs);
-
+                    Instance = (SmtpSettings)serializer.Deserialize(fs);
+                }
+                //this is old :SoapFormatter sf1 = new SoapFormatter()
+                //old way: Instance = (SmtpSettings)sf1.Deserialize(fs)
                 Instance.prefsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
             }
-            catch (Exception ex) { LogLib.WriteLine("Error in SmtpSettings.Load(): ", ex); }
-
-            fs?.Close();
+            catch (Exception ex) { LogLib.WriteLine("Error: SMTPSettings.Load(): ", ex); }
         }
 
         public static string DecryptString(string Message, string _Pass)
@@ -220,10 +223,4 @@ namespace Structures
             return Convert.ToBase64String(_Res);
         }
     }
-
-#endregion
-#region Settings class
-
-    #endregion
-
 }

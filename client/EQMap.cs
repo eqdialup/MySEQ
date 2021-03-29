@@ -1,3 +1,4 @@
+using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
@@ -55,7 +56,6 @@ namespace myseq
 
                 eq.SpawnY = -1.0f;
             }
-
         }
 
         protected void OnEnterMap()
@@ -79,15 +79,8 @@ namespace myseq
             initialized = true;
         }
 
-        public void NewMap()
-        {
-            OnEnterMap();
-        }
-
         public void ClearMap()
-
         {
-
             try {
                 if (!initialized) { throw new Exception("EQMapManager not initialized yet"); }
 
@@ -120,7 +113,7 @@ namespace myseq
             catch (Exception ex) {LogLib.WriteLine("Error with ClearMap:", ex);}
         }
 
-        public void loadDummyMap(string mapname)
+        public void LoadDummyMap(string mapname)
 
         {
             OnExitMap();
@@ -128,8 +121,6 @@ namespace myseq
             ClearMap();
 
             eq.ClearMapStructures();
-
-            mapCon.SetDistinctPens();
 
             eq.shortname = mapname;
 
@@ -139,8 +130,8 @@ namespace myseq
             OnEnterMap();
         }
 
-        public bool loadMap(string filename) {
-
+        public bool LoadMap(string filename)
+        {
             eq.mobsTimers.ResetTimers();
 
             OnExitMap();
@@ -148,8 +139,6 @@ namespace myseq
             ClearMap();
 
             eq.ClearMapStructures();
-
-            mapCon.SetDistinctPens();
 
             bool rc = eq.LoadMapInternal(filename);
 
@@ -161,14 +150,11 @@ namespace myseq
                 OnEnterMap();
             }
 
-
             return rc;
         }
 
-        public bool loadLoYMap(string filename, bool resetmap)
-
+        public bool LoadLoYMap(string filename, bool resetmap)
         {
-
             if (resetmap)
 
             {
@@ -179,8 +165,6 @@ namespace myseq
                 ClearMap();
 
                 eq.ClearMapStructures();
-
-                mapCon.SetDistinctPens();
             }
 
             bool rc = eq.LoadLoYMapInternal(filename);
@@ -360,15 +344,20 @@ namespace myseq
                 }
             }
             // Put in offsets for use when drawing text on map, for duplicate text at same location
+            OptimizeText();
+        }
+
+        private void OptimizeText()
+        {
             int index = 0;
             foreach (MapText tex1 in eq.texts)
             {
                 int index2 = 0;
                 foreach (MapText tex2 in eq.texts)
                 {
-                    if (index2 > index && tex1.x == tex2.x && tex1.y == tex2.y && tex1.z == tex2.z && tex1.text != tex2.text)
+                    if (index2 > index && tex1.x == tex2.x && tex1.y == tex2.y && tex1.z == tex2.z && tex1.label != tex2.label)
                     {
-                        tex2.offset = tex1.offset + (int)(2.0f * Settings.Instance.MapLabelFontSize);
+                        tex2.offset = tex1.offset + (int)(2.0f * Settings.Default.MapLabel.Size);
                     }
                     index2++;
                 }
@@ -378,20 +367,14 @@ namespace myseq
 
         public float CalcDotProduct(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
         {
-            double lenV1;
-
-            double lenV2;
-
-            double lenV3;
-
             if ((x1 == x2 && y1 == y2 && z1 == z2) || (x2 == x3 && y2 == y3 && z2 == z3))
                 return 1.0f;
 
-            lenV1 = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)) + ((z2 - z1) * (z2 - z1)));
+            double lenV1 = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)) + ((z2 - z1) * (z2 - z1)));
 
-            lenV2 = Math.Sqrt(((x3 - x2) * (x3 - x2)) + ((y3 - y2) * (y3 - y2)) + ((z3 - z2) * (z3 - z2)));
+            double lenV2 = Math.Sqrt(((x3 - x2) * (x3 - x2)) + ((y3 - y2) * (y3 - y2)) + ((z3 - z2) * (z3 - z2)));
 
-            lenV3 = Math.Sqrt(((x3 - x1) * (x3 - x1)) + ((y3 - y1) * (y3 - y1)) + ((z3 - z1) * (z3 - z1)));
+            double lenV3 = Math.Sqrt(((x3 - x1) * (x3 - x1)) + ((y3 - y1) * (y3 - y1)) + ((z3 - z1) * (z3 - z1)));
 
             return (float)(lenV3 / (lenV1 + lenV2));
         }

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace myseq
 {
     /// <summary>
-    /// Small snippet classes with static methods, and have little to no impact on experience. 
+    /// Small classes with static methods, and have little to no impact on experience.
     /// moved to parasoll file for easier overview and reduce clutter in the larger classes.
     /// </summary>
     internal static class SafeNativeMethods
@@ -41,12 +41,12 @@ namespace myseq
 
     public class ListBoxComparerSpawnList : IComparer
     {
-        public int Compare(object a, object b)
+        public int Compare(object x, object y)
 
         {
-            ListViewItem sa = (ListViewItem)a;
+            ListViewItem sa = (ListViewItem)x;
 
-            ListViewItem sb = (ListViewItem)b;
+            ListViewItem sb = (ListViewItem)y;
 
             int res = 0;
 
@@ -81,7 +81,6 @@ namespace myseq
                 (Column == 9) ||    // Invis
 
                 (Column == 17))     // Guild
-
 
             {
                 res = string.Compare(sa.SubItems[Column].Text, sb.SubItems[Column].Text);
@@ -149,12 +148,12 @@ namespace myseq
     public class ListBoxComparerSpawnTimerList : IComparer
 
     {
-        public int Compare(object a, object b)
+        public int Compare(object x, object y)
 
         {
-            ListViewItem sa = (ListViewItem)a;
+            ListViewItem sa = (ListViewItem)x;
 
-            ListViewItem sb = (ListViewItem)b;
+            ListViewItem sb = (ListViewItem)y;
 
             int res = 0;
 
@@ -174,11 +173,6 @@ namespace myseq
                 if (ia < ib) res = -1;
                 else res = ia > ib ? 1 : 0;
             }
-
-            //else if ()
-
-            //    res = string.Compare(sa.SubItems[Column].Text, sb.SubItems[Column].Text);
-
             else if (
 
                 (Column == 4) ||   // X
@@ -239,7 +233,7 @@ namespace myseq
             Column = column;
         }
 
-        private ListView.ListViewItemCollection Spawns;
+        private readonly ListView.ListViewItemCollection Spawns;
 
         private bool Descending;
 
@@ -248,13 +242,13 @@ namespace myseq
 
     public class ListBoxComparerGroundItemsList : IComparer
     {
-        public int Compare(object a, object b)
+        public int Compare(object x, object y)
         {
-            ListViewItem sa = (ListViewItem)a;
+            var sa = (ListViewItem)x;
 
-            ListViewItem sb = (ListViewItem)b;
+            var sb = (ListViewItem)y;
 
-            int res = 0;
+            var res = 0;
 
             if (Column == 0)    // Description
             {
