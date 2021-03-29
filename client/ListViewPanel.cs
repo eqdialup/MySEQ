@@ -661,21 +661,22 @@ namespace myseq
             {
                 curDescend = !curDescend;
 
-                if (ListType == 0)
+                this.listView.ListViewItemSorter = new ListComparer(e.Column);
+                //if (ListType == 0)
 
-                {
-                    listView.ListViewItemSorter = new ListBoxComparerSpawnList(listView.Items, curDescend, e.Column);
-                }
-                else if (ListType == 1)
+                //{
+                //    listView.ListViewItemSorter = new ListBoxComparerSpawnList(listView.Items, curDescend, e.Column);
+                //}
+                //else if (ListType == 1)
 
-                {
-                    listView.ListViewItemSorter = new ListBoxComparerSpawnTimerList(listView.Items, curDescend, e.Column);
-                }
-                else if (ListType == 2)
+                //{
+                //    listView.ListViewItemSorter = new ListBoxComparerSpawnTimerList(listView.Items, curDescend, e.Column);
+                //}
+                //else if (ListType == 2)
 
-                {
-                    listView.ListViewItemSorter = new ListBoxComparerGroundItemsList(listView.Items, curDescend, e.Column);
-                }
+                //{
+                //    listView.ListViewItemSorter = new ListBoxComparerGroundItemsList(listView.Items, curDescend, e.Column);
+                //}
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.listView_ColumnClick: ", ex); }
         }
@@ -718,6 +719,22 @@ namespace myseq
             try { listView.Columns.Add(ColumnName, ColumnWidth, CoulumnAlign); }
             catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.ColumnsAdd: ", ex); }
         }
+
+        public void RemoveColumn(int Index)
+		{
+			try
+			{
+				if (Index <= listView.Columns.Count)
+				{
+					listView.Columns.RemoveByKey("Offhand");
+                    listView.Columns.RemoveByKey("Last Name");
+				}
+			}
+			catch (Exception e)
+			{
+				LogLib.WriteLine("ListViewPanel.RemoveColumn: ", e);
+			}
+		}
 
         private void MnuAddHuntFilter_Click(object sender, EventArgs e)
 

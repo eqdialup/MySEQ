@@ -71,7 +71,6 @@
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel.Size = new System.Drawing.Size(322, 146);
-            this.tableLayoutPanel.TabIndex = 0;
             // 
             // logoPictureBox
             // 
@@ -82,8 +81,6 @@
             this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);
             this.logoPictureBox.Size = new System.Drawing.Size(96, 96);
             this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.logoPictureBox.TabIndex = 12;
-            this.logoPictureBox.TabStop = false;
             // 
             // linkLabel2
             // 
@@ -92,8 +89,6 @@
             this.linkLabel2.Location = new System.Drawing.Point(105, 118);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(138, 16);
-            this.linkLabel2.TabIndex = 28;
-            this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "http://www.showeq.net";
             this.linkLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(ForumlinkClick);
@@ -104,7 +99,6 @@
             this.okButton.Location = new System.Drawing.Point(3, 121);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 24;
             this.okButton.Text = "&OK";
             // 
             // label2
@@ -114,7 +108,6 @@
             this.label2.Location = new System.Drawing.Point(105, 102);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(201, 16);
-            this.label2.TabIndex = 27;
             this.label2.Text = "Visit the MySEQ Open Forums at";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -125,8 +118,6 @@
             this.linkLabel1.Location = new System.Drawing.Point(105, 84);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(168, 16);
-            this.linkLabel1.TabIndex = 26;
-            this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "https://dockpanelsuite.com";
             this.linkLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(DockpanelClick);
@@ -138,7 +129,6 @@
             this.label1.Location = new System.Drawing.Point(105, 68);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(164, 16);
-            this.label1.TabIndex = 25;
             this.label1.Text = "Uses the DockPanel Suite";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -150,7 +140,6 @@
             this.labelCompanyName.MaximumSize = new System.Drawing.Size(0, 17);
             this.labelCompanyName.Name = "labelCompanyName";
             this.labelCompanyName.Size = new System.Drawing.Size(348, 17);
-            this.labelCompanyName.TabIndex = 22;
             this.labelCompanyName.Text = "Company Name";
             this.labelCompanyName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -162,7 +151,6 @@
             this.labelCopyright.MaximumSize = new System.Drawing.Size(0, 17);
             this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.Size = new System.Drawing.Size(348, 17);
-            this.labelCopyright.TabIndex = 21;
             this.labelCopyright.Text = "Copyright";
             this.labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -174,7 +162,6 @@
             this.labelVersion.MaximumSize = new System.Drawing.Size(0, 17);
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(348, 17);
-            this.labelVersion.TabIndex = 0;
             this.labelVersion.Text = "Version";
             this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -186,7 +173,6 @@
             this.labelProductName.MaximumSize = new System.Drawing.Size(0, 17);
             this.labelProductName.Name = "labelProductName";
             this.labelProductName.Size = new System.Drawing.Size(348, 17);
-            this.labelProductName.TabIndex = 19;
             this.labelProductName.Text = "Product Name";
             this.labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -205,7 +191,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "AboutBox1";
+            this.Text = "AboutBox";
             this.tableLayoutPanel.ResumeLayout(false);
             this.tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();

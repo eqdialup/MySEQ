@@ -9,7 +9,6 @@ namespace myseq
     // Does the map loading etc.
 
     public class EQMap
-
     {
         private MapCon mapCon;
 
@@ -130,28 +129,28 @@ namespace myseq
             OnEnterMap();
         }
 
-        public bool LoadMap(string filename)
-        {
-            eq.mobsTimers.ResetTimers();
+        //public bool LoadMap(string filename)
+        //{
+        //    eq.mobsTimers.ResetTimers();
 
-            OnExitMap();
+        //    OnExitMap();
 
-            ClearMap();
+        //    ClearMap();
 
-            eq.ClearMapStructures();
+        //    eq.ClearMapStructures();
 
-            bool rc = eq.LoadMapInternal(filename);
+        //    bool rc = eq.LoadMapInternal(filename);
 
-            if (rc)
-            {
-                OptimizeMap();
+        //    if (rc)
+        //    {
+        //        OptimizeMap();
 
-                eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
-                OnEnterMap();
-            }
+        //        eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
+        //        OnEnterMap();
+        //    }
 
-            return rc;
-        }
+        //    return rc;
+        //}
 
         public bool LoadLoYMap(string filename, bool resetmap)
         {

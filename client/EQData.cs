@@ -2,7 +2,6 @@ using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -56,7 +55,7 @@ namespace myseq
 
         private readonly ArrayList itemcollection = new ArrayList();          // Hold the items that are on the ground
 
-        private readonly Hashtable mobs = new Hashtable();           // Holds the details of the mobs in the current zone.
+        private readonly Hashtable mobsHashTable = new Hashtable();           // Holds the details of the mobs in the current zone.
 
         public MobsTimers mobsTimers = new MobsTimers();   // Manages the timers
 
@@ -145,68 +144,58 @@ namespace myseq
         public void MarkLookups(string name, bool filterMob = false)
         {
             if (name.Length > 2 && name.Substring(2) == dflt) { name = name.Substring(0, 2); }
-            if (name.Substring(0, 2) == "0:")
+            switch (name.Substring(0, 2))
             {
-                if (name.Length > 2)
-                {
-                    search0 = name.Substring(2);
-                    filter0 = filterMob;
-                }
-                else
-                { search0 = ""; }
-            }
-            if (name.Substring(0, 2) == "1:")
-            {
-                if (name.Length > 2)
-                {
-                    search1 = name.Substring(2);
-                    filter1 = filterMob;
-                }
-                else
-                { search1 = ""; }
-            }
-            if (name.Substring(0, 2) == "2:")
-            {
-                if (name.Length > 2)
-                {
-                    search2 = name.Substring(2);
-                    filter2 = filterMob;
-                }
-                else
-                { search2 = ""; }
-            }
-            if (name.Substring(0, 2) == "3:")
-            {
-                if (name.Length > 2)
-                {
-                    search3 = name.Substring(2);
-                    filter3 = filterMob;
-                }
-                else
-                { search3 = ""; }
-            }
-            if (name.Substring(0, 2) == "4:")
-            {
-                if (name.Length > 2)
-                {
-                    search4 = name.Substring(2);
-                    filter4 = filterMob;
-                }
-                else
-                { search4 = ""; }
-            }
-            if (name.Substring(0, 2) == "5:")
-            {
-                if (name.Length > 2)
-                {
-                    search5 = name.Substring(2);
-                    filter5 = filterMob;
-                }
-                else
-                { search5 = ""; }
+                case "0:":
+                    if (name.Length > 2)
+                    {
+                        search0 = name.Substring(2);
+                        filter0 = filterMob;
+                    }
+                    break;
+
+                case "1:":
+                    if (name.Length > 2)
+                    {
+                        search1 = name.Substring(2);
+                        filter1 = filterMob;
+                    }
+                    break;
+
+                case "2:":
+                    if (name.Length > 2)
+                    {
+                        search2 = name.Substring(2);
+                        filter2 = filterMob;
+                    }
+                    break;
+
+                case "3:":
+                    if (name.Length > 2)
+                    {
+                        search3 = name.Substring(2);
+                        filter3 = filterMob;
+                    }
+                    break;
+
+                case "4:":
+                    if (name.Length > 2)
+                    {
+                        search4 = name.Substring(2);
+                        filter4 = filterMob;
+                    }
+                    break;
+
+                case "5:":
+                    if (name.Length > 2)
+                    {
+                        search5 = name.Substring(2);
+                        filter5 = filterMob;
+                    }
+                    break;
             }
 
-            foreach (SPAWNINFO sp in mobs.Values)
+            foreach (SPAWNINFO sp in mobsHashTable.Values)
             {
                 sp.isLookup = false;
                 sp.lookupNumber = "";
@@ -236,8 +225,6 @@ namespace myseq
                 }
             }
         }
-
-        //Reusing the code here, since it's all the same
         private void SubLookup(SPAWNINFO sp, string search, bool filter, string ln)
         {
             bool levelCheck = false;
@@ -264,7 +251,7 @@ namespace myseq
                 mobtrails.Add(work);
         }
 
-        public Hashtable GetMobsReadonly() => mobs;
+        public Hashtable GetMobsReadonly() => mobsHashTable;
 
         public ArrayList GetMobTrailsReadonly() => mobtrails;
 
@@ -383,7 +370,7 @@ namespace myseq
         {
             try
             {
-                foreach (SPAWNINFO sp in mobs.Values)
+                foreach (SPAWNINFO sp in mobsHashTable.Values)
                 {
                     var dely = sp.Y < y + delta && sp.Y > y - delta;
                     var delx = sp.X < x + delta && sp.X > x - delta;
@@ -407,7 +394,7 @@ namespace myseq
         {
             try
             {
-                foreach (SPAWNINFO sp in mobs.Values)
+                foreach (SPAWNINFO sp in mobsHashTable.Values)
                 {
                     var dely = sp.Y < y + delta && sp.Y > y - delta;
                     var delx = sp.X < x + delta && sp.X > x - delta;
@@ -431,7 +418,7 @@ namespace myseq
         {
             try
             {
-                foreach (SPAWNINFO sp in mobs.Values)
+                foreach (SPAWNINFO sp in mobsHashTable.Values)
                 {
                     if (HiddenFamPet(sp) && !sp.isCorpse && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
                     {
@@ -455,7 +442,7 @@ namespace myseq
         {
             try
             {
-                foreach (SPAWNINFO sp in mobs.Values)
+                foreach (SPAWNINFO sp in mobsHashTable.Values)
                 {
                     if (!sp.hidden && !sp.filtered && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
                     {
@@ -477,7 +464,7 @@ namespace myseq
         {
             try
             {
-                foreach (SPAWNINFO sp in mobs.Values)
+                foreach (SPAWNINFO sp in mobsHashTable.Values)
                 {
                     if ((sp.SpawnLoc == spawnLoc) && (sp.Type == 1))
                     {
@@ -562,7 +549,7 @@ namespace myseq
             return null;
         }
 
-        public SPAWNINFO GetSelectedMob() => (SPAWNINFO)mobs[(uint)selectedID];
+        public SPAWNINFO GetSelectedMob() => (SPAWNINFO)mobsHashTable[(uint)selectedID];
 
         public void InitLookups()
         {
@@ -583,320 +570,319 @@ namespace myseq
 
         #region showeq_map_format
 
-        public bool LoadMapInternal(string filename) //SHOWEQ format
-        {
-            // All Parse Routines MUST be passed this culture info so that they work
+        //public bool LoadMapInternal(string filename) //SHOWEQ format
+        //{
+        //    // All Parse Routines MUST be passed this culture info so that they work
 
-            // correctly when used on an operating system configured to use a different culture.
+        //    // correctly when used on an operating system configured to use a different culture.
 
-            IFormatProvider NumFormat = new CultureInfo("en-US");
+        //    IFormatProvider NumFormat = new CultureInfo("en-US");
 
-            StreamReader tr;
-            int numtexts = 0;
+        //    StreamReader tr;
+        //    int numtexts = 0;
 
-            int numlines = 0;
+        //    int numlines = 0;
 
-            int curLine = 0;
+        //    int curLine = 0;
 
-            if (!File.Exists(filename))
-            {
-                LogLib.WriteLine($"File not found loading {filename} in loadMap()");
+        //    if (!File.Exists(filename))
+        //    {
+        //        LogLib.WriteLine($"File not found loading {filename} in loadMap()");
 
-                return false;
-            }
+        //        return false;
+        //    }
 
-            try { tr = new StreamReader(File.OpenRead(filename)); }
-            catch (FileNotFoundException)
-            {
-                LogLib.WriteLine($"File not found loading {filename} in loadMap()");
+        //    try { tr = new StreamReader(File.OpenRead(filename)); }
+        //    catch (FileNotFoundException)
+        //    {
+        //        LogLib.WriteLine($"File not found loading {filename} in loadMap()");
 
-                return false;
-            }
+        //        return false;
+        //    }
 
-            LogLib.WriteLine($"Loading Zone Map (non LoY): {filename}");
+        //    LogLib.WriteLine($"Loading Zone Map (non LoY): {filename}");
 
-            // First line is file ID info
-
-            var line = tr.ReadLine();
-            curLine++;
+        //    // First line is file ID info
+
+        //    var line = tr.ReadLine();
+        //    curLine++;
 
-            if (line == null)
-                return false;
-
-            int lineCount = 1;
-
-            if ((longname = Getnexttoken(ref line, ',')) == null)
-                return false;
+        //    if (line == null)
+        //        return false;
+
+        //    int lineCount = 1;
+
+        //    if ((longname = Getnexttoken(ref line, ',')) == null)
+        //        return false;
 
-            if ((shortname = Getnexttoken(ref line, ',')) == null)
-                return false;
+        //    if ((shortname = Getnexttoken(ref line, ',')) == null)
+        //        return false;
 
-            string tok = "";
-            // Rest of header is optional.
+        //    string tok = "";
+        //    // Rest of header is optional.
 
-            try
-            {
-                // ICK....
-
-                Walktheline(NumFormat, ref line);
-            }
-            catch (Exception ex) { LogLib.WriteLine("Error in loadMap() Reading Map Header: ", ex); }
-
-            // Now the bulk of the file....
-            // Note A and Z are not implemented as they don't ever seem to be used...
-            while ((line = tr.ReadLine()) != null)
-            {
-                curLine++;
-                try
-                {
-                    if (line != "")
-                    {
-                        if ((tok = Getnexttoken(ref line, ',')) == null)
-                        {
-                            LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-                        }
-                        else
-                        {
-                            ParseMLP(filename, NumFormat, ref numtexts, ref numlines, curLine, ref tok, ref line);
-                        }
-                    }
-                }
-                catch (Exception ex) { LogLib.WriteLine($"Error in loadMap() Line: {curLine}:", ex); }
-            }
+        //    try
+        //    {
+        //        // ICK....
+
+        //        Walktheline(NumFormat, ref line);
+        //    }
+        //    catch (Exception ex) { LogLib.WriteLine("Error in loadMap() Reading Map Header: ", ex); }
+
+        //    // Now the bulk of the file....
+        //    // Note A and Z are not implemented as they don't ever seem to be used...
+        //    while ((line = tr.ReadLine()) != null)
+        //    {
+        //        curLine++;
+        //        try
+        //        {
+        //            if (line != "")
+        //            {
+        //                if ((tok = Getnexttoken(ref line, ',')) == null)
+        //                {
+        //                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
+        //                }
+        //                else
+        //                {
+        //                    ParseMLP(filename, NumFormat, ref numtexts, ref numlines, curLine, ref tok, ref line);
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex) { LogLib.WriteLine($"Error in loadMap() Line: {curLine}:", ex); }
+        //    }
 
-            LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
+        //    LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
 
-            LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
+        //    LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
 
-            tr.Close();
+        //    tr.Close();
 
-            if (numtexts > 0 || lineCount > 0)
-            {
-                CalcExtents();
+        //    if (numtexts > 0 || lineCount > 0)
+        //    {
+        //        CalcExtents();
 
-                return true;
-            }
-            else
-            {
-                longname = "";
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        longname = "";
 
-                shortname = "";
-
-                return false;
-            }
-        }
-
-        private void Walktheline(IFormatProvider NumFormat, ref string line)
-        {
-            string tok;
-            if ((tok = Getnexttoken(ref line, ',')) != null)
-            {
-                minx = int.Parse(tok, NumFormat);
-
-                if ((tok = Getnexttoken(ref line, ',')) != null)
-                {
-                    miny = int.Parse(tok, NumFormat);
-
-                    if ((tok = Getnexttoken(ref line, ',')) != null)
-                    {
-                        minz = int.Parse(tok, NumFormat);
-
-                        if ((tok = Getnexttoken(ref line, ',')) != null)
-                        {
-                            maxx = int.Parse(tok, NumFormat);
-
-                            if ((tok = Getnexttoken(ref line, ',')) != null)
-                            {
-                                maxy = int.Parse(tok, NumFormat);
-
-                                if ((tok = Getnexttoken(ref line, ',')) != null)
-                                    maxz = int.Parse(tok, NumFormat);
-                            }
-                        }
-                    }
-                }
-            }
-        } // SHOWEQ
-
-        private void ParseMLP(string filename, IFormatProvider NumFormat, ref int numtexts, ref int numlines, int curLine, ref string tok, ref string line)
-        {
-            if (tok == "M")
-            {// example format : M,line,white,2,-247,-371,850,-249,-366,870
-                MapLine work = new MapLine();
-
-                int numpoints = 0;
-
-                bool bOK = true;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.name = tok;
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.color = new Pen(new SolidBrush(ColorChart.StringToColor(tok)));
-                else
-                    bOK = false;
-
-                if ((tok = Getnexttoken(ref line, ',')) != null)
-                    numpoints = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK)
-                    work.linePoints = new PointF[numpoints];
-
-                int pointnum = 0;
-
-                while (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                {
-                    MapPoint temp = new MapPoint
-                    {
-                        x = (int)float.Parse(tok, NumFormat)
-                    };
-
-                    if ((tok = Getnexttoken(ref line, ',')) != null)
-                    {
-                        temp.y = (int)float.Parse(tok, NumFormat);
-
-                        if ((tok = Getnexttoken(ref line, ',')) != null)
-                        {
-                            temp.z = (int)float.Parse(tok, NumFormat) / 10;
-
-                            work.aPoints.Add(temp);
-
-                            work.linePoints[pointnum] = new PointF(temp.x, temp.y);
-
-                            pointnum++;
-                        }
-                    }
-                }
-
-                if (numpoints != work.aPoints.Count)
-                {
-                    LogLib.WriteLine(
-                        $"Warning - Line {curLine} of map '{filename}' has an invalid point count. Expected - {numpoints}, Actual {work.aPoints.Count}. Continuing...",
-                        LogLevel.Warning);
-                }
-
-                if (bOK && work.aPoints.Count >= 2)
-                {
-                    lines.Add(work);
-
-                    numlines++;
-                }
-            }
-            else if (tok == "L")
-            {// example 
-                MapLine work = new MapLine();
-
-                int numpoints = 0;
-
-                bool bOK = true;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.name = tok;
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.color = new Pen(new SolidBrush(ColorChart.StringToColor(tok)));
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    numpoints = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK)
-                {
-                    int pointnum = 0;
-
-                    while ((tok = Getnexttoken(ref line, ',')) != null)
-                    {
-                        MapPoint temp = new MapPoint
-                        {
-                            x = (int)float.Parse(tok, NumFormat)
-                        };
-
-                        if ((tok = Getnexttoken(ref line, ',')) != null)
-                        {
-                            temp.y = (int)float.Parse(tok, NumFormat);
-
-                            work.aPoints.Add(temp);
-
-                            work.linePoints[pointnum] = new PointF(temp.x, temp.y);
-
-                            pointnum++;
-                        }
-                    }
-
-                    if (numpoints != work.aPoints.Count)
-                    {
-                        LogLib.WriteLine(
-                            $"Warning - Line {curLine} of map '{filename}' has an invalid point count. Expected - {numpoints}, Actual {work.aPoints.Count}. Continuing...", LogLevel.Warning);
-                    }
-
-                    if (work.aPoints.Count >= 2)
-                    {
-                        lines.Add(work);
-
-                        numlines++;
-                    }
-                }
-                else
-                {
-                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-                }
-            }
-            else if (tok == "P")
-            {// example P,Succor Point,white,-172,-821
-                MapText work = new MapText();
-
-                bool bOK = true;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.label = tok;
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.color = new SolidBrush(ColorChart.StringToColor(tok));
-                else
-                    bOK = false;
-
-                if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-                    work.x = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if ((tok = Getnexttoken(ref line, ',')) != null)
-                    work.y = int.Parse(tok, NumFormat);
-                else
-                    bOK = false;
-
-                if (bOK)
-                {
-                    // add a z value if it exists
-                    work.z = (Getnexttoken(ref line, ',')) != null ? int.Parse(tok, NumFormat) : -99999;
-
-                    texts.Add(work);
-
-                    numtexts++;
-                }
-            }
-        }
+        //        shortname = "";
+
+        //        return false;
+        //    }
+        //}
+
+        //private void Walktheline(IFormatProvider NumFormat, ref string line)
+        //{
+        //    string tok;
+        //    if ((tok = Getnexttoken(ref line, ',')) != null)
+        //    {
+        //        minx = int.Parse(tok, NumFormat);
+
+        //        if ((tok = Getnexttoken(ref line, ',')) != null)
+        //        {
+        //            miny = int.Parse(tok, NumFormat);
+
+        //            if ((tok = Getnexttoken(ref line, ',')) != null)
+        //            {
+        //                minz = int.Parse(tok, NumFormat);
+
+        //                if ((tok = Getnexttoken(ref line, ',')) != null)
+        //                {
+        //                    maxx = int.Parse(tok, NumFormat);
+
+        //                    if ((tok = Getnexttoken(ref line, ',')) != null)
+        //                    {
+        //                        maxy = int.Parse(tok, NumFormat);
+
+        //                        if ((tok = Getnexttoken(ref line, ',')) != null)
+        //                            maxz = int.Parse(tok, NumFormat);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //} // SHOWEQ
+
+        //private void ParseMLP(string filename, IFormatProvider NumFormat, ref int numtexts, ref int numlines, int curLine, ref string tok, ref string line)
+        //{
+        //    if (tok == "M")
+        //    {// example format : M,line,white,2,-247,-371,850,-249,-366,870
+        //        MapLine work = new MapLine();
+
+        //        int numpoints = 0;
+
+        //        bool bOK = true;
+
+        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+        //            work.name = tok;
+        //        else
+        //            bOK = false;
+
+        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+        //            work.color = new Pen(new SolidBrush(ColorChart.StringToColor(tok)));
+        //        else
+        //            bOK = false;
+
+        //        if ((tok = Getnexttoken(ref line, ',')) != null)
+        //            numpoints = int.Parse(tok, NumFormat);
+        //        else
+        //            bOK = false;
+
+        //        if (bOK)
+        //            work.linePoints = new PointF[numpoints];
+
+        //        int pointnum = 0;
+
+        //        while (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+        //        {
+        //            MapPoint temp = new MapPoint
+        //            {
+        //                x = (int)float.Parse(tok, NumFormat)
+        //            };
+
+        //            if ((tok = Getnexttoken(ref line, ',')) != null)
+        //            {
+        //                temp.y = (int)float.Parse(tok, NumFormat);
+
+        //                if ((tok = Getnexttoken(ref line, ',')) != null)
+        //                {
+        //                    temp.z = (int)float.Parse(tok, NumFormat) / 10;
+
+        //                    work.aPoints.Add(temp);
+
+        //                    work.linePoints[pointnum] = new PointF(temp.x, temp.y);
+
+        //                    pointnum++;
+        //                }
+        //            }
+        //        }
+
+        //        if (numpoints != work.aPoints.Count)
+        //        {
+        //            LogLib.WriteLine(
+        //                $"Warning - Line {curLine} of map '{filename}' has an invalid point count. Expected - {numpoints}, Actual {work.aPoints.Count}. Continuing...",
+        //                LogLevel.Warning);
+        //        }
+
+        //        if (bOK && work.aPoints.Count >= 2)
+        //        {
+        //            lines.Add(work);
+
+        //            numlines++;
+        //        }
+        //    }
+        //    else if (tok == "L")
+        //    {// example
+        //        MapLine work = new MapLine();
+
+        //        int numpoints = 0;
+
+        //        bool bOK = true;
+
+        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+        //            work.name = tok;
+        //        else
+        //            bOK = false;
+
+        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+        //            work.color = new Pen(new SolidBrush(ColorChart.StringToColor(tok)));
+        //        else
+        //            bOK = false;
+
+        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+        //            numpoints = int.Parse(tok, NumFormat);
+        //        else
+        //            bOK = false;
+
+        //        if (bOK)
+        //        {
+        //            int pointnum = 0;
+
+        //            while ((tok = Getnexttoken(ref line, ',')) != null)
+        //            {
+        //                MapPoint temp = new MapPoint
+        //                {
+        //                    x = (int)float.Parse(tok, NumFormat)
+        //                };
+
+        //                if ((tok = Getnexttoken(ref line, ',')) != null)
+        //                {
+        //                    temp.y = (int)float.Parse(tok, NumFormat);
+
+        //                    work.aPoints.Add(temp);
+
+        //                    work.linePoints[pointnum] = new PointF(temp.x, temp.y);
+
+        //                    pointnum++;
+        //                }
+        //            }
+
+        //            if (numpoints != work.aPoints.Count)
+        //            {
+        //                LogLib.WriteLine(
+        //                    $"Warning - Line {curLine} of map '{filename}' has an invalid point count. Expected - {numpoints}, Actual {work.aPoints.Count}. Continuing...", LogLevel.Warning);
+        //            }
+
+        //            if (work.aPoints.Count >= 2)
+        //            {
+        //                lines.Add(work);
+
+        //                numlines++;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
+        //        }
+        //    }
+        //    else if (tok == "P")
+        //    {// example P,Succor Point,white,-172,-821
+        //        MapText work = new MapText();
+
+        //        bool bOK = true;
+
+        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+        //            work.label = tok;
+        //        else
+        //            bOK = false;
+
+        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+        //            work.color = new SolidBrush(ColorChart.StringToColor(tok));
+        //        else
+        //            bOK = false;
+
+        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
+        //            work.x = int.Parse(tok, NumFormat);
+        //        else
+        //            bOK = false;
+
+        //        if ((tok = Getnexttoken(ref line, ',')) != null)
+        //            work.y = int.Parse(tok, NumFormat);
+        //        else
+        //            bOK = false;
+
+        //        if (bOK)
+        //        {
+        //            // add a z value if it exists
+        //            work.z = (Getnexttoken(ref line, ',')) != null ? int.Parse(tok, NumFormat) : -99999;
+
+        //            texts.Add(work);
+
+        //            numtexts++;
+        //        }
+        //    }
+        //}
+
         #endregion showeq_map_format
 
-        public bool LoadLoYMapInternal(string filename) //SOE / ingame EQ format
+        public bool LoadLoYMapInternal(string filename) //ingame EQ format
         {
             IFormatProvider NumFormat = new CultureInfo("en-US");
             string line = "";
             int numtexts = 0;
-
             int numlines = 0;
-
             int curLine = 0;
 
             if (!File.Exists(filename))
@@ -943,9 +929,9 @@ namespace myseq
                 catch (Exception ex) { LogLib.WriteLine("Error in loadLoYMap() Line: " + lineCount + " : ", ex); }
             }
 
-            LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
+//            LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
 
-            LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
+  //          LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
 
             streamReader.Close();
 
@@ -962,10 +948,8 @@ namespace myseq
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         } // LOY / EQ folder maps
 
         private void ParseLP(string filename, IFormatProvider NumFormat, ref string line, ref int numtexts, ref int numlines, int curLine, ref string tok)
@@ -1357,7 +1341,7 @@ namespace myseq
 
             // Increment the remove timers on all the mobs
 
-            foreach (SPAWNINFO sp in mobs.Values)
+            foreach (SPAWNINFO sp in mobsHashTable.Values)
             {
                 if (sp.delFromList)
                 {
@@ -1388,7 +1372,7 @@ namespace myseq
 
                     sp.listitem = null;
 
-                    mobs.Remove(sp.SpawnID);
+                    mobsHashTable.Remove(sp.SpawnID);
                 }
 
                 foreach (SPAWNINFO sp in delListItems)
@@ -1579,7 +1563,7 @@ namespace myseq
 
                     SpawnY = -1.0f;
 
-                    foreach (SPAWNINFO sp in mobs.Values)
+                    foreach (SPAWNINFO sp in mobsHashTable.Values)
                     {
                         if (sp.SpawnID == EQSelectedID)
                         {
@@ -1599,10 +1583,11 @@ namespace myseq
         }
 
         public void ProcessWorld(SPAWNINFO si) => gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0);
+
         /*  yy/mm/dd/hh/min
          * gameYear = si.Race
          * gameMonth = si.Hide
-         * gameDay = si.Level
+         * gameDay = si.Levelafk
          * gameHour = si.Type - 1
          * gameMin = si.Class
         */
@@ -1627,11 +1612,11 @@ namespace myseq
 
                 // a fast lookup to see if a mob already exists
 
-                if (mobs.ContainsKey(si.SpawnID))
+                if (mobsHashTable.ContainsKey(si.SpawnID))
                 {
                     found = true;
 
-                    mob = (SPAWNINFO)mobs[si.SpawnID];
+                    mob = (SPAWNINFO)mobsHashTable[si.SpawnID];
 
                     mob.gone = 0;
 
@@ -1694,9 +1679,9 @@ namespace myseq
                                 mob.listitem.SubItems[6].Text = "";
                                 mob.isPet = false;
                             }
-                            else if (mobs.ContainsKey(mob.OwnerID))
+                            else if (mobsHashTable.ContainsKey(mob.OwnerID))
                             {
-                                SPAWNINFO owner = (SPAWNINFO)mobs[mob.OwnerID];
+                                SPAWNINFO owner = (SPAWNINFO)mobsHashTable[mob.OwnerID];
 
                                 if (owner.IsPlayer)
                                 {
@@ -1883,9 +1868,9 @@ namespace myseq
             {
                 SPAWNINFO owner;
 
-                if (mobs.ContainsKey(si.OwnerID))
+                if (mobsHashTable.ContainsKey(si.OwnerID))
                 {
-                    owner = (SPAWNINFO)mobs[si.OwnerID];
+                    owner = (SPAWNINFO)mobsHashTable[si.OwnerID];
                     if (owner.IsPlayer)
                     {
                         si.isPet = true;
@@ -2136,16 +2121,10 @@ namespace myseq
                 // [hunt]
 
                 var corpse = !si.isCorpse || CorpseAlerts;
-                if (filters.Hunt.Count > 0 && corpse && FindMatches(
-                    filters.Hunt,
-                    matchmobname,
-                    Settings.Default.NoneOnHunt,
-                    Settings.Default.TalkOnHunt,
-                    "Hunt Mob",
-                    Settings.Default.PlayOnHunt,
-                    Settings.Default.HuntAudioFile,
-                    Settings.Default.BeepOnHunt,
-                    MatchFullTextH))
+                if (filters.Hunt.Count > 0 && corpse && FindMatches(filters.Hunt, matchmobname, Settings.Default.NoneOnHunt,
+                    Settings.Default.TalkOnHunt, "Hunt Mob",
+                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                    Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
                     alert = true;
                     mobnameWithInfo = huntpref(mobnameWithInfo);
@@ -2279,15 +2258,7 @@ namespace myseq
                         Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
                     alert = true;
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = $"{HuntPrefix}W {mobnameWithInfo}";
-                    }
-
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += $" {HuntPrefix}";
-                    }
+                    mobnameWithInfo = huntpref(mobnameWithInfo);
 
                     si.isHunt = true;
                 }
@@ -2301,14 +2272,7 @@ namespace myseq
                         Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
                     alert = true;
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = $"{HuntPrefix}O {mobnameWithInfo}";
-                    }
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += $" {HuntPrefix}";
-                    }
+                    mobnameWithInfo = huntpref(mobnameWithInfo);
                     si.isAlert = true;
                 }
 
@@ -2316,8 +2280,7 @@ namespace myseq
             }
 
             ListViewItem item1 = AddDetailsToList(si, SpawnList, alert, mobnameWithInfo);
-
-            try { mobs.Add(si.SpawnID, si); }
+            try { mobsHashTable.Add(si.SpawnID, si); }
             catch (Exception ex) { LogLib.WriteLine($"Error adding {si.Name} to mobs hashtable: ", ex); }
 
             // Add it to the spawn list if it's not supposed to be hidden
@@ -2337,7 +2300,6 @@ namespace myseq
 
                 return mname;
             }
-            //            return alert;
         }
 
         private ListViewItem AddDetailsToList(SPAWNINFO si, ListViewPanel SpawnList, bool alert, string mobnameWithInfo)
@@ -2380,9 +2342,7 @@ namespace myseq
 
             item1.SubItems.Add(si.Z.ToString("#.00"));
 
-            var sd = SpawnDistance(si);
-
-            item1.SubItems.Add(sd.ToString("#.00"));
+            item1.SubItems.Add(SpawnDistance(si).ToString("#.00"));
 
             //            item1.SubItems.Add(GuildNumToString(si.Guild));
 
@@ -2507,9 +2467,9 @@ namespace myseq
         {
             if (si.OwnerID > 0)
             {
-                if (mobs.ContainsKey(si.OwnerID))
+                if (mobsHashTable.ContainsKey(si.OwnerID))
                 {
-                    SPAWNINFO owner = (SPAWNINFO)mobs[si.OwnerID];
+                    SPAWNINFO owner = (SPAWNINFO)mobsHashTable[si.OwnerID];
                     item1.SubItems.Add(RegexHelper.FixMobName(owner.Name));
                 }
                 else
@@ -2525,9 +2485,9 @@ namespace myseq
 
         public void UpdateMobListColors()
         {
-            if (mobs != null)
+            if (mobsHashTable != null)
             {
-                foreach (SPAWNINFO si in mobs.Values)
+                foreach (SPAWNINFO si in mobsHashTable.Values)
                 {
                     if (si.listitem != null)
                     {
@@ -2638,7 +2598,7 @@ namespace myseq
 
             sw.Write("Name\tLevel\t Class\tRace\tLastname\tType\tInvis\tRun\tSpeed\tSpawnID\tX\tY\tZ\tHeading");
 
-            foreach (SPAWNINFO si in mobs.Values)
+            foreach (SPAWNINFO si in mobsHashTable.Values)
             {
                 sw.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}",
                              si.Name,
@@ -2725,7 +2685,6 @@ namespace myseq
                     foreach (ListViewItem i in newSpawns) items[d++] = i;
 
                     SpawnList.listView.Items.AddRange(items);
-
                     newSpawns.Clear();
                     if (Zoning)
                         SpawnList.listView.EndUpdate();
@@ -2747,6 +2706,7 @@ namespace myseq
                     foreach (ListViewItem i in newGroundItems) items[d++] = i;
 
                     GroundItemList.listView.Items.AddRange(items);
+                    //GroundItemList.listView.Items.Add((string)items.GetValue(1));
 
                     newGroundItems.Clear();
                 }
@@ -2832,10 +2792,6 @@ namespace myseq
                             gconLevel = 115;
                         if (gconLevel < 1)
                             gconLevel = -1;
-                        //if (f1.gconLevel == -1)
-                        //{
-                        //    f1.gConBaseName = "";
-                        //}
                         gLastconLevel = gconLevel;
                         Settings.Default.LevelOverride = gconLevel;
                     }
@@ -2860,7 +2816,7 @@ namespace myseq
 
         public void Clear()
         {
-            mobs.Clear();
+            mobsHashTable.Clear();
             itemcollection.Clear();
             mobtrails.Clear();
         }

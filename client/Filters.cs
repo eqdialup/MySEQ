@@ -41,18 +41,10 @@ namespace myseq
             //            OffhandItem.Clear();
         }
 
-        /// <summary>
-        /// Highly doubtful anyone operating with 4.xx filters still, those were replaced/removed in 2006 or so. removed funtion to read them.
-        /// program is doing a continuous job in purging all .conf files too.
-        /// Combined primary and off hand arrays into one. it's all based on same itemlist.
-        /// </summary>
         public void AddToAlerts(ArrayList list, string additem)
-
         {
             // only add to list, if not in list already
-
             try
-
             {
                 foreach (string item in list)
                 {
@@ -61,7 +53,6 @@ namespace myseq
                         return;
                     }
                 }
-
                 list.Add(additem);
             }
             catch (Exception ex)
@@ -79,11 +70,10 @@ namespace myseq
 
             try
             {
-                string filterFile;
                 string filterDir = Settings.Default.FilterDir;
                 zoneName = zoneName.ToLower();
 
-                filterFile = Path.Combine(filterDir, $"{zoneName}.xml");
+                string filterFile = Path.Combine(filterDir, $"{zoneName}.xml");
 
                 if (!File.Exists(filterFile))
                 {
@@ -457,8 +447,7 @@ namespace myseq
         public void LoadAlerts(string zoneName)
 
         {
-            if (zoneName.Length > 0)
-
+            if (!string.IsNullOrEmpty(zoneName))
             {
                 ReadNewAlertFile(zoneName);
                 ReadNewAlertFile("global");
@@ -516,5 +505,25 @@ namespace myseq
                 Process.Start("notepad.exe", filterFile);
             }
         }
+
+        private void createCustomAlertFile(string fileName)
+		{
+			StreamWriter streamWriter = new StreamWriter(fileName);
+			streamWriter.WriteLine("# Include # on every line that is not a filter");
+			streamWriter.WriteLine("# Be sure to only have up to 1 extra space at the end ");
+			streamWriter.WriteLine("#");
+			streamWriter.WriteLine("#");
+			streamWriter.WriteLine("# Hunt will put a yellow circle around the mob");
+			streamWriter.WriteLine("[hunt]");
+			streamWriter.WriteLine("#");
+			streamWriter.WriteLine("#");
+			streamWriter.WriteLine("# Caution will draw an flashing line to the target (traps etc)");
+			streamWriter.WriteLine("[caution]");
+			streamWriter.WriteLine("#");
+			streamWriter.WriteLine("#");
+			streamWriter.WriteLine("# Rare will draw a flashing white circle around the mob");
+			streamWriter.WriteLine("[rare]");
+			streamWriter.Close();
+		}
     }
 }

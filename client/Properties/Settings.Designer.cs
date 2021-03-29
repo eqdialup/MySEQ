@@ -1870,5 +1870,17 @@ namespace myseq.Properties {
                 this["EmailAlerts"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ThinSpawnList {
+            get {
+                return ((bool)(this["ThinSpawnList"]));
+            }
+            set {
+                this["ThinSpawnList"] = value;
+            }
+        }
     }
 }
