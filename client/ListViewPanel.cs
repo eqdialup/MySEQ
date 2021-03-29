@@ -882,9 +882,7 @@ namespace myseq
 
                 (Column == 8) ||    // Type
 
-                (Column == 9) ||    // Invis
-
-                (Column == 17))     // Guild
+                (Column == 9))      // Invis
 
 
             {

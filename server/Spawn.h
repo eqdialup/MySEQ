@@ -62,8 +62,6 @@ struct netBuffer_t
 
 	UINT flags;
 
-	UINT guild;
-
 };
 
 #pragma pack(pop)
@@ -82,7 +80,7 @@ public:
 						
 						OT_primary, OT_offhand, 
 
-						OT_prev, OT_next, OT_guild, OT_max};
+						OT_prev, OT_next, OT_max };
 
 	UINT largestOffset;
 

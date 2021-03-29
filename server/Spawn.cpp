@@ -96,8 +96,6 @@ void Spawn::init(IniReaderInterface* ir_intf)
 	
 	setOffset(OT_offhand,	ir_intf->readIntegerEntry("SpawnInfo Offsets", "OffhandOffset"), "Offhand");
 
-	setOffset(OT_guild,		ir_intf->readIntegerEntry("SpawnInfo Offsets", "GuildOffset"), "Guild");
-
 	// Determine how many bytes we should read for each spawn
 
 	largestOffset = 0;
@@ -185,15 +183,13 @@ void Spawn::packNetBufferRaw(UINT flags, UINT _this)
 		tempNetBuffer.race	= extractRawByte(OT_race);
 		tempNetBuffer.primary	= extractRawWord(OT_primary);
 		tempNetBuffer.offhand	= extractRawWord(OT_offhand);
-		tempNetBuffer.guild		= extractRawWord(OT_guild);
 		tempNetBuffer.id		= extractRawWord(OT_id);
-		tempNetBuffer.owner		= extractRawWord(OT_owner);
+		tempNetBuffer.owner = extractRawWord(OT_owner);
 	} else {
 		tempNetBuffer.race		= extractRawDWord(OT_race);
 		tempNetBuffer.primary	= extractRawDWord(OT_primary);
 		tempNetBuffer.offhand	= extractRawDWord(OT_offhand);
-		tempNetBuffer.guild		= extractRawDWord(OT_guild);
-		tempNetBuffer.owner		= extractRawDWord(OT_owner);
+		tempNetBuffer.owner = extractRawDWord(OT_owner);
 	}
 	tempNetBuffer.level		= extractRawByte(OT_level);
 
