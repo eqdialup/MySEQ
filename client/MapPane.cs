@@ -446,7 +446,7 @@ namespace myseq
         private void scale_ValueChanged(object sender, EventArgs e) {
             mapCon.scale = (float)scale.Value/100.0f;
 
-            f1.toolStripScale.Text = $"{scale.Value / 100:0.0%}";
+            f1.toolStripScale.Text = $"{scale.Value / 100:0%}";
 
             mapCon.ReAdjust();
 
@@ -500,5 +500,3 @@ namespace myseq
         }
     }
 }
-
->>>>>>> Lenothx/master

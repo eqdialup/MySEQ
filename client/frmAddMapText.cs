@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Structures;
+using System;
 using System.Windows.Forms;
 
 namespace myseq
@@ -10,13 +11,12 @@ namespace myseq
             InitializeComponent();
         }
 
-        //private void frmAddTextBox_Load(object sender, EventArgs e)
-        //{
-        //    //event, no nohing needed
-        //}
-
         private void BtnAddTxtOk_Click(object sender, EventArgs e)
         {
+            if (Settings.Instance.SelectedAddMapText != txtColr)
+            {
+                Settings.Instance.SelectedAddMapText = txtColr;
+            }
             Close();
         }
 

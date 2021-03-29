@@ -1,20 +1,13 @@
-﻿
-using SpeechLib;
+﻿using SpeechLib;
 
 namespace myseq
 {
     public class Talker
-
     {
-        public string speakText;
+        public string speakText {get; set; }
+        public static SpVoice Speech { get; set; } = new SpVoice();
 
-        public static SpVoice speech = new SpVoice();
-
-        public void SpeakText()
-
-        {
-            speech.Speak(speakText, SpeechVoiceSpeakFlags.SVSFDefault);
-        }
+        public void SpeakText() => Speech.Speak(speakText, SpeechVoiceSpeakFlags.SVSFDefault);
     }
 }
 

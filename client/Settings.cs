@@ -8,72 +8,71 @@ using System.Xml;
 namespace Structures
 
 {
-    public enum DrawOptions {
+    public enum DrawOptions
+    {
+        DrawMap = 0x00000001,       // Do we want to draw the map?
 
-        DrawMap             = 0x00000001,       // Do we want to draw the map?
+        Readjust = 0x00000002,       // Readjust?
 
-        Readjust            = 0x00000002,       // Readjust?
+        Player = 0x00000004,       // Draw the player?
 
-        Player              = 0x00000004,       // Draw the player?
+        SpotLine = 0x00000008,       // Draw the shift-click line?
 
-        SpotLine            = 0x00000008,       // Draw the shift-click line?
+        Spawns = 0x00000010,       // Draw all spawns?
 
-        Spawns              = 0x00000010,       // Draw all spawns?
+        SpawnTrails = 0x00000020,       // Draw the mob trails?
 
-        SpawnTrails         = 0x00000020,       // Draw the mob trails?
+        GroundItems = 0x00000040,       // Draw the ground items?
 
-        GroundItems         = 0x00000040,       // Draw the ground items?
+        SpawnTimers = 0x00000080,       // Draw the spawn timers?
 
-        SpawnTimers         = 0x00000080,       // Draw the spawn timers?
+        DirectionLines = 0x00000100,       // Draw Direction lines (direction lines and such)
 
-        DirectionLines      = 0x00000100,       // Draw Direction lines (direction lines and such)
+        SpawnRings = 0x00000200,       // Draw Shopkeeper(etc) rings around mobs
 
-        SpawnRings          = 0x00000200,       // Draw Shopkeeper(etc) rings around mobs
+        GridLines = 0x00000400,       // Draw grid lines
 
-        GridLines           = 0x00000400,       // Draw grid lines
-
-        ZoneText            = 0x00000800,       // Draw zone text
+        ZoneText = 0x00000800,       // Draw zone text
 
         //
 
-        DrawAll             = 0x0fffffff,
+        DrawAll = 0x0fffffff,
 
-        DrawNormal          = DrawMap           // Standard, nice, savings
+        DrawNormal = DrawMap           // Standard, nice, savings
 
-                              +Readjust
+                              + Readjust
 
-                              +Player
+                              + Player
 
-                              +SpotLine
+                              + SpotLine
 
-                              +Spawns
+                              + Spawns
 
-                              +GroundItems
+                              + GroundItems
 
-                              +SpawnTimers
+                              + SpawnTimers
 
-                              +DirectionLines
+                              + DirectionLines
 
-                              +GridLines
+                              + GridLines
 
-                              +ZoneText,
+                              + ZoneText,
 
-        DrawLess            = DrawNormal        // Takes away more uncritically things
+        DrawLess = DrawNormal        // Takes away more uncritically things
 
-                              -DirectionLines
+                              - DirectionLines
 
-                              -GroundItems
+                              - GroundItems
 
-                              -SpawnTimers
+                              - SpawnTimers
 
-                              -ZoneText,
+                              - ZoneText,
 
-        DrawEvenLess        = DrawLess          // Takes away substantially
+        DrawEvenLess = DrawLess          // Takes away substantially
 
-                              -Readjust,
+                              - Readjust,
 
-        DrawNone            = 0x00000000,       // Maximum savings - all enabled
-
+        DrawNone = 0x00000000,       // Maximum savings - all enabled
     };
 
     #region Settings class
@@ -81,7 +80,6 @@ namespace Structures
     // Settings singleton
 
     [Serializable]
-
     public sealed class Settings
 
     {
@@ -370,7 +368,7 @@ namespace Structures
 
         public bool CorpseAlerts { get; set; } = true;
 
-        public int LevelOverride { get; set; } = -1;
+        public int LevelOverride = -1;
 
         public int RangeCircle { get; set; } = 150;
 
@@ -410,8 +408,10 @@ namespace Structures
 
         public Color SelectedAddMapText { get; set; } = Color.White;
 
-        public static Settings Instance {
-            get {
+        public static Settings Instance
+        {
+            get
+            {
                 // only create a new instance if one doesn't already exist.
 
                 if (instance == null)
@@ -430,10 +430,11 @@ namespace Structures
                 return instance;
             }
 
-            set{instance = value;}
+            set { instance = value; }
         }
 
-        public void Save(string filename) {
+        public void Save(string filename)
+        {
             if (prefsDir?.Length == 0)
             {
                 prefsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
@@ -452,18 +453,21 @@ namespace Structures
                 File.Delete(oldconfigFile);
         }
 
-        public void Load(string filename) {
+        public void Load(string filename)
+        {
             FileStream fs = null;
             bool otherLoad = false;
-            try {
+            try
+            {
                 fs = new FileStream(filename, FileMode.Open);
 
                 SoapFormatter sf1 = new SoapFormatter();
 
                 Instance = (Settings)sf1.Deserialize(fs);
             }
-            catch (Exception ex) {
-                LogLib.WriteLine("Error in Settings.Load(): ", ex);
+            catch (Exception)
+            {
+                //                LogLib.WriteLine("Error in Settings.Load(): ", ex);
                 otherLoad = true;
             }
 
@@ -474,221 +478,279 @@ namespace Structures
             if (otherLoad)
             {
                 // Try manually loading directly
-                try {
-                    XmlTextReader reader = new XmlTextReader(url: filename);
-                    while (reader.Read())
+                XmlTextReader reader = new XmlTextReader(url: filename);
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if (reader.NodeType == XmlNodeType.Element)
+                        switch (reader.Name)
                         {
-                            switch (reader.Name)
-                            {
-                                case "ipAddress1":
-                                    IPAddress1 = reader.ReadElementContentAsString();
-                                    break;
-                                case "ipAddress2":
-                                    IPAddress2 = reader.ReadElementContentAsString();
-                                    break;
-                                case "ipAddress3":
-                                    IPAddress3 = reader.ReadElementContentAsString();
-                                    break;
-                                case "ipAddress4":
-                                    IPAddress4 = reader.ReadElementContentAsString();
-                                    break;
-                                case "ipAddress5":
-                                    IPAddress5 = reader.ReadElementContentAsString();
-                                    break;
-                                case "currentIPAddress":
-                                    CurrentIPAddress = reader.ReadElementContentAsInt();
-                                    break;
-                                case "port":
-                                    Port = reader.ReadElementContentAsInt();
-                                    break;
-                                case "autoConnect":
-                                    AutoConnect = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "rangeCircle":
-                                    RangeCircle = reader.ReadElementContentAsInt();
-                                    break;
-                                case "updateDelay":
-                                    UpdateDelay = reader.ReadElementContentAsInt();
-                                    break;
-                                case "showPCNames":
-                                    ShowPCNames = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showNPCNames":
-                                    ShowNPCNames = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showNPCCorpseNames":
-                                     ShowNPCCorpseNames = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showPlayerCorpseNames":
-                                    ShowPlayerCorpseNames = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showLayer1":
-                                    ShowLayer1 = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showLayer2":
-                                    ShowLayer2 = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showLayer3":
-                                    ShowLayer3 = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "gridInterval":
-                                    GridInterval = reader.ReadElementContentAsInt();
-                                    break;
-                                case "SpawnSize":
-                                    SpawnDrawSize = reader.ReadElementContentAsInt();
-                                    break;
-                                case "colorRangeCircle":
-                                    ColorRangeCircle = reader.ReadElementContentAsBoolean();
-                                    break;
-                                 case "drawFoV":
-                                    DrawFoV = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showZoneName":
-                                    ShowZoneName = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showCharName":
-                                    ShowCharName = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "sodCon":
-                                    SoDCon = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "sofCon":
-                                    SoFCon = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "defaultCon":
-                                    DefaultCon = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showTargetInfo":
-                                    ShowTargetInfo = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "smallTargetInfo":
-                                    SmallTargetInfo = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "autoSelectEQTarget":
-                                    AutoSelectEQTarget = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "mapDir":
-                                    MapDir = reader.ReadElementContentAsString();
-                                    break;
-                                case "FilterDir":
-                                    FilterDir = reader.ReadElementContentAsString();
-                                    break;
-                                case "cfgDir":
-                                    CfgDir = reader.ReadElementContentAsString();
-                                    break;
-                                case "logDir":
-                                    LogDir = reader.ReadElementContentAsString();
-                                    break;
-                                case "timerDir":
-                                    TimerDir = reader.ReadElementContentAsString();
-                                    break;
-                                case "showPlayers":
-                                    ShowPlayers = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showNPCs":
-                                    ShowNPCs = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showCorpses":
-                                    ShowCorpses = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showPCCorpses":
-                                    ShowPCCorpses = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showMyCorpse":
-                                    ShowMyCorpse = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showInvis":
-                                    ShowInvis = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showMounts":
-                                    ShowMounts = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showFamiliars":
-                                    ShowFamiliars = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showPets":
-                                    ShowPets = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showPVP":
-                                    ShowPVP = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showPVPLevel":
-                                    ShowPVPLevel = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showNPCLevels":
-                                    ShowNPCLevels = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showLookupText":
-                                    ShowLookupText = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "showLookupNumber":
-                                    ShowLookupNumber = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "autoSelectSpawnList":
-                                    AutoSelectSpawnList = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "keepCentered":
-                                    KeepCentered = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "autoExpand":
-                                    AutoExpand = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "saveSpawnLogs":
-                                    SaveSpawnLogs = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "spawnCountdown":
-                                    SpawnCountdown = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "forceDistinct":
-                                    ForceDistinct = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "forceDistinctText":
-                                    ForceDistinctText = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "useDynamicAlpha":
-                                    UseDynamicAlpha = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "fadedLines":
-                                    FadedLines = reader.ReadElementContentAsInt();
-                                    break;
-                                case "filterGroundItems":
-                                    FilterGroundItems = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "filterNPCs":
-                                    FilterNPCs = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "filterPlayers":
-                                    FilterPlayers = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "filterMapLines":
-                                    FilterMapLines = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "filterMapText":
-                                    FilterMapText = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "filterSpawnPoints":
-                                    FilterSpawnPoints = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "filterNPCCorpses":
-                                    FilterNPCCorpses = reader.ReadElementContentAsBoolean();
-                                    break;
-                                case "filterPlayerCorpses":
-                                    FilterPlayerCorpses = reader.ReadElementContentAsBoolean();
-                                    break;
-                            }
+                            case "ipAddress1":
+                                IPAddress1 = reader.ReadElementContentAsString();
+                                break;
+
+                            case "ipAddress2":
+                                IPAddress2 = reader.ReadElementContentAsString();
+                                break;
+
+                            case "ipAddress3":
+                                IPAddress3 = reader.ReadElementContentAsString();
+                                break;
+
+                            case "ipAddress4":
+                                IPAddress4 = reader.ReadElementContentAsString();
+                                break;
+
+                            case "ipAddress5":
+                                IPAddress5 = reader.ReadElementContentAsString();
+                                break;
+
+                            case "currentIPAddress":
+                                CurrentIPAddress = reader.ReadElementContentAsInt();
+                                break;
+
+                            case "port":
+                                Port = reader.ReadElementContentAsInt();
+                                break;
+
+                            case "autoConnect":
+                                AutoConnect = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "rangeCircle":
+                                RangeCircle = reader.ReadElementContentAsInt();
+                                break;
+
+                            case "updateDelay":
+                                UpdateDelay = reader.ReadElementContentAsInt();
+                                break;
+
+                            case "showPCNames":
+                                ShowPCNames = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showNPCNames":
+                                ShowNPCNames = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showNPCCorpseNames":
+                                ShowNPCCorpseNames = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showPlayerCorpseNames":
+                                ShowPlayerCorpseNames = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showLayer1":
+                                ShowLayer1 = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showLayer2":
+                                ShowLayer2 = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showLayer3":
+                                ShowLayer3 = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "gridInterval":
+                                GridInterval = reader.ReadElementContentAsInt();
+                                break;
+
+                            case "SpawnSize":
+                                SpawnDrawSize = reader.ReadElementContentAsInt();
+                                break;
+
+                            case "colorRangeCircle":
+                                ColorRangeCircle = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "drawFoV":
+                                DrawFoV = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showZoneName":
+                                ShowZoneName = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showCharName":
+                                ShowCharName = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "sodCon":
+                                SoDCon = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "sofCon":
+                                SoFCon = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "defaultCon":
+                                DefaultCon = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showTargetInfo":
+                                ShowTargetInfo = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "smallTargetInfo":
+                                SmallTargetInfo = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "autoSelectEQTarget":
+                                AutoSelectEQTarget = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "mapDir":
+                                MapDir = reader.ReadElementContentAsString();
+                                break;
+
+                            case "FilterDir":
+                                FilterDir = reader.ReadElementContentAsString();
+                                break;
+
+                            case "cfgDir":
+                                CfgDir = reader.ReadElementContentAsString();
+                                break;
+
+                            case "logDir":
+                                LogDir = reader.ReadElementContentAsString();
+                                break;
+
+                            case "timerDir":
+                                TimerDir = reader.ReadElementContentAsString();
+                                break;
+
+                            case "showPlayers":
+                                ShowPlayers = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showNPCs":
+                                ShowNPCs = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showCorpses":
+                                ShowCorpses = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showPCCorpses":
+                                ShowPCCorpses = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showMyCorpse":
+                                ShowMyCorpse = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showInvis":
+                                ShowInvis = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showMounts":
+                                ShowMounts = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showFamiliars":
+                                ShowFamiliars = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showPets":
+                                ShowPets = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showPVP":
+                                ShowPVP = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showPVPLevel":
+                                ShowPVPLevel = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showNPCLevels":
+                                ShowNPCLevels = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showLookupText":
+                                ShowLookupText = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "showLookupNumber":
+                                ShowLookupNumber = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "autoSelectSpawnList":
+                                AutoSelectSpawnList = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "keepCentered":
+                                KeepCentered = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "autoExpand":
+                                AutoExpand = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "saveSpawnLogs":
+                                SaveSpawnLogs = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "spawnCountdown":
+                                SpawnCountdown = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "forceDistinct":
+                                ForceDistinct = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "forceDistinctText":
+                                ForceDistinctText = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "useDynamicAlpha":
+                                UseDynamicAlpha = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "fadedLines":
+                                FadedLines = reader.ReadElementContentAsInt();
+                                break;
+
+                            case "filterGroundItems":
+                                FilterGroundItems = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "filterNPCs":
+                                FilterNPCs = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "filterPlayers":
+                                FilterPlayers = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "filterMapLines":
+                                FilterMapLines = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "filterMapText":
+                                FilterMapText = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "filterSpawnPoints":
+                                FilterSpawnPoints = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "filterNPCCorpses":
+                                FilterNPCCorpses = reader.ReadElementContentAsBoolean();
+                                break;
+
+                            case "filterPlayerCorpses":
+                                FilterPlayerCorpses = reader.ReadElementContentAsBoolean();
+                                break;
                         }
                     }
-                    reader.Close();
                 }
-                catch (Exception ex)
-                {
-                    LogLib.WriteLine("Error in Settings.Load(): ", ex);
-                }
+                reader.Close();
             }
         }
     }
 
-    #endregion
+    #endregion Settings class
 }
