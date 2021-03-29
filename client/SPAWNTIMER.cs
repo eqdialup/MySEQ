@@ -1,4 +1,5 @@
-﻿using Structures;
+﻿using myseq.Properties;
+using Structures;
 using System;
 using System.Drawing;
 using System.Text;
@@ -74,9 +75,7 @@ namespace myseq
 
         // Returns the data in a format which can be used with the (string) constructor.
 
-        public string GetAsString() => SpawnLoc + ";" + SpawnCount + ";" + SpawnTimer + ";" + SpawnTimeStr + ";" + KillTimeStr + ";" +
-
-            NextSpawnStr + ";" + LastSpawnName + ";" + AllNames + ";" + X + ";" + Y + ";" + Z;
+        public string GetAsString() => $"{SpawnLoc};{SpawnCount};{SpawnTimer};{SpawnTimeStr};{KillTimeStr};{NextSpawnStr};{LastSpawnName};{AllNames};{X};{Y};{Z}";
 
         // st has been loaded from a file, and is the same spawn as "this" one. 
 
@@ -187,7 +186,6 @@ namespace myseq
         // TODO: optimize this, as it is called much more often than the mob is being updated
 
         public int SecondsUntilSpawn(DateTime now)
-
         {
             int checkTimer=0;
 
@@ -198,10 +196,9 @@ namespace myseq
 
                 checkTimer = (Diff.Hours * 3600) + (Diff.Minutes * 60) + Diff.Seconds;
 
-                if (checkTimer<=0)
-
+                if (checkTimer <= 0)
                 {
-                    checkTimer=0;
+                    checkTimer = 0;
                 }
             }
 
@@ -213,12 +210,12 @@ namespace myseq
         {
             int countTime = 0;
 
-            string countTimer = "";
+            var countTimer = "";
 
             if (NextSpawnDT != DateTime.MinValue) {
                 TimeSpan Diff = NextSpawnDT.Subtract(DateTime.Now);
 
-                countTimer = Diff.Hours.ToString("00") + ":" + Diff.Minutes.ToString("00") + ":" + Diff.Seconds.ToString("00");
+                countTimer = $"{Diff.Hours:00}:{Diff.Minutes:00}:{Diff.Seconds:00}";
 
                 countTime = (Diff.Hours * 3600) + (Diff.Minutes * 60) + Diff.Seconds;
             }
@@ -303,9 +300,7 @@ namespace myseq
             string names_to_add = "Names encountered: ";
             string[] names = AllNames.Split(',');
 
-            int namecount = 0;
-
-            NameCount(spawnTimer, ref names_to_add, names, ref namecount);
+            NameCount(spawnTimer, ref names_to_add, names);
 
             if (names_to_add.Length > 0)
             {
@@ -315,32 +310,25 @@ namespace myseq
             return spawnTimer;
         }
 
-        private static void NameCount(StringBuilder spawnTimer, ref string names_to_add, string[] names, ref int namecount)
+        private static void NameCount(StringBuilder spawnTimer, ref string names_to_add, string[] names)
         {
+            var builder = new StringBuilder();
             foreach (string name in names)
             {
                 var namet = RegexHelper.TrimName(name);
 
-                if (namecount == 0)
+                if ((namet.Length + names_to_add.Length + 2) < 45)
                 {
-                    names_to_add += namet;
+                    builder.Append(names_to_add);
+                    builder.Append(", ");
+                    builder.Append(namet);
                 }
                 else
                 {
-                    if ((namet.Length + names_to_add.Length + 2) < 45)
-                    {
-                        names_to_add += ", ";
-                        names_to_add += namet;
-                    }
-                    else
-                    {
-                        spawnTimer.Append(names_to_add);
-                        spawnTimer.Append("\n");
-                        names_to_add = namet;
-                    }
+                    spawnTimer.Append(builder.ToString());
+                    spawnTimer.Append("\n");
+                    names_to_add = namet;
                 }
-
-                namecount++;
             }
         }
 
@@ -406,7 +394,7 @@ namespace myseq
 
                     SpawnTimer = (Diff.Hours * 3600) + (Diff.Minutes * 60) + Diff.Seconds;
 
-                    if (Settings.Instance.MaxLogLevel > 0)
+                    if (Settings.Default.MaxLogLevel > 0)
                     {
                         string spawnTimer = $"{Diff.Hours:00}:{Diff.Minutes:00}:{Diff.Seconds:00}";
 
@@ -459,7 +447,7 @@ namespace myseq
 
                 listNeedsUpdate = true;
 
-                for (int t=0; t<10; t++)
+                for (var t = 0; t < 10; t++)
 
                 {
                     itmSpawnTimerList.SubItems.Add("");

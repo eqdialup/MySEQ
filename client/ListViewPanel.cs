@@ -1,3 +1,4 @@
+using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
@@ -19,7 +20,7 @@ namespace myseq
 
         private Filters filters;
 
-        private frmMain f1;
+        private FrmMain f1;
 
         private TextBox txtSpawnList;
 
@@ -48,7 +49,7 @@ namespace myseq
 
         private ToolStripMenuItem mnuAddZoneRareFilter;
 
-//        private ToolStripMenuItem addZoneEmailAlertFilter;
+        //        private ToolStripMenuItem addZoneEmailAlertFilter;
 
         private ToolStripMenuItem mnuEditGlobalFilters;
 
@@ -75,12 +76,13 @@ namespace myseq
         private ToolStripMenuItem mnuStickyTimer;
         private ToolStripMenuItem toolStriConcolor;
 
-        private int ListType;
+        private readonly int ListType;
 
         // if 0, it's the SpawnList, 1 SpawnTimerList, 2 GroundItemList
 
-        public ListViewPanel(int listType) {
-            ListType=listType; // 0 = spawn list, 1 = spawn timer list, 2 = ground spawn list
+        public ListViewPanel(int listType)
+        {
+            ListType = listType; // 0 = spawn list, 1 = spawn timer list, 2 = ground spawn list
 
             InitializeComponent();
 
@@ -95,15 +97,7 @@ namespace myseq
             listProperty.SetValue(listView, true, null);
         }
 
-        protected override string GetPersistString()
-        {
-            if (ListType == 0)
-                return "SpawnList";
-            else if (ListType == 1)
-                return "SpawnTimerList";
-            else
-                return "GroundSpawnList";
-        }
+        protected override string GetPersistString() => ListType == 0 ? "SpawnList" : ListType == 1 ? "SpawnTimerList" : "GroundSpawnList";
 
         public void HideSearchBox()
         {
@@ -120,7 +114,7 @@ namespace myseq
             listView.Location = new Point(0, 24);
         }
 
-        public void SetComponents(EQData eq,MapCon mapCon, Filters filters,frmMain f1)
+        public void SetComponents(EQData eq, MapCon mapCon, Filters filters, FrmMain f1)
 
         {
             this.eq = eq;
@@ -132,11 +126,12 @@ namespace myseq
             this.f1 = f1;
         }
 
-        protected override void Dispose(bool disposing) {
+        protected override void Dispose(bool disposing)
+        {
             if (disposing && components != null)
                 components.Dispose();
 
-            base.Dispose( disposing );
+            base.Dispose(disposing);
         }
 
         #region Component Designer generated code
@@ -157,7 +152,7 @@ namespace myseq
             mnuAddZoneCautionFilter = new ToolStripMenuItem();
             mnuAddZoneDangerFilter = new ToolStripMenuItem();
             mnuAddZoneRareFilter = new ToolStripMenuItem();
-//            addZoneEmailAlertFilter = new ToolStripMenuItem();
+            //            addZoneEmailAlertFilter = new ToolStripMenuItem();
             menuItem2 = new ToolStripSeparator();
             mnuAddGlobalFilter = new ToolStripMenuItem();
             mnuAddHuntFilter = new ToolStripMenuItem();
@@ -183,7 +178,7 @@ namespace myseq
             txtSpawnList.Name = "txtSpawnList";
             txtSpawnList.Size = new Size(152, 23);
             txtSpawnList.TabIndex = 1;
-            txtSpawnList.TextChanged += new EventHandler(txtSpawnList_TextChanged);
+            txtSpawnList.TextChanged += new EventHandler(TxtSpawnList_TextChanged);
             // 
             // cmdReset
             // 
@@ -192,7 +187,7 @@ namespace myseq
             cmdReset.Size = new Size(48, 20);
             cmdReset.TabIndex = 0;
             cmdReset.Text = "Reset";
-            cmdReset.Click += new EventHandler(cmdReset_Click);
+            cmdReset.Click += new EventHandler(CmdReset_Click);
             // 
             // listView
             // 
@@ -210,10 +205,10 @@ namespace myseq
             listView.TabIndex = 2;
             listView.UseCompatibleStateImageBehavior = false;
             listView.View = View.Details;
-            listView.ColumnClick += new ColumnClickEventHandler(listView_ColumnClick);
-            listView.SelectedIndexChanged += new EventHandler(listView_SelectedIndexChanged);
-            listView.VisibleChanged += new EventHandler(listView_VisibleChanged);
-            listView.MouseEnter += new EventHandler(listView_MouseEnter);
+            listView.ColumnClick += new ColumnClickEventHandler(ListView_ColumnClick);
+            listView.SelectedIndexChanged += new EventHandler(ListView_SelectedIndexChanged);
+            listView.VisibleChanged += new EventHandler(ListView_VisibleChanged);
+            listView.MouseEnter += new EventHandler(ListView_MouseEnter);
             // 
             // mnuContext
             // 
@@ -240,7 +235,7 @@ namespace myseq
             mnuSearchAllakhazam});
             mnuContext.Name = "mnuContext";
             mnuContext.Size = new Size(342, 370);
-            mnuContext.Opened += new EventHandler(mnuContext_Opened);
+            mnuContext.Opened += new EventHandler(MnuContext_Opened);
             // 
             // mnuAddZoneFilter
             // 
@@ -254,7 +249,7 @@ namespace myseq
             mnuStickyTimer.Name = "mnuStickyTimer";
             mnuStickyTimer.Size = new Size(307, 22);
             mnuStickyTimer.Text = "Sticky Timer";
-            mnuStickyTimer.Click += new EventHandler(mnuStickyTimer_Click);
+            mnuStickyTimer.Click += new EventHandler(MnuStickyTimer_Click);
             // 
             // menuItem3
             // 
@@ -266,28 +261,28 @@ namespace myseq
             mnuAddZoneHuntFilter.Name = "mnuAddZoneHuntFilter";
             mnuAddZoneHuntFilter.Size = new Size(307, 22);
             mnuAddZoneHuntFilter.Text = "Add Zone Hunt Alert Filter";
-            mnuAddZoneHuntFilter.Click += new EventHandler(mnuAddZoneHuntFilter_Click);
+            mnuAddZoneHuntFilter.Click += new EventHandler(MnuAddZoneHuntFilter_Click);
             // 
             // mnuAddZoneCautionFilter
             // 
             mnuAddZoneCautionFilter.Name = "mnuAddZoneCautionFilter";
             mnuAddZoneCautionFilter.Size = new Size(307, 22);
             mnuAddZoneCautionFilter.Text = "Add Zone Caution Alert Filter";
-            mnuAddZoneCautionFilter.Click += new EventHandler(mnuAddZoneCautionFilter_Click);
+            mnuAddZoneCautionFilter.Click += new EventHandler(MnuAddZoneCautionFilter_Click);
             // 
             // mnuAddZoneDangerFilter
             // 
             mnuAddZoneDangerFilter.Name = "mnuAddZoneDangerFilter";
             mnuAddZoneDangerFilter.Size = new Size(307, 22);
             mnuAddZoneDangerFilter.Text = "Add Zone Danger Alert Filter";
-            mnuAddZoneDangerFilter.Click += new EventHandler(mnuAddZoneDangerFilter_Click);
+            mnuAddZoneDangerFilter.Click += new EventHandler(MnuAddZoneDangerFilter_Click);
             // 
             // mnuAddZoneRareFilter
             // 
             mnuAddZoneRareFilter.Name = "mnuAddZoneRareFilter";
             mnuAddZoneRareFilter.Size = new Size(307, 22);
             mnuAddZoneRareFilter.Text = "Add Zone Rare Alert Filter";
-            mnuAddZoneRareFilter.Click += new EventHandler(mnuAddZoneAlertFilter_Click);
+            mnuAddZoneRareFilter.Click += new EventHandler(MnuAddZoneAlertFilter_Click);
             //// 
             //// addZoneEmailAlertFilter
             //// 
@@ -317,28 +312,28 @@ namespace myseq
             mnuAddHuntFilter.Name = "mnuAddHuntFilter";
             mnuAddHuntFilter.Size = new Size(124, 22);
             mnuAddHuntFilter.Text = "Hunt";
-            mnuAddHuntFilter.Click += new EventHandler(mnuAddHuntFilter_Click);
+            mnuAddHuntFilter.Click += new EventHandler(MnuAddHuntFilter_Click);
             // 
             // mnuAddCautionFilter
             // 
             mnuAddCautionFilter.Name = "mnuAddCautionFilter";
             mnuAddCautionFilter.Size = new Size(124, 22);
             mnuAddCautionFilter.Text = "Caution";
-            mnuAddCautionFilter.Click += new EventHandler(mnuAddCautionFilter_Click);
+            mnuAddCautionFilter.Click += new EventHandler(MnuAddCautionFilter_Click);
             // 
             // mnuAddDangerFilter
             // 
             mnuAddDangerFilter.Name = "mnuAddDangerFilter";
             mnuAddDangerFilter.Size = new Size(124, 22);
             mnuAddDangerFilter.Text = "Danger";
-            mnuAddDangerFilter.Click += new EventHandler(mnuAddDangerFilter_Click);
+            mnuAddDangerFilter.Click += new EventHandler(MnuAddDangerFilter_Click);
             // 
             // mnuAddAlertFilter
             // 
             mnuAddAlertFilter.Name = "mnuAddAlertFilter";
             mnuAddAlertFilter.Size = new Size(124, 22);
             mnuAddAlertFilter.Text = "Rare";
-            mnuAddAlertFilter.Click += new EventHandler(mnuAddAlertFilter_Click);
+            mnuAddAlertFilter.Click += new EventHandler(MnuAddAlertFilter_Click);
             // 
             // mnuSep1
             // 
@@ -350,14 +345,14 @@ namespace myseq
             mnuEditGlobalFilters.Name = "mnuEditGlobalFilters";
             mnuEditGlobalFilters.Size = new Size(307, 22);
             mnuEditGlobalFilters.Text = "Edit Global &Alert Filters";
-            mnuEditGlobalFilters.Click += new EventHandler(mnuEditGlobalFilters_Click);
+            mnuEditGlobalFilters.Click += new EventHandler(MnuEditGlobalFilters_Click);
             // 
             // mnuEditZoneFilters
             // 
             mnuEditZoneFilters.Name = "mnuEditZoneFilters";
             mnuEditZoneFilters.Size = new Size(307, 22);
             mnuEditZoneFilters.Text = "Edit Z&one Alert Filters";
-            mnuEditZoneFilters.Click += new EventHandler(mnuEditZoneFilters_Click);
+            mnuEditZoneFilters.Click += new EventHandler(MnuEditZoneFilters_Click);
             // 
             // mnuSep2
             // 
@@ -370,7 +365,7 @@ namespace myseq
             mnuReloadZoneFilters.Name = "mnuReloadZoneFilters";
             mnuReloadZoneFilters.Size = new Size(341, 22);
             mnuReloadZoneFilters.Text = "&Reload Alert Filters";
-            mnuReloadZoneFilters.Click += new EventHandler(mnuReloadFilters_Click);
+            mnuReloadZoneFilters.Click += new EventHandler(MnuReloadFilters_Click);
             // 
             // toolStripSeparator1
             // 
@@ -382,7 +377,7 @@ namespace myseq
             addMapLabelToolStripMenuItem.Name = "addMapLabelToolStripMenuItem";
             addMapLabelToolStripMenuItem.Size = new Size(307, 22);
             addMapLabelToolStripMenuItem.Text = "Add Map Label";
-            addMapLabelToolStripMenuItem.Click += new EventHandler(addMapLabelToolStripMenuItem_Click);
+            addMapLabelToolStripMenuItem.Click += new EventHandler(AddMapLabelToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -408,7 +403,7 @@ namespace myseq
             toolStriConcolor.ShortcutKeys = Keys.Alt | Keys.C;
             toolStriConcolor.Size = new Size(341, 22);
             toolStriConcolor.Text = "Base Concolor on this Spawn";
-            toolStriConcolor.Click += new EventHandler(toolStriConcolor_Click);
+            toolStriConcolor.Click += new EventHandler(ToolStriConcolor_Click);
             // 
             // ListViewPanel
             // 
@@ -428,7 +423,7 @@ namespace myseq
 
         #endregion
 
-        private void mnuContext_Opened(object sender, EventArgs e)
+        private void MnuContext_Opened(object sender, EventArgs e)
 
         {
             mobname = "";
@@ -439,36 +434,11 @@ namespace myseq
             {
                 if (ListType == 0)
                 {
-                    mobname = RegexHelper.FilterMobName(listView.Items[sel[0]].SubItems[18].Text);
-                    mobname = mobname.Replace("_", " ");
-                    mobname = mobname.Trim();
-                    smoblevel = "";
-                    smoblevel = listView.Items[sel[0]].SubItems[1].Text;
-                    if (smoblevel.Length > 0)
-                    {
-                        bool isNum = int.TryParse(smoblevel, out var Num);
-
-                        if (isNum)
-                        {
-                            moblevel = Num;
-                        }
-                    }
+                    ListType0(sel);
                 }
                 else if (ListType == 1)
                 {
-                    smoblevel = "";
-                    smoblevel = listView.Items[sel[0]].SubItems[1].Text;
-                    if (smoblevel.Length > 0)
-                    {
-                        bool isNum = int.TryParse(smoblevel, out var Num);
-
-                        if (isNum)
-                        {
-                            moblevel = Num;
-                        }
-                    }
-                    mobname = RegexHelper.FixMobNameMatch(listView.Items[sel[0]].SubItems[0].Text);
-                    mobname = mobname.Trim();
+                    ListType1(sel);
                 }
                 else
                 {
@@ -479,11 +449,11 @@ namespace myseq
             if ((sel.Count > 0) && (mobname.Length > 0))
 
             {
-                mnuAddGlobalFilter.Text = "Add '" + mobname + "' &Global Alert Filter";
+                mnuAddGlobalFilter.Text = $"Add '{mobname}' &Global Alert Filter";
 
-                mnuAddZoneFilter.Text = "'" + mobname + "'";
+                mnuAddZoneFilter.Text = $"'{mobname}'";
 
-                toolStriConcolor.Text = "Base Concolor on '" + mobname + "' (" + smoblevel + ")";
+                toolStriConcolor.Text = $"Base Concolor on '{mobname}' ({smoblevel})";
                 mnuAddZoneFilter.Visible = true;
 
                 menuItem3.Visible = true;
@@ -500,7 +470,7 @@ namespace myseq
 
                 mnuAddZoneRareFilter.Enabled = true;
 
-//                addZoneEmailAlertFilter.Enabled = ListType != 2; // Not for ground items
+                //                addZoneEmailAlertFilter.Enabled = ListType != 2; // Not for ground items
 
                 mnuEditZoneFilters.Enabled = true;
 
@@ -525,97 +495,145 @@ namespace myseq
                     f1.alertZ = float.Parse(listView.Items[sel[0]].SubItems[6].Text);
                     // search for a better name to use for this spawn point
                     SPAWNTIMER st = eq.FindListViewTimer(listView.Items[sel[0]]);
-                    //SPAWNTIMER st = eq.FindTimer(1.0f, float.Parse(listView.Items[sel[0]].SubItems[4].Text), float.Parse(listView.Items[sel[0]].SubItems[5].Text));
+
                     if (st != null)
                     {
-                        mnuStickyTimer.Checked = st.sticky;
-                        foreach (string name in st.AllNames.Split(','))
-                        {
-                            var bname = RegexHelper.TrimName(name);
-                            if (RegexHelper.RegexMatch(bname))
-                            {
-                                mobname = bname;
-                                mnuAddZoneFilter.Text = "'" + mobname + "'";
-                                f1.alertX = st.X;
-                                f1.alertY = st.Y;
-                                f1.alertZ = st.Z;
-                                break;
-                            }
-                        }
+                        StickyTimer(st);
                     }
                 }
             }
             else
             {
-                // This is where we update the menu view if no selected item
-
-                mnuAddGlobalFilter.Text = "Add '' &Global Filter";
-
-                mnuAddZoneFilter.Text = "''";
-
-                mnuStickyTimer.Enabled = false;
-
-                mnuAddZoneFilter.Visible = false;
-
-                menuItem3.Visible = false;
-
-                mnuAddGlobalFilter.Enabled = false;
-
-                mnuAddZoneFilter.Enabled = false;
-
-                mnuAddZoneHuntFilter.Enabled = false;
-
-                mnuAddZoneCautionFilter.Enabled = false;
-
-                mnuAddZoneDangerFilter.Enabled = false;
-
-                mnuAddZoneRareFilter.Enabled = false;
-
-//                addZoneEmailAlertFilter.Enabled = false;
-
-                mnuEditZoneFilters.Enabled = true;
-
-                mnuEditGlobalFilters.Enabled = true;
-
-                mnuReloadZoneFilters.Enabled = true;
-
-                mnuSearchAllakhazam.Enabled = false;
-
-                addMapLabelToolStripMenuItem.Enabled = false;
+                NoSelection();
             }
         }
 
-        private void ListViewPanel_Resize(object sender, EventArgs e) {
-            try {
+        private void NoSelection()
+        {
+            // This is where we update the menu view if no selected item
+
+            mnuAddGlobalFilter.Text = "Add '' &Global Filter";
+
+            mnuAddZoneFilter.Text = "''";
+
+            mnuStickyTimer.Enabled = false;
+
+            mnuAddZoneFilter.Visible = false;
+
+            menuItem3.Visible = false;
+
+            mnuAddGlobalFilter.Enabled = false;
+
+            mnuAddZoneFilter.Enabled = false;
+
+            mnuAddZoneHuntFilter.Enabled = false;
+
+            mnuAddZoneCautionFilter.Enabled = false;
+
+            mnuAddZoneDangerFilter.Enabled = false;
+
+            mnuAddZoneRareFilter.Enabled = false;
+
+            //                addZoneEmailAlertFilter.Enabled = false;
+
+            mnuEditZoneFilters.Enabled = true;
+
+            mnuEditGlobalFilters.Enabled = true;
+
+            mnuReloadZoneFilters.Enabled = true;
+
+            mnuSearchAllakhazam.Enabled = false;
+
+            addMapLabelToolStripMenuItem.Enabled = false;
+        }
+
+        private void ListType0(ListView.SelectedIndexCollection sel)
+        {
+            mobname = RegexHelper.FilterMobName(listView.Items[sel[0]].SubItems[17].Text);
+            mobname = mobname.Replace("_", " ");
+            mobname = mobname.Trim();
+            //smoblevel = "";
+            smoblevel = listView.Items[sel[0]].SubItems[1].Text;
+            if (smoblevel.Length > 0)
+            {
+                GetMobLevel();
+            }
+        }
+
+        private void ListType1(ListView.SelectedIndexCollection sel)
+        {
+            smoblevel = "";
+            smoblevel = listView.Items[sel[0]].SubItems[1].Text;
+            if (smoblevel.Length > 0)
+            {
+                GetMobLevel();
+            }
+            mobname = RegexHelper.FixMobNameMatch(listView.Items[sel[0]].SubItems[0].Text);
+            mobname = mobname.Trim();
+        }
+
+        private void StickyTimer(SPAWNTIMER st)
+        {
+            mnuStickyTimer.Checked = st.sticky;
+            foreach (string name in st.AllNames.Split(','))
+            {
+                var bname = RegexHelper.TrimName(name);
+                if (RegexHelper.RegexMatch(bname))
+                {
+                    mobname = bname;
+                    mnuAddZoneFilter.Text = $"'{mobname}'";
+                    f1.alertX = st.X;
+                    f1.alertY = st.Y;
+                    f1.alertZ = st.Z;
+                    break;
+                }
+            }
+        }
+
+        private void GetMobLevel()
+        {
+            if (int.TryParse(smoblevel, out var Num))
+            {
+                moblevel = Num;
+            }
+        }
+
+        private void ListViewPanel_Resize(object sender, EventArgs e)
+        {
+            try
+            {
                 txtSpawnList.Width = Width - txtSpawnList.Left;
 
                 listView.Width = Width;
 
                 listView.Height = Height - listView.Top;
             }
-            catch (Exception ex) {LogLib.WriteLine("Error in ListViewPanel.ListViewPanel_Resize: ", ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.ListViewPanel_Resize: ", ex); }
         }
 
-        private void cmdReset_Click(object sender, EventArgs e) {
-            try {
+        private void CmdReset_Click(object sender, EventArgs e)
+        {
+            try
+            {
                 txtSpawnList.Text = "";
 
                 txtSpawnList.Focus();
             }
-            catch (Exception ex) {LogLib.WriteLine("Error in ListViewPanel.cmdReset_Click: ", ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.cmdReset_Click: ", ex); }
         }
 
-        private void txtSpawnList_TextChanged(object sender, EventArgs e) {
-            SearchName(txtSpawnList.Text);
-        }
+        private void TxtSpawnList_TextChanged(object sender, EventArgs e) => SearchName(txtSpawnList.Text);
 
         public void SearchName(string name)
 
         {
-            try {
-                foreach (ListViewItem lstItem in listView.Items) {
+            try
+            {
+                foreach (ListViewItem lstItem in listView.Items)
+                {
                     // Match the regular expression pattern against a text string.
-                    if (RegexHelper.GetRegex(name).Match(lstItem.Text).Success) {
+                    if (RegexHelper.GetRegex(name).Match(lstItem.Text).Success)
+                    {
                         lstItem.EnsureVisible();
 
                         lstItem.Selected = true;
@@ -624,17 +642,23 @@ namespace myseq
                     }
                 }
             }
-            catch (Exception ex) {LogLib.WriteLine("Error in ListViewPanel.txtSpawnList_TextChanged: ", ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.txtSpawnList_TextChanged: ", ex); }
         }
 
-        private void listView_MouseEnter(object sender, EventArgs e) {
-            try  { if (!f1.toolStripScale.Focused && !f1.toolStripZPos.Focused && !f1.toolStripZNeg.Focused && !f1.toolStripLookupBox.Focused)
-                listView.Focus();}
-            catch (Exception ex) {LogLib.WriteLine("Error in ListViewPanel.listView_MouseEnter: ", ex);}
+        private void ListView_MouseEnter(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!f1.toolStripScale.Focused && !f1.toolStripZPos.Focused && !f1.toolStripZNeg.Focused && !f1.toolStripLookupBox.Focused)
+                    listView.Focus();
+            }
+            catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.listView_MouseEnter: ", ex); }
         }
 
-        private void listView_ColumnClick(object sender, ColumnClickEventArgs e) {
-            try  {
+        private void ListView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            try
+            {
                 curDescend = !curDescend;
 
                 if (ListType == 0)
@@ -653,15 +677,18 @@ namespace myseq
                     listView.ListViewItemSorter = new ListBoxComparerGroundItemsList(listView.Items, curDescend, e.Column);
                 }
             }
-            catch (Exception ex) {LogLib.WriteLine("Error in ListViewPanel.listView_ColumnClick: ", ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.listView_ColumnClick: ", ex); }
         }
 
-        private void listView_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
             ListView.SelectedIndexCollection sel = listView.SelectedIndices;
             listView.HideSelection = false;
 
-            if (sel.Count > 0) {
-                try {
+            if (sel.Count > 0)
+            {
+                try
+                {
                     if (listView.Visible)
                         listView.Focus();
 
@@ -681,21 +708,21 @@ namespace myseq
 
                     mapCon?.Invalidate();
                 }
-                catch (Exception ex) {LogLib.WriteLine("Error in ListViewPanel.listView_SelectedIndexChanged: ", ex);}
+                catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.listView_SelectedIndexChanged: ", ex); }
             }
         }
 
         public void ColumnsAdd(string ColumnName, int ColumnWidth, HorizontalAlignment CoulumnAlign)
 
         {
-            try {listView.Columns.Add(ColumnName, ColumnWidth, CoulumnAlign);}
+            try { listView.Columns.Add(ColumnName, ColumnWidth, CoulumnAlign); }
             catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.ColumnsAdd: ", ex); }
         }
 
-        private void mnuAddHuntFilter_Click(object sender, EventArgs e)
+        private void MnuAddHuntFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Global Alert Filters", "Add name to Hunt list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Hunt list:", mobname))
                 AddFilter(filters.GlobalHunt, "global");
         }
 
@@ -705,106 +732,99 @@ namespace myseq
 
             filters.WriteAlertFile(zone);
 
-            f1.reloadAlertFiles();
+            f1.ReloadAlertFiles();
         }
 
-        private void mnuAddCautionFilter_Click(object sender, EventArgs e)
+        private void MnuAddCautionFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Global Alert Filters", "Add name to Caution list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Caution list:", mobname))
                 AddFilter(filters.GlobalCaution, "global");
         }
 
-        private void mnuAddDangerFilter_Click(object sender, EventArgs e)
+        private void MnuAddDangerFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Global Alert Filters", "Add name to Danger list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Danger list:", mobname))
                 AddFilter(filters.GlobalDanger, "global");
         }
 
-        private void mnuAddAlertFilter_Click(object sender, EventArgs e)
+        private void MnuAddAlertFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Global Alert Filters", "Add name to Rare list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Rare list:", mobname))
                 AddFilter(filters.GlobalAlert, "global");
         }
 
-        private void mnuAddZoneHuntFilter_Click(object sender, EventArgs e)
+        private void MnuAddZoneHuntFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", mobname))
+            if (f1.DialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", mobname))
                 AddFilter(filters.Hunt, f1.curZone);
         }
 
-        private void mnuAddZoneCautionFilter_Click(object sender, EventArgs e)
+        private void MnuAddZoneCautionFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", mobname))
+            if (f1.DialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", mobname))
                 AddFilter(filters.Caution, f1.curZone);
         }
 
-        private void mnuAddZoneDangerFilter_Click(object sender, EventArgs e)
+        private void MnuAddZoneDangerFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", mobname))
+            if (f1.DialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", mobname))
                 AddFilter(filters.Danger, f1.curZone);
         }
 
-        private void mnuAddZoneAlertFilter_Click(object sender, EventArgs e)
+        private void MnuAddZoneAlertFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.dialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", mobname))
+            if (f1.DialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", mobname))
                 AddFilter(filters.Alert, f1.curZone);
         }
 
-        private void mnuEditGlobalFilters_Click(object sender, EventArgs e)
+        private void MnuEditGlobalFilters_Click(object sender, EventArgs e) => filters.EditAlertFile("global");
 
-        {
-            filters.EditAlertFile("global");
-        }
+        private void MnuEditZoneFilters_Click(object sender, EventArgs e) => filters.EditAlertFile(f1.curZone);
 
-        private void mnuEditZoneFilters_Click(object sender, EventArgs e)
-
-        {
-            filters.EditAlertFile(f1.curZone);
-        }
-
-        private void mnuReloadFilters_Click(object sender, EventArgs e)
+        private void MnuReloadFilters_Click(object sender, EventArgs e)
 
         {
             filters.ClearArrays();
 
-            f1.reloadAlertFiles();
+            f1.ReloadAlertFiles();
         }
 
         private void MnuSearchAllakhazam_Click(object sender, EventArgs e)
         {
             var searchname = RegexHelper.SearchName(mobname);
 
-            if (searchname.Length > 0)
+            if (!string.IsNullOrEmpty(searchname))
 
             {
-                var searchURL = string.Format(Settings.Instance.SearchString, searchname);
+                var searchURL = string.Format(Settings.Default.SearchString, searchname);
 
                 System.Diagnostics.Process.Start(searchURL);
             }
         }
 
-        private void addMapLabelToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AddMapLabelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (mobname.Length > 0)
-                f1.addMapText(mobname);
+                f1.AddMapText(mobname);
         }
 
-        private void listView_VisibleChanged(object sender, EventArgs e)
+        private void ListView_VisibleChanged(object sender, EventArgs e)
         {
-            ListView.SelectedListViewItemCollection selection = listView.SelectedItems;
-            if (listView.SelectedItems.Count > 0 && listView.Visible) {
+            _ = listView.SelectedItems;
+            if (listView.SelectedItems.Count > 0 && listView.Visible)
+            {
                 listView.EnsureVisible(listView.SelectedItems[0].Index);
             }
         }
 
-        private void mnuStickyTimer_Click(object sender, EventArgs e)
+        private void MnuStickyTimer_Click(object sender, EventArgs e)
         {
             // Set or unset the sticky flag for the timer selected
             ListView.SelectedIndexCollection sel = listView.SelectedIndices;
@@ -825,13 +845,12 @@ namespace myseq
             }
         }
 
-        private void toolStriConcolor_Click(object sender, EventArgs e)
+        private void ToolStriConcolor_Click(object sender, EventArgs e)
         {
             //mobname;
-            Settings.Instance.LevelOverride = moblevel;
-            f1.gconLevel = moblevel;
-            f1.gConBaseName = mobname;
+            Settings.Default.LevelOverride = moblevel;
+            //f1.gconLevel = moblevel;
+            eq.GConBaseName = mobname;
         }
     }
 }
-

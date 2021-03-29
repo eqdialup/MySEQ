@@ -13,7 +13,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>myseq</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>myseq.frmMain</StartupObject>
+    <StartupObject>myseq.Program</StartupObject>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -80,7 +80,7 @@
     <ManifestKeyFile>MySEQ.client_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="speechlib">
@@ -111,8 +111,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutDlg.cs">
+    <Compile Include="AboutDialog.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutDialog.designer.cs">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -144,6 +147,12 @@
     <Compile Include="frmDialogBox.Designer.cs">
       <DependentUpon>frmDialogBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,20 +169,29 @@
     <Compile Include="MapCon.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="MapLine.cs" />
     <Compile Include="MapPane.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MobsTimers.cs" />
+    <Compile Include="PacketType.cs" />
     <Compile Include="PrettyNames.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="RegexHelper.cs" />
-    <Compile Include="Settings.cs">
+    <Compile Include="DrawOptions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SmtpSettings.cs" />
     <Compile Include="SPAWNINFO.cs" />
     <Compile Include="SPAWNTIMER.cs" />
     <Compile Include="Structures.cs">
@@ -184,6 +202,10 @@
       <SubType>Code</SubType>
     </Compile>
     <None Include="app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\ShrinkSpaceHS.PNG" />
     <None Include="Resources\ExpandSpaceHS.png" />
     <None Include="Resources\File.ico" />
@@ -204,9 +226,8 @@
     <None Include="Resources\ZoomIn.png" />
     <None Include="Resources\PlayHS.png" />
     <None Include="Resources\openfolderHS.png" />
-    <EmbeddedResource Include="AboutDlg.resx">
-      <DependentUpon>AboutDlg.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="AboutDialog.resx">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App.ico" />
     <EmbeddedResource Include="frmAddMapText.resx">
@@ -215,6 +236,9 @@
     <EmbeddedResource Include="frmDialogBox.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmDialogBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>

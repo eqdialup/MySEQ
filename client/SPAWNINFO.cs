@@ -7,11 +7,9 @@ using System.Windows.Forms;
 namespace Structures
 
 {
-    #region SPAWNINFO class
-
     [StructLayout(LayoutKind.Sequential, Pack=1)]
 
-    public class SPAWNINFO
+    public partial class SPAWNINFO
     {
         public SPAWNINFO() {}
 
@@ -28,33 +26,23 @@ namespace Structures
             return Encoding.ASCII.GetString(b, start, i);
         }
 
-        public void frombytes(byte []b, int offset)
-
+        public void Frombytes(byte []b, int offset)
         {
             Name = BytesToString(b, 0 + offset, 30);
 
             Y = BitConverter.ToSingle(b, 30 + offset);
-
             X = BitConverter.ToSingle(b, 34 + offset);
-
             Z = BitConverter.ToSingle(b, 38 + offset);
 
             Heading = BitConverter.ToSingle(b, 42 + offset);
-
             SpeedRun = BitConverter.ToSingle(b, 46 + offset);
-
-            SpawnID = BitConverter.ToUInt32(b, 50 + offset);
-
-            OwnerID = BitConverter.ToUInt32(b, 54 + offset);
+            SpawnID = BitConverter.ToInt32(b, 50 + offset);
+            OwnerID = BitConverter.ToInt32(b, 54 + offset);
 
             Type = b[58 + offset];
-
             Class = b[59 + offset];
-
             Race = BitConverter.ToInt32(b, 60 + offset);
-
             Level = b[64 + offset];
-
             Hide = b[65 + offset];
 
             Primary = BitConverter.ToInt32(b, 66 + offset);
@@ -67,124 +55,96 @@ namespace Structures
             if (flags==PacketType.Player)
                 m_isPlayer = true;
 
-            Guild = BitConverter.ToInt32(b, 100 + offset);
-        }
-
-        public enum PacketType {
-
-            Spawn = 0,
-
-            Target = 1,
-
-            Zone = 4,
-
-            GroundItem = 5,
-
-            GetProcessInfo = 6,
-
-            SetProcess = 7,
-
-            World = 8,
-
-            Player = 253
-
+//            Guild = BitConverter.ToInt32(b, 100 + offset);
         }
 
         public string Name = "";
 
-        public float Y = 0;
+        public float Y;
 
-        public float X = 0;
+        public float X;
 
-        public float Z = 0;
+        public float Z;
 
-        public float Heading = 0;
+        public float Heading;
 
-        public float SpeedRun = 0;
+        public float SpeedRun;
 
-        public uint SpawnID = 0;
+        public int SpawnID;
 
-        public uint OwnerID = 0;
+        public int OwnerID;
 
-        public byte Type = 0;
+        public byte Type;
 
-        public byte Class = 0;
+        public byte Class;
 
-        public int Race = 0;
+        public int Race;
 
-        public int Primary = 0;
+        public int Primary;
 
-        public int Offhand = 0;
+        public int Offhand;
 
-        public int Guild = 0;
+//        public int Guild;
 
-        public byte Gender = 0;
-
-        public byte Level = 0;
+        public byte Level;
 
         public byte Hide;
 
         public string Lastname = "";
 
-        public int gone = 0;
+        public int gone;
 
-        public int refresh = 0;
+        public int refresh;
 
-        public PacketType flags = 0;
+        public PacketType flags;
 
-        public bool isHunt = false;
+        public bool isHunt;
 
-        public bool isCaution = false;
+        public bool isCaution;
 
-        public bool isDanger = false;
+        public bool isDanger;
 
-        public bool isAlert = false;
+        public bool isAlert;
 
-        public bool isPet = false;
+        public bool isPet;
 
-        public bool isMerc = false;
+        public bool isMerc;
 
-        public bool isCorpse = false;
+        public bool isCorpse;
 
-        public bool isMount = false;
+        public bool isMount;
 
-        public bool isFamiliar = false;
+        public bool isFamiliar;
 
-        public bool isLDONObject = false;
+        public bool isLDONObject;
 
-        public bool isEventController = false;
+        public bool isEventController;
 
-        public bool isLookup = false;
+        public bool isLookup;
 
         public string lookupNumber = "";
 
-        public bool hidden = false;
+        public bool hidden;
 
-        public bool filtered = false;
+        public bool filtered;
 
-        public ListViewItem listitem = null;
+        public ListViewItem listitem;
 
-        public Pen DrawPen = null;
+        public bool m_isPlayer;
 
-        public Brush DrawBrush = null;
+        public bool m_isMyCorpse;
 
-        public bool m_isPlayer = false;
+        public bool delFromList;
 
-        public bool m_isMyCorpse = false;
+        public bool proxAlert;
 
-        public bool delFromList = false;
-
-        public bool proxAlert = false;
-
-        public bool alertMob = false;
+        public bool alertMob;
 
         public string SpawnLoc = "";
 
         public string ZoneSpawnLoc = "";
 
-        public bool IsPlayer() {return m_isPlayer;}
+        public bool IsPlayer => m_isPlayer;
     }
-
-#endregion
 }
 
