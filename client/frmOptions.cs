@@ -23,23 +23,23 @@ namespace myseq
 
         private TabPage tabColors;
 
-        public PictureBox picPlayerBorder;
+        private PictureBox picPlayerBorder;
 
         private Button butPlayerBorder;
 
-        public PictureBox picListBackgroundColor;
+        private PictureBox picListBackgroundColor;
 
         private Button cmdListBackgroundColor;
 
-        public PictureBox picRangeCircleColor;
+        private PictureBox picRangeCircleColor;
 
         private Button cmdRangeCircleColor;
 
-        public PictureBox picGridColor;
+        private PictureBox picGridColor;
 
         private Button cmdGridColor;
 
-        public PictureBox picMapBackgroundColor;
+        private PictureBox picMapBackgroundColor;
 
         private Button cmdMapBackgroundColor;
 

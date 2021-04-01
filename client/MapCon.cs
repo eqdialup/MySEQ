@@ -3,7 +3,6 @@
 using myseq.Properties;
 using Structures;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text;
@@ -806,7 +805,7 @@ namespace myseq
                 {
                     string ItemName = gi.Name;
 
-                    foreach (ListItem listItem in eq.itemList.Values)
+                    foreach (ListItem listItem in eq.GroundSpawn)//eq.itemList.Values)
 
                     {
                         if (gi.Name == listItem.ActorDef)

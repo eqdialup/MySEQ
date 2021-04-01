@@ -33,11 +33,11 @@ namespace Structures
 
     #endregion
 
-    #region ListItem class
+    #region ListItem struct
 
     public struct ListItem
     {
-        public string ActorDef;
+        public string ActorDef {get; set; }
         public int ID {get; set; }
         public string Name { get; set; }
     }

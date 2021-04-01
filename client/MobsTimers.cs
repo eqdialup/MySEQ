@@ -39,16 +39,17 @@ namespace myseq
         // Used when the mouse is hovered over a timer (for the detail display)
 
         public SPAWNTIMER Find(float delta, float x, float y)
-
         {
             foreach (SPAWNTIMER st in mobsTimer2.Values)
             {
-                if (!st.filtered && st.X < x + delta && st.X > x - delta && st.Y < y + delta && st.Y > y - delta)
+                var stXdelta = (st.X < x + delta) && (st.X > x - delta);
+                var stY_delta = (st.Y < y + delta)&& (st.Y > y - delta);
+
+                if (!st.filtered && stXdelta && stY_delta)
                 {
                     return st;
                 }
             }
-
             return null;
         }
 

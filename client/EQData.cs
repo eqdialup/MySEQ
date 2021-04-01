@@ -2,11 +2,12 @@ using myseq.Properties;
 using Structures;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Media;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -34,8 +35,6 @@ namespace myseq
         public ArrayList texts = maptextarray;//MapText[50]
 
         private readonly ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
-
-        //        private bool playAlerts
 
         // Max + Min map coordinates - define the bounds of the zone
 
@@ -79,7 +78,8 @@ namespace myseq
 
         // Items List by ID and Description loaded from file
 
-        public Hashtable itemList = new Hashtable();
+        //        public Hashtable itemList = new Hashtable();
+        public List<ListItem> GroundSpawn = new List<ListItem>();
 
         // Guild List by ID and Description loaded from file
 
@@ -225,6 +225,7 @@ namespace myseq
                 }
             }
         }
+
         private void SubLookup(SPAWNINFO sp, string search, bool filter, string ln)
         {
             bool levelCheck = false;
@@ -557,7 +558,7 @@ namespace myseq
 
             Races = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Races.txt"));
 
-            itemList.Clear();
+            GroundSpawn.Clear();
 
             ReadItemList(Path.Combine(Settings.Default.CfgDir, "GroundItems.ini"));
 
@@ -568,393 +569,55 @@ namespace myseq
             ColorChart.Initialise(Path.Combine(Settings.Default.CfgDir, "RGB.txt"));
         }
 
-        #region showeq_map_format
-
-        //public bool LoadMapInternal(string filename) //SHOWEQ format
-        //{
-        //    // All Parse Routines MUST be passed this culture info so that they work
-
-        //    // correctly when used on an operating system configured to use a different culture.
-
-        //    IFormatProvider NumFormat = new CultureInfo("en-US");
-
-        //    StreamReader tr;
-        //    int numtexts = 0;
-
-        //    int numlines = 0;
-
-        //    int curLine = 0;
-
-        //    if (!File.Exists(filename))
-        //    {
-        //        LogLib.WriteLine($"File not found loading {filename} in loadMap()");
-
-        //        return false;
-        //    }
-
-        //    try { tr = new StreamReader(File.OpenRead(filename)); }
-        //    catch (FileNotFoundException)
-        //    {
-        //        LogLib.WriteLine($"File not found loading {filename} in loadMap()");
-
-        //        return false;
-        //    }
-
-        //    LogLib.WriteLine($"Loading Zone Map (non LoY): {filename}");
-
-        //    // First line is file ID info
-
-        //    var line = tr.ReadLine();
-        //    curLine++;
-
-        //    if (line == null)
-        //        return false;
-
-        //    int lineCount = 1;
-
-        //    if ((longname = Getnexttoken(ref line, ',')) == null)
-        //        return false;
-
-        //    if ((shortname = Getnexttoken(ref line, ',')) == null)
-        //        return false;
-
-        //    string tok = "";
-        //    // Rest of header is optional.
-
-        //    try
-        //    {
-        //        // ICK....
-
-        //        Walktheline(NumFormat, ref line);
-        //    }
-        //    catch (Exception ex) { LogLib.WriteLine("Error in loadMap() Reading Map Header: ", ex); }
-
-        //    // Now the bulk of the file....
-        //    // Note A and Z are not implemented as they don't ever seem to be used...
-        //    while ((line = tr.ReadLine()) != null)
-        //    {
-        //        curLine++;
-        //        try
-        //        {
-        //            if (line != "")
-        //            {
-        //                if ((tok = Getnexttoken(ref line, ',')) == null)
-        //                {
-        //                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-        //                }
-        //                else
-        //                {
-        //                    ParseMLP(filename, NumFormat, ref numtexts, ref numlines, curLine, ref tok, ref line);
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex) { LogLib.WriteLine($"Error in loadMap() Line: {curLine}:", ex); }
-        //    }
-
-        //    LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
-
-        //    LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
-
-        //    tr.Close();
-
-        //    if (numtexts > 0 || lineCount > 0)
-        //    {
-        //        CalcExtents();
-
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        longname = "";
-
-        //        shortname = "";
-
-        //        return false;
-        //    }
-        //}
-
-        //private void Walktheline(IFormatProvider NumFormat, ref string line)
-        //{
-        //    string tok;
-        //    if ((tok = Getnexttoken(ref line, ',')) != null)
-        //    {
-        //        minx = int.Parse(tok, NumFormat);
-
-        //        if ((tok = Getnexttoken(ref line, ',')) != null)
-        //        {
-        //            miny = int.Parse(tok, NumFormat);
-
-        //            if ((tok = Getnexttoken(ref line, ',')) != null)
-        //            {
-        //                minz = int.Parse(tok, NumFormat);
-
-        //                if ((tok = Getnexttoken(ref line, ',')) != null)
-        //                {
-        //                    maxx = int.Parse(tok, NumFormat);
-
-        //                    if ((tok = Getnexttoken(ref line, ',')) != null)
-        //                    {
-        //                        maxy = int.Parse(tok, NumFormat);
-
-        //                        if ((tok = Getnexttoken(ref line, ',')) != null)
-        //                            maxz = int.Parse(tok, NumFormat);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //} // SHOWEQ
-
-        //private void ParseMLP(string filename, IFormatProvider NumFormat, ref int numtexts, ref int numlines, int curLine, ref string tok, ref string line)
-        //{
-        //    if (tok == "M")
-        //    {// example format : M,line,white,2,-247,-371,850,-249,-366,870
-        //        MapLine work = new MapLine();
-
-        //        int numpoints = 0;
-
-        //        bool bOK = true;
-
-        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-        //            work.name = tok;
-        //        else
-        //            bOK = false;
-
-        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-        //            work.color = new Pen(new SolidBrush(ColorChart.StringToColor(tok)));
-        //        else
-        //            bOK = false;
-
-        //        if ((tok = Getnexttoken(ref line, ',')) != null)
-        //            numpoints = int.Parse(tok, NumFormat);
-        //        else
-        //            bOK = false;
-
-        //        if (bOK)
-        //            work.linePoints = new PointF[numpoints];
-
-        //        int pointnum = 0;
-
-        //        while (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-        //        {
-        //            MapPoint temp = new MapPoint
-        //            {
-        //                x = (int)float.Parse(tok, NumFormat)
-        //            };
-
-        //            if ((tok = Getnexttoken(ref line, ',')) != null)
-        //            {
-        //                temp.y = (int)float.Parse(tok, NumFormat);
-
-        //                if ((tok = Getnexttoken(ref line, ',')) != null)
-        //                {
-        //                    temp.z = (int)float.Parse(tok, NumFormat) / 10;
-
-        //                    work.aPoints.Add(temp);
-
-        //                    work.linePoints[pointnum] = new PointF(temp.x, temp.y);
-
-        //                    pointnum++;
-        //                }
-        //            }
-        //        }
-
-        //        if (numpoints != work.aPoints.Count)
-        //        {
-        //            LogLib.WriteLine(
-        //                $"Warning - Line {curLine} of map '{filename}' has an invalid point count. Expected - {numpoints}, Actual {work.aPoints.Count}. Continuing...",
-        //                LogLevel.Warning);
-        //        }
-
-        //        if (bOK && work.aPoints.Count >= 2)
-        //        {
-        //            lines.Add(work);
-
-        //            numlines++;
-        //        }
-        //    }
-        //    else if (tok == "L")
-        //    {// example
-        //        MapLine work = new MapLine();
-
-        //        int numpoints = 0;
-
-        //        bool bOK = true;
-
-        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-        //            work.name = tok;
-        //        else
-        //            bOK = false;
-
-        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-        //            work.color = new Pen(new SolidBrush(ColorChart.StringToColor(tok)));
-        //        else
-        //            bOK = false;
-
-        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-        //            numpoints = int.Parse(tok, NumFormat);
-        //        else
-        //            bOK = false;
-
-        //        if (bOK)
-        //        {
-        //            int pointnum = 0;
-
-        //            while ((tok = Getnexttoken(ref line, ',')) != null)
-        //            {
-        //                MapPoint temp = new MapPoint
-        //                {
-        //                    x = (int)float.Parse(tok, NumFormat)
-        //                };
-
-        //                if ((tok = Getnexttoken(ref line, ',')) != null)
-        //                {
-        //                    temp.y = (int)float.Parse(tok, NumFormat);
-
-        //                    work.aPoints.Add(temp);
-
-        //                    work.linePoints[pointnum] = new PointF(temp.x, temp.y);
-
-        //                    pointnum++;
-        //                }
-        //            }
-
-        //            if (numpoints != work.aPoints.Count)
-        //            {
-        //                LogLib.WriteLine(
-        //                    $"Warning - Line {curLine} of map '{filename}' has an invalid point count. Expected - {numpoints}, Actual {work.aPoints.Count}. Continuing...", LogLevel.Warning);
-        //            }
-
-        //            if (work.aPoints.Count >= 2)
-        //            {
-        //                lines.Add(work);
-
-        //                numlines++;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-        //        }
-        //    }
-        //    else if (tok == "P")
-        //    {// example P,Succor Point,white,-172,-821
-        //        MapText work = new MapText();
-
-        //        bool bOK = true;
-
-        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-        //            work.label = tok;
-        //        else
-        //            bOK = false;
-
-        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-        //            work.color = new SolidBrush(ColorChart.StringToColor(tok));
-        //        else
-        //            bOK = false;
-
-        //        if (bOK && (tok = Getnexttoken(ref line, ',')) != null)
-        //            work.x = int.Parse(tok, NumFormat);
-        //        else
-        //            bOK = false;
-
-        //        if ((tok = Getnexttoken(ref line, ',')) != null)
-        //            work.y = int.Parse(tok, NumFormat);
-        //        else
-        //            bOK = false;
-
-        //        if (bOK)
-        //        {
-        //            // add a z value if it exists
-        //            work.z = (Getnexttoken(ref line, ',')) != null ? int.Parse(tok, NumFormat) : -99999;
-
-        //            texts.Add(work);
-
-        //            numtexts++;
-        //        }
-        //    }
-        //}
-
-        #endregion showeq_map_format
-
         public bool LoadLoYMapInternal(string filename) //ingame EQ format
         {
             IFormatProvider NumFormat = new CultureInfo("en-US");
-            string line = "";
             int numtexts = 0;
             int numlines = 0;
             int curLine = 0;
+            int lineCount = 0;
 
             if (!File.Exists(filename))
             {
                 LogLib.WriteLine($"File not found loading {filename} in loadLoYMap");
-
-                return false;
-            }
-
-            StreamReader streamReader;
-            try { streamReader = new StreamReader(File.OpenRead(filename)); }
-            catch (FileNotFoundException)
-            {
-                LogLib.WriteLine($"File not found loading {filename} in loadLoYMap");
-
                 return false;
             }
 
             LogLib.WriteLine($"Loading Zone Map (LoY): {filename}");
 
-            int lineCount = 0;
-
-            while ((line = streamReader.ReadLine()) != null)
+            foreach (var line in File.ReadAllLines(filename))
             {
-                curLine++;
-
-                try
+                if (line.StartsWith("L") || line.StartsWith("P"))
                 {
-                    lineCount++;
-
-                    if (line != "")
-                    {
-                        string tok;
-                        if ((tok = Getnexttoken(ref line, ' ')) == null)
-                        {
-                            LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-                        }
-                        else
-                        {
-                            ParseLP(filename, NumFormat, ref line, ref numtexts, ref numlines, curLine, ref tok);
-                        }
-                    }
+                    ParseLP(filename, NumFormat, line, ref numtexts, ref numlines, curLine);
                 }
-                catch (Exception ex) { LogLib.WriteLine("Error in loadLoYMap() Line: " + lineCount + " : ", ex); }
-            }
+                else
+                {
+                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
+                }
 
-//            LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
+                LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
+                LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
 
-  //          LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
+                if (numtexts > 0 || lineCount > 0)
+                {
+                    shortname = Path.GetFileNameWithoutExtension(filename);
 
-            streamReader.Close();
+                    if (shortname.IndexOf("_") > 0)
+                        shortname = shortname.Substring(0, shortname.Length - 2);
 
-            if (numtexts > 0 || lineCount > 0)
-            {
-                shortname = Path.GetFileNameWithoutExtension(filename);
+                    longname = shortname;
 
-                if (shortname.IndexOf("_") > 0)
-                    shortname = shortname.Substring(0, shortname.Length - 2);
+                    CalcExtents();
 
-                longname = shortname;
+                    return true;
+                }
+            }return false; // LOY / EQ folder maps
+        }
 
-                CalcExtents();
-
-                return true;
-            }
-
-            return false;
-        } // LOY / EQ folder maps
-
-        private void ParseLP(string filename, IFormatProvider NumFormat, ref string line, ref int numtexts, ref int numlines, int curLine, ref string tok)
+        private void ParseLP(string filename, IFormatProvider NumFormat, string line, ref int numtexts, ref int numlines, int curLine)
         {
-            if (tok == "L")
+            if (line.StartsWith("L"))
             {
                 MapLine work = new MapLine();
 
@@ -962,7 +625,7 @@ namespace myseq
 
                 MapPoint point2 = new MapPoint();
 
-                string[] parsedLine = line.Split(",".ToCharArray());
+                string[] parsedLine = line.Remove(0,1).Split(",".ToCharArray());
 
                 if (parsedLine.Length == 9)
                 {
@@ -998,10 +661,10 @@ namespace myseq
                     LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
                 }
             }
-            else if (tok == "P")
+            else if (line.StartsWith("P"))
             {// string format "P 175.5915{0}, 894.8506{1}, 148.1645{2},  240{3}, 240{4}, 240{5},  2{6},  Tower{7}"
                 MapText work = new MapText();
-                string dataRecord = line;
+                string dataRecord = line.Remove(0,1);
                 string[] parsedline = dataRecord.Split(",".ToCharArray());
 
                 if (parsedline.Length >= 7)
@@ -1028,32 +691,6 @@ namespace myseq
             }
         }
 
-        public string Getnexttoken(ref string tokenstring, char seperator)
-        {
-            var builder = new StringBuilder();
-            int c = 0;
-
-            string token = "";
-
-            if (tokenstring.Length == 0)
-            {
-                return null;
-            }
-
-            while (c < tokenstring.Length && tokenstring[c] != seperator)
-            {
-                builder.Append(tokenstring[c]);
-                token = builder.ToString();
-                c++;
-            }
-
-            c++;
-
-            tokenstring = c == tokenstring.Length + 1 ? "" : tokenstring.Substring(c, tokenstring.Length - c);
-
-            return token;
-        }
-
         public void AddMapText(MapText work)
         {
             texts.Add(work);
@@ -1067,26 +704,17 @@ namespace myseq
         private string[] GetStrArrayFromTextFile(string filePath)
         {
             ArrayList arList = new ArrayList();
-
-            string line;
-
             if (File.Exists(filePath))
             {
-                var sr = new StreamReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read));
-                do
+                foreach (var line in File.ReadAllLines(filePath))
                 {
-                    line = sr.ReadLine();
-
                     if (line != null)
                     {
-                        line = line.Trim();
-
+                        line.Trim();
                         if (line != "" && line.Substring(0, 1) != "#")
                             arList.Add(line);
                     }
-                } while (line != null);
-
-                sr.Close();
+                }
             }
 
             return (string[])arList.ToArray(Type.GetType("System.String"));
@@ -1094,68 +722,28 @@ namespace myseq
 
         private void ReadItemList(string filePath)
         {
-            string tok;
-
-            string line = "";
-
             IFormatProvider NumFormat = new CultureInfo("en-US");
 
             if (!File.Exists(filePath))
             {
                 // we did not find the GroundItems file
-
                 LogLib.WriteLine("GroundItems.ini file not found", LogLevel.Warning);
-
                 return;
             }
 
-            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-
-            StreamReader sr = new StreamReader(fs);
-
-            while (line != null)
+            foreach (var line in File.ReadAllLines(filePath).ToList())
             {
-                line = sr.ReadLine();
-
-                if (line != null)
+                //sample:  IT0_ACTORDEF = Generic
+                var entries = line.Split('=');
+                var tmp = entries[0].Split('_');
+                ListItem newGround = new ListItem
                 {
-                    line = line.Trim();
-
-                    if (line.Length > 0 && !line.StartsWith("[") && !line.StartsWith("#"))
-                    {
-                        ListItem thisitem = new ListItem();
-
-                        if ((tok = Getnexttoken(ref line, '=')) != null)
-                        {
-                            thisitem.ActorDef = tok.ToUpper();
-
-                            if ((tok = Getnexttoken(ref line, ',')) != null)
-                            {
-                                thisitem.Name = tok;
-
-                                // Remove the starting IT to get at ID number
-
-                                string temp = thisitem.ActorDef.Remove(0, 2);
-
-                                if ((tok = Getnexttoken(ref temp, '_')) != null)
-                                {
-                                    thisitem.ID = int.Parse(tok, NumFormat);
-
-                                    // We got this far, so we have a valid item to add
-
-                                    if (!itemList.ContainsKey(thisitem.ID))
-                                    {
-                                        try { itemList.Add(thisitem.ID, thisitem); }
-                                        catch (Exception ex) { LogLib.WriteLine($"Error adding {thisitem.ID} to items hashtable: ", ex); }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                    ID = int.Parse(tmp[0].Remove(0, 2), NumFormat), //0
+                    ActorDef = entries[0], //IT0_ACTORDEF
+                    Name = entries[1] //NAME
+                };
+                GroundSpawn.Add(newGround);
             }
-            sr.Close();
-            fs.Close();
         }
 
         //private void ReadGuildList(string filePath)
@@ -1217,21 +805,17 @@ namespace myseq
         //}
 
         public string GetItemDescription(string ActorDef)
-        {
-            // Remove the starting IT to get at ID number
-            var temp = ActorDef.Remove(0, 2);
-
+        {//sample:  IT0_ACTORDEF
+         // Remove the starting IT to get at ID number
+            string[] tok = ActorDef.Remove(0, 2).Split('_');
+            var lookupid = int.Parse(tok[0], new CultureInfo("en-US"));
             // Get description from list made using GroundItems.txt
-            string tok;
-            if ((tok = Getnexttoken(ref temp, '_')) != null)
+            for (int i = 0; i < GroundSpawn.Count; i++)
             {
-                var lookupid = int.Parse(tok, new CultureInfo("en-US"));
-
-                // We got this far, so we have a valid item to add
-
-                if (itemList.ContainsKey(lookupid))
+                if (GroundSpawn[i].ID.Equals(lookupid))
                 {
-                    return ((ListItem)itemList[lookupid]).Name;
+                    // We got this far, so we have a valid item to add
+                    return GroundSpawn[i].Name;
                 }
             }
             return ActorDef;
@@ -1394,15 +978,12 @@ namespace myseq
             try
             {
                 bool found = false;
-
                 foreach (GroundItem gi in itemcollection)
                 {
                     if (gi.Name == si.Name && gi.X == si.X && gi.Y == si.Y && gi.Z == si.Z)
                     {
                         found = true;
-
                         gi.gone = 0;
-
                         break;
                     }
                 }
@@ -1412,22 +993,16 @@ namespace myseq
                     GroundItem gi = new GroundItem
                     {
                         X = si.X,
-
                         Y = si.Y,
-
                         Z = si.Z,
-
                         Name = si.Name,
-
                         Desc = GetItemDescription(si.Name)
                     };
 
                     string itemname = gi.Desc.ToLower();
 
                     /* ************************************* *
-
                     * ************* ALERTS **************** *
-
                     * ************************************* */
 
                     // [hunt]
@@ -2230,7 +1805,6 @@ namespace myseq
                         Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
                         Settings.Default.BeepOnAlert, MatchFullTextA))
                 {
-                    alert = true;
                     if (PrefixStars)
                     {
                         mobnameWithInfo = AlertPrefix + " " + mobnameWithInfo;
@@ -2242,13 +1816,12 @@ namespace myseq
 
                     si.isAlert = true;
                 }
-                // [Email]
-                if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, false, false, "", false, "", !si.isAlert && !si.isCaution && !si.isDanger && !si.isHunt, true))
-                {
-                    alert = true;
-                    // Flag on map as an alert mob
-                    si.isAlert = true;
-                }
+                //// [Email]
+                //if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, false, false, "", false, "", !si.isAlert && !si.isCaution && !si.isDanger && !si.isHunt, true))
+                //{
+                //    // Flag on map as an alert mob
+                //    si.isAlert = true;
+                //}
 
                 // [Wielded Items]
                 // Acts like a hunt mob.
@@ -2257,7 +1830,6 @@ namespace myseq
                         Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
                         Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
-                    alert = true;
                     mobnameWithInfo = huntpref(mobnameWithInfo);
 
                     si.isHunt = true;
@@ -2271,7 +1843,6 @@ namespace myseq
                         Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
                         Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
-                    alert = true;
                     mobnameWithInfo = huntpref(mobnameWithInfo);
                     si.isAlert = true;
                 }
@@ -2279,7 +1850,7 @@ namespace myseq
                 LookupBoxMatch(si, f1);
             }
 
-            ListViewItem item1 = AddDetailsToList(si, SpawnList, alert, mobnameWithInfo);
+            ListViewItem item1 = AddDetailsToList(si, SpawnList, mobnameWithInfo);
             try { mobsHashTable.Add(si.SpawnID, si); }
             catch (Exception ex) { LogLib.WriteLine($"Error adding {si.Name} to mobs hashtable: ", ex); }
 
@@ -2302,7 +1873,7 @@ namespace myseq
             }
         }
 
-        private ListViewItem AddDetailsToList(SPAWNINFO si, ListViewPanel SpawnList, bool alert, string mobnameWithInfo)
+        private ListViewItem AddDetailsToList(SPAWNINFO si, ListViewPanel SpawnList, string mobnameWithInfo)
         {
             ListViewItem item1 = new ListViewItem(mobnameWithInfo);
 
@@ -2658,7 +2229,17 @@ namespace myseq
 
         public string GetClass(int num) => ArrayIndextoStr(Classes, num);
 
-        public string ItemNumToString(int num) => itemList.ContainsKey(num) ? ((ListItem)itemList[num]).Name : num.ToString();
+        public string ItemNumToString(int num)
+        {
+            foreach (var item in GroundSpawn)
+            {
+                if (item.ID.Equals(num))
+                {
+                    return item.Name;
+                }
+            }
+            return num.ToString();
+        }
 
         //        public string GuildNumToString(int num) => guildList.ContainsKey(num) ? ((ListItem)guildList[num]).Name : num.ToString();
 
@@ -3312,17 +2893,19 @@ namespace myseq
                 return;
 
             Pen darkpen = new Pen(Color.Black);
+            var alpha = Settings.Default.FadedLines * 255 / 100;
+
             foreach (MapLine mapline in lines)
             {
                 if (Settings.Default.ForceDistinct)
                 {
                     mapline.draw_color = GetDistinctColor(darkpen);
-                    mapline.fade_color = new Pen(Color.FromArgb(Settings.Default.FadedLines * 255 / 100, mapline.draw_color.Color));
+                    mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
                 }
                 else
                 {
                     mapline.draw_color = GetDistinctColor(new Pen(mapline.color.Color));
-                    mapline.fade_color = new Pen(Color.FromArgb(Settings.Default.FadedLines * 255 / 100, mapline.draw_color.Color));
+                    mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
                 }
             }
             SolidBrush distinctbrush = new SolidBrush(Color.Black);
@@ -3335,9 +2918,8 @@ namespace myseq
 
         private int GetColorDiff(Color foreColor, Color backColor)
         {
-            int lColDiff, lTmp;
-
-            lColDiff = 0;
+            int lTmp;
+            int lColDiff = 0;
 
             lTmp = Math.Abs(backColor.R - foreColor.R);
 

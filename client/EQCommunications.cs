@@ -2,6 +2,7 @@
 
 using myseq;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Structures
@@ -259,8 +260,8 @@ namespace Structures
                         f1.ProcessPacket(si, update_hidden);
                     }
 
-                    f1.ProcessSpawnList();
-                    f1.ProcessGroundItemList();
+                    eq.ProcessSpawnList(f1.SpawnList);
+                    eq.ProcessGroundItemList(f1.GroundItemList);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: ", ex); }

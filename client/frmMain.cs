@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -4150,16 +4151,6 @@ namespace myseq
 
         #endregion ProccessMap
 
-        #region ProcessSpawnList
-
-        public void ProcessSpawnList()
-
-        {
-            eq.ProcessSpawnList(SpawnList);
-        }
-
-        #endregion ProcessSpawnList
-
         #region ProcessGroundItemList
 
         public void ProcessGroundItemList()
@@ -5297,54 +5288,20 @@ namespace myseq
             }
         }
 
-        //private void ShowEQMapAdd(FrmAddMapText mapBox, string new_text)
-        //{
-        //    var seq_maptext = $"P,{new_text},{mapBox.txtColr.Name},{alertX:f0},{alertY:f0},{alertZ:f0}\n";
-
-        //    MapText work = new MapText
-        //    {
-        //        label = new_text,
-        //        x = (int)alertX,
-        //        y = (int)alertY,
-        //        z = (int)alertZ,
-        //        color = new SolidBrush(mapBox.txtColr)
-        //    };
-        //    work.draw_color = eq.GetDistinctColor(work.color);
-        //    eq.AddMapText(work);
-
-        //    if (DialogResult.Yes == MessageBox.Show($"Do you want to write the label to {mapBox.mapName}?" +
-        //        $"{Environment.NewLine}{Environment.NewLine}{seq_maptext}", "Write label to map file?",
-        //        MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
-        //    {
-        //        File.AppendAllText(mapnameWithLabels, seq_maptext);
-        //    }
-        //    else
-        //    {
-        //        eq.DeleteMapText(work);
-        //    }
-        //}
-
         public bool DialogBox(string titleText, string labelText, string dialogText)
-
         {
             frmDialogBox dlgBox = new frmDialogBox
             {
                 dlgTitle = titleText,
-
                 dlgLabel = labelText,
-
                 dlgTextBox = dialogText,
-
                 TopMost = true
             };
 
             if (dlgBox.ShowDialog() == DialogResult.OK && dlgBox.dlgTextBox.Length > 0)
-
             {
                 SpawnList.mobname = dlgBox.dlgTextBox;
-
                 SpawnTimerList.mobname = dlgBox.dlgTextBox;
-
                 return true;
             }
             else
@@ -5379,7 +5336,6 @@ namespace myseq
         private void MnuMapReset_Click(object sender, EventArgs e) => mapCon.MapReset();
 
         private void MnuShowLayer1_Click(object sender, EventArgs e)
-
         {
             if (sender.Equals(mnuShowLayer1))
             {
@@ -5413,7 +5369,6 @@ namespace myseq
         }
 
         private void MnuShowLayer3_Click(object sender, EventArgs e)
-
         {
             if (sender.Equals(mnuShowLayer3))
             {
@@ -5433,72 +5388,47 @@ namespace myseq
 
         {
             mnuConSoD.Checked = true;
-
             mnuConSoF.Checked = false;
-
             mnuConDefault.Checked = false;
-
             Settings.Default.SoDCon = true;
-
             Settings.Default.SoFCon = false;
-
             Settings.Default.DefaultCon = false;
-
             eq.FillConColors(this);
-
             eq.UpdateMobListColors();
         }
 
         private void MnuConDefault_Click(object sender, EventArgs e)
         {
             mnuConSoD.Checked = false;
-
             mnuConSoF.Checked = false;
-
             mnuConDefault.Checked = true;
-
             Settings.Default.SoDCon = false;
-
             Settings.Default.SoFCon = false;
-
             Settings.Default.DefaultCon = true;
-
             eq.FillConColors(this);
-
             eq.UpdateMobListColors();
         }
 
         private void MnuConSoF_Click(object sender, EventArgs e)
-
         {
             mnuConSoD.Checked = false;
-
             mnuConSoF.Checked = true;
-
             mnuConDefault.Checked = false;
-
             Settings.Default.SoDCon = false;
-
             Settings.Default.SoFCon = true;
-
             Settings.Default.DefaultCon = false;
-
             eq.FillConColors(this);
-
             eq.UpdateMobListColors();
         }
 
         private void MnuShowPCNames_Click(object sender, EventArgs e)
-
         {
             Settings.Default.ShowPCNames = !Settings.Default.ShowPCNames;
-
             mnuShowPCNames.Checked = Settings.Default.ShowPCNames;
             mnuShowPCNames2.Checked = Settings.Default.ShowPCNames;
         }
 
         private void MnuShowNPCNames_Click(object sender, EventArgs e)
-
         {
             Settings.Default.ShowNPCNames = !Settings.Default.ShowNPCNames;
 
@@ -5507,7 +5437,6 @@ namespace myseq
         }
 
         private void MnuShowNPCCorpseNames_Click(object sender, EventArgs e)
-
         {
             Settings.Default.ShowNPCCorpseNames = !Settings.Default.ShowNPCCorpseNames;
 
@@ -5604,7 +5533,6 @@ namespace myseq
         }
 
         private void MnuShowPVP_Click(object sender, EventArgs e)
-
         {
             Settings.Default.ShowPVP = !Settings.Default.ShowPVP;
 
