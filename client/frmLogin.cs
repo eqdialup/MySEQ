@@ -20,9 +20,14 @@ namespace myseq
             textSMTPUsername.Text = SmtpSettings.Instance.SmtpUsername;
 
             if (SmtpSettings.Instance.SmtpPassword.Length > 0)
+            {
                 textSMTPPassword.Text = "Password:::1";
+            }
             else
+            {
                 textSMTPPassword.Text = "";
+            }
+
             textSMTPToEmail.Text = SmtpSettings.Instance.ToEmail;
             textSMTPFromEmail.Text = SmtpSettings.Instance.FromEmail;
             textSMTPCCEmail.Text = SmtpSettings.Instance.CCEmail;
@@ -60,13 +65,17 @@ namespace myseq
         {
             UpdateSMTPSettings();
             // check email parameters all filled out
-            string errmsg = "";
+            var errmsg = "";
             if (textSMTPAddress.Text.Length == 0)
             {
                 if (textSMTPPort.Text.Length == 0)
+                {
                     errmsg += "Enter a valid SMTP Server Address and Port.\r\n";
+                }
                 else
+                {
                     errmsg += "Enter a valid SMTP Server Address.\r\n";
+                }
             }
             else if (textSMTPPort.Text.Length == 0)
             {
@@ -75,9 +84,13 @@ namespace myseq
             if (textSMTPFromEmail.Text.Length == 0)
             {
                 if (textSMTPToEmail.Text.Length == 0)
+                {
                     errmsg += "Valid From and To Email Addresses are required.\r\n";
+                }
                 else
+                {
                     errmsg += "Enter a valid From Email Address.\r\n";
+                }
             }
             else if (textSMTPToEmail.Text.Length == 0)
             {
@@ -97,23 +110,27 @@ namespace myseq
                 };
 
                 // To Email Address could contain multiple addresses
-                string presplit = SmtpSettings.Instance.ToEmail;
+                var presplit = SmtpSettings.Instance.ToEmail;
                 const string delim = ",;";
-                char[] delimarray = delim.ToCharArray();
-                string[] split = presplit.Split(delimarray);
-                foreach (string s in split)
+                var delimarray = delim.ToCharArray();
+                var split = presplit.Split(delimarray);
+                foreach (var s in split)
                 {
                     if (s.Trim().Length > 0)
+                    {
                         mailMessage.To.Add(new MailAddress(s.Trim()));
+                    }
                 }
 
                 // CC email addresses
                 presplit = SmtpSettings.Instance.CCEmail;
                 split = presplit.Split(delimarray);
-                foreach (string s in split)
+                foreach (var s in split)
                 {
                     if (s.Trim().Length > 0)
+                    {
                         mailMessage.CC.Add(new MailAddress(s.Trim()));
+                    }
                 }
 
                 mailMessage.Subject = "MySEQ Spawn Alert";
@@ -132,9 +149,13 @@ namespace myseq
                 {
                     smtpClient.UseDefaultCredentials = false;
                     if (SmtpSettings.Instance.SmtpDomain != string.Empty)
+                    {
                         smtpClient.Credentials = new System.Net.NetworkCredential(SmtpSettings.Instance.SmtpUsername, SmtpSettings.Instance.SmtpPassword, SmtpSettings.Instance.SmtpDomain);
+                    }
                     else
+                    {
                         smtpClient.Credentials = new System.Net.NetworkCredential(SmtpSettings.Instance.SmtpUsername, SmtpSettings.Instance.SmtpPassword);
+                    }
                 }
                 // using SSL to authenticate?
                 smtpClient.EnableSsl = SmtpSettings.Instance.UseSSL;
@@ -198,9 +219,13 @@ namespace myseq
         {
             this.textSMTPUsername.Text = SmtpSettings.Instance.SmtpUsername;
             if (SmtpSettings.Instance.SmtpPassword.Length > 0)
+            {
                 this.textSMTPPassword.Text = "Password:::1";
+            }
             else
+            {
                 this.textSMTPPassword.Text = "";
+            }
 
             if (SmtpSettings.Instance.UseNetworkCredentials)
             {
@@ -223,9 +248,14 @@ namespace myseq
         {
             // Username
             if (this.textSMTPUsername.Text.Length == 0)
+            {
                 SmtpSettings.Instance.SmtpUsername = "";
+            }
+
             if (this.textSMTPUsername.Text.Length > 0)
+            {
                 SmtpSettings.Instance.SmtpUsername = this.textSMTPUsername.Text;
+            }
             // Password
             if (this.textSMTPPassword.Text.Length > 0 && this.textSMTPPassword.Text != "Password:::1")
             {
@@ -233,7 +263,9 @@ namespace myseq
             }
 
             if (this.textSMTPPassword.Text.Length == 0)
+            {
                 SmtpSettings.Instance.SmtpPassword = "";
+            }
 
             Settings.Default.EmailAlerts = !Settings.Default.EmailAlerts;
         }
@@ -243,7 +275,7 @@ namespace myseq
             MailMessage mail = (MailMessage)e.UserState;
 
             //write out the subject
-            string subject = mail.Subject;
+            var subject = mail.Subject;
 
             if (e.Cancelled)
             {
@@ -263,20 +295,24 @@ namespace myseq
         {
             StringBuilder addr = new StringBuilder();
             SmtpSettings.Instance.UseSSL = this.checkBoxSMTPUseSecureAuthentication.Checked;
-            if (this.textSMTPPassword.ToString().Length > 0 && this.textSMTPPassword.Text != "Password:::1") {
+            if (this.textSMTPPassword.ToString().Length > 0 && this.textSMTPPassword.Text != "Password:::1")
+            {
                 SmtpSettings.Instance.SmtpPassword = this.textSMTPPassword.Text;
             }
 
             if (this.textSMTPPassword.ToString().Length == 0 && SmtpSettings.Instance.SmtpPassword.Length > 0)
+            {
                 SmtpSettings.Instance.SmtpPassword = "";
+            }
+
             SmtpSettings.Instance.SmtpUsername = this.textSMTPUsername.Text;
             SmtpSettings.Instance.SmtpDomain = this.textBoxSMTPDomain.Text;
 
             // make sure value for port is an int
             if (this.textSMTPPort.Text.Length > 0)
             {
-                string Str = this.textSMTPPort.Text;
-                bool isNum = int.TryParse(Str, out var Num);
+                var Str = this.textSMTPPort.Text;
+                var isNum = int.TryParse(Str, out var Num);
                 if (isNum && Num > 0)
                 {
                     SmtpSettings.Instance.SmtpPort = Num;
@@ -293,19 +329,23 @@ namespace myseq
 
             // From Email Address
             if (textSMTPFromEmail.Text.Length > 0 && re.IsMatch(textSMTPFromEmail.Text))
+            {
                 SmtpSettings.Instance.FromEmail = textSMTPFromEmail.Text;
+            }
 
             // To Email Address (can contain multiple addresses seperated by comma or semicolon
             if (textSMTPToEmail.Text.Length == 0)
+            {
                 SmtpSettings.Instance.ToEmail = "";
+            }
             // split of To: email string with a , or ; delimiter, and verify
             if (textSMTPToEmail.Text.Length > 0)
             {
-                string presplit = textSMTPToEmail.Text;
-                string postsplit = "";
+                var presplit = textSMTPToEmail.Text;
+                var postsplit = "";
                 const string delim = ",;<>[] ";
-                char[] delimarray = delim.ToCharArray();
-                foreach (string s in presplit.Split(delimarray))
+                var delimarray = delim.ToCharArray();
+                foreach (var s in presplit.Split(delimarray))
                 {
                     if (re.IsMatch(s.Trim()))
                     {
@@ -333,14 +373,17 @@ namespace myseq
             // CC Email Address (can contain multiple addresses seperated by comma or semicolon
 
             if (textSMTPCCEmail.Text.Length == 0)
+            {
                 SmtpSettings.Instance.CCEmail = "";
+            }
+
             if (textSMTPCCEmail.Text.Length > 0)
             {
-                string presplit = textSMTPCCEmail.Text;
-                string postsplit = "";
+                var presplit = textSMTPCCEmail.Text;
+                var postsplit = "";
                 const string delim = ",;<>[] ";
-                char[] delimarray = delim.ToCharArray();
-                foreach (string s in presplit.Split(delimarray))
+                var delimarray = delim.ToCharArray();
+                foreach (var s in presplit.Split(delimarray))
                 {
                     if (re.IsMatch(s.Trim()))
                     {
@@ -372,9 +415,15 @@ namespace myseq
             // Check if the SMTP Server Address looks like a host name
             const string hostPattern = @"^((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
             if (textSMTPAddress.Text.Length == 0)
+            {
                 SmtpSettings.Instance.SmtpServer = "";
+            }
+
             if (textSMTPAddress.Text.Length > 0 && new Regex(hostPattern).IsMatch(textSMTPAddress.Text))
+            {
                 SmtpSettings.Instance.SmtpServer = textSMTPAddress.Text;
+            }
+
             textSMTPAddress.Text = SmtpSettings.Instance.SmtpServer;
         }
     }

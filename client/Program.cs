@@ -1,6 +1,6 @@
-﻿using Structures;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Structures;
 
 namespace myseq
 {
@@ -14,7 +14,7 @@ namespace myseq
             try { Application.Run(new FrmMain()); }
             catch (NullReferenceException e)
             {
-                string s = $"Uncaught exception in Main(): {e.Message}";
+                var s = $"Uncaught exception in Main(): {e.Message}";
                 LogLib.WriteLine(s);
                 MessageBox.Show(s);
                 Application.Exit();

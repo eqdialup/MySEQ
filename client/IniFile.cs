@@ -1,6 +1,6 @@
 ﻿
-using myseq;
 using System.Text;
+using myseq;
 
 namespace Structures
 {
@@ -15,7 +15,8 @@ namespace Structures
 
         public void WriteValue(string Section, string Key, string Value) => SafeNativeMethods.WritePrivateProfileString(Section, Key, Value, path);
 
-        public string ReadValue(string Section, string Key, string Default) {
+        public string ReadValue(string Section, string Key, string Default)
+        {
             StringBuilder buffer = new StringBuilder(255);
 
             SafeNativeMethods.GetPrivateProfileString(Section, Key, Default, buffer, 255, path);

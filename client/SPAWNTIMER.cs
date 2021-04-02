@@ -1,9 +1,9 @@
-﻿using myseq.Properties;
-using Structures;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using myseq.Properties;
+using Structures;
 
 namespace myseq
 {
@@ -12,7 +12,7 @@ namespace myseq
         public SPAWNTIMER(SPAWNINFO si, DateTime dt)
 
         {
-            SpawnLoc=si.SpawnLoc;
+            SpawnLoc = si.SpawnLoc;
 
             ZoneSpawnLoc = si.ZoneSpawnLoc;
 
@@ -38,7 +38,7 @@ namespace myseq
         public SPAWNTIMER(string str)
 
         {
-            string[] parts = str.Split(';');
+            var parts = str.Split(';');
 
             SpawnLoc = parts[0];
 
@@ -48,22 +48,31 @@ namespace myseq
 
             SpawnTimeStr = parts[3];
 
-            if (SpawnTimeStr.Length>0) SpawnTimeDT = Convert.ToDateTime(SpawnTimeStr);
+            if (SpawnTimeStr.Length > 0)
+            {
+                SpawnTimeDT = Convert.ToDateTime(SpawnTimeStr);
+            }
 
             KillTimeStr = parts[4];
 
-            if (KillTimeStr.Length>0) KillTimeDT = Convert.ToDateTime(KillTimeStr);
+            if (KillTimeStr.Length > 0)
+            {
+                KillTimeDT = Convert.ToDateTime(KillTimeStr);
+            }
 
             NextSpawnStr = parts[5];
 
-            if (NextSpawnStr.Length>0) NextSpawnDT = Convert.ToDateTime(NextSpawnStr);
+            if (NextSpawnStr.Length > 0)
+            {
+                NextSpawnDT = Convert.ToDateTime(NextSpawnStr);
+            }
 
             LastSpawnName = parts[6];
 
             AllNames = parts[7];
 
             // split up the All Names, and parse out spawn numbers in parenthesis
-            string[] subparts = AllNames.Split(',');
+            var subparts = AllNames.Split(',');
             _ = subparts.GetUpperBound(0);
 
             X = float.Parse(parts[8]);
@@ -84,12 +93,12 @@ namespace myseq
         public void Merge(SPAWNTIMER st)
 
         {
-            LogLib.WriteLine("Merging spawn timers:",LogLevel.Debug);
+            LogLib.WriteLine("Merging spawn timers:", LogLevel.Debug);
 
-//            LogLib.WriteLine($"  Old: {GetAsString()}", LogLevel.Debug);
+            //            LogLib.WriteLine($"  Old: {GetAsString()}", LogLevel.Debug);
 
 
-//            LogLib.WriteLine($"  Other: {st.GetAsString()}", LogLevel.Debug);
+            //            LogLib.WriteLine($"  Other: {st.GetAsString()}", LogLevel.Debug);
 
             SpawnCount = st.SpawnCount; // usually makes it > 1
 
@@ -113,7 +122,7 @@ namespace myseq
                 EnableTimer(st);
             }
 
-            int namecount = 1;
+            var namecount = 1;
 
             foreach (var name in st.AllNames.Split(','))
             {
@@ -137,7 +146,7 @@ namespace myseq
             }
 
             listNeedsUpdate = true;
-//            LogLib.WriteLine($"  New: {GetAsString()}", LogLevel.Debug);
+            //            LogLib.WriteLine($"  New: {GetAsString()}", LogLevel.Debug);
         }
 
         private void EnableTimer(SPAWNTIMER st)
@@ -191,7 +200,7 @@ namespace myseq
 
         public int SecondsUntilSpawn(DateTime now)
         {
-            int checkTimer=0;
+            var checkTimer = 0;
 
             if (NextSpawnDT != DateTime.MinValue)
 
@@ -214,7 +223,8 @@ namespace myseq
         {
             var countTimer = "";
 
-            if (NextSpawnDT != DateTime.MinValue) {
+            if (NextSpawnDT != DateTime.MinValue)
+            {
                 TimeSpan Diff = NextSpawnDT.Subtract(DateTime.Now);
 
                 countTimer = $"{Diff.Hours:00}:{Diff.Minutes:00}:{Diff.Seconds:00}";
@@ -225,27 +235,27 @@ namespace myseq
             //if (countTime > 0)
 
             //{
-                // StringBuilder moved to new, common method, as equal for all paths.
-                StringBuilder spawnTimer = StBuilder();
+            // StringBuilder moved to new, common method, as equal for all paths.
+            StringBuilder spawnTimer = StBuilder();
 
-                spawnTimer.Append("\n");
+            spawnTimer.Append("\n");
 
-                spawnTimer.AppendFormat("Last Spawned At: {0}\n", SpawnTimeStr);
+            spawnTimer.AppendFormat("Last Spawned At: {0}\n", SpawnTimeStr);
 
-                spawnTimer.AppendFormat("Last Killed At: {0}\n", KillTimeStr);
+            spawnTimer.AppendFormat("Last Killed At: {0}\n", KillTimeStr);
 
-                spawnTimer.AppendFormat("Next Spawn At: {0}\n", NextSpawnStr);
+            spawnTimer.AppendFormat("Next Spawn At: {0}\n", NextSpawnStr);
 
-                spawnTimer.AppendFormat("Spawn Timer: {0} secs\n", SpawnTimer);
+            spawnTimer.AppendFormat("Spawn Timer: {0} secs\n", SpawnTimer);
 
-                spawnTimer.AppendFormat("Spawning In: {0}\n", countTimer);
+            spawnTimer.AppendFormat("Spawning In: {0}\n", countTimer);
 
-                spawnTimer.AppendFormat("Spawn Count: {0}\n", SpawnCount);
+            spawnTimer.AppendFormat("Spawn Count: {0}\n", SpawnCount);
 
-                spawnTimer.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", Y, X, Z);
+            spawnTimer.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", Y, X, Z);
 
-                return spawnTimer.ToString();
-//            }
+            return spawnTimer.ToString();
+            //            }
             //else if (SpawnTimer > 0)
 
             //{
@@ -299,8 +309,8 @@ namespace myseq
 
             spawnTimer.AppendFormat("Spawn Name: {0}\n", LastSpawnName);
 
-            string names_to_add = "Names encountered: ";
-            string[] names = AllNames.Split(',');
+            var names_to_add = "Names encountered: ";
+            var names = AllNames.Split(',');
 
             NameCount(spawnTimer, ref names_to_add, names);
 
@@ -314,8 +324,8 @@ namespace myseq
 
         private static void NameCount(StringBuilder spawnTimer, ref string names_to_add, string[] names)
         {
-            var builder = new StringBuilder();
-            foreach (string name in names)
+            StringBuilder builder = new StringBuilder();
+            foreach (var name in names)
             {
                 var namet = RegexHelper.TrimName(name);
 
@@ -338,7 +348,7 @@ namespace myseq
 
         public string ReSpawn(string name)
         {
-            string log = "";
+            var log = "";
             try
             {
                 SpawnCount++;
@@ -381,7 +391,7 @@ namespace myseq
 
                 log = GetRespawnTime(name, log);
             }
-            catch (Exception ex) {LogLib.WriteLine($"Error updating Timer SPAWNTIMER for {name}: ", ex);}
+            catch (Exception ex) { LogLib.WriteLine($"Error updating Timer SPAWNTIMER for {name}: ", ex); }
 
             listNeedsUpdate = true;
 
@@ -397,7 +407,7 @@ namespace myseq
 
                 // the respawn time
 
-                int last_Timer = SpawnTimer;
+                var last_Timer = SpawnTimer;
 
                 TimeSpan Diff = SpawnTimeDT.Subtract(KillTimeDT);
 
@@ -405,7 +415,7 @@ namespace myseq
 
                 if (Settings.Default.MaxLogLevel > 0)
                 {
-                    string spawnTimer = $"{Diff.Hours:00}:{Diff.Minutes:00}:{Diff.Seconds:00}";
+                    var spawnTimer = $"{Diff.Hours:00}:{Diff.Minutes:00}:{Diff.Seconds:00}";
 
                     log = $"Setting Timer for Spawn: {SpawnLoc} Name: {name} Count: {SpawnCount} Last Kill Time: {KillTimeStr} Current Spawn Time: {SpawnTimeStr} Timer: {spawnTimer} = {SpawnTimer} secs Old: {last_Timer} secs";
                 }
@@ -440,7 +450,7 @@ namespace myseq
 
         public ListViewItem GetListItem()
         {
-            bool isInList = true;
+            var isInList = true;
 
             if (itmSpawnTimerList == null)
             {
@@ -459,12 +469,21 @@ namespace myseq
             SpawnTimeRemaining = SecondsUntilSpawn(DateTime.Now);
 
             if (SpawnTimeRemaining < 1 || SpawnTimeRemaining > 120)
+            {
                 itmSpawnTimerList.ForeColor = Color.Black;
+            }
             else if (SpawnTimeRemaining < 30)
+            {
                 itmSpawnTimerList.ForeColor = Color.Red;
+            }
             else if (SpawnTimeRemaining < 60)
+            {
                 itmSpawnTimerList.ForeColor = Color.IndianRed;
-            else itmSpawnTimerList.ForeColor = SpawnTimeRemaining < 90 ? Color.Orange : Color.Goldenrod;
+            }
+            else
+            {
+                itmSpawnTimerList.ForeColor = SpawnTimeRemaining < 90 ? Color.Orange : Color.Goldenrod;
+            }
 
             UpdateList();
 
@@ -508,7 +527,9 @@ namespace myseq
             else
             {
                 if (SpawnTimeRemaining.ToString() != itmSpawnTimerList.SubItems[1].Text)
+                {
                     itmSpawnTimerList.SubItems[1].Text = SpawnTimeRemaining.ToString();
+                }
             }
         }
 

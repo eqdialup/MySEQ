@@ -1,8 +1,8 @@
-using myseq.Properties;
-using Structures;
 using System;
 using System.Collections;
 using System.Drawing;
+using myseq.Properties;
+using Structures;
 
 namespace myseq
 {
@@ -62,25 +62,26 @@ namespace myseq
             EnterMap?.Invoke(this);
         }
 
-        public void SetComponents(MapCon mapCon,ListViewPanel SpawnList,ListViewPanel SpawnTimerList,ListViewPanel GroundItemList,MapPane mapPane,EQData eq)
+        public void SetComponents(MapCon mapCon, ListViewPanel SpawnList, ListViewPanel SpawnTimerList, ListViewPanel GroundItemList, MapPane mapPane, EQData eq)
 
         {
-            this.mapCon=mapCon;
+            this.mapCon = mapCon;
 
-            this.SpawnList=SpawnList;
+            this.SpawnList = SpawnList;
 
-            this.SpawnTimerList=SpawnTimerList;
+            this.SpawnTimerList = SpawnTimerList;
 
             this.GroundItemList = GroundItemList;
 
-            this.eq=eq;
+            this.eq = eq;
 
             initialized = true;
         }
 
         public void ClearMap()
         {
-            try {
+            try
+            {
                 if (!initialized) { throw new Exception("EQMapManager not initialized yet"); }
 
                 eq.Clear();
@@ -109,7 +110,7 @@ namespace myseq
 
                 eq.mobsTimers.ResetTimers();
             }
-            catch (Exception ex) {LogLib.WriteLine("Error with ClearMap:", ex);}
+            catch (Exception ex) { LogLib.WriteLine("Error with ClearMap:", ex); }
         }
 
         public void LoadDummyMap(string mapname)
@@ -124,7 +125,9 @@ namespace myseq
             eq.shortname = mapname;
 
             if (mapPane != null)
+            {
                 mapPane.scale.Value = 100M;
+            }
 
             OnEnterMap();
         }
@@ -166,7 +169,7 @@ namespace myseq
                 eq.ClearMapStructures();
             }
 
-            bool rc = eq.LoadLoYMapInternal(filename);
+            var rc = eq.LoadLoYMapInternal(filename);
 
             if (rc)
             {
@@ -183,7 +186,9 @@ namespace myseq
         public void OptimizeMap()
         {
             if (eq.lines == null)
+            {
                 return;
+            }
 
             ArrayList linesToRemove = new ArrayList();
             MapLine lastline = null;
@@ -231,7 +236,7 @@ namespace myseq
 
                         lastline.linePoints = new PointF[thiscount + lastcount - 1 - droppoint];
 
-                        for (int p = 0; p < (lastcount - droppoint); p++)
+                        for (var p = 0; p < (lastcount - droppoint); p++)
                         {
                             MapPoint tmp = (MapPoint)lastline.aPoints[p];
 
@@ -239,9 +244,11 @@ namespace myseq
                         }
 
                         if (droppoint == 1)
+                        {
                             lastline.aPoints.RemoveAt(lastcount - 1);
+                        }
 
-                        for (int p = 1; p < thiscount; p++)
+                        for (var p = 1; p < thiscount; p++)
                         {
                             MapPoint tmp = (MapPoint)thisline.aPoints[p];
 
@@ -293,9 +300,11 @@ namespace myseq
                             lastline.linePoints = new PointF[thiscount + lastcount - 1 - droppoint];
 
                             if (droppoint == 1)
+                            {
                                 lastline.aPoints.RemoveAt(0);
+                            }
 
-                            for (int p = 0; p < (thiscount - 1); p++)
+                            for (var p = 0; p < (thiscount - 1); p++)
                             {
                                 MapPoint tmp = (MapPoint)thisline.aPoints[p];
 
@@ -313,7 +322,7 @@ namespace myseq
 
                             thiscount = lastline.aPoints.Count;
 
-                            for (int p = 0; p < thiscount; p++)
+                            for (var p = 0; p < thiscount; p++)
                             {
                                 MapPoint tmp = (MapPoint)lastline.aPoints[p];
 
@@ -330,16 +339,25 @@ namespace myseq
                 lastline = thisline;
             }
 
-            foreach (MapLine lineToRemove in linesToRemove) eq.lines.Remove(lineToRemove);
+            foreach (MapLine lineToRemove in linesToRemove)
+            {
+                eq.lines.Remove(lineToRemove);
+            }
+
             foreach (MapLine line in eq.lines)
             {
                 line.maxZ = line.minZ = line.Point(0).z;
-                for (int j = 1; j < line.aPoints.Count; j++)
+                for (var j = 1; j < line.aPoints.Count; j++)
                 {
                     if (line.minZ > line.Point(j).z)
+                    {
                         line.minZ = line.Point(j).z;
+                    }
+
                     if (line.maxZ < line.Point(j).z)
+                    {
                         line.maxZ = line.Point(j).z;
+                    }
                 }
             }
             // Put in offsets for use when drawing text on map, for duplicate text at same location
@@ -348,10 +366,10 @@ namespace myseq
 
         private void OptimizeText()
         {
-            int index = 0;
+            var index = 0;
             foreach (MapText tex1 in eq.texts)
             {
-                int index2 = 0;
+                var index2 = 0;
                 foreach (MapText tex2 in eq.texts)
                 {
                     if (index2 > index && tex1.x == tex2.x && tex1.y == tex2.y && tex1.z == tex2.z && tex1.label != tex2.label)
@@ -367,13 +385,15 @@ namespace myseq
         public float CalcDotProduct(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
         {
             if ((x1 == x2 && y1 == y2 && z1 == z2) || (x2 == x3 && y2 == y3 && z2 == z3))
+            {
                 return 1.0f;
+            }
 
-            double lenV1 = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)) + ((z2 - z1) * (z2 - z1)));
+            var lenV1 = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)) + ((z2 - z1) * (z2 - z1)));
 
-            double lenV2 = Math.Sqrt(((x3 - x2) * (x3 - x2)) + ((y3 - y2) * (y3 - y2)) + ((z3 - z2) * (z3 - z2)));
+            var lenV2 = Math.Sqrt(((x3 - x2) * (x3 - x2)) + ((y3 - y2) * (y3 - y2)) + ((z3 - z2) * (z3 - z2)));
 
-            double lenV3 = Math.Sqrt(((x3 - x1) * (x3 - x1)) + ((y3 - y1) * (y3 - y1)) + ((z3 - z1) * (z3 - z1)));
+            var lenV3 = Math.Sqrt(((x3 - x1) * (x3 - x1)) + ((y3 - y1) * (y3 - y1)) + ((z3 - z1) * (z3 - z1)));
 
             return (float)(lenV3 / (lenV1 + lenV2));
         }

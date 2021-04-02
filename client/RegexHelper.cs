@@ -46,7 +46,7 @@ namespace Structures
 
         public static bool IsSubstring(string toSearch, string forSearch)
         {
-            var regex = GetRegex(forSearch);
+            Regex regex = GetRegex(forSearch);
             return regex.Match(toSearch).Success;
         }
     }

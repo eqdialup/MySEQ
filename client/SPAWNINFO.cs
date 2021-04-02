@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -7,18 +6,19 @@ using System.Windows.Forms;
 namespace Structures
 
 {
-    [StructLayout(LayoutKind.Sequential, Pack=1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
 
     public partial class SPAWNINFO
     {
-        public SPAWNINFO() {}
+        public SPAWNINFO() { }
 
-        private string BytesToString(byte []b, int start, int maxlen) {
-            int i=0;
+        private string BytesToString(byte[] b, int start, int maxlen)
+        {
+            var i = 0;
 
             // look for a null
 
-            while (i <maxlen&&b[start+i]!='\0')
+            while (i < maxlen && b[start + i] != '\0')
             {
                 i++;
             }
@@ -26,7 +26,7 @@ namespace Structures
             return Encoding.ASCII.GetString(b, start, i);
         }
 
-        public void Frombytes(byte []b, int offset)
+        public void Frombytes(byte[] b, int offset)
         {
             Name = BytesToString(b, 0 + offset, 30);
 
@@ -52,10 +52,12 @@ namespace Structures
 
             flags = (PacketType)BitConverter.ToInt32(b, 96 + offset);
 
-            if (flags==PacketType.Player)
+            if (flags == PacketType.Player)
+            {
                 m_isPlayer = true;
+            }
 
-//            Guild = BitConverter.ToInt32(b, 100 + offset);
+            //            Guild = BitConverter.ToInt32(b, 100 + offset);
         }
 
         public string Name = "";
@@ -84,7 +86,7 @@ namespace Structures
 
         public int Offhand;
 
-//        public int Guild;
+        //        public int Guild;
 
         public byte Level;
 

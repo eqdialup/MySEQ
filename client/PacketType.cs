@@ -3,7 +3,8 @@
 {
     public partial class SPAWNINFO
     {
-        public enum PacketType {
+        public enum PacketType
+        {
 
             Spawn = 0,
 

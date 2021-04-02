@@ -4,7 +4,8 @@ using myseq.Properties;
 
 namespace Structures
 {
-    public enum LogLevel{
+    public enum LogLevel
+    {
         Off = 0,            // Set maxLogLevel to Off and no logging occurs
         Error = 1,          // Used for exceptions and other errors
         Warning = 2,        // Used for les
@@ -39,17 +40,20 @@ namespace Structures
         {
             if (logLevel <= maxLogLevel && logLevel > LogLevel.Off)
             {
-                    string logpath = Settings.Default.LogDir;
-                    string logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";
+                var logpath = Settings.Default.LogDir;
+                var logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";
 
-                    if (!Directory.Exists(logpath)) Directory.CreateDirectory(logpath);
+                if (!Directory.Exists(logpath))
+                {
+                    Directory.CreateDirectory(logpath);
+                }
 
-                    FileStream fs = new FileStream(Path.Combine(logpath, logfile),FileMode.Append,FileAccess.Write,FileShare.ReadWrite);
-                    StreamWriter outLog = new StreamWriter(fs);
-                    outLog.WriteLine($"[{(int)logLevel}] {DateTime.Now:MM/dd/yyyy HH:mm:ss.ff} - {msg}");
-                    outLog.Close();
-                    fs.Close();
-/* How does one log an error if the logging function is the one erroring? */
+                FileStream fs = new FileStream(Path.Combine(logpath, logfile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                StreamWriter outLog = new StreamWriter(fs);
+                outLog.WriteLine($"[{(int)logLevel}] {DateTime.Now:MM/dd/yyyy HH:mm:ss.ff} - {msg}");
+                outLog.Close();
+                fs.Close();
+                /* How does one log an error if the logging function is the one erroring? */
             }
         }
     }

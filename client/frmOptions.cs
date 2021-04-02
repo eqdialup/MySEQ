@@ -1,6 +1,3 @@
-using myseq.Properties;
-using Structures;
-
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -8,6 +5,8 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Media;
 using System.Windows.Forms;
+using myseq.Properties;
+using Structures;
 
 namespace myseq
 
@@ -292,7 +291,7 @@ namespace myseq
             //
             InitializeComponent();
 
-            foreach (string styleName in Enum.GetNames(typeof(HatchStyle)))
+            foreach (var styleName in Enum.GetNames(typeof(HatchStyle)))
             {
                 cmbHatch.Items.Add(styleName);
             }
@@ -2112,7 +2111,9 @@ namespace myseq
             fldrBrowser.ShowDialog();
 
             if (fldrBrowser.SelectedPath.Trim() != "")
+            {
                 txtMapDir.Text = fldrBrowser.SelectedPath;
+            }
         }
 
         private void CmdCfgDirBrowse_Click(object sender, EventArgs e)
@@ -2125,7 +2126,9 @@ namespace myseq
             fldrBrowser.ShowDialog();
 
             if (fldrBrowser.SelectedPath.Trim() != "")
+            {
                 txtCfgDir.Text = fldrBrowser.SelectedPath;
+            }
         }
 
         private void CmdFilterDirBrowse_Click(object sender, EventArgs e)
@@ -2138,7 +2141,9 @@ namespace myseq
             fldrBrowser.ShowDialog();
 
             if (fldrBrowser.SelectedPath.Trim() != "")
+            {
                 txtFilterDir.Text = fldrBrowser.SelectedPath;
+            }
         }
 
         private void CmdLogDir_Click(object sender, EventArgs e)
@@ -2151,7 +2156,9 @@ namespace myseq
             fldrBrowser.ShowDialog();
 
             if (fldrBrowser.SelectedPath.Trim() != "")
+            {
                 txtLogDir.Text = fldrBrowser.SelectedPath;
+            }
         }
 
         private void CmdSpawnTimers_Click(object sender, EventArgs e)
@@ -2164,7 +2171,9 @@ namespace myseq
             fldrBrowser.ShowDialog();
 
             if (fldrBrowser.SelectedPath.Trim() != "")
+            {
                 txtTimerDir.Text = fldrBrowser.SelectedPath;
+            }
         }
 
         public DrawOptions GetDrawOptions()
@@ -2172,29 +2181,65 @@ namespace myseq
         {
             DrawOptions DrawOpts = DrawOptions.None;
 
-            if (chkMap.Checked) DrawOpts |= DrawOptions.DrawMap;
+            if (chkMap.Checked)
+            {
+                DrawOpts |= DrawOptions.DrawMap;
+            }
 
-            if (chkAddjust.Checked) DrawOpts |= DrawOptions.Readjust;
+            if (chkAddjust.Checked)
+            {
+                DrawOpts |= DrawOptions.Readjust;
+            }
 
-            if (chkPlayer.Checked) DrawOpts |= DrawOptions.Player;
+            if (chkPlayer.Checked)
+            {
+                DrawOpts |= DrawOptions.Player;
+            }
 
-            if (chkLineToPoint.Checked) DrawOpts |= DrawOptions.SpotLine;
+            if (chkLineToPoint.Checked)
+            {
+                DrawOpts |= DrawOptions.SpotLine;
+            }
 
-            if (chkSpawns.Checked) DrawOpts |= DrawOptions.Spawns;
+            if (chkSpawns.Checked)
+            {
+                DrawOpts |= DrawOptions.Spawns;
+            }
 
-            if (chkTrails.Checked) DrawOpts |= DrawOptions.SpawnTrails;
+            if (chkTrails.Checked)
+            {
+                DrawOpts |= DrawOptions.SpawnTrails;
+            }
 
-            if (chkGround.Checked) DrawOpts |= DrawOptions.GroundItems;
+            if (chkGround.Checked)
+            {
+                DrawOpts |= DrawOptions.GroundItems;
+            }
 
-            if (chkTimers.Checked) DrawOpts |= DrawOptions.SpawnTimers;
+            if (chkTimers.Checked)
+            {
+                DrawOpts |= DrawOptions.SpawnTimers;
+            }
 
-            if (chkDirection.Checked) DrawOpts |= DrawOptions.DirectionLines;
+            if (chkDirection.Checked)
+            {
+                DrawOpts |= DrawOptions.DirectionLines;
+            }
 
-            if (chkHighlight.Checked) DrawOpts |= DrawOptions.SpawnRings;
+            if (chkHighlight.Checked)
+            {
+                DrawOpts |= DrawOptions.SpawnRings;
+            }
 
-            if (chkGrid.Checked) DrawOpts |= DrawOptions.GridLines;
+            if (chkGrid.Checked)
+            {
+                DrawOpts |= DrawOptions.GridLines;
+            }
 
-            if (chkText.Checked) DrawOpts |= DrawOptions.ZoneText;
+            if (chkText.Checked)
+            {
+                DrawOpts |= DrawOptions.ZoneText;
+            }
 
             return DrawOpts;
         }

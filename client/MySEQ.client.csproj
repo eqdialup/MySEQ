@@ -120,7 +120,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes.cs">
+    <Compile Include="ListComparer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ColorConverter.cs" />
@@ -177,6 +177,7 @@
     <Compile Include="MobsTimers.cs" />
     <Compile Include="PacketType.cs" />
     <Compile Include="PrettyNames.cs" />
+    <Compile Include="ProcessInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -192,6 +193,8 @@
     <Compile Include="DrawOptions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SafeNativeMethods.cs" />
+    <Compile Include="SAudio.cs" />
     <Compile Include="SmtpSettings.cs" />
     <Compile Include="SPAWNINFO.cs" />
     <Compile Include="SPAWNTIMER.cs" />

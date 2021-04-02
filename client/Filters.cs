@@ -1,12 +1,12 @@
 // Class Files
 
-using myseq.Properties;
-using Structures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using myseq.Properties;
+using Structures;
 
 namespace myseq
 {
@@ -65,10 +65,10 @@ namespace myseq
 
         public void ReadNewAlertFile(string zoneName)
         {
-            int type = 0;
+            var type = 0;
             zoneName = zoneName.ToLower();
 
-            string filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
+            var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
 
             if (!File.Exists(filterFile))
             {
@@ -82,8 +82,8 @@ namespace myseq
 
             // Load the 5.xx version alerts
             // open the existing filter file
-            foreach(string line in File.ReadAllLines(filterFile))
-                {
+            foreach (var line in File.ReadAllLines(filterFile))
+            {
                 line.Trim();
                 if (line.Length > 1 && !line.StartsWith("<!"))
                 {
@@ -123,7 +123,7 @@ namespace myseq
                             continue;
                         }
 
-                        string inputstring = line;
+                        var inputstring = line;
                         // Remove extra stuff
 
                         if (line.StartsWith("<oldfilter>"))
@@ -161,10 +161,14 @@ namespace myseq
 
                         // if there are any odd characters in the name, just skip it
                         if (line.IndexOfAny(anyOf) != -1)
+                        {
                             continue;
+                        }
 
                         if (inputstring.IndexOfAny(anyOf) != -1)
+                        {
                             continue;
+                        }
 
                         DetermineType(zoneName, type, inputstring);
                     }
@@ -229,7 +233,7 @@ namespace myseq
             {
                 zoneName = zoneName.ToLower();
 
-                string filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
+                var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
 
                 if (File.Exists(filterFile))
                 {
@@ -237,11 +241,13 @@ namespace myseq
                 }
                 // create the filter file - truncate if exists - going to write all the filters
 
-                List<string> lines = new List<string>();
-                lines.Add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                lines.Add("<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">");
-                lines.Add("<seqfilters>");
-                lines.Add("    <section name=\"Hunt\">");
+                List<string> lines = new List<string>
+                {
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+                    "<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">",
+                    "<seqfilters>",
+                    "    <section name=\"Hunt\">"
+                };
 
                 if (zoneName == "global")
                 {
@@ -349,7 +355,7 @@ namespace myseq
                             lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
                         }
                     }
-                   lines.Add("    </section>");
+                    lines.Add("    </section>");
                     lines.Add("    <section name=\"Primary\">");  // Item In Primary Hand Alerts - zone only
                     foreach (string str in WieldedItems)
                     {
@@ -409,10 +415,12 @@ namespace myseq
         {
             StreamWriter sw = new StreamWriter(fileName);
 
-            bool isglobal = false;
+            var isglobal = false;
 
             if (fileName.EndsWith("global.xml"))
+            {
                 isglobal = true;
+            }
 
             sw.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             sw.WriteLine("<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">");
@@ -446,10 +454,12 @@ namespace myseq
             {
                 zoneName = zoneName.ToLower();
 
-                string filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
+                var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
 
                 if (!File.Exists(filterFile))
+                {
                     CreateAlertFile(filterFile);
+                }
 
                 Process.Start("notepad.exe", filterFile);
             }

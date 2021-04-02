@@ -87,7 +87,9 @@ namespace Structures
                     lock (syncObj)
                     {
                         if (instance == null)
+                        {
                             instance = new SmtpSettings();
+                        }
                     }
                 }
 
@@ -107,7 +109,7 @@ namespace Structures
             }
 
             // Dont save password if we are not selecting to save it
-            string curpass = "";
+            var curpass = "";
             if (!Instance.SavePassword)
             {
                 curpass = Instance.SmtpPassword;
@@ -129,7 +131,9 @@ namespace Structures
 
             var oldconfigFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "myseq.xml");
             if (File.Exists(oldconfigFile))
+            {
                 File.Delete(oldconfigFile);
+            }
         }
 
         public void Load(string filename)
@@ -158,8 +162,8 @@ namespace Structures
             UTF8Encoding _UTF8 = new UTF8Encoding();
             MD5CryptoServiceProvider _Hash = new MD5CryptoServiceProvider();
 
-            byte[] _Key = _Hash.ComputeHash(_UTF8.GetBytes(_Pass));
-            byte[] _Data = Convert.FromBase64String(Message);
+            var _Key = _Hash.ComputeHash(_UTF8.GetBytes(_Pass));
+            var _Data = Convert.FromBase64String(Message);
 
             TripleDESCryptoServiceProvider _Service = new TripleDESCryptoServiceProvider
             {
@@ -195,8 +199,8 @@ namespace Structures
             UTF8Encoding _UTF8 = new UTF8Encoding();
             MD5CryptoServiceProvider _Hash = new MD5CryptoServiceProvider();
 
-            byte[] _Key = _Hash.ComputeHash(_UTF8.GetBytes(_Pass));
-            byte[] _Data = _UTF8.GetBytes(Message);
+            var _Key = _Hash.ComputeHash(_UTF8.GetBytes(_Pass));
+            var _Data = _UTF8.GetBytes(Message);
 
             TripleDESCryptoServiceProvider _Service = new TripleDESCryptoServiceProvider
             {

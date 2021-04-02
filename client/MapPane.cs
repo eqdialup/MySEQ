@@ -8,7 +8,8 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace myseq
 {
-    public class MapPane : DockContent {
+    public class MapPane : DockContent
+    {
         public MapCon mapCon;
 
         public NumericUpDown offsetx;
@@ -45,7 +46,8 @@ namespace myseq
 
         private EQData eq = null;
 
-        public MapPane() {
+        public MapPane()
+        {
             InitializeComponent();
 
             // Create the quick lookup text field and buttn
@@ -87,7 +89,7 @@ namespace myseq
             filterzpos.Value = 75;
         }
 
-        public void SetComponents(FrmMain f1,EQData eq)
+        public void SetComponents(FrmMain f1, EQData eq)
 
         {
             this.f1 = f1;
@@ -99,7 +101,9 @@ namespace myseq
 
         {
             if (disposing)
+            {
                 components?.Dispose();
+            }
 
             base.Dispose(disposing);
         }
@@ -113,17 +117,18 @@ namespace myseq
         private void cmdLookup_Click(object sender, EventArgs e)
 
         {
-                txtLookup.Text = "";
+            txtLookup.Text = "";
 
-                txtLookup.Focus();
+            txtLookup.Focus();
 
-                Lookup("");
+            Lookup("");
         }
 
         private void txtLookup_KeyPress(object sender, KeyPressEventArgs e)
 
         {
-            if (e.KeyChar == (char)Keys.Enter) {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
                 Lookup(txtLookup.Text);
 
                 txtLookup.Focus();
@@ -142,7 +147,8 @@ namespace myseq
 
         #region Component Designer generated code
 
-        private void InitializeComponent() {
+        private void InitializeComponent()
+        {
             offsetx = new NumericUpDown();
             offsety = new NumericUpDown();
             scale = new NumericUpDown();
@@ -380,7 +386,8 @@ namespace myseq
 
         #endregion
 
-        private void MapPane_Resize(object sender, EventArgs e) {
+        private void MapPane_Resize(object sender, EventArgs e)
+        {
             Size s = mapCon.Size;
 
             Size t = Size;
@@ -392,7 +399,7 @@ namespace myseq
 
             mapCon.Size = s;
 
-            int top = Size.Height - 25; // Top of controls
+            var top = Size.Height - 25; // Top of controls
 
             cmdCommand.Top = top;
 
@@ -427,7 +434,8 @@ namespace myseq
             mapCon.Invalidate();
         }
 
-        private void offsetx_ValueChanged(object sender, EventArgs e) {
+        private void offsetx_ValueChanged(object sender, EventArgs e)
+        {
             mapCon.m_panOffsetX = -(int)offsetx.Value;
 
             mapCon.ReAdjust();
@@ -435,7 +443,8 @@ namespace myseq
             mapCon.Invalidate();
         }
 
-        private void offsety_ValueChanged(object sender, EventArgs e) {
+        private void offsety_ValueChanged(object sender, EventArgs e)
+        {
             mapCon.m_panOffsetY = -(int)offsety.Value;
 
             mapCon.ReAdjust();
@@ -443,8 +452,9 @@ namespace myseq
             mapCon.Invalidate();
         }
 
-        private void scale_ValueChanged(object sender, EventArgs e) {
-            mapCon.scale = (float)scale.Value/100.0f;
+        private void scale_ValueChanged(object sender, EventArgs e)
+        {
+            mapCon.scale = (float)scale.Value / 100.0f;
 
             f1.toolStripScale.Text = $"{scale.Value / 100:0%}";
 
@@ -453,26 +463,37 @@ namespace myseq
             mapCon.Invalidate();
         }
 
-        private void cmdCommand_Click(object sender, EventArgs e) {
-            if (f1 == null) return;
+        private void cmdCommand_Click(object sender, EventArgs e)
+        {
+            if (f1 == null)
+            {
+                return;
+            }
 
             f1.CmdCommand_Click(sender, e);
         }
 
-        private void filterzpos_ValueChanged(object sender, EventArgs e) {
+        private void filterzpos_ValueChanged(object sender, EventArgs e)
+        {
             mapCon.filterpos = (int)filterzpos.Value;
             if (f1 != null)
+            {
                 f1.toolStripZPos.Text = $"{filterzpos.Value:0.0}";
+            }
         }
 
-        private void filterzneg_ValueChanged(object sender, EventArgs e) {
+        private void filterzneg_ValueChanged(object sender, EventArgs e)
+        {
             mapCon.filterneg = (int)filterzneg.Value;
 
             if (f1 != null)
+            {
                 f1.toolStripZNeg.Text = $"{filterzneg.Value:0.0}";
+            }
         }
 
-        private void mapCon_MouseEnter(object sender, EventArgs e) {
+        private void mapCon_MouseEnter(object sender, EventArgs e)
+        {
             // focus for docking panel changes, to autohide panels that may be visible
             if ((f1.SpawnList.DockState == DockState.DockLeftAutoHide ||
                  f1.SpawnList.DockState == DockState.DockRightAutoHide ||

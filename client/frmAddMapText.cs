@@ -1,6 +1,6 @@
-﻿using myseq.Properties;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using myseq.Properties;
 
 namespace myseq
 {
@@ -27,7 +27,7 @@ namespace myseq
             if (colorDialog1.ShowDialog() != DialogResult.Cancel && colorDialog1.Color != selectedColor)
             {
                 selectedColor = colorDialog1.Color;
-                Settings.Default.SelectedAddMapText= colorDialog1.Color;
+                Settings.Default.SelectedAddMapText = colorDialog1.Color;
                 pictureBox1.BackColor = colorDialog1.Color;
             }
         }

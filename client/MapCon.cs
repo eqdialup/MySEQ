@@ -1,12 +1,13 @@
 // Class Files
 
-using myseq.Properties;
-using Structures;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Media;
 using System.Text;
 using System.Windows.Forms;
+using myseq.Properties;
+using Structures;
 
 namespace myseq
 {
@@ -228,7 +229,9 @@ namespace myseq
             double fpsTimeDelta;
 
             if (bkgBuffer == null)
+            {
                 return;
+            }
 
             bkgBuffer.Render(e.Graphics);
 
@@ -254,7 +257,9 @@ namespace myseq
         protected override void Dispose(bool disposing)
         {
             if (disposing && components != null)
+            {
                 components.Dispose();
+            }
 
             base.Dispose(disposing);
         }
@@ -359,7 +364,7 @@ namespace myseq
             tt.Active = true;
 
             // Set sine and cosine values to use with headings
-            for (int p = 0; p < 512; p++)
+            for (var p = 0; p < 512; p++)
             {
                 xCos[p] = (float)Math.Cos(p / 512.0f * 2.0f * Math.PI);
                 xSin[p] = (float)Math.Sin(p / 512.0f * 2.0f * Math.PI);
@@ -387,12 +392,17 @@ namespace myseq
 
         private void MapCon_MouseScroll(object sender, MouseEventArgs me)
         {
-            if (mapPane == null) return;
+            if (mapPane == null)
+            {
+                return;
+            }
 
-            float newScale = scale + (me.Delta / 600.0f);
+            var newScale = scale + (me.Delta / 600.0f);
 
             if (newScale >= 0.1)
+            {
                 f1.mapPane.scale.Value = (decimal)(newScale * 100);
+            }
 
             ReAdjust();
 
@@ -401,7 +411,10 @@ namespace myseq
 
         private void MapCon_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (mapPane == null) return;
+            if (mapPane == null)
+            {
+                return;
+            }
 
             if (e.KeyChar == '+')
             {
@@ -500,12 +513,14 @@ namespace myseq
                 {
                     float rCircleRadius = Settings.Default.RangeCircle;
 
-                    float upperRadius = rCircleRadius + (4 * SpawnSize);
+                    var upperRadius = rCircleRadius + (4 * SpawnSize);
 
-                    float lowerRadius = rCircleRadius - (4 * SpawnSize);
+                    var lowerRadius = rCircleRadius - (4 * SpawnSize);
 
                     if (lowerRadius < 0)
+                    {
                         lowerRadius = 0;
+                    }
 
                     // Calc the proper loc for the mouse
 
@@ -600,11 +615,14 @@ namespace myseq
                     SPAWNTIMER st = eq.FindTimer(5.0f, mousex, mousey);
                     if (st != null)
                     {
-                        foreach (string name in st.AllNames.Split(','))
+                        foreach (var name in st.AllNames.Split(','))
                         {
-                            string bname = RegexHelper.TrimName(name);
+                            var bname = RegexHelper.TrimName(name);
                             if (bname.Length > 0 && f1.alertAddmobname.Length == 0)
+                            {
                                 f1.alertAddmobname = bname;
+                            }
+
                             if (RegexHelper.RegexMatch(bname))
                             {
                                 f1.alertAddmobname = bname;
@@ -677,9 +695,11 @@ namespace myseq
 
                     // try to select mob, if not then do timer
 
-                    float delta = (float)(5.0 / m_ratio);
+                    var delta = (float)(5.0 / m_ratio);
                     if (!eq.SelectMob(delta, mousex, mousey) && !eq.SelectTimer(delta, mousex, mousey))
+                    {
                         eq.SelectGroundItem(delta, mousex, mousey);
+                    }
 
                     Invalidate();
                 }
@@ -698,7 +718,7 @@ namespace myseq
 
         private void ModKeyControl(float x, float y)
         {
-            float delta = 5.0f / m_ratio;
+            var delta = 5.0f / m_ratio;
 
             SPAWNINFO sp = eq.FindMobNoPet(delta, x, y) ?? eq.FindMob(delta, x, y);
 
@@ -708,14 +728,14 @@ namespace myseq
 
                 if (st == null)
                 {
-                    eq.SetSelectedID((int)sp.SpawnID);
+                    eq.SetSelectedID(sp.SpawnID);
 
                     eq.SpawnX = -1.0f;
                     eq.SpawnY = -1.0f;
                 }
                 else
                 {
-                    eq.SetSelectedID((int)st.SpawnID);
+                    eq.SetSelectedID(st.SpawnID);
                     SPAWNTIMER spt = eq.FindTimer(1.0f, st.X, st.Y);
                     if (spt?.itmSpawnTimerList != null)
                     {
@@ -730,13 +750,18 @@ namespace myseq
             else
             {
                 if (!eq.SelectTimer((float)(5.0 / m_ratio), x, y))
+                {
                     eq.SelectGroundItem((float)(5.0 / m_ratio), x, y);
+                }
             }
         }
 
         private void MapCon_MouseMove(object sender, MouseEventArgs e)
         {
-            if (mapPane == null || f1 == null) return;
+            if (mapPane == null || f1 == null)
+            {
+                return;
+            }
 
             // Limit TT popups to four times a sec
 
@@ -761,8 +786,8 @@ namespace myseq
             if (m_dragging)
             {
                 // Compute delta x,y from original click
-                int dx = m_dragStartX - e.X;
-                int dy = m_dragStartY - e.Y;
+                var dx = m_dragStartX - e.X;
+                var dy = m_dragStartY - e.Y;
                 mapPane.offsetx.Value = -(decimal)(m_dragStartPanX - dx);
                 mapPane.offsety.Value = -(decimal)(m_dragStartPanY - dy);
                 ReAdjust();
@@ -777,7 +802,7 @@ namespace myseq
         private void PopulateToolTip(MouseEventArgs e)
         {
             MouseMapLoc(e, out var mousex, out var mousey);
-            float delta = 5.0f / m_ratio;
+            var delta = 5.0f / m_ratio;
 
             SPAWNINFO sp = eq.FindMobNoPet(delta, mousex, mousey) ?? eq.FindMob(delta, mousex, mousey);
 
@@ -803,7 +828,7 @@ namespace myseq
                 if (gi != null)
 
                 {
-                    string ItemName = gi.Name;
+                    var ItemName = gi.Name;
 
                     foreach (ListItem listItem in eq.GroundSpawn)//eq.itemList.Values)
 
@@ -815,7 +840,7 @@ namespace myseq
                         }
                     }
 
-                    string s = $"Name: {ItemName}\n{gi.Name}";
+                    var s = $"Name: {ItemName}\n{gi.Name}";
 
                     tt.SetToolTip(this, s);
 
@@ -837,7 +862,7 @@ namespace myseq
                 if (st != null)
 
                 {
-                    string description = st.GetDescription();
+                    var description = st.GetDescription();
 
                     if (description != null)
 
@@ -856,7 +881,9 @@ namespace myseq
             }
 
             if (!found)
+            {
                 tt.SetToolTip(this, "");
+            }
         }
 
         private void ClearPan()
@@ -868,26 +895,28 @@ namespace myseq
 
         public void ReAdjust()
         {
-            float mapWidth = Math.Abs(eq.maxx - eq.minx);
+            var mapWidth = Math.Abs(eq.maxx - eq.minx);
 
-            float mapHeight = Math.Abs(eq.maxy - eq.miny);
+            var mapHeight = Math.Abs(eq.maxy - eq.miny);
 
-            float ScreenWidth = Width - (2 * (float)15);
+            var ScreenWidth = Width - (2 * (float)15);
 
-            float ScreenHeight = Height - (2 * (float)15);
+            var ScreenHeight = Height - (2 * (float)15);
 
             m_screenCenterX = Width / 2;
 
             m_screenCenterY = Height / 2;
 
-            float zoom = scale;
+            var zoom = scale;
 
             if (m_zoom > 32)
+            {
                 m_zoom = 32;
+            }
 
-            float xratio = (float)ScreenWidth / mapWidth;
+            var xratio = (float)ScreenWidth / mapWidth;
 
-            float yratio = (float)ScreenHeight / mapHeight;
+            var yratio = (float)ScreenHeight / mapHeight;
 
             // Use the smaller scale ratio so that the map fits in the screen at a zoom of 1.
 
@@ -973,9 +1002,13 @@ namespace myseq
             void reposCenter(float ScreenMinX, float ScreenMaxX)
             {
                 if (ScreenMinX < eq.minx)
+                {
                     m_mapCenterX += eq.minx - ScreenMinX;
+                }
                 else if (ScreenMaxX > eq.maxx)
+                {
                     m_mapCenterX -= ScreenMaxX - eq.maxx;
+                }
             }
         }
 
@@ -999,17 +1032,25 @@ namespace myseq
         private float ScreenToMapCoordX(float screenCoordX, bool IgnorePan)
         {
             if (IgnorePan)
+            {
                 return m_mapCenterX + ((m_screenCenterX - screenCoordX) / m_ratio);
+            }
             else
+            {
                 return ScreenToMapCoordX(screenCoordX);
+            }
         }
 
         private float ScreenToMapCoordY(float screenCoordY, bool IgnorePan)
         {
             if (IgnorePan)
+            {
                 return m_mapCenterY + ((m_screenCenterY - screenCoordY) / m_ratio);
+            }
             else
+            {
                 return ScreenToMapCoordY(screenCoordY);
+            }
         }
 
         private void DrawLine(Pen pen, float x1, float y1, float x2, float y2)
@@ -1074,7 +1115,7 @@ namespace myseq
 
         private void DrawSpawnNames(Brush dBrush, string tName, float x1, float y1)//, string gName)
         {
-            float xoffset = bkgBuffer.Graphics.MeasureString(tName, drawFont).Width * 0.5f;
+            var xoffset = bkgBuffer.Graphics.MeasureString(tName, drawFont).Width * 0.5f;
             //            float goffset = bkgBuffer.Graphics.MeasureString(gName, drawFont).Width * 0.5f;
 
             try
@@ -1163,18 +1204,40 @@ namespace myseq
 
                 if (SetColor)
                 {
-                    if (si.Level < (eq.GreyRange + eq.gamerInfo.Level)) lblMobInfo.BackColor = Color.LightGray;
-                    else if (si.Level < (eq.GreenRange + eq.gamerInfo.Level)) lblMobInfo.BackColor = Color.PaleGreen;
-                    else if (si.Level < (eq.CyanRange + eq.gamerInfo.Level)) lblMobInfo.BackColor = Color.PowderBlue;
-                    else if (si.Level < eq.gamerInfo.Level) lblMobInfo.BackColor = Color.DeepSkyBlue;
-                    else if (si.Level == eq.gamerInfo.Level) lblMobInfo.BackColor = Color.White;
-                    else lblMobInfo.BackColor = si.Level <= eq.gamerInfo.Level + eq.YellowRange ? Color.Yellow : Color.Red;
+                    if (si.Level < (eq.GreyRange + eq.gamerInfo.Level))
+                    {
+                        lblMobInfo.BackColor = Color.LightGray;
+                    }
+                    else if (si.Level < (eq.GreenRange + eq.gamerInfo.Level))
+                    {
+                        lblMobInfo.BackColor = Color.PaleGreen;
+                    }
+                    else if (si.Level < (eq.CyanRange + eq.gamerInfo.Level))
+                    {
+                        lblMobInfo.BackColor = Color.PowderBlue;
+                    }
+                    else if (si.Level < eq.gamerInfo.Level)
+                    {
+                        lblMobInfo.BackColor = Color.DeepSkyBlue;
+                    }
+                    else if (si.Level == eq.gamerInfo.Level)
+                    {
+                        lblMobInfo.BackColor = Color.White;
+                    }
+                    else
+                    {
+                        lblMobInfo.BackColor = si.Level <= eq.gamerInfo.Level + eq.YellowRange ? Color.Yellow : Color.Red;
+                    }
 
                     if (si.isEventController)
+                    {
                         lblMobInfo.BackColor = Color.Violet;
+                    }
 
                     if (si.isLDONObject)
+                    {
                         lblMobInfo.BackColor = Color.LightGray;
+                    }
                 }
 
                 graphics = lblMobInfo.CreateGraphics();
@@ -1250,19 +1313,33 @@ namespace myseq
             {
                 // small target window version
                 if (si.isMerc)
+                {
                     mobInfo.AppendFormat("Mercenary: {0}\n", si.Name);
+                }
                 else if (si.isPet)
+                {
                     mobInfo.AppendFormat("Pet: {0}\n", si.Name);
+                }
                 else if (si.isFamiliar)
+                {
                     mobInfo.AppendFormat("Familiar: {0}\n", si.Name);
+                }
                 else if (si.isMount)
+                {
                     mobInfo.AppendFormat("Mount: {0}\n", si.Name);
+                }
                 else if (si.m_isPlayer)
+                {
                     mobInfo.AppendFormat("Player: {0}\n", si.Name);
+                }
                 else if (si.isCorpse)
+                {
                     mobInfo.AppendFormat("Corpse: {0}\n", si.Name);
+                }
                 else
+                {
                     mobInfo.AppendFormat("NPC: {0}\n", si.Name);
+                }
 
                 mobInfo.AppendFormat("Level {0} / {1}\n", si.Level.ToString(), PrettyNames.GetHideStatus(si.Hide));
 
@@ -1278,25 +1355,43 @@ namespace myseq
                 mobInfo.AppendFormat("Name: {0} ({1})\n", si.Name, si.SpawnID);
 
                 if (si.isMerc)
+                {
                     mobInfo.AppendFormat("Level: {0} (Mercenary)\n", si.Level.ToString());
+                }
                 else if (si.isPet)
+                {
                     mobInfo.AppendFormat("Level: {0} (Pet)\n", si.Level.ToString());
+                }
                 else if (si.isFamiliar)
+                {
                     mobInfo.AppendFormat("Level: {0} (Familiar)\n", si.Level.ToString());
+                }
                 else if (si.isMount)
+                {
                     mobInfo.AppendFormat("Level: {0} (Mount)\n", si.Level.ToString());
+                }
                 else
+                {
                     mobInfo.AppendFormat("Level: {0}\n", si.Level.ToString());
+                }
 
                 if (si.Primary > 0)
+                {
                     mobInfo.AppendFormat("Class: {0}    Primary: {1} ({2})\n", eq.GetClass(si.Class), eq.ItemNumToString(si.Primary), si.Primary);
+                }
                 else
+                {
                     mobInfo.AppendFormat("Class: {0}\n", eq.GetClass(si.Class));
+                }
 
                 if (si.Offhand > 0)
+                {
                     mobInfo.AppendFormat("Race: {0}    Offhand: {1} ({2})\n", eq.GetRace(si.Race), eq.ItemNumToString(si.Offhand), si.Offhand);
+                }
                 else
+                {
                     mobInfo.AppendFormat("Race: {0}\n", eq.GetRace(si.Race));
+                }
 
                 mobInfo.AppendFormat("Speed: {0:f3}\n", si.SpeedRun);
 
@@ -1322,7 +1417,7 @@ namespace myseq
         private string TimerInfo(SPAWNTIMER st)
 
         {
-            int height_adder = 20;
+            var height_adder = 20;
             try
 
             {
@@ -1330,9 +1425,9 @@ namespace myseq
 
                 string descr = null;
 
-                int countTime = 0;
+                var countTime = 0;
 
-                string countTimer = "";
+                var countTimer = "";
 
                 if (st.NextSpawnDT != DateTime.MinValue)
                 {
@@ -1383,7 +1478,7 @@ namespace myseq
 
                 //return descr;
 
-                string timerInfo = descr;
+                var timerInfo = descr;
 
                 //String timerInfo = st.GetDescription();
 
@@ -1456,11 +1551,11 @@ namespace myseq
             spawnTimer.AppendFormat("Spawn Name: {0}\n", st.LastSpawnName);
 
             names_to_add = "Names encountered: ";
-            string[] names = st.AllNames.Split(',');
+            var names = st.AllNames.Split(',');
 
-            int namecount = 0;
+            var namecount = 0;
 
-            foreach (string name in names)
+            foreach (var name in names)
             {
                 var namet = RegexHelper.TrimName(name);
 
@@ -1595,7 +1690,10 @@ namespace myseq
 
         private void MapCon_Paint(object sender, PaintEventArgs pe)
         {
-            if (mapPane == null || f1 == null) return;
+            if (mapPane == null || f1 == null)
+            {
+                return;
+            }
 
             try
             {
@@ -1624,21 +1722,21 @@ namespace myseq
 
                     // Used to help reduce the number of calls to improve speed
 
-                    float pX = eq.gamerInfo.X;
+                    var pX = eq.gamerInfo.X;
 
-                    float pY = eq.gamerInfo.Y;
+                    var pY = eq.gamerInfo.Y;
 
-                    float pZ = eq.gamerInfo.Z;
+                    var pZ = eq.gamerInfo.Z;
 
-                    float playerx = CalcScreenCoordX(pX);
+                    var playerx = CalcScreenCoordX(pX);
 
-                    float playery = CalcScreenCoordY(pY);
+                    var playery = CalcScreenCoordY(pY);
 
-                    float realhead = eq.CalcRealHeading(eq.gamerInfo);
+                    var realhead = eq.CalcRealHeading(eq.gamerInfo);
 
-                    float dx = ((m_panOffsetX + m_screenCenterX) / -m_ratio) - m_mapCenterX;
+                    var dx = ((m_panOffsetX + m_screenCenterX) / -m_ratio) - m_mapCenterX;
 
-                    float dy = ((m_panOffsetY + m_screenCenterY) / -m_ratio) - m_mapCenterY;
+                    var dy = ((m_panOffsetY + m_screenCenterY) / -m_ratio) - m_mapCenterY;
 
                     GraphicsState tState = bkgBuffer.Graphics.Save();
 
@@ -1655,7 +1753,9 @@ namespace myseq
                     DrawMap(DrawOpts);
 
                     if ((DrawOpts & DrawOptions.SpawnTrails) != DrawOptions.None)
+                    {
                         DrawSpawnTrails();
+                    }
 
                     if (eq.Zoning)
                     {
@@ -1664,22 +1764,34 @@ namespace myseq
                     else
                     {
                         if ((DrawOpts & DrawOptions.Player) != DrawOptions.None)
+                        {
                             DrawPlayer(playerx, playery, SpawnSize, SpawnSizeOffset, DrawOpts);
+                        }
 
                         if ((DrawOpts & DrawOptions.Spawns) != DrawOptions.None)
+                        {
                             DrawCorpses(pZ);
+                        }
 
                         if ((DrawOpts & DrawOptions.GroundItems) != DrawOptions.None)
+                        {
                             DrawGroundItems(pZ);
+                        }
 
                         if ((DrawOpts & DrawOptions.SpawnTimers) != DrawOptions.None)
+                        {
                             DrawSpawnTimers();
+                        }
 
                         if (Settings.Default.SpawnDrawSize > 1)
+                        {
                             bkgBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                        }
 
                         if ((DrawOpts & DrawOptions.Spawns) != DrawOptions.None)
+                        {
                             DrawSpawns(pX, pY, pZ, playerx, playery, DrawOpts);
+                        }
                     }
                     // Collect mob trails, every 8th pass - approx once every 1 sec
                     if (Settings.Default.CollectMobTrails)
@@ -1729,11 +1841,11 @@ namespace myseq
         private void DrawCorpses(float pZ)
 
         {
-            bool PCCorpseDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterPlayerCorpses;
+            var PCCorpseDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterPlayerCorpses;
 
-            bool NPCCorpseDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterNPCCorpses;
+            var NPCCorpseDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterNPCCorpses;
 
-            float drawOffset = PlusSzOZ - 0.5f;
+            var drawOffset = PlusSzOZ - 0.5f;
 
             // Draw Spawns
 
@@ -1759,7 +1871,9 @@ namespace myseq
                             DrawRectangle(yellowPen, x - PlusSzOZ + 0.5f, y - PlusSzOZ + 0.5f, SpawnPlusSize, SpawnPlusSize);
 
                             if (Settings.Default.ShowPlayerCorpseNames && (sp.Name.Length > 0))
+                            {
                                 DrawSpawnNames(textBrush, $"{sp.Level}: {sp.Name}", sp.X, sp.Y); //, gName);
+                            }
 
                             sp.filtered = false;
                         }
@@ -1777,7 +1891,9 @@ namespace myseq
                             DrawLine(cyanPen, x, y - drawOffset, x, y + drawOffset);
 
                             if (Settings.Default.ShowNPCCorpseNames && (sp.Name.Length > 0))
+                            {
                                 DrawSpawnNames(textBrush, $"{sp.Level}: {sp.Name}", sp.X, sp.Y); //, gName);
+                            }
 
                             sp.filtered = false;
                         }
@@ -1801,19 +1917,19 @@ namespace myseq
 
         private void DrawSpawns(float pX, float pY, float pZ, float playerx, float playery, DrawOptions DrawOpts)
         {
-            int playerSpawnID = eq.gamerInfo.SpawnID;
+            var playerSpawnID = eq.gamerInfo.SpawnID;
 
-            int RangeCircle = Settings.Default.RangeCircle;
+            var RangeCircle = Settings.Default.RangeCircle;
 
-            bool NPCDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterNPCs;
+            var NPCDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterNPCs;
 
-            bool PCDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterPlayers;
+            var PCDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterPlayers;
 
             //            string gName;
 
-            bool ShowRings = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.None;
+            var ShowRings = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.None;
 
-            bool DrawDirection = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None;
+            var DrawDirection = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None;
 
             if ((eq.selectedID == 99999) && (eq.SpawnX == -1))
             {
@@ -1869,7 +1985,9 @@ namespace myseq
                         // Highlight Current Target
 
                         if (curTarget == sp.Name)
+                        {
                             FillRectangle(whiteBrush, x - PlusSzOZ - 1, y - PlusSzOZ - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
+                        }
 
                         // Draw Invisible Mob - these are EQ trigger events
 
@@ -1936,12 +2054,18 @@ namespace myseq
             sp.filtered = false;
 
             if (Settings.Default.ShowNPCNames && (sp.Name.Length > 0))
+            {
                 DrawSpawnNames(textBrush, sp.Name, sp.X, sp.Y);//, gName);
+            }
             else if (Settings.Default.ShowNPCLevels && (sp.Name.Length > 0))
+            {
                 DrawSpawnNames(textBrush, sp.Level.ToString(), sp.X, sp.Y);//, gName);
+            }
 
             if (DrawDirection)
+            {
                 DrawDirectionLines(sp, x, y);
+            }
 
             // Draw NPCs
             if ((sp.isPet && !Settings.Default.ShowPVP) || sp.isFamiliar || sp.isMount)
@@ -1956,7 +2080,9 @@ namespace myseq
             // Draw PC color border around Mercenary
 
             if (sp.isMerc)
+            {
                 DrawEllipse(PCBorder, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
+            }
 
             // Draw Purple border around invis mobs
 
@@ -1967,7 +2093,9 @@ namespace myseq
                 if (sp.Hide == 2)
                 {
                     if (flash)
+                    {
                         DrawEllipse(purplePen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
+                    }
                 }
                 else
                 {
@@ -1982,7 +2110,9 @@ namespace myseq
             if (eq.ConColors[sp.Level] != null)
             {
                 if ((DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None)
+                {
                     DrawDirectionLines(sp, x, y);
+                }
 
                 // Draw Other Players
 
@@ -2006,7 +2136,9 @@ namespace myseq
                     else
                     {
                         if (Settings.Default.ShowPVPLevel)
+                        {
                             DrawSpawnNames(textBrush, sp.Level.ToString(), sp.X, sp.Y);//, gName);
+                        }
                     }
 
                     if (flash)
@@ -2031,7 +2163,9 @@ namespace myseq
                             // SoS Players
 
                             if (flash)
+                            {
                                 DrawRectangle(purplePen, x - PlusSzOZ - 0.5f, y - PlusSzOZ - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
+                            }
                         }
                         else
                         {
@@ -2057,10 +2191,12 @@ namespace myseq
             {
                 // if alertmob - use to identify mobs that are ok to do alerts
 
-                int minlevel = Settings.Default.MinAlertLevel;
+                var minlevel = Settings.Default.MinAlertLevel;
 
                 if (minlevel == -1)
+                {
                     minlevel = eq.gamerInfo.Level + eq.GreyRange;
+                }
 
                 if (sp.Level >= minlevel)
                 {
@@ -2068,9 +2204,9 @@ namespace myseq
 
                     //                    float rsRange = rRange * 1.1f;
 
-                    float maxZ = pZ + rRange;
+                    var maxZ = pZ + rRange;
 
-                    float minZ = pZ - rRange;
+                    var minZ = pZ - rRange;
 
                     if (NPCDepthFilter)
                     {
@@ -2083,13 +2219,13 @@ namespace myseq
                     {
                         if ((sp.Z > minZ) && (sp.Z < maxZ))
                         {
-                            float sd = ((pX - sp.X) * (pX - sp.X)) + ((pY - sp.Y) * (pY - sp.Y));
+                            var sd = ((pX - sp.X) * (pX - sp.X)) + ((pY - sp.Y) * (pY - sp.Y));
 
                             if (sd < (rRange * rRange))
                             {
                                 sp.proxAlert = true;
 
-                                eq.PlayAlertSound();
+                                PlayAlertSound();
                             }
                         }
                     }
@@ -2101,7 +2237,7 @@ namespace myseq
                         }
                         else
                         {
-                            float sd = ((pX - sp.X) * (pX - sp.X)) + ((pY - sp.Y) * (pY - sp.Y));
+                            var sd = ((pX - sp.X) * (pX - sp.X)) + ((pY - sp.Y) * (pY - sp.Y));
 
                             if (sd > (1.4 * rRange * rRange))
                             {
@@ -2121,6 +2257,29 @@ namespace myseq
             }
         }
 
+        public void PlayAlertSound()
+        {
+            if (Settings.Default.AlertSound == "Asterisk")
+            {
+                SystemSounds.Asterisk.Play();
+            }
+            else if (Settings.Default.AlertSound == "Beep")
+            {
+                SystemSounds.Beep.Play();
+            }
+            else if (Settings.Default.AlertSound == "Exclamation")
+            {
+                SystemSounds.Exclamation.Play();
+            }
+            else if (Settings.Default.AlertSound == "Hand")
+            {
+                SystemSounds.Hand.Play();
+            }
+            else if (Settings.Default.AlertSound == "Question")
+            {
+                SystemSounds.Question.Play();
+            }
+        }
         private void MarkSpecial(float pZ, bool NPCDepthFilter, float x, float y, bool ShowRings, SPAWNINFO sp)
         {
             if (ShowRings && (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos))))
@@ -2167,17 +2326,23 @@ namespace myseq
                 var notdepthfiltered = (!NPCDepthFilter || (below && above));
 
                 if ((sp.isHunt || sp.proxAlert) && notdepthfiltered)
+                {
                     DrawEllipse(green2Pen, x1, y1, SpawnPlusSize, SpawnPlusSize);
+                }
 
                 // Draw Ring around Caution Mobs
 
                 if (sp.isCaution && notdepthfiltered)
+                {
                     DrawEllipse(yellow2Pen, x1, y1, SpawnPlusSize, SpawnPlusSize);
+                }
 
                 // Draw Ring around Danger Mobs
 
                 if (sp.isDanger && notdepthfiltered)
+                {
                     DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                }
 
                 // Draw Ring around Rare Mobs
 
@@ -2203,9 +2368,13 @@ namespace myseq
                 if (Settings.Default.ShowLookupText)
                 {
                     if (Settings.Default.ShowLookupNumber)
+                    {
                         DrawSpawnNames(textBrush, sp.lookupNumber, sp.X, sp.Y);//, gName);
+                    }
                     else
+                    {
                         DrawSpawnNames(textBrush, sp.Name, sp.X, sp.Y);//, gName);
+                    }
                 }
             }
         }
@@ -2250,23 +2419,25 @@ namespace myseq
                     if (!Settings.Default.DepthFilter || (Settings.Default.DepthFilter && !Settings.Default.FilterMapLines))
                     // No depth filtering
                     {
-                        foreach (MapLine l in eq.GetLinesReadonly())
-                            DrawLines(l.draw_color, l.linePoints);
+                        foreach (MapLine mapLine in eq.GetLinesReadonly())
+                        {
+                            DrawLines(mapLine.draw_color, mapLine.linePoints);
+                        }
                     }
                     else
                     {
                         MinMaxFilter(out var minZ, out var maxZ);
 
-                        foreach (MapLine l in eq.GetLinesReadonly())
+                        foreach (MapLine mapLine in eq.GetLinesReadonly())
                         {
                             // All the points in this set of lines are good
-                            if (l.maxZ < maxZ && l.minZ > minZ)
+                            if (mapLine.maxZ < maxZ && mapLine.minZ > minZ)
                             {
-                                DrawLines(l.draw_color, l.linePoints);
+                                DrawLines(mapLine.draw_color, mapLine.linePoints);
                             }
-                            else if (l.maxZ < minZ || l.minZ > maxZ)
+                            else if (mapLine.maxZ < minZ || mapLine.minZ > maxZ)
                             {
-                                DrawLines(l.fade_color, l.linePoints);
+                                DrawLines(mapLine.fade_color, mapLine.linePoints);
                             }
                             else
                             {
@@ -2274,21 +2445,21 @@ namespace myseq
 
                                 float curX, curY, curZ, lastX, lastY, lastZ;
 
-                                lastX = l.Point(0).x;
+                                lastX = mapLine.Point(0).x;
 
-                                lastY = l.Point(0).y;
+                                lastY = mapLine.Point(0).y;
 
-                                lastZ = l.Point(0).z;
+                                lastZ = mapLine.Point(0).z;
 
                                 lastValid = (lastZ > minZ) && (lastZ < maxZ);
 
-                                for (int d = 1; d < l.aPoints.Count; d++)
+                                for (var d = 1; d < mapLine.aPoints.Count; d++)
                                 {
-                                    curX = l.Point(d).x;
+                                    curX = mapLine.Point(d).x;
 
-                                    curY = l.Point(d).y;
+                                    curY = mapLine.Point(d).y;
 
-                                    curZ = l.Point(d).z;
+                                    curZ = mapLine.Point(d).z;
 
                                     curValid = (curZ > minZ) && (curZ < maxZ);
 
@@ -2300,12 +2471,12 @@ namespace myseq
                                     {
                                         if (Settings.Default.UseDynamicAlpha)
                                         {
-                                            DrawLine(l.fade_color, lastX, lastY, curX, curY);
+                                            DrawLine(mapLine.fade_color, lastX, lastY, curX, curY);
                                         }
                                     }
                                     else
                                     {
-                                        DrawLine(l.draw_color, lastX, lastY, curX, curY);
+                                        DrawLine(mapLine.draw_color, lastX, lastY, curX, curY);
                                     }
 
                                     lastX = curX;
@@ -2342,7 +2513,7 @@ namespace myseq
 
                     float sx, sy;
 
-                    int gridInterval = Settings.Default.GridInterval;
+                    var gridInterval = Settings.Default.GridInterval;
 
                     Color curGridColor = Settings.Default.GridColor;
 
@@ -2424,8 +2595,8 @@ namespace myseq
 
         private void AddTextToDrawnMap(MapText t)
         {
-            int x_cord = (int)CalcScreenCoordX(t.x);
-            int y_cord = (int)CalcScreenCoordY(t.y);
+            var x_cord = (int)CalcScreenCoordX(t.x);
+            var y_cord = (int)CalcScreenCoordY(t.y);
             if (t.size == 2)
             {
                 bkgBuffer.Graphics.DrawString(t.label, drawFont, t.draw_color, x_cord, y_cord - t.offset);
@@ -2457,7 +2628,7 @@ namespace myseq
                 if (Settings.Default.RangeCircle > 0)
 
                 {
-                    float rCircleRadius = Settings.Default.RangeCircle * m_ratio;
+                    var rCircleRadius = Settings.Default.RangeCircle * m_ratio;
 
                     if (Settings.Default.ColorRangeCircle)
 
@@ -2477,7 +2648,9 @@ namespace myseq
 
                     {
                         if (flash)
+                        {
                             DrawEllipse(eq.GetDistinctColor(new Pen(Settings.Default.RangeCircleColor)), gamerX - rCircleRadius, gamerY - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
+                        }
                     }
                     else
                     {
@@ -2495,9 +2668,9 @@ namespace myseq
                     if ((DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None && xHead >= 0 && xHead < 512)
 
                     {
-                        float y1 = -(float)(xCos[xHead] * (eq.gamerInfo.SpeedRun * m_ratio * 100));
+                        var y1 = -(float)(xCos[xHead] * (eq.gamerInfo.SpeedRun * m_ratio * 100));
 
-                        float x1 = -(float)(xSin[xHead] * (eq.gamerInfo.SpeedRun * m_ratio * 100));
+                        var x1 = -(float)(xSin[xHead] * (eq.gamerInfo.SpeedRun * m_ratio * 100));
 
                         DrawLine(whitePen, gamerX, gamerY, gamerX + x1, gamerY + y1);
                     }
@@ -2579,20 +2752,24 @@ namespace myseq
                 foreach (SPAWNTIMER st in eq.mobsTimers.GetRespawned().Values)
                 {
                     if (st.zone != eq.shortname)
+                    {
                         continue;
+                    }
 
-                    float stX = (float)Math.Round(CalcScreenCoordX(st.X), 0);
+                    var stX = (float)Math.Round(CalcScreenCoordX(st.X), 0);
 
-                    float stY = (float)Math.Round(CalcScreenCoordY(st.Y), 0);
+                    var stY = (float)Math.Round(CalcScreenCoordY(st.Y), 0);
 
-                    float stOffset = PlusSzOZ - 0.5f;
+                    var stOffset = PlusSzOZ - 0.5f;
 
-                    int checkTimer = st.SecondsUntilSpawn(DateTime.Now);
+                    var checkTimer = st.SecondsUntilSpawn(DateTime.Now);
 
-                    bool canDraw = false;
+                    var canDraw = false;
 
                     if (checkTimer == 0)
+                    {
                         canDraw = true;
+                    }
 
                     if (checkTimer > 0)
 
@@ -2605,7 +2782,9 @@ namespace myseq
 
                         {
                             if (flash)
+                            {
                                 pen = redPen;
+                            }
                         }
                         else if (checkTimer < 60)
 
@@ -2650,7 +2829,9 @@ namespace myseq
                         DrawLine(pen, stX, stY - stOffset, stX, stY + stOffset);
 
                         if (Settings.Default.SpawnCountdown && (checkTimer > 0) && (checkTimer < 120))
+                        {
                             DrawSpawnNames(textBrush, checkTimer.ToString(), st.X, st.Y);//, "");
+                        }
                     }
 
                     // Draw Blue Line to selected spawn location
@@ -2686,7 +2867,7 @@ namespace myseq
         public void DrawGroundItems(float pZ)
 
         {
-            bool GroundItemDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterGroundItems;
+            var GroundItemDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterGroundItems;
 
             try
 
@@ -2755,15 +2936,21 @@ namespace myseq
             }
             // Draw Red Ring around Danger Ground Items
             if (gi.isDanger && Depthfilter)
+            {
                 DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x1, y1, width, height);
+            }
 
             // Draw White Ring around Rare Ground Items
             if (gi.isAlert && Depthfilter)
+            {
                 DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x1, y1, width, height);
+            }
 
             // Draw Cyan Ring around Hunt Ground Items
             if (gi.isHunt && Depthfilter)
+            {
                 DrawEllipse(new Pen(new SolidBrush(Color.Green), 2), x1, y1, width, height);
+            }
         }
 
         #endregion DrawGroundItems
@@ -2778,7 +2965,9 @@ namespace myseq
                 // Draw Mob Trails
 
                 foreach (MobTrailPoint mtp in eq.GetMobTrailsReadonly())
+                {
                     FillEllipse(whiteBrush, CalcScreenCoordX(mtp.x) - 2, CalcScreenCoordY(mtp.y) - 2, 2, 2);
+                }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in DrawSpawnTrails(): ", ex); }
         }
@@ -2842,12 +3031,12 @@ namespace myseq
             if (eq.longname.Length > 0 && mapPane != null && !Settings.Default.AutoExpand &&
                 mapPane.scale.Value != 100)
             {
-                float mapWidth = Math.Abs(eq.maxx - eq.minx);
-                float mapHeight = Math.Abs(eq.maxy - eq.miny);
-                float ScreenWidth = Width - (2.0f * 15);
-                float ScreenHeight = Height - (2.0f * 15);
-                float xratio = (float)ScreenWidth / mapWidth;
-                float yratio = (float)ScreenHeight / mapHeight;
+                var mapWidth = Math.Abs(eq.maxx - eq.minx);
+                var mapHeight = Math.Abs(eq.maxy - eq.miny);
+                var ScreenWidth = Width - (2.0f * 15);
+                var ScreenHeight = Height - (2.0f * 15);
+                var xratio = (float)ScreenWidth / mapWidth;
+                var yratio = (float)ScreenHeight / mapHeight;
                 var r_ratio = xratio < yratio ? xratio : yratio;
 
                 if (r_ratio > 0.0f)
@@ -2904,7 +3093,9 @@ namespace myseq
             float ylabel = 0;
 
             if (m_ratio > 0)
+            {
                 factor = 1 / m_ratio;
+            }
 
             if ((DrawOpts & DrawOptions.GridLines) != DrawOptions.None)
 
@@ -2921,19 +3112,31 @@ namespace myseq
             {
                 SizeF tf = bkgBuffer.Graphics.MeasureString(t.label, drawFont);
                 if (t.size == 1)
+                {
                     bkgBuffer.Graphics.MeasureString(t.label, drawFont1);
+                }
                 else if (t.size == 3)
+                {
                     bkgBuffer.Graphics.MeasureString(t.label, drawFont3);
+                }
 
                 if ((t.x - ((tf.Width + xlabel) * factor)) < eq.minx)
+                {
                     eq.minx = t.x - ((tf.Width + xlabel) / m_ratio);
+                }
                 else if (t.x > eq.maxx)
+                {
                     eq.maxx = t.x;
+                }
 
                 if ((t.y + (t.offset * factor)) > eq.maxy)
+                {
                     eq.maxy = t.y + (t.offset * factor);
+                }
                 else if ((t.y - ((tf.Height + ylabel) * factor)) < eq.miny)
+                {
                     eq.miny = t.y - ((tf.Height + ylabel) * factor);
+                }
             }
 
             ReAdjust();
@@ -2946,7 +3149,9 @@ namespace myseq
             flash_count++;
 
             if (skittle > UpdateSteps)
+            {
                 skittle = 0;
+            }
 
             if (flash_count >= UpdateTicks)
             {

@@ -1,10 +1,10 @@
-using myseq.Properties;
-using Structures;
 using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using myseq.Properties;
+using Structures;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace myseq
@@ -129,7 +129,9 @@ namespace myseq
         protected override void Dispose(bool disposing)
         {
             if (disposing && components != null)
+            {
                 components.Dispose();
+            }
 
             base.Dispose(disposing);
         }
@@ -575,7 +577,7 @@ namespace myseq
         private void StickyTimer(SPAWNTIMER st)
         {
             mnuStickyTimer.Checked = st.sticky;
-            foreach (string name in st.AllNames.Split(','))
+            foreach (var name in st.AllNames.Split(','))
             {
                 var bname = RegexHelper.TrimName(name);
                 if (RegexHelper.RegexMatch(bname))
@@ -650,7 +652,9 @@ namespace myseq
             try
             {
                 if (!f1.toolStripScale.Focused && !f1.toolStripZPos.Focused && !f1.toolStripZNeg.Focused && !f1.toolStripLookupBox.Focused)
+                {
                     listView.Focus();
+                }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.listView_MouseEnter: ", ex); }
         }
@@ -691,7 +695,9 @@ namespace myseq
                 try
                 {
                     if (listView.Visible)
+                    {
                         listView.Focus();
+                    }
 
                     if (ListType == 0)
 
@@ -721,26 +727,28 @@ namespace myseq
         }
 
         public void RemoveColumn(int Index)
-		{
-			try
-			{
-				if (Index <= listView.Columns.Count)
-				{
-					listView.Columns.RemoveByKey("Offhand");
+        {
+            try
+            {
+                if (Index <= listView.Columns.Count)
+                {
+                    listView.Columns.RemoveByKey("Offhand");
                     listView.Columns.RemoveByKey("Last Name");
-				}
-			}
-			catch (Exception e)
-			{
-				LogLib.WriteLine("ListViewPanel.RemoveColumn: ", e);
-			}
-		}
+                }
+            }
+            catch (Exception e)
+            {
+                LogLib.WriteLine("ListViewPanel.RemoveColumn: ", e);
+            }
+        }
 
         private void MnuAddHuntFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.DialogBox("Add to Global Alert Filters", "Add name to Hunt list:", mobname))
+            {
                 AddFilter(filters.GlobalHunt, "global");
+            }
         }
 
         private void AddFilter(ArrayList fltr, string zone)
@@ -756,49 +764,63 @@ namespace myseq
 
         {
             if (f1.DialogBox("Add to Global Alert Filters", "Add name to Caution list:", mobname))
+            {
                 AddFilter(filters.GlobalCaution, "global");
+            }
         }
 
         private void MnuAddDangerFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.DialogBox("Add to Global Alert Filters", "Add name to Danger list:", mobname))
+            {
                 AddFilter(filters.GlobalDanger, "global");
+            }
         }
 
         private void MnuAddAlertFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.DialogBox("Add to Global Alert Filters", "Add name to Rare list:", mobname))
+            {
                 AddFilter(filters.GlobalAlert, "global");
+            }
         }
 
         private void MnuAddZoneHuntFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.DialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", mobname))
+            {
                 AddFilter(filters.Hunt, f1.curZone);
+            }
         }
 
         private void MnuAddZoneCautionFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.DialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", mobname))
+            {
                 AddFilter(filters.Caution, f1.curZone);
+            }
         }
 
         private void MnuAddZoneDangerFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.DialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", mobname))
+            {
                 AddFilter(filters.Danger, f1.curZone);
+            }
         }
 
         private void MnuAddZoneAlertFilter_Click(object sender, EventArgs e)
 
         {
             if (f1.DialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", mobname))
+            {
                 AddFilter(filters.Alert, f1.curZone);
+            }
         }
 
         private void MnuEditGlobalFilters_Click(object sender, EventArgs e) => filters.EditAlertFile("global");
@@ -829,7 +851,9 @@ namespace myseq
         private void AddMapLabelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (mobname.Length > 0)
+            {
                 f1.AddMapText(mobname);
+            }
         }
 
         private void ListView_VisibleChanged(object sender, EventArgs e)
