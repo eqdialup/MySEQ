@@ -30,7 +30,7 @@ namespace myseq
         // Map data
         public ArrayList lines = maplinearray;//MapLine[MAX_LINES]
 
-        private static readonly ArrayList maptextarray = new ArrayList();
+        private static  ArrayList maptextarray = new ArrayList();
         public ArrayList texts = maptextarray;//MapText[50]
 
         private readonly ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
@@ -51,7 +51,7 @@ namespace myseq
 
         // Mobs
 
-        private readonly ArrayList itemcollection = new ArrayList();          // Hold the items that are on the ground
+        private readonly List<GroundItem> itemcollection = new List<GroundItem>();          // Hold the items that are on the ground
 
         private readonly Hashtable mobsHashTable = new Hashtable();           // Holds the details of the mobs in the current zone.
 
@@ -132,13 +132,12 @@ namespace myseq
         private string search2 = "";
         private string search3 = "";
         private string search4 = "";
-        private string search5 = "";
+
         private bool filter0;
         private bool filter1;
         private bool filter2;
         private bool filter3;
         private bool filter4;
-        private bool filter5;
 
         public void MarkLookups(string name, bool filterMob = false)
         {
@@ -150,6 +149,11 @@ namespace myseq
                     search0 = name.Substring(2);
                     filter0 = filterMob;
                 }
+                else
+                {
+                    search0 = "";
+                    filter0 = false;
+                }
             }
             else if (name.Substring(0, 2) == "1:")
             {
@@ -157,6 +161,11 @@ namespace myseq
                 {
                     search1 = name.Substring(2);
                     filter1 = filterMob;
+                }
+                else
+                {
+                    search1 = "";
+                    filter1 = false;
                 }
             }
             else if (name.Substring(0, 2) == "2:")
@@ -166,6 +175,11 @@ namespace myseq
                     search2 = name.Substring(2);
                     filter2 = filterMob;
                 }
+                else
+                {
+                    search2 = "";
+                    filter2 = false;
+                }
             }
             else if (name.Substring(0, 2) == "3:")
             {
@@ -173,6 +187,11 @@ namespace myseq
                 {
                     search3 = name.Substring(2);
                     filter3 = filterMob;
+                }
+                else
+                {
+                    search3 = "";
+                    filter3 = false;
                 }
             }
             else if (name.Substring(0, 2) == "4:")
@@ -182,13 +201,10 @@ namespace myseq
                     search4 = name.Substring(2);
                     filter4 = filterMob;
                 }
-            }
-            else if (name.Substring(0, 2) == "5:")
-            {
-                if (name.Length > 2)
+                else
                 {
-                    search5 = name.Substring(2);
-                    filter5 = filterMob;
+                    search4 = "";
+                    filter4 = false;
                 }
             }
 
@@ -215,10 +231,6 @@ namespace myseq
                 if (search4.Length > 1)
                 {
                     SubLookup(sp, search4, filter4, "5");
-                }
-                if (search5.Length > 1)
-                {
-                    SubLookup(sp, search5, filter5, "6");
                 }
             }
         }
@@ -259,7 +271,7 @@ namespace myseq
 
         public ArrayList GetTextsReadonly() => texts;
 
-        public ArrayList GetItemsReadonly() => itemcollection;
+        public List<GroundItem> GetItemsReadonly() => itemcollection;
 
         public bool SelectTimer(float delta, float x, float y)
         {
@@ -1416,25 +1428,8 @@ namespace myseq
                 }
                 else
                 {
-                    mob.listitem.ForeColor = ConColors[mob.Level].Color;
-
-                    if (mob.listitem.ForeColor == Color.Maroon)
-                    {
-                        mob.listitem.ForeColor = Color.Red;
-                    }
-                    else if (SpawnList.listView.BackColor == Color.White)
-                    {
-                        // Change the colors to be more visible on white if the background is white
-
-                        if (mob.listitem.ForeColor == Color.White)
-                        {
-                            mob.listitem.ForeColor = Color.Black;
-                        }
-                        else if (mob.listitem.ForeColor == Color.Yellow)
-                        {
-                            mob.listitem.ForeColor = Color.Goldenrod;
-                        }
-                    }
+                    // a duplicate codeblock was found, extracted as common method.
+                    SetListColors(si, SpawnList, mob);
                 }
             }
         }
@@ -1636,24 +1631,29 @@ namespace myseq
             }
             else
             {
-                mob.listitem.ForeColor = ConColors[si.Level].Color;
+                SetListColors(si, SpawnList, mob);
+            }
+        }
 
-                if (mob.listitem.ForeColor == Color.Maroon)
+        private void SetListColors(SPAWNINFO si, ListViewPanel SpawnList, SPAWNINFO mob)
+        {
+            mob.listitem.ForeColor = ConColors[si.Level].Color;
+
+            if (mob.listitem.ForeColor == Color.Maroon)
+            {
+                mob.listitem.ForeColor = Color.Red;
+            }
+            else if (SpawnList.listView.BackColor == Color.White)
+            {
+                // Change the colors to be more visible on white if the background is white
+
+                if (mob.listitem.ForeColor == Color.White)
                 {
-                    mob.listitem.ForeColor = Color.Red;
+                    mob.listitem.ForeColor = Color.Black;
                 }
-                else if (SpawnList.listView.BackColor == Color.White)
+                else if (mob.listitem.ForeColor == Color.Yellow)
                 {
-                    // Change the colors to be more visible on white if the background is white
-
-                    if (mob.listitem.ForeColor == Color.White)
-                    {
-                        mob.listitem.ForeColor = Color.Black;
-                    }
-                    else if (mob.listitem.ForeColor == Color.Yellow)
-                    {
-                        mob.listitem.ForeColor = Color.Goldenrod;
-                    }
+                    mob.listitem.ForeColor = Color.Goldenrod;
                 }
             }
         }
@@ -2134,13 +2134,6 @@ namespace myseq
             if (f1.toolStripLookupBox4.Text.Length > 1
                 && f1.toolStripLookupBox4.Text != dflt
                 && RegexHelper.GetRegex(f1.toolStripLookupBox4.Text).Match(si.Name).Success)
-            {
-                si.isLookup = true;
-            }
-
-            if (f1.toolStripLookupBox5.Text.Length > 1
-                && f1.toolStripLookupBox5.Text != dflt
-                && RegexHelper.GetRegex(f1.toolStripLookupBox5.Text).Match(si.Name).Success)
             {
                 si.isLookup = true;
             }

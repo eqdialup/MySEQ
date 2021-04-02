@@ -10,15 +10,13 @@ namespace myseq
     public class MobsTimers
 
     {
-        private Hashtable mobsTimer = new Hashtable();    // All spawns
+        private readonly Hashtable mobsTimer = new Hashtable();    // All spawns
 
         public Hashtable mobsTimer2 = new Hashtable();   // Only those that re-spawned at least once^
 
-        public Hashtable mobsTimer3 = new Hashtable();
-
         private string mapName;
 
-        public bool MustSave;
+        internal bool MustSave;
 
         private DateTime LastSaveTime = DateTime.Now;
 

@@ -99,8 +99,6 @@ namespace Structures
                 try { GetCloseHandler(this); }
                 catch (Exception ex) { LogLib.WriteLine("Error CSocketClient.ReceiveComplete(): ", ex); }
                 Disconnect();
-                // Dispose of the class
-                //                Dispose();
             }
         }
 
