@@ -54,7 +54,7 @@ namespace Structures
 
         private readonly EQData eq;
 
-        private readonly FrmMain f1; // TODO: get rid of this
+        private readonly MainForm f1;
 
         public int NewProcessID { get; set; }
 
@@ -63,7 +63,7 @@ namespace Structures
             update_hidden = true;
         }
 
-        public EQCommunications(EQData eq, FrmMain f1)
+        public EQCommunications(EQData eq, MainForm f1)//FrmMain f1)
         {
             this.eq = eq;
             this.f1 = f1;

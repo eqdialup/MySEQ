@@ -11,7 +11,7 @@ namespace myseq
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
-            try { Application.Run(new FrmMain()); }
+            try { Application.Run(new MainForm()); }//new FrmMain()); }
             catch (NullReferenceException e)
             {
                 var s = $"Uncaught exception in Main(): {e.Message}";

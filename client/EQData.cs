@@ -30,7 +30,7 @@ namespace myseq
         // Map data
         public ArrayList lines = maplinearray;//MapLine[MAX_LINES]
 
-        private static  ArrayList maptextarray = new ArrayList();
+        private static ArrayList maptextarray = new ArrayList();
         public ArrayList texts = maptextarray;//MapText[50]
 
         private readonly ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
@@ -1185,7 +1185,7 @@ namespace myseq
          * gameMin = si.Class
         */
 
-        public void ProcessSpawns(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
+        public void ProcessSpawns(SPAWNINFO si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
         {
             CorpseAlerts = Settings.Default.CorpseAlerts;
             if (si.Name.Contains("a_tainted_egg"))
@@ -1574,7 +1574,7 @@ namespace myseq
             }
         }
 
-        private void AdjustMapForSpawns(SPAWNINFO si, FrmMain f1, MapPane mapPane, SPAWNINFO mob)
+        private void AdjustMapForSpawns(SPAWNINFO si, MainForm f1, MapPane mapPane, SPAWNINFO mob)
         {
             CheckBigMap(si, mapPane);
 
@@ -1731,7 +1731,7 @@ namespace myseq
             return listReAdd;
         }
 
-        private void IsSpawnInFilterLists(SPAWNINFO si, FrmMain f1, ListViewPanel SpawnList, Filters filters)//, bool alert)
+        private void IsSpawnInFilterLists(SPAWNINFO si, MainForm f1, ListViewPanel SpawnList, Filters filters)//, bool alert)
         {
             var mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
 
@@ -2100,7 +2100,7 @@ namespace myseq
             mob.Name = si.Name;
         }
 
-        private static void LookupBoxMatch(SPAWNINFO si, FrmMain f1)
+        private static void LookupBoxMatch(SPAWNINFO si, MainForm f1)
         {
             si.isLookup = false;
             if (f1.toolStripLookupBox.Text.Length > 1
@@ -2213,7 +2213,7 @@ namespace myseq
              bool BeepOnMatch, bool MatchFullText)
         {
             var alert = false;
-            FrmMain f1 = null;
+            MainForm f1 = null;
             foreach (string str in exps)
             {
                 var matched = false;
@@ -2344,7 +2344,7 @@ namespace myseq
 
         public string ItemNumToString(int num)
         {
-            foreach (var item in GroundSpawn)
+            foreach (ListItem item in GroundSpawn)
             {
                 if (item.ID.Equals(num))
                 {
@@ -2453,7 +2453,7 @@ namespace myseq
         private int gLastconLevel = -1;
         private int gconLevel;
 
-        public void ProcessGamer(SPAWNINFO si, FrmMain f1)
+        public void ProcessGamer(SPAWNINFO si, MainForm f1)//FrmMain f1)
         {
             try
             {
@@ -2560,7 +2560,7 @@ namespace myseq
 
         #region ColorOperations
 
-        public void FillConColors(FrmMain f1)
+        public void FillConColors(MainForm f1)//FrmMain f1)
         {
             int level;
             if (Settings.Default.LevelOverride == -1)

@@ -158,7 +158,7 @@ namespace myseq
 
         #endregion pens
 
-        private FrmMain f1;          // Caution: this may be null
+        private MainForm f1;          // Caution: this may be null
 
         private MapPane mapPane;     // Caution: this may be null
 
@@ -194,7 +194,7 @@ namespace myseq
             gfxManager = BufferedGraphicsManager.Current;
         }
 
-        public void SetComponents(FrmMain f1, MapPane mapPane, EQData eq, EQMap map)
+        public void SetComponents(MainForm f1, MapPane mapPane, EQData eq, EQMap map)
         {
             this.f1 = f1;
             this.mapPane = mapPane;

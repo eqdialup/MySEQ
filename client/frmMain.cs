@@ -29,6 +29,7 @@ namespace myseq
         public ListViewPanel SpawnList = new ListViewPanel(0);
 
         public string curZone = "map_pane";
+        public string mapnameWithLabels = "";
 
         private string currentIPAddress = "";
 
@@ -45,6 +46,11 @@ namespace myseq
 
         public DrawOptions DrawOpts = DrawOptions.DrawNormal;
 
+
+        public string alertAddmobname = "";
+        public float alertX = 0.0f;
+        public float alertY = 0.0f;
+        public float alertZ = 0.0f;
 //        public readonly ArrayList colProcesses = new ArrayList();
 
 //        private ProcessInfo CurrentProcess = new ProcessInfo(0, "");
@@ -86,13 +92,6 @@ namespace myseq
         private ToolStripMenuItem mnuAddAlertFilter;
 
         private ToolStripMenuItem mnuAddMapLabel;
-
-        public string alertAddmobname = "";
-        public float alertX = 0.0f;
-        public float alertY = 0.0f;
-        public float alertZ = 0.0f;
-
-        public string mapnameWithLabels = "";
 
         private ToolStripMenuItem mnuSearchAllakhazam;
 

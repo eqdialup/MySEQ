@@ -20,7 +20,7 @@ namespace myseq
 
         private Filters filters;
 
-        private FrmMain f1;
+        private MainForm f1;
 
         private TextBox txtSpawnList;
 
@@ -114,7 +114,7 @@ namespace myseq
             listView.Location = new Point(0, 24);
         }
 
-        public void SetComponents(EQData eq, MapCon mapCon, Filters filters, FrmMain f1)
+        public void SetComponents(EQData eq, MapCon mapCon, Filters filters, MainForm f1)
 
         {
             this.eq = eq;
