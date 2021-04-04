@@ -153,7 +153,6 @@ namespace myseq
                     };
 
                     try
-
                     {
                         mobsTimer.Add(si.ZoneSpawnLoc, st);
 
@@ -162,7 +161,11 @@ namespace myseq
                             SpawnTimerLog($"Added Spawn: {si.SpawnLoc} Name: {si.Name}");
                         }
                     }
-                    catch (Exception ex) { LogLib.WriteLine($"Error adding new SPAWNTIMER for {si.Name}: ", ex); }
+                    catch (Exception ex)
+                    {
+                        LogLib.WriteLine($"Error adding new SPAWNTIMER for {si.Name}: ", ex);
+                        throw;
+                    }
                 }
                 else
                 {
@@ -230,9 +233,7 @@ namespace myseq
         }
 
         // We're pretty positive that the mob has been processed before, here.
-
         // This updates KillTime and NextSpawn.
-
         public void Kill(SPAWNINFO mob)
 
         {
@@ -324,10 +325,7 @@ namespace myseq
 
             var logpath = Settings.Default.LogDir;
 
-            if (!Directory.Exists(logpath))
-            {
-                Directory.CreateDirectory(logpath);
-            }
+            Directory.CreateDirectory(logpath);
 
             FileStream fs = new FileStream(Path.Combine(logpath, "SpawnTimer.txt"), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
 
@@ -353,10 +351,7 @@ namespace myseq
                 var logpath = Settings.Default.LogDir;
                 var logfile = $"spawns-{DateTime.Now:MM-dd-yyyy}-{mapName}.txt";
 
-                if (!Directory.Exists(logpath))
-                {
-                    Directory.CreateDirectory(logpath);
-                }
+                Directory.CreateDirectory(logpath);
 
                 FileStream fs = new FileStream(Path.Combine(logpath, logfile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
                 StreamWriter spawnLog = new StreamWriter(fs);
@@ -513,10 +508,7 @@ namespace myseq
                     {
                         var timerpath = Settings.Default.TimerDir;
 
-                        if (!Directory.Exists(timerpath))
-                        {
-                            Directory.CreateDirectory(timerpath);
-                        }
+                        Directory.CreateDirectory(timerpath);
 
                         var timerfile = Path.Combine(timerpath, $"spawns-{mapName}.txt");
 

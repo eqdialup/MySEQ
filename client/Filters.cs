@@ -74,7 +74,7 @@ namespace myseq
             {
                 // we did not find the alert file
                 // create an empty alerts file.
-                LogLib.WriteLine($"Alert file not found for {zoneName}, creating empty one.", LogLevel.Warning);
+                LogLib.WriteLine($"file not found for {zoneName}, creating empty one.", LogLevel.Warning);
 
                 CreateAlertFile(filterFile);
                 return;
@@ -128,35 +128,35 @@ namespace myseq
 
                         if (line.StartsWith("<oldfilter>"))
                         {
-                            line.Remove(0, 11);
+                            inputstring = line.Remove(0, 11);
 
-                            inputstring = inputstring.Remove(0, 11);
+//                            inputstring = inputstring.Remove(0, 11);
                         }
                         if (line.StartsWith("<regex>"))
                         {
-                            line.Remove(0, 7);
+                            inputstring = line.Remove(0, 7);
 
-                            inputstring = inputstring.Remove(0, 7);
+//                            inputstring = inputstring.Remove(0, 7);
                         }
 
                         if (line.EndsWith("</oldfilter>"))
                         {
-                            line.Remove(line.Length - 12, 12);
+                            inputstring = line.Remove(line.Length - 12, 12);
 
-                            inputstring = inputstring.Remove(inputstring.Length - 12, 12);
+                            //inputstring = inputstring.Remove(inputstring.Length - 12, 12);
                         }
                         if (line.EndsWith("</regex>"))
                         {
-                            line.Remove(line.Length - 8, 8);
+                            inputstring = line.Remove(line.Length - 8, 8);
 
-                            inputstring = inputstring.Remove(inputstring.Length - 8, 8);
+                            //inputstring = inputstring.Remove(inputstring.Length - 8, 8);
                         }
                         // remove Name: from line if it exists
                         if (line.StartsWith("name:"))
                         {
-                            line.Remove(0, 5);
+                            inputstring = line.Remove(0, 5);
 
-                            inputstring = inputstring.Remove(0, 5);
+                            //inputstring = inputstring.Remove(0, 5);
                         }
 
                         // if there are any odd characters in the name, just skip it
@@ -165,10 +165,10 @@ namespace myseq
                             continue;
                         }
 
-                        if (inputstring.IndexOfAny(anyOf) != -1)
-                        {
-                            continue;
-                        }
+                        //if (inputstring.IndexOfAny(anyOf) != -1)
+                        //{
+                        //    continue;
+                        //}
 
                         DetermineType(zoneName, type, inputstring);
                     }

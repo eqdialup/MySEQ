@@ -1,6 +1,8 @@
 ﻿
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
+using myseq.Properties;
 
 namespace Structures
 {
@@ -48,6 +50,39 @@ namespace Structures
         {
             Regex regex = GetRegex(forSearch);
             return regex.Match(toSearch).Success;
+        }
+
+        public static void CreateFolders()
+        {
+            if (Settings.Default.MapDir?.Length == 0 || !Directory.Exists(Settings.Default.MapDir))
+            {
+                Settings.Default.MapDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maps");
+                Directory.CreateDirectory(Settings.Default.MapDir);
+            }
+
+            if (Settings.Default.FilterDir?.Length == 0 || !Directory.Exists(Settings.Default.FilterDir))
+            {
+                Settings.Default.FilterDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "filters");
+                Directory.CreateDirectory(Settings.Default.FilterDir);
+            }
+
+            if (Settings.Default.CfgDir?.Length == 0 || !Directory.Exists(Settings.Default.CfgDir))
+            {
+                Settings.Default.CfgDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cfg");
+                Directory.CreateDirectory(Settings.Default.CfgDir);
+            }
+
+            if (Settings.Default.LogDir?.Length == 0 || !Directory.Exists(Settings.Default.LogDir))
+            {
+                Settings.Default.LogDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+                Directory.CreateDirectory(Settings.Default.LogDir);
+            }
+
+            if (Settings.Default.TimerDir?.Length == 0 || !Directory.Exists(Settings.Default.TimerDir))
+            {
+                Settings.Default.TimerDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "timers");
+                Directory.CreateDirectory(Settings.Default.TimerDir);
+            }
         }
     }
 }

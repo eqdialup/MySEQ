@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,7 +13,7 @@ namespace myseq
 {
     public partial class MainForm : Form
     {
-        private string Version = Application.ProductVersion;
+        private readonly string Version = Application.ProductVersion;
 
         private string BaseTitle = "MySEQ Open";
 
@@ -32,6 +33,7 @@ namespace myseq
         public MapPane mapPane = new MapPane();
         private readonly Filters filters = new Filters();
         private readonly EQData eq;
+
         private readonly EQCommunications comm;
         private readonly EQMap map;
 
@@ -139,7 +141,7 @@ namespace myseq
             // This is for processing timers, do it once per second.
             timProcessTimers.Interval = 1000;
 
-            SetUpdateSteps();
+            mapCon.SetUpdateSteps();
 
             Text = BaseTitle;
 
@@ -333,7 +335,7 @@ namespace myseq
             }
         }
 
-        public void StartListening()
+        private void StartListening()
         {
             comm.colProcesses?.Clear();
 
@@ -446,7 +448,7 @@ namespace myseq
             }
         }
 
-        public void LoadPrefs()
+        private void LoadPrefs()
 
         {
             // Always want these off on starting up.
@@ -657,7 +659,7 @@ namespace myseq
 
             mnuAutoConnect.Checked = Settings.Default.AutoConnect;
 
-            eq.LoadSpawnInfo();
+//            eq.LoadSpawnInfo();
 
             // SpawnList
 
@@ -673,100 +675,14 @@ namespace myseq
 
             GroundItemList.listView.GridLines = Settings.Default.ShowListGridLines;
 
-            LogLib.maxLogLevel = Settings.Default.MaxLogLevel;
-
-            CreateFolders();
+            RegexHelper.CreateFolders();
 
             DrawOpts = Settings.Default.DrawOptions;
 
             timProcessTimers.Start();
         }
 
-        private static void CreateFolders()
-        {
-            if (Settings.Default.MapDir?.Length == 0 || !Directory.Exists(Settings.Default.MapDir))
-            {
-                Settings.Default.MapDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maps");
-
-                if (!Directory.Exists(Settings.Default.MapDir))
-                {
-                    Directory.CreateDirectory(Settings.Default.MapDir);
-                }
-            }
-
-            if (Settings.Default.FilterDir?.Length == 0 || !Directory.Exists(Settings.Default.FilterDir))
-
-            {
-                Settings.Default.FilterDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "filters");
-
-                if (!Directory.Exists(Settings.Default.FilterDir))
-                {
-                    Directory.CreateDirectory(Settings.Default.FilterDir);
-                }
-            }
-
-            if (Settings.Default.CfgDir?.Length == 0 || !Directory.Exists(Settings.Default.CfgDir))
-
-            {
-                Settings.Default.CfgDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cfg");
-
-                if (!Directory.Exists(Settings.Default.CfgDir))
-                {
-                    Directory.CreateDirectory(Settings.Default.CfgDir);
-                }
-            }
-
-            if (Settings.Default.LogDir?.Length == 0 || !Directory.Exists(Settings.Default.LogDir))
-
-            {
-                Settings.Default.LogDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
-
-                if (!Directory.Exists(Settings.Default.LogDir))
-                {
-                    Directory.CreateDirectory(Settings.Default.LogDir);
-                }
-            }
-
-            if (Settings.Default.TimerDir?.Length == 0 || !Directory.Exists(Settings.Default.TimerDir))
-
-            {
-                Settings.Default.TimerDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "timers");
-
-                if (!Directory.Exists(Settings.Default.TimerDir))
-                {
-                    Directory.CreateDirectory(Settings.Default.TimerDir);
-                }
-            }
-        }
-
-        public void SavePrefs() => Settings.Default.Save();
-
-        public bool Loadmap(string filename)
-        {
-            try
-            {
-                if (filename.EndsWith("_1.txt") || filename.EndsWith("_2.txt") || filename.EndsWith("_3.txt"))
-                {
-                    if (!map.LoadLoYMap(filename, false))
-                    {
-                        return false;
-                    }
-                }
-                else if (!map.LoadLoYMap(filename, true))
-                {
-                    return false;
-                }
-                SetTitle();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var msg = $"Failed to load map {filename}: {ex.Message}";
-                LogLib.WriteLine(msg);
-                //                MessageBox.Show(msg);
-                return false;
-            }
-        }
+        private void SavePrefs() => Settings.Default.Save();
 
         private void MainForm_Move(object sender, EventArgs e)
         {
@@ -958,7 +874,6 @@ namespace myseq
             mapnameWithLabels = "";
 
             try
-
             {
                 LogLib.WriteLine($"ProcesssMap: Short Zone Name: ({si.Name})");
 
@@ -1068,37 +983,25 @@ namespace myseq
 
                         mapnameWithLabels = "";
                     }
-
-                    // Try it as a SEQ map first
-
-                    //else if (Loadmap(f + ".map"))
-                    //{
-                    //    eq.Zoning = false;
-                    //    foundmap = true;
-
-                    //    mapnameWithLabels = f + ".map";
-                    //}
-                    //else
+                    else
                     {
                         eq.Zoning = false;
-                        // If it didn't work, try an SOE map
-
-                        if (Loadmap($"{fullmap}.txt"))
+                        if (map.Loadmap($"{fullmap}.txt"))
                         {
                             foundmap = true;
                         }
 
-                        if (Settings.Default.ShowLayer1 && Loadmap($"{fullmap}_1.txt"))
+                        if (Settings.Default.ShowLayer1 && map.Loadmap($"{fullmap}_1.txt"))
                         {
                             foundmap = true;
                         }
 
-                        if (Settings.Default.ShowLayer2 && Loadmap($"{fullmap}_2.txt"))
+                        if (Settings.Default.ShowLayer2 && map.Loadmap($"{fullmap}_2.txt"))
                         {
                             foundmap = true;
                         }
 
-                        if (Settings.Default.ShowLayer3 && Loadmap($"{fullmap}_3.txt"))
+                        if (Settings.Default.ShowLayer3 && map.Loadmap($"{fullmap}_3.txt"))
                         {
                             foundmap = true;
                         }
@@ -1133,27 +1036,15 @@ namespace myseq
                 filters.LoadAlerts(mapname);
 
                 SetTitle();
-
-                //this.Text = BaseTitle;
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessMap(): ", ex); }
         }
 
         #endregion ProccessMap
 
-        #region ProcessGroundItemList
-
-        public void ProcessGroundItemList()
-        {
-            eq.ProcessGroundItemList(GroundItemList);
-        }
-
-        #endregion ProcessGroundItemList
-
         #region ProcessSpawnTimer
 
-        public void ProcessSpawnTimer()
-
+        private void ProcessSpawnTimer()
         {
             if (eq.mobsTimers.mobsTimer2.Count > 0)
             {
@@ -1232,22 +1123,19 @@ namespace myseq
         }
 
         private void MnuOpenMap_Click(object sender, EventArgs e)
-
         {
             openFileDialog.InitialDirectory = Settings.Default.MapDir;
 
             openFileDialog.Filter = "Map Files (*.txt)|*.txt|All Files (*.*)|*.*";
-
-            openFileDialog.FilterIndex = 1;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
 
             {
                 mapnameWithLabels = "";
 
-                var filename = openFileDialog.FileName;
+                var filename = openFileDialog.SafeFileName;
 
-                Loadmap(filename);
+                map.Loadmap(filename);
 
                 var lastSlashIndex = filename.LastIndexOf("\\");
 
@@ -1312,7 +1200,7 @@ namespace myseq
                 return;
             }
             timPackets.Interval = Settings.Default.UpdateDelay;
-            SetUpdateSteps();
+            mapCon.SetUpdateSteps();
             ReloadAlertFiles();
             ResetMapPens();
             SpawnList.listView.BackColor = Settings.Default.ListBackColor;
@@ -1337,7 +1225,7 @@ namespace myseq
 
             ServerSelection();
 
-            eq?.LoadSpawnInfo();
+//            eq?.LoadSpawnInfo();
 
             SetTitle();
 
@@ -1392,10 +1280,7 @@ namespace myseq
                 {
                     // Save depth filter settings to file
                     var myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
-                    if (!Directory.Exists(myPath))
-                    {
-                        Directory.CreateDirectory(myPath);
-                    }
+                    Directory.CreateDirectory(myPath);
 
                     var ConfigFile = Path.Combine(myPath, "config.ini");
 
@@ -2078,7 +1963,7 @@ namespace myseq
             eq.mobsTimers.LoadTimers();
         }
 
-        public void ResetMapPens()
+        private void ResetMapPens()
         {
             eq.CalculateMapLinePens();
             mapCon?.Invalidate();
@@ -2135,7 +2020,7 @@ namespace myseq
             }
         }
 
-        internal void AddMapText(string textToAdd)
+        public void AddMapText(string textToAdd)
         {
             var new_text = textToAdd.Replace("#", "");
             FrmAddMapText mapBox = new FrmAddMapText
@@ -2317,7 +2202,6 @@ namespace myseq
         }
 
         private void MnuSodTitanium_Click(object sender, EventArgs e)
-
         {
             mnuConSoD.Checked = true;
             mnuConSoF.Checked = false;
@@ -2552,11 +2436,7 @@ namespace myseq
         {
             if (DialogBox("Add to Zone Hunt Filters", "Add name to Hunt list:", alertAddmobname))
             {
-                filters.AddToAlerts(filters.Hunt, alertAddmobname);
-
-                filters.WriteAlertFile(curZone);
-
-                ReloadAlertFiles();
+                AddToFilter(filters.Hunt, alertAddmobname);
             }
         }
 
@@ -2564,11 +2444,7 @@ namespace myseq
         {
             if (DialogBox("Add to Zone Caution Filters", "Add name to Caution list:", alertAddmobname))
             {
-                filters.AddToAlerts(filters.Caution, alertAddmobname);
-
-                filters.WriteAlertFile(curZone);
-
-                ReloadAlertFiles();
+                AddToFilter(filters.Caution, alertAddmobname);
             }
         }
 
@@ -2576,11 +2452,7 @@ namespace myseq
         {
             if (DialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", alertAddmobname))
             {
-                filters.AddToAlerts(filters.Danger, alertAddmobname);
-
-                filters.WriteAlertFile(curZone);
-
-                ReloadAlertFiles();
+                AddToFilter(filters.Danger, alertAddmobname);
             }
         }
 
@@ -2588,12 +2460,17 @@ namespace myseq
         {
             if (DialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", alertAddmobname))
             {
-                filters.AddToAlerts(filters.Alert, alertAddmobname);
-
-                filters.WriteAlertFile(curZone);
-
-                ReloadAlertFiles();
+                AddToFilter(filters.Alert, alertAddmobname);
             }
+        }
+
+        private void AddToFilter(ArrayList filter, string mob)
+        {
+            filters.AddToAlerts(filter, mob);
+
+            filters.WriteAlertFile(curZone);
+
+            ReloadAlertFiles();
         }
 
         #endregion filters
@@ -3030,23 +2907,23 @@ namespace myseq
 
         #endregion zoom
 
-        private void SetUpdateSteps()
-        {
-            var update_steps = (1000 / Settings.Default.UpdateDelay) + 1;
-            if (update_steps < 3)
-            {
-                update_steps = 3;
-            }
+        //private void SetUpdateSteps()
+        //{
+        //    var update_steps = (1000 / Settings.Default.UpdateDelay) + 1;
+        //    if (update_steps < 3)
+        //    {
+        //        update_steps = 3;
+        //    }
 
-            var update_ticks = 250 / Settings.Default.UpdateDelay;
-            if (update_ticks < 1)
-            {
-                update_ticks = 1;
-            }
+        //    var update_ticks = 250 / Settings.Default.UpdateDelay;
+        //    if (update_ticks < 1)
+        //    {
+        //        update_ticks = 1;
+        //    }
 
-            mapCon.UpdateSteps = update_steps;
-            mapCon.UpdateTicks = update_ticks;
-        }
+        //    mapCon.UpdateSteps = update_steps;
+        //    mapCon.UpdateTicks = update_ticks;
+        //}
 
         private void AddMapTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -3493,16 +3370,7 @@ namespace myseq
             comm.CharRefresh();
         }
 
-        //        public void StartNewPackets() => processcount = 0;
-
-        // <summary>
-        // These do almost exactly the same, can link all to one method.
-        private void ToolStripLevel_TextUpdate(object sender, EventArgs e)
-        {
-            var Str = toolStripLevel.Text.Trim();
-
-            ToolStripLevelCheck(Str);
-        }
+        private void ToolStripLevel_TextUpdate(object sender, EventArgs e) => ToolStripLevelCheck(toolStripLevel.Text.Trim());
 
         private void ToolStripLevelCheck(string Str)
         {
@@ -3541,27 +3409,15 @@ namespace myseq
             }
         }
 
-        private void ToolStripLevel_Leave(object sender, EventArgs e)
-        {
-            var Str = toolStripLevel.Text.Trim();
+        private void ToolStripLevel_Leave(object sender, EventArgs e) => ToolStripLevelCheck(toolStripLevel.Text.Trim());
 
-            ToolStripLevelCheck(Str);
-        }
-
-        private void ToolStripLevel_DropDownClosed(object sender, EventArgs e)
-        {
-            var Str = toolStripLevel.SelectedItem.ToString();
-
-            ToolStripLevelCheck(Str);
-        }
+        private void ToolStripLevel_DropDownClosed(object sender, EventArgs e) => ToolStripLevelCheck(toolStripLevel.SelectedItem.ToString());
 
         private void ToolStripLevel_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                var Str = toolStripLevel.Text.Trim();
-
-                ToolStripLevelCheck(Str);
+                ToolStripLevelCheck(toolStripLevel.Text.Trim());
                 toolStripScale.Focus();
 
                 e.Handled = true;
@@ -3576,8 +3432,8 @@ namespace myseq
         {
             Settings.Default.ThinSpawnList = !Settings.Default.ThinSpawnList;
             thinSpawnlistToolStripMenuItem.Checked = Settings.Default.ThinSpawnList;
+            // Need to build more on this to actually make a thin spawnlist
 
-            SpawnList.RemoveColumn(3);
         }
     }
 }

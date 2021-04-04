@@ -43,10 +43,7 @@ namespace Structures
                 var logpath = Settings.Default.LogDir;
                 var logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";
 
-                if (!Directory.Exists(logpath))
-                {
-                    Directory.CreateDirectory(logpath);
-                }
+                Directory.CreateDirectory(logpath);
 
                 FileStream fs = new FileStream(Path.Combine(logpath, logfile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
                 StreamWriter outLog = new StreamWriter(fs);

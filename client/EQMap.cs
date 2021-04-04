@@ -35,7 +35,6 @@ namespace myseq
         public event EnterMapHandler EnterMap; // Fires when the map is loaded
 
         protected void OnExitMap()
-
         {
             ExitMap?.Invoke(this);
 
@@ -80,19 +79,15 @@ namespace myseq
 
         public void ClearMap()
         {
-            try
+            if (initialized)
             {
-                if (!initialized) { throw new Exception("EQMapManager not initialized yet"); }
-
                 eq.Clear();
-
-                SpawnList.listView.BeginUpdate();
-                SpawnTimerList.listView.BeginUpdate();
-                GroundItemList.listView.BeginUpdate();
-
+                //SpawnList.listView.BeginUpdate();
+                //SpawnTimerList.listView.BeginUpdate();
+                //GroundItemList.listView.BeginUpdate();
                 SpawnList.listView.Items.Clear();
-
                 SpawnTimerList.listView.Items.Clear();
+                GroundItemList.listView.Items.Clear();
 
                 if (eq.mobsTimers.mobsTimer2.Count > 0)
                 {
@@ -101,16 +96,12 @@ namespace myseq
                         st.itmSpawnTimerList = null;
                     }
                 }
-
-                GroundItemList.listView.Items.Clear();
-
-                SpawnList.listView.EndUpdate();
-                SpawnTimerList.listView.EndUpdate();
-                GroundItemList.listView.EndUpdate();
+                //SpawnList.listView.EndUpdate();
+                //SpawnTimerList.listView.EndUpdate();
+                //GroundItemList.listView.EndUpdate();
 
                 eq.mobsTimers.ResetTimers();
             }
-            catch (Exception ex) { LogLib.WriteLine("Error with ClearMap:", ex); }
         }
 
         public void LoadDummyMap(string mapname)
@@ -132,40 +123,38 @@ namespace myseq
             OnEnterMap();
         }
 
-        //public bool LoadMap(string filename)
-        //{
-        //    eq.mobsTimers.ResetTimers();
-
-        //    OnExitMap();
-
-        //    ClearMap();
-
-        //    eq.ClearMapStructures();
-
-        //    bool rc = eq.LoadMapInternal(filename);
-
-        //    if (rc)
-        //    {
-        //        OptimizeMap();
-
-        //        eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
-        //        OnEnterMap();
-        //    }
-
-        //    return rc;
-        //}
+         public bool Loadmap(string filename)
+        {
+            try
+            {
+                if (filename.EndsWith("_1.txt") || filename.EndsWith("_2.txt") || filename.EndsWith("_3.txt"))
+                {
+                    if (!LoadLoYMap(filename, false))
+                    {
+                        return false;
+                    }
+                }
+                else if (!LoadLoYMap(filename, true))
+                {
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var msg = $"Failed to load map {filename}: {ex.Message}";
+                LogLib.WriteLine(msg);
+                return false;
+            }
+        }
 
         public bool LoadLoYMap(string filename, bool resetmap)
         {
             if (resetmap)
-
             {
                 eq.mobsTimers.ResetTimers();
-
                 OnExitMap();
-
                 ClearMap();
-
                 eq.ClearMapStructures();
             }
 
@@ -175,7 +164,7 @@ namespace myseq
             {
                 OptimizeMap();
 
-                eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
+                 eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
 
                 OnEnterMap();
             }
@@ -183,32 +172,38 @@ namespace myseq
             return rc;
         }
 
+        #region Optimize Map
         public void OptimizeMap()
         {
-            if (eq.lines == null)
+            if (eq.lines != null)
             {
-                return;
+                ArrayList linesToRemove = new ArrayList();
+                MapLine lastline = null;
+                FindvoidLines(linesToRemove, lastline);
+                RemoveLines(linesToRemove);
+                NormalizeMaxMinZ();
+                // Put in offsets for use when drawing text on map, for duplicate text at same location
+                OptimizeText();
             }
+        }
 
-            ArrayList linesToRemove = new ArrayList();
-            MapLine lastline = null;
+        private void FindvoidLines(ArrayList linesToRemove, MapLine lastline)
+        {
             float prod;
-            var pointsdrop = 0;
-
             foreach (MapLine line in eq.lines)
             {
                 MapLine thisline = line;
                 if (thisline != null && lastline != null)
                 {
                     var thiscount = thisline.aPoints.Count;
-                    MapPoint thispoint = (MapPoint)thisline.aPoints[0];
-
-                    MapPoint thisnext = (MapPoint)thisline.aPoints[1];
-
-                    Pen thisColor = thisline.color;
                     var lastcount = lastline.aPoints.Count;
+
+                    MapPoint thispoint = (MapPoint)thisline.aPoints[0];
+                    MapPoint thisnext = (MapPoint)thisline.aPoints[1];
                     MapPoint lastpoint = (MapPoint)lastline.aPoints[lastcount - 1];
                     MapPoint lastprev = (MapPoint)lastline.aPoints[lastcount - 2];
+
+                    Pen thisColor = thisline.color;
                     Pen lastColor = lastline.color;
 
                     int droppoint;
@@ -226,7 +221,7 @@ namespace myseq
 
                             if (prod > 0.9999f)
                             {
-                                pointsdrop++;
+                                //                                    pointsdrop++;
 
                                 droppoint = 1;
                             }
@@ -287,12 +282,8 @@ namespace myseq
 
                             if (prod > 0.9999f)
                             {
-                                pointsdrop++;
-
+                                //                                    pointsdrop++;
                                 droppoint = 1;
-
-                                // look here
-
                             }
 
                             // Second Line is at beginning of first line
@@ -306,16 +297,7 @@ namespace myseq
 
                             for (var p = 0; p < (thiscount - 1); p++)
                             {
-                                MapPoint tmp = (MapPoint)thisline.aPoints[p];
-
-                                MapPoint temp = new MapPoint
-                                {
-                                    x = tmp.x,
-
-                                    y = tmp.y,
-
-                                    z = tmp.z
-                                };
+                                MapPoint temp = GetMapPoint(thisline, p);
 
                                 lastline.aPoints.Insert(p, temp);
                             }
@@ -338,12 +320,21 @@ namespace myseq
 
                 lastline = thisline;
             }
+        }
 
-            foreach (MapLine lineToRemove in linesToRemove)
+        private static MapPoint GetMapPoint(MapLine thisline, int p)
+        {
+            MapPoint tmp = (MapPoint)thisline.aPoints[p];
+            return new MapPoint
             {
-                eq.lines.Remove(lineToRemove);
-            }
+                x = tmp.x,
+                y = tmp.y,
+                z = tmp.z
+            };
+        }
 
+        private void NormalizeMaxMinZ()
+        {
             foreach (MapLine line in eq.lines)
             {
                 line.maxZ = line.minZ = line.Point(0).z;
@@ -360,8 +351,14 @@ namespace myseq
                     }
                 }
             }
-            // Put in offsets for use when drawing text on map, for duplicate text at same location
-            OptimizeText();
+        }
+
+        private void RemoveLines(ArrayList linesToRemove)
+        {
+            foreach (MapLine lineToRemove in linesToRemove)
+            {
+                eq.lines.Remove(lineToRemove);
+            }
         }
 
         private void OptimizeText()
@@ -382,7 +379,7 @@ namespace myseq
             }
         }
 
-        public float CalcDotProduct(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
+        private float CalcDotProduct(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
         {
             if ((x1 == x2 && y1 == y2 && z1 == z2) || (x2 == x3 && y2 == y3 && z2 == z3))
             {
@@ -397,5 +394,6 @@ namespace myseq
 
             return (float)(lenV3 / (lenV1 + lenV2));
         }
+        #endregion
     }
 }

@@ -123,7 +123,7 @@ namespace myseq
         public string[] Classes { get; private set; }
         public string[] Races { get; private set; }
         public string GConBaseName { get; set; } = "";
-        public SolidBrush[] ConColors { get; set; } = new SolidBrush[1000];
+        public SolidBrush[] ConColors { get; set; } = new SolidBrush[500];
 
         private const int ditchGone = 2;
         private const string dflt = "Mob Search";
@@ -252,14 +252,6 @@ namespace myseq
                 sp.lookupNumber = ln;
                 sp.hidden = false;
                 if (filter) { sp.hidden = true; }
-            }
-        }
-
-        public void AddMobTrailPoint(MobTrailPoint work)
-        {
-            if (!mobtrails.Contains(work))
-            {
-                mobtrails.Add(work);
             }
         }
 
@@ -1774,7 +1766,7 @@ namespace myseq
                     Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
                     alert = true;
-                    mobnameWithInfo = huntpref(mobnameWithInfo);
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
 
                     si.isHunt = true;
                 }
@@ -1785,7 +1777,7 @@ namespace myseq
                         Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
                     alert = true;
-                    mobnameWithInfo = huntpref(mobnameWithInfo);
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
                     si.isHunt = true;
                 }
 
@@ -1799,15 +1791,7 @@ namespace myseq
                     alert = true;
                     si.isCaution = true;
 
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = CautionPrefix + " " + mobnameWithInfo;
-                    }
-
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += " " + CautionPrefix;
-                    }
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
 
                     si.isCaution = true;
                 }
@@ -1821,15 +1805,7 @@ namespace myseq
 
                     si.isCaution = true;
 
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = CautionPrefix + " " + mobnameWithInfo;
-                    }
-
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += " " + CautionPrefix;
-                    }
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
                 }
 
                 // [danger]
@@ -1843,15 +1819,7 @@ namespace myseq
                 {
                     alert = true;
 
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = DangerPrefix + " " + mobnameWithInfo;
-                    }
-
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += " " + DangerPrefix;
-                    }
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
 
                     si.isDanger = true;
                 }
@@ -1862,15 +1830,7 @@ namespace myseq
                 {
                     alert = true;
 
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = DangerPrefix + " " + mobnameWithInfo;
-                    }
-
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += " " + DangerPrefix;
-                    }
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
 
                     si.isDanger = true;
                 }
@@ -1885,29 +1845,14 @@ namespace myseq
 
                     si.isAlert = true;
 
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = AlertPrefix + " " + mobnameWithInfo;
-                    }
-
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += " " + AlertPrefix;
-                    }
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
                 }
                 if (filters.GlobalAlert.Count > 0 && !alert && corpse && FindMatches(filters.GlobalAlert, matchmobname, Settings.Default.NoneOnAlert,
                         Settings.Default.TalkOnAlert, "Rare Mob",
                         Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
                         Settings.Default.BeepOnAlert, MatchFullTextA))
                 {
-                    if (PrefixStars)
-                    {
-                        mobnameWithInfo = AlertPrefix + " " + mobnameWithInfo;
-                    }
-                    if (AffixStars)
-                    {
-                        mobnameWithInfo += " " + AlertPrefix;
-                    }
+                   mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
 
                     si.isAlert = true;
                 }
@@ -1925,7 +1870,7 @@ namespace myseq
                         Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
                         Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
-                    mobnameWithInfo = huntpref(mobnameWithInfo);
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
 
                     si.isHunt = true;
                 }
@@ -1938,7 +1883,7 @@ namespace myseq
                         Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
                         Settings.Default.BeepOnHunt, MatchFullTextH))
                 {
-                    mobnameWithInfo = huntpref(mobnameWithInfo);
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
                     si.isAlert = true;
                 }
 
@@ -1955,20 +1900,21 @@ namespace myseq
                 newSpawns.Add(item1);
             }
 
-            string huntpref(string mname)
+
+        }
+        private string PrefixAffixLabel(string mname, string prefix)
+        {
+            if (PrefixStars)
             {
-                if (PrefixStars)
-                {
-                    mname = HuntPrefix + " " + mname;
-                }
-
-                if (AffixStars)
-                {
-                    mname += " " + HuntPrefix;
-                }
-
-                return mname;
+                mname = prefix + " " + mname;
             }
+
+            if (AffixStars)
+            {
+                mname += " " + prefix;
+            }
+
+            return mname;
         }
 
         private ListViewItem AddDetailsToList(SPAWNINFO si, ListViewPanel SpawnList, string mobnameWithInfo)
@@ -2487,13 +2433,11 @@ namespace myseq
                     {
                         if (si.Level > gamerInfo.Level)
                         {
-                            var diff = si.Level - gamerInfo.Level;
-                            gconLevel += diff;
+                            gconLevel += si.Level - gamerInfo.Level;
                         }
                         else
                         {
-                            var diff = gamerInfo.Level - si.Level;
-                            gconLevel -= diff;
+                            gconLevel -= gamerInfo.Level - si.Level;
                         }
                         if (gconLevel > 115)
                         {
@@ -2553,7 +2497,10 @@ namespace myseq
                         y = (int)sp.Y
                     };
 
-                    AddMobTrailPoint(work);
+                    if (!mobtrails.Contains(work))
+                    {
+                        mobtrails.Add(work);
+                    }
                 }
             }
         }
@@ -2625,7 +2572,7 @@ namespace myseq
             ConColors[c++] = new SolidBrush(Color.Red);
 
             // Set the remaining levels to dark red
-            for (; c < 1000; c++)
+            for (; c < 500; c++)
             {
                 ConColors[c] = new SolidBrush(Color.Maroon);
             }
@@ -3021,54 +2968,38 @@ namespace myseq
 
         public void CalculateMapLinePens()
         {
-            if (lines == null)
+            if (lines != null)
             {
-                return;
-            }
+                Pen darkpen = new Pen(Color.Black);
+                var alpha = Settings.Default.FadedLines * 255 / 100;
 
-            Pen darkpen = new Pen(Color.Black);
-            var alpha = Settings.Default.FadedLines * 255 / 100;
-
-            foreach (MapLine mapline in lines)
-            {
-                if (Settings.Default.ForceDistinct)
+                foreach (MapLine mapline in lines)
                 {
-                    mapline.draw_color = GetDistinctColor(darkpen);
-                    mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
+                    if (Settings.Default.ForceDistinct)
+                    {
+                        mapline.draw_color = GetDistinctColor(darkpen);
+                        mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
+                    }
+                    else
+                    {
+                        mapline.draw_color = GetDistinctColor(new Pen(mapline.color.Color));
+                        mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
+                    }
                 }
-                else
+                SolidBrush distinctbrush = new SolidBrush(Color.Black);
+                foreach (MapText maptxt in texts)
                 {
-                    mapline.draw_color = GetDistinctColor(new Pen(mapline.color.Color));
-                    mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
+                    maptxt.draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(distinctbrush) : GetDistinctColor(maptxt.color);
+                    maptxt.draw_pen = new Pen(maptxt.draw_color.Color);
                 }
-            }
-            SolidBrush distinctbrush = new SolidBrush(Color.Black);
-            foreach (MapText maptxt in texts)
-            {
-                maptxt.draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(distinctbrush) : GetDistinctColor(maptxt.color);
-                maptxt.draw_pen = new Pen(maptxt.draw_color.Color);
             }
         }
-
-        private int GetColorDiff(Color foreColor, Color backColor)
+        public SolidBrush GetDistinctColor(SolidBrush curBrush)
         {
-            int lTmp;
-            var lColDiff = 0;
+            curBrush.Color = GetDistinctColor(curBrush.Color, Settings.Default.BackColor);
 
-            lTmp = Math.Abs(backColor.R - foreColor.R);
-
-            lColDiff = Math.Max(lColDiff, lTmp);
-
-            lTmp = Math.Abs(backColor.G - foreColor.G);
-
-            lColDiff = Math.Max(lColDiff, lTmp);
-
-            lTmp = Math.Abs(backColor.B - foreColor.B);
-
-            return Math.Max(lColDiff, lTmp);
+            return curBrush;
         }
-
-        private Color GetInverseColor(Color foreColor) => Color.FromArgb((int)(192 - (foreColor.R * 0.75)), (int)(192 - (foreColor.G * 0.75)), (int)(192 - (foreColor.B * 0.75)));
 
         public Color GetDistinctColor(Color foreColor, Color backColor)
         {
@@ -3094,23 +3025,32 @@ namespace myseq
                 }
             }
         }
-
         public Pen GetDistinctColor(Pen curPen)
         {
             curPen.Color = GetDistinctColor(curPen.Color, Settings.Default.BackColor);
-
             return curPen;
         }
-
         public Color GetDistinctColor(Color curColor) => GetDistinctColor(curColor, Settings.Default.BackColor);
 
-        public SolidBrush GetDistinctColor(SolidBrush curBrush)
+        private int GetColorDiff(Color foreColor, Color backColor)
         {
-            curBrush.Color = GetDistinctColor(curBrush.Color, Settings.Default.BackColor);
+            int lTmp;
+            var lColDiff = 0;
 
-            return curBrush;
+            lTmp = Math.Abs(backColor.R - foreColor.R);
+
+            lColDiff = Math.Max(lColDiff, lTmp);
+
+            lTmp = Math.Abs(backColor.G - foreColor.G);
+
+            lColDiff = Math.Max(lColDiff, lTmp);
+
+            lTmp = Math.Abs(backColor.B - foreColor.B);
+
+            return Math.Max(lColDiff, lTmp);
         }
 
+        private Color GetInverseColor(Color foreColor) => Color.FromArgb((int)(192 - (foreColor.R * 0.75)), (int)(192 - (foreColor.G * 0.75)), (int)(192 - (foreColor.B * 0.75)));
         #endregion ColorOperations
     }
 }

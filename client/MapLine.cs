@@ -65,7 +65,6 @@ namespace myseq
         public PointF[] linePoints;
 
         public MapPoint Point(int index)
-
         {
             return (MapPoint)aPoints[index];
         }

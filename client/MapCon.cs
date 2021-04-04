@@ -3141,6 +3141,24 @@ namespace myseq
 
             ReAdjust();
         }
+        public void SetUpdateSteps()
+        {
+            var update_steps = (1000 / Settings.Default.UpdateDelay) + 1;
+            if (update_steps < 3)
+            {
+                update_steps = 3;
+            }
+
+            var update_ticks = 250 / Settings.Default.UpdateDelay;
+            if (update_ticks < 1)
+            {
+                update_ticks = 1;
+            }
+
+            UpdateSteps = update_steps;
+            UpdateTicks = update_ticks;
+        }
+
 
         public void Tick()
         {

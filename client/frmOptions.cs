@@ -2016,37 +2016,17 @@ namespace myseq
                 Settings.Default.Save();//SaveSettings();
             }
 
-            if (!Directory.Exists(txtMapDir.Text) && DialogResult.Yes == DirBox("Map"))
-            {
-                Directory.CreateDirectory(txtMapDir.Text);
-            }
+            Directory.CreateDirectory(txtMapDir.Text);
 
-            if (!Directory.Exists(txtFilterDir.Text) && DialogResult.Yes == DirBox("Filters"))
-            {
-                Directory.CreateDirectory(txtFilterDir.Text);
-            }
+            Directory.CreateDirectory(txtFilterDir.Text);
 
-            if (!Directory.Exists(txtCfgDir.Text) && DialogResult.Yes == DirBox("Config"))
-            {
-                Directory.CreateDirectory(txtCfgDir.Text);
-            }
+            Directory.CreateDirectory(txtCfgDir.Text);
 
-            if (!Directory.Exists(txtLogDir.Text) && DialogResult.Yes == DirBox("Log"))
-            {
-                Directory.CreateDirectory(txtLogDir.Text);
-            }
+            Directory.CreateDirectory(txtLogDir.Text);
 
-            if (!Directory.Exists(txtTimerDir.Text) && DialogResult.Yes == DirBox("Spawn timer"))
-            {
-                Directory.CreateDirectory(txtTimerDir.Text);
-            }
+            Directory.CreateDirectory(txtTimerDir.Text);
 
             Hide();
-
-            DialogResult DirBox(string dir)
-            {
-                return MessageBox.Show($" {dir} directory doesn't exist.  Create it?", "Directory Not Found", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-            }
         }
 
         private void CmdMapBackgroundColor_Click(object sender, EventArgs e)
@@ -2176,73 +2156,73 @@ namespace myseq
             }
         }
 
-        public DrawOptions GetDrawOptions()
+        //public DrawOptions GetDrawOptions()
 
-        {
-            DrawOptions DrawOpts = DrawOptions.None;
+        //{
+        //    DrawOptions DrawOpts = DrawOptions.None;
 
-            if (chkMap.Checked)
-            {
-                DrawOpts |= DrawOptions.DrawMap;
-            }
+        //    if (chkMap.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.DrawMap;
+        //    }
 
-            if (chkAddjust.Checked)
-            {
-                DrawOpts |= DrawOptions.Readjust;
-            }
+        //    if (chkAddjust.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.Readjust;
+        //    }
 
-            if (chkPlayer.Checked)
-            {
-                DrawOpts |= DrawOptions.Player;
-            }
+        //    if (chkPlayer.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.Player;
+        //    }
 
-            if (chkLineToPoint.Checked)
-            {
-                DrawOpts |= DrawOptions.SpotLine;
-            }
+        //    if (chkLineToPoint.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.SpotLine;
+        //    }
 
-            if (chkSpawns.Checked)
-            {
-                DrawOpts |= DrawOptions.Spawns;
-            }
+        //    if (chkSpawns.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.Spawns;
+        //    }
 
-            if (chkTrails.Checked)
-            {
-                DrawOpts |= DrawOptions.SpawnTrails;
-            }
+        //    if (chkTrails.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.SpawnTrails;
+        //    }
 
-            if (chkGround.Checked)
-            {
-                DrawOpts |= DrawOptions.GroundItems;
-            }
+        //    if (chkGround.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.GroundItems;
+        //    }
 
-            if (chkTimers.Checked)
-            {
-                DrawOpts |= DrawOptions.SpawnTimers;
-            }
+        //    if (chkTimers.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.SpawnTimers;
+        //    }
 
-            if (chkDirection.Checked)
-            {
-                DrawOpts |= DrawOptions.DirectionLines;
-            }
+        //    if (chkDirection.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.DirectionLines;
+        //    }
 
-            if (chkHighlight.Checked)
-            {
-                DrawOpts |= DrawOptions.SpawnRings;
-            }
+        //    if (chkHighlight.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.SpawnRings;
+        //    }
 
-            if (chkGrid.Checked)
-            {
-                DrawOpts |= DrawOptions.GridLines;
-            }
+        //    if (chkGrid.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.GridLines;
+        //    }
 
-            if (chkText.Checked)
-            {
-                DrawOpts |= DrawOptions.ZoneText;
-            }
+        //    if (chkText.Checked)
+        //    {
+        //        DrawOpts |= DrawOptions.ZoneText;
+        //    }
 
-            return DrawOpts;
-        }
+        //    return DrawOpts;
+        //}
 
         public void SetFgDrawOptions(DrawOptions DrawOpts)
 
