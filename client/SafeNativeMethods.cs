@@ -20,6 +20,6 @@ namespace myseq
 
         [DllImport("winmm.dll")]
 
-        internal static extern long PlaySound(string lpszName, long hModule, long dwFlags);
+        internal static extern long PlaySound(string lpszName, System.IntPtr hModule, System.IntPtr dwFlags);
     }
 }

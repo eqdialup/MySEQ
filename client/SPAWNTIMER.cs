@@ -7,9 +7,9 @@ using Structures;
 
 namespace myseq
 {
-    public class SPAWNTIMER
+    public class Spawntimer
     {
-        public SPAWNTIMER(SPAWNINFO si, DateTime dt)
+        public Spawntimer(Spawninfo si, DateTime dt)
 
         {
             SpawnLoc = si.SpawnLoc;
@@ -35,7 +35,7 @@ namespace myseq
             AllNames = RegexHelper.TrimName(si.Name);
         }
 
-        public SPAWNTIMER(string str)
+        public Spawntimer(string str)
 
         {
             var parts = str.Split(';');
@@ -86,25 +86,18 @@ namespace myseq
 
         public string GetAsString() => $"{SpawnLoc};{SpawnCount};{SpawnTimer};{SpawnTimeStr};{KillTimeStr};{NextSpawnStr};{LastSpawnName};{AllNames};{X};{Y};{Z}";
 
-        // st has been loaded from a file, and is the same spawn as "this" one. 
+        // st has been loaded from a file, and is the same spawn as "this" one.
 
         // Glean all useful information.
 
-        public void Merge(SPAWNTIMER st)
+        public void Merge(Spawntimer st)
 
         {
             LogLib.WriteLine("Merging spawn timers:", LogLevel.Debug);
 
-            //            LogLib.WriteLine($"  Old: {GetAsString()}", LogLevel.Debug);
-
-
-            //            LogLib.WriteLine($"  Other: {st.GetAsString()}", LogLevel.Debug);
-
             SpawnCount = st.SpawnCount; // usually makes it > 1
 
             SpawnTimer = st.SpawnTimer; // woot!
-
-            //this.SpawnTimer =   // NOT!
 
             if (KillTimeDT == DateTime.MinValue) // woot!
 
@@ -123,16 +116,17 @@ namespace myseq
             }
 
             var namecount = 1;
-
+            StringBuilder builder = new StringBuilder(AllNames);
             foreach (var name in st.AllNames.Split(','))
             {
                 var bname = RegexHelper.TrimName(name);
                 if (AllNames.IndexOf(bname) < 0 && namecount < 11)
                 {
-                    AllNames += $", {bname}";
+                    builder.Append(", ").Append(bname);
                     namecount++;
                 }
             }
+            AllNames = builder.ToString();
 
             // update last spawn name to be what looks like named mobs
             foreach (var tname in AllNames.Split(','))
@@ -146,10 +140,9 @@ namespace myseq
             }
 
             listNeedsUpdate = true;
-            //            LogLib.WriteLine($"  New: {GetAsString()}", LogLevel.Debug);
         }
 
-        private void EnableTimer(SPAWNTIMER st)
+        private void EnableTimer(Spawntimer st)
         {
             if (st.SpawnTimer > 10)
 
@@ -195,8 +188,7 @@ namespace myseq
         }
 
         // When will the mob spawn next? Returns 0 if not available.
-
-        // TODO: optimize this, as it is called much more often than the mob is being updated
+        // TO DO: optimize this, as it is called much more often than the mob is being updated
 
         public int SecondsUntilSpawn(DateTime now)
         {
@@ -231,10 +223,6 @@ namespace myseq
 
                 //int countTime = (Diff.Hours * 3600) + (Diff.Minutes * 60) + Diff.Seconds;
             }
-
-            //if (countTime > 0)
-
-            //{
             // StringBuilder moved to new, common method, as equal for all paths.
             StringBuilder spawnTimer = StBuilder();
 
@@ -255,52 +243,6 @@ namespace myseq
             spawnTimer.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", Y, X, Z);
 
             return spawnTimer.ToString();
-            //            }
-            //else if (SpawnTimer > 0)
-
-            //{
-            //    StringBuilder spawnTimer = StBuilder();
-
-            //    spawnTimer.Append("\n");
-
-            //    spawnTimer.AppendFormat("Last Spawned At: {0}\n", SpawnTimeStr);
-
-            //    spawnTimer.AppendFormat("Last Killed At: {0}\n", KillTimeStr);
-
-            //    spawnTimer.AppendFormat("Next Spawn At: {0}\n", "");
-
-            //    spawnTimer.AppendFormat("Spawn Timer: {0} secs\n", SpawnTimer);
-
-            //    spawnTimer.AppendFormat("Spawning In: {0}\n", "");
-
-            //    spawnTimer.AppendFormat("Spawn Count: {0}\n", SpawnCount);
-
-            //    spawnTimer.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", Y, X, Z);
-
-            //    return spawnTimer.ToString();
-            //}
-            //else
-            //{
-            //    StringBuilder spawnTimer = StBuilder();
-
-            //    spawnTimer.Append("\n");
-
-            //    spawnTimer.AppendFormat("Last Spawned At: {0}\n", SpawnTimeStr);
-
-            //    spawnTimer.AppendFormat("Last Killed At: {0}\n", KillTimeStr);
-
-            //    spawnTimer.AppendFormat("Next Spawn At: {0}\n", "");
-
-            //    spawnTimer.AppendFormat("Spawn Timer: {0} secs\n", "0");
-
-            //    spawnTimer.AppendFormat("Spawning In: {0}\n", "");
-
-            //    spawnTimer.AppendFormat("Spawn Count: {0}\n", SpawnCount);
-
-            //    spawnTimer.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", Y, X, Z);
-
-            //    return spawnTimer.ToString();
-            //}
         }
 
         private StringBuilder StBuilder()
@@ -344,7 +286,7 @@ namespace myseq
             }
         }
 
-        // A true re-spawn has been detected        
+        // A true re-spawn has been detected
 
         public string ReSpawn(string name)
         {
@@ -377,17 +319,17 @@ namespace myseq
 
                 var newnames = RegexHelper.TrimName(name);
                 var namecount = 1;
+                StringBuilder builder = new StringBuilder(AllNames);
                 foreach (var tname in AllNames.Split(','))
                 {
                     var bname = RegexHelper.TrimName(tname);
                     if (newnames.IndexOf(bname) < 0 && namecount < 12)
                     {
-                        newnames += ", " + bname;
+                        builder.Append(", ").Append(bname);
                         namecount++;
                     }
                 }
-
-                AllNames = newnames;
+                AllNames = builder.ToString();
 
                 log = GetRespawnTime(name, log);
             }
@@ -539,7 +481,7 @@ namespace myseq
 
         public string zone;
 
-        public bool sticky = false;
+        public bool sticky;
 
         public float Y = 0;
 
@@ -576,4 +518,3 @@ namespace myseq
         public string AllNames { get; set; } = "";
     }
 }
-

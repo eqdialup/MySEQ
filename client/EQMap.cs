@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using myseq.Properties;
 using Structures;
@@ -82,24 +83,17 @@ namespace myseq
             if (initialized)
             {
                 eq.Clear();
-                //SpawnList.listView.BeginUpdate();
-                //SpawnTimerList.listView.BeginUpdate();
-                //GroundItemList.listView.BeginUpdate();
                 SpawnList.listView.Items.Clear();
                 SpawnTimerList.listView.Items.Clear();
                 GroundItemList.listView.Items.Clear();
 
                 if (eq.mobsTimers.mobsTimer2.Count > 0)
                 {
-                    foreach (SPAWNTIMER st in eq.mobsTimers.mobsTimer2.Values)
+                    foreach (Spawntimer st in eq.mobsTimers.mobsTimer2.Values)
                     {
                         st.itmSpawnTimerList = null;
                     }
                 }
-                //SpawnList.listView.EndUpdate();
-                //SpawnTimerList.listView.EndUpdate();
-                //GroundItemList.listView.EndUpdate();
-
                 eq.mobsTimers.ResetTimers();
             }
         }
@@ -123,7 +117,7 @@ namespace myseq
             OnEnterMap();
         }
 
-         public bool Loadmap(string filename)
+        public bool Loadmap(string filename)
         {
             try
             {
@@ -164,7 +158,7 @@ namespace myseq
             {
                 OptimizeMap();
 
-                 eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
+                eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
 
                 OnEnterMap();
             }
@@ -173,11 +167,12 @@ namespace myseq
         }
 
         #region Optimize Map
+
         public void OptimizeMap()
         {
             if (eq.lines != null)
             {
-                ArrayList linesToRemove = new ArrayList();
+                List<MapLine> linesToRemove = new List<MapLine>();
                 MapLine lastline = null;
                 FindvoidLines(linesToRemove, lastline);
                 RemoveLines(linesToRemove);
@@ -187,7 +182,7 @@ namespace myseq
             }
         }
 
-        private void FindvoidLines(ArrayList linesToRemove, MapLine lastline)
+        private void FindvoidLines(List<MapLine> linesToRemove, MapLine lastline)
         {
             float prod;
             foreach (MapLine line in eq.lines)
@@ -245,18 +240,8 @@ namespace myseq
 
                         for (var p = 1; p < thiscount; p++)
                         {
-                            MapPoint tmp = (MapPoint)thisline.aPoints[p];
-
-                            lastline.linePoints[p + lastcount - 1 - droppoint] = new PointF(tmp.x, tmp.y);
-
-                            MapPoint temp = new MapPoint
-                            {
-                                x = tmp.x,
-
-                                y = tmp.y,
-
-                                z = tmp.z
-                            };
+                            MapPoint temp = GetMapPoint(thisline, p);
+                            lastline.linePoints[p + lastcount - 1 - droppoint] = new PointF(temp.x, temp.y);
 
                             lastline.aPoints.Add(temp);
                         }
@@ -353,7 +338,7 @@ namespace myseq
             }
         }
 
-        private void RemoveLines(ArrayList linesToRemove)
+        private void RemoveLines(List<MapLine> linesToRemove)
         {
             foreach (MapLine lineToRemove in linesToRemove)
             {
@@ -394,6 +379,7 @@ namespace myseq
 
             return (float)(lenV3 / (lenV1 + lenV2));
         }
-        #endregion
+
+        #endregion Optimize Map
     }
 }

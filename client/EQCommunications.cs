@@ -12,8 +12,10 @@ namespace Structures
     public enum RequestTypes
     {
         None = 0,
+
         //Bit Flags determining what data to send to the client
         ZONE = 0x00000001,
+
         PLAYER = 0x00000002,
         TARGET = 0x00000004,
         MOBS = 0x00000008,
@@ -37,6 +39,7 @@ namespace Structures
 
         // Processing stuff-
         private readonly Filters filters = new Filters();
+
         public ProcessInfo CurrentProcess = new ProcessInfo(0, "");
         private int processcount;
         public List<ProcessInfo> colProcesses = new List<ProcessInfo>();
@@ -48,7 +51,7 @@ namespace Structures
 
         private int numPackets; // Total Packets expected
 
-        private int numProcessed; // No. of Packets already processed        
+        private int numProcessed; // No. of Packets already processed
 
         private readonly byte[] incompletebuffer = new byte[2048];
 
@@ -194,7 +197,9 @@ namespace Structures
             }
             catch (Exception ex) { LogLib.WriteLine("Error: timPackets_Tick: ", ex); }
         }
+
         private void SendData(byte[] data) => pSocketClient.Send(data);
+
         public void CharRefresh()
         {
             if (pSocketClient != null)
@@ -237,7 +242,7 @@ namespace Structures
                     for (; offset + SIZE_OF_PACKET <= bytes; offset += SIZE_OF_PACKET)
 
                     {
-                        SPAWNINFO si = new SPAWNINFO();
+                        Spawninfo si = new Spawninfo();
 
                         if (offset < 0)
                         {
@@ -272,6 +277,74 @@ namespace Structures
 
             ProcessedPackets(packet, bytes, offset);
         }
+
+        private void ProcessPacket(Spawninfo si, bool update_hidden)
+        {
+            // SPAWN  // si.flags == 0
+
+            // Target // si.flags == 1
+
+            //  MAP   // si.flags == 4
+
+            // GROUND // si.flags == 5
+
+            //ProcInfo// si.flags == 6
+
+            //World//    si.flags == 8
+
+            // PLAYER // si.flags == 253
+
+            switch (si.flags)
+            {
+                case Spawninfo.PacketType.Zone:
+
+                    f1.ProcessMap(si);
+
+                    break;
+
+                case Spawninfo.PacketType.Player:
+
+                    eq.ProcessGamer(si, f1);
+
+                    break;
+
+                case Spawninfo.PacketType.GroundItem:
+
+                    eq.ProcessGroundItems(si, filters);//,GroundItemList)
+
+                    break;
+
+                case Spawninfo.PacketType.Target:
+
+                    eq.ProcessTarget(si);
+
+                    break;
+
+                case Spawninfo.PacketType.World:
+
+                    eq.ProcessWorld(si);
+
+                    break;
+
+                case Spawninfo.PacketType.Spawn:
+
+                    eq.ProcessSpawns(si, f1, f1.SpawnList, filters, f1.mapPane, update_hidden);
+
+                    break;
+
+                case Spawninfo.PacketType.GetProcessInfo:
+
+                    ProcessProcessInfo(si);
+                    break;
+
+                default:
+
+                    LogLib.WriteLine("Unknown Packet Type: " + si.flags.ToString());
+
+                    break;
+            }
+        }
+
         private void PacketCopy(byte[] packet, int SIZE_OF_PACKET)
         {
             if (incompleteCount > 0 && packet.Length > 0)
@@ -279,6 +352,7 @@ namespace Structures
                 Array.Copy(packet, 0, incompletebuffer, incompleteCount, SIZE_OF_PACKET - incompleteCount);
             }
         }
+
         private int CheckStart(byte[] packet)
         {
             int offset;
@@ -299,73 +373,33 @@ namespace Structures
 
             return offset;
         }
-        private void ProcessPacket(SPAWNINFO si, bool update_hidden)
+
+        private void ProcessProcessInfo(Spawninfo si)
         {
-            // SPAWN  // si.flags == 0
+            ProcessInfo PI = new ProcessInfo(si.SpawnID, si.Name);
 
-            // Target // si.flags == 1
-
-            //  MAP   // si.flags == 4
-
-            // GROUND // si.flags == 5
-
-            //ProcInfo// si.flags == 6
-
-            //World//    si.flags == 8
-
-            // PLAYER // si.flags == 253
-
-            switch (si.flags)
+            if (si.SpawnID == 0)
             {
-                case SPAWNINFO.PacketType.Zone:
+                PI.SCharName = "";
+                CurrentProcess = PI;
+            }
+            else
+            {
+                processcount++;
 
-                    f1.ProcessMap(si);
+                while (colProcesses.Count > 0 && colProcesses.Count >= processcount)
+                {
+                    colProcesses.Remove(colProcesses[colProcesses.Count - 1]);
+                }
 
-                    break;
+                colProcesses.Add(PI);
 
-                case SPAWNINFO.PacketType.Player:
-
-                    eq.ProcessGamer(si, f1);
-
-                    break;
-
-                case SPAWNINFO.PacketType.GroundItem:
-
-                    eq.ProcessGroundItems(si, filters);//,GroundItemList)
-
-                    break;
-
-                case SPAWNINFO.PacketType.Target:
-
-                    eq.ProcessTarget(si);
-
-                    break;
-
-                case SPAWNINFO.PacketType.World:
-
-                    eq.ProcessWorld(si);
-
-                    break;
-
-                case SPAWNINFO.PacketType.Spawn:
-
-                    eq.ProcessSpawns(si, f1, f1.SpawnList, filters, f1.mapPane, update_hidden);
-
-                    break;
-
-                case SPAWNINFO.PacketType.GetProcessInfo:
-
-                    ProcessProcessInfo(si);
-                    break;
-
-                default:
-
-                    LogLib.WriteLine("Unknown Packet Type: " + si.flags.ToString());
-
-                    break;
+                f1.ShowCharsInList(si, PI);
             }
         }
+
         private void StartNewPackets() => processcount = 0;
+
         private void ProcessedPackets(byte[] packet, int bytes, int offset)
         {
             if (numProcessed < numPackets)
@@ -424,29 +458,5 @@ namespace Structures
         }
 
         private void CheckMobs() => eq.CheckMobs(f1.SpawnList, f1.GroundItemList);
-
-        private void ProcessProcessInfo(SPAWNINFO si)
-        {
-            ProcessInfo PI = new ProcessInfo(si.SpawnID, si.Name);
-
-            if (si.SpawnID == 0)
-            {
-                PI.SCharName = "";
-                CurrentProcess = PI;
-            }
-            else
-            {
-                processcount++;
-
-                while (colProcesses.Count > 0 && colProcesses.Count >= processcount)
-                {
-                    colProcesses.Remove(colProcesses[colProcesses.Count - 1]);
-                }
-
-                colProcesses.Add(PI);
-
-                f1.ShowCharsInList(si, PI);
-            }
-        }
     }
 }

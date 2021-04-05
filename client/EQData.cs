@@ -16,24 +16,22 @@ namespace myseq
 
     public class EQData
     {
-        private static readonly SPAWNINFO sPAWNINFO = new SPAWNINFO();
+        private static readonly Spawninfo sPAWNINFO = new Spawninfo();
 
         // player details
-        public SPAWNINFO gamerInfo = sPAWNINFO;
+        public Spawninfo gamerInfo = sPAWNINFO;
 
         // Map details
         public string longname = "";
 
         public string shortname = "";
-        private static readonly ArrayList maplinearray = new ArrayList();
 
         // Map data
-        public ArrayList lines = maplinearray;//MapLine[MAX_LINES]
+        public List<MapLine> lines = new List<MapLine>();
 
-        private static ArrayList maptextarray = new ArrayList();
-        public ArrayList texts = maptextarray;//MapText[50]
+        public List<MapText> texts = new List<MapText>();
 
-        private readonly ArrayList mobtrails = new ArrayList();//MobTrailPoint[1000]
+        private readonly List<MobTrailPoint> mobtrails = new List<MobTrailPoint>();
 
         // Max + Min map coordinates - define the bounds of the zone
 
@@ -55,7 +53,7 @@ namespace myseq
 
         private readonly Hashtable mobsHashTable = new Hashtable();           // Holds the details of the mobs in the current zone.
 
-        public MobsTimers mobsTimers = new MobsTimers();   // Manages the timers
+        public MobsTimers mobsTimers { get; } = new MobsTimers();   // Manages the timers
 
         public int selectedID = 99999;
 
@@ -71,13 +69,12 @@ namespace myseq
 
         // Mobs / UI Lists
 
-        public ArrayList newSpawns = new ArrayList();
+        private List<ListViewItem> newSpawns { get; } = new List<ListViewItem>();
 
-        public ArrayList newGroundItems = new ArrayList();
+        private List<ListViewItem> newGroundItems { get; } = new List<ListViewItem>();
 
         // Items List by ID and Description loaded from file
 
-        //        public Hashtable itemList = new Hashtable();
         public List<ListItem> GroundSpawn = new List<ListItem>();
 
         // Guild List by ID and Description loaded from file
@@ -116,8 +113,6 @@ namespace myseq
 
         public int GreyRange { get; set; }
         public int YellowRange { get; set; } = 3;
-
-        //        private readonly Structures.ColorConverter ColorChart = new Structures.ColorConverter();
 
         public bool Zoning { get; set; }
         public string[] Classes { get; private set; }
@@ -208,7 +203,7 @@ namespace myseq
                 }
             }
 
-            foreach (SPAWNINFO sp in mobsHashTable.Values)
+            foreach (Spawninfo sp in mobsHashTable.Values)
             {
                 sp.isLookup = false;
                 sp.lookupNumber = "";
@@ -235,7 +230,7 @@ namespace myseq
             }
         }
 
-        private void SubLookup(SPAWNINFO sp, string search, bool filter, string ln)
+        private void SubLookup(Spawninfo sp, string search, bool filter, string ln)
         {
             var levelCheck = false;
             if (search.Length > 2 && string.Equals(search.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
@@ -257,17 +252,17 @@ namespace myseq
 
         public Hashtable GetMobsReadonly() => mobsHashTable;
 
-        public ArrayList GetMobTrailsReadonly() => mobtrails;
+        public List<MobTrailPoint> GetMobTrailsReadonly() => mobtrails;
 
-        public ArrayList GetLinesReadonly() => lines;
+        public List<MapLine> GetLinesReadonly() => lines;
 
-        public ArrayList GetTextsReadonly() => texts;
+        public List<MapText> GetTextsReadonly() => texts;
 
         public List<GroundItem> GetItemsReadonly() => itemcollection;
 
         public bool SelectTimer(float delta, float x, float y)
         {
-            SPAWNTIMER st = FindTimer(delta, x, y);
+            Spawntimer st = FindTimer(delta, x, y);
 
             if (st != null)
             {
@@ -276,7 +271,7 @@ namespace myseq
                     st.itmSpawnTimerList.EnsureVisible();
                     st.itmSpawnTimerList.Selected = true;
                 }
-                SPAWNINFO sp = FindMobTimer(st.SpawnLoc);
+                Spawninfo sp = FindMobTimer(st.SpawnLoc);
 
                 selectedID = sp == null ? 99999 : sp.SpawnID;
 
@@ -321,7 +316,7 @@ namespace myseq
 
         public bool SelectMob(float delta, float x, float y)
         {
-            SPAWNINFO sp = FindMobNoPet(delta, x, y) ?? FindMob(delta, x, y);
+            Spawninfo sp = FindMobNoPet(delta, x, y) ?? FindMob(delta, x, y);
 
             if (sp != null)
             {
@@ -346,11 +341,11 @@ namespace myseq
             }
         }
 
-        public SPAWNINFO FindMobNoPet(float delta, float x, float y)
+        public Spawninfo FindMobNoPet(float delta, float x, float y)
         {
             try
             {
-                foreach (SPAWNINFO sp in mobsHashTable.Values)
+                foreach (Spawninfo sp in mobsHashTable.Values)
                 {
                     var dely = sp.Y < y + delta && sp.Y > y - delta;
                     var delx = sp.X < x + delta && sp.X > x - delta;
@@ -370,11 +365,11 @@ namespace myseq
             }
         }
 
-        public SPAWNINFO FindMobNoPetNoPlayerNoCorpse(float delta, float x, float y)
+        public Spawninfo FindMobNoPetNoPlayerNoCorpse(float delta, float x, float y)
         {
             try
             {
-                foreach (SPAWNINFO sp in mobsHashTable.Values)
+                foreach (Spawninfo sp in mobsHashTable.Values)
                 {
                     var dely = sp.Y < y + delta && sp.Y > y - delta;
                     var delx = sp.X < x + delta && sp.X > x - delta;
@@ -394,11 +389,11 @@ namespace myseq
             }
         }
 
-        public SPAWNINFO FindMobNoPetNoPlayer(float delta, float x, float y)
+        public Spawninfo FindMobNoPetNoPlayer(float delta, float x, float y)
         {
             try
             {
-                foreach (SPAWNINFO sp in mobsHashTable.Values)
+                foreach (Spawninfo sp in mobsHashTable.Values)
                 {
                     if (HiddenFamPet(sp) && !sp.isCorpse && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
                     {
@@ -416,13 +411,13 @@ namespace myseq
             }
         }
 
-        private static bool HiddenFamPet(SPAWNINFO sp) => !sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isMerc;
+        private static bool HiddenFamPet(Spawninfo sp) => !sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isMerc;
 
-        public SPAWNINFO FindMob(float delta, float x, float y)
+        public Spawninfo FindMob(float delta, float x, float y)
         {
             try
             {
-                foreach (SPAWNINFO sp in mobsHashTable.Values)
+                foreach (Spawninfo sp in mobsHashTable.Values)
                 {
                     if (!sp.hidden && !sp.filtered && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
                     {
@@ -440,11 +435,11 @@ namespace myseq
             }
         }
 
-        public SPAWNINFO FindMobTimer(string spawnLoc)
+        public Spawninfo FindMobTimer(string spawnLoc)
         {
             try
             {
-                foreach (SPAWNINFO sp in mobsHashTable.Values)
+                foreach (Spawninfo sp in mobsHashTable.Values)
                 {
                     if ((sp.SpawnLoc == spawnLoc) && (sp.Type == 1))
                     {
@@ -462,12 +457,12 @@ namespace myseq
             }
         }
 
-        public SPAWNTIMER FindListViewTimer(ListViewItem listItem)
+        public Spawntimer FindListViewTimer(ListViewItem listItem)
         {
             try
             {
                 // This returns mobsTimer2
-                foreach (SPAWNTIMER st in mobsTimers.GetRespawned().Values)
+                foreach (Spawntimer st in mobsTimers.GetRespawned().Values)
                 {
                     if (st.itmSpawnTimerList == listItem)
                     {
@@ -484,12 +479,12 @@ namespace myseq
             }
         }
 
-        public SPAWNTIMER FindTimer(float delta, float x, float y)
+        public Spawntimer FindTimer(float delta, float x, float y)
         {
             try
             {
                 // This returns mobsTimer2
-                foreach (SPAWNTIMER st in mobsTimers.GetRespawned().Values)
+                foreach (Spawntimer st in mobsTimers.GetRespawned().Values)
                 {
                     if (st.X < x + delta && st.X > x - delta && st.Y < y + delta && st.Y > y - delta)
                     {
@@ -533,7 +528,7 @@ namespace myseq
             return null;
         }
 
-        public SPAWNINFO GetSelectedMob() => (SPAWNINFO)mobsHashTable[(uint)selectedID];
+        public Spawninfo GetSelectedMob() => (Spawninfo)mobsHashTable[(uint)selectedID];
 
         public void InitLookups()
         {
@@ -544,7 +539,6 @@ namespace myseq
             GroundSpawn.Clear();
 
             ReadItemList(Path.Combine(Settings.Default.CfgDir, "GroundItems.ini"));
-
             //guildList.Clear();
 
             //ReadGuildList(Path.Combine(Settings.Default.CfgDir, "Guilds.txt"));
@@ -689,7 +683,7 @@ namespace myseq
 
         private string[] GetStrArrayFromTextFile(string filePath)
         {
-            ArrayList arList = new ArrayList();
+            List<string> arList = new List<string>();
             if (File.Exists(filePath))
             {
                 foreach (var line in File.ReadAllLines(filePath))
@@ -704,14 +698,12 @@ namespace myseq
                     }
                 }
             }
-
-            return (string[])arList.ToArray(typeof(string));
+            return arList.ToArray();
         }
 
         private void ReadItemList(string filePath)
         {
-            //            IFormatProvider NumFormat = new CultureInfo("en-US"); //no commaseparation on numbers, so this is pointless.
-
+//            IFormatProvider NumFormat = new CultureInfo("en-US"); //no commaseparation on numbers, so this is pointless.
 
             if (!File.Exists(filePath))
             {
@@ -722,16 +714,33 @@ namespace myseq
             foreach (var line in File.ReadAllLines(filePath).ToList())
             {
                 //sample:  IT0_ACTORDEF = Generic
-                var entries = line.Split('=');
-                var tmp = entries[0].Split('_');
-                ListItem newGround = new ListItem
+                if (!line.StartsWith("[") && !string.IsNullOrWhiteSpace(line))
                 {
-                    ID = int.Parse(tmp[0].Remove(0, 2)),/* NumFormat)*/ //0
-                    ActorDef = entries[0], //IT0_ACTORDEF
-                    Name = entries[1] //NAME
-                };
-                GroundSpawn.Add(newGround);
+                    var entries = line.Split('=');
+                    var tmp = entries[0].Split('_');
+                    ListItem newGround = new ListItem
+                    {
+                        ID = int.Parse(tmp[0].Remove(0, 2)),/* NumFormat),*/ //0
+                        ActorDef = entries[0], //IT0_ACTORDEF
+                        Name = entries[1] //NAME
+                    };
+                    GroundSpawn.Add(newGround);
+                }
             }
+        }
+
+        public string GetItemDescription(string ActorDef)
+        {//sample:  IT0_ACTORDEF
+            var lookupid = int.Parse(ActorDef.Remove(0, 2).Split('_')[0]);
+
+            for (var i = 0; i < GroundSpawn.Count; i++)
+            {
+                if (GroundSpawn[i].ID.Equals(lookupid))
+                {
+                    return GroundSpawn[i].Name;
+                }
+            }
+            return ActorDef;
         }
 
         //private void ReadGuildList(string filePath)
@@ -791,21 +800,6 @@ namespace myseq
         //    sr.Close();
         //    fs.Close();
         //}
-
-        public string GetItemDescription(string ActorDef)
-        {//sample:  IT0_ACTORDEF
-            var lookupid = int.Parse(ActorDef.Remove(0, 2).Split('_')[0]);
-
-            for (var i = 0; i < GroundSpawn.Count; i++)
-            {
-                if (GroundSpawn[i].ID.Equals(lookupid))
-                {
-                    return GroundSpawn[i].Name;
-                }
-            }
-            return ActorDef;
-        }
-
         //public string GetGuildDescription(string guildDef)
         //{
         //    // I know - ## NEEDS CLEANUP
@@ -830,11 +824,11 @@ namespace myseq
         {
             if (longname != "" && lines.Count > 0)
             {
-                maxx = minx = ((MapLine)lines[0]).Point(0).x;
+                maxx = minx = lines[0].Point(0).x;
 
-                maxy = miny = ((MapLine)lines[0]).Point(0).y;
+                maxy = miny = lines[0].Point(0).y;
 
-                maxz = minz = ((MapLine)lines[0]).Point(0).z;
+                maxz = minz = lines[0].Point(0).z;
 
                 foreach (MapLine mapLine in lines)
                 {
@@ -908,10 +902,10 @@ namespace myseq
             // Remove any that have been marked for deletion
             if (deletedItems.Count > 0)
             {
-                //if (Zoning || deletedItems.Count > 5)
-                //{
-                //    GroundItemList.listView.BeginUpdate();
-                //}
+                if (Zoning || deletedItems.Count > 5)
+                {
+                    GroundItemList.listView.BeginUpdate();
+                }
 
                 foreach (GroundItem gi in deletedItems)
                 {
@@ -922,16 +916,16 @@ namespace myseq
                     itemcollection.Remove(gi);
                 }
 
-                //if (Zoning || deletedItems.Count > 5)
-                //{
-                //    GroundItemList.listView.EndUpdate();
-                //}
+                if (Zoning || deletedItems.Count > 5)
+                {
+                    GroundItemList.listView.EndUpdate();
+                }
             }
             deletedItems.Clear();
 
             // Increment the remove timers on all the mobs
 
-            foreach (SPAWNINFO sp in mobsHashTable.Values)
+            foreach (Spawninfo sp in mobsHashTable.Values)
             {
                 if (sp.delFromList)
                 {
@@ -958,7 +952,7 @@ namespace myseq
                     SpawnList.listView.BeginUpdate();
                 }
 
-                foreach (SPAWNINFO sp in deletedItems)
+                foreach (Spawninfo sp in deletedItems)
                 {
                     SpawnList.listView.Items.Remove(sp.listitem);
 
@@ -967,7 +961,7 @@ namespace myseq
                     mobsHashTable.Remove(sp.SpawnID);
                 }
 
-                foreach (SPAWNINFO sp in delListItems)
+                foreach (Spawninfo sp in delListItems)
                 {
                     SpawnList.listView.Items.Remove(sp.listitem);
                 }
@@ -983,7 +977,7 @@ namespace myseq
             }
         }
 
-        public void ProcessGroundItems(SPAWNINFO si, Filters filters)//, ListViewPanel GroundItemList)
+        public void ProcessGroundItems(Spawninfo si, Filters filters)//, ListViewPanel GroundItemList)
         {
             try
             {
@@ -1136,7 +1130,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItems(): ", ex); }
         }
 
-        public void ProcessTarget(SPAWNINFO si)
+        public void ProcessTarget(Spawninfo si)
         {
             try
             {
@@ -1148,7 +1142,7 @@ namespace myseq
 
                     SpawnY = -1.0f;
 
-                    foreach (SPAWNINFO sp in mobsHashTable.Values)
+                    foreach (Spawninfo sp in mobsHashTable.Values)
                     {
                         if (sp.SpawnID == EQSelectedID)
                         {
@@ -1167,7 +1161,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessTarget(): ", ex); }
         }
 
-        public void ProcessWorld(SPAWNINFO si) => gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0);
+        public void ProcessWorld(Spawninfo si) => gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0);
 
         /*  yy/mm/dd/hh/min
          * gameYear = si.Race
@@ -1177,7 +1171,7 @@ namespace myseq
          * gameMin = si.Class
         */
 
-        public void ProcessSpawns(SPAWNINFO si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
+        public void ProcessSpawns(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
         {
             CorpseAlerts = Settings.Default.CorpseAlerts;
             if (si.Name.Contains("a_tainted_egg"))
@@ -1191,7 +1185,7 @@ namespace myseq
 
                 var found = false;
 
-                SPAWNINFO mob;
+                Spawninfo mob;
 
                 // Converted mob collection to a hashtable so we can do
 
@@ -1201,7 +1195,7 @@ namespace myseq
                 {
                     found = true;
 
-                    mob = (SPAWNINFO)mobsHashTable[si.SpawnID];
+                    mob = (Spawninfo)mobsHashTable[si.SpawnID];
 
                     mob.gone = 0;
 
@@ -1268,7 +1262,7 @@ namespace myseq
                             }
                             else if (mobsHashTable.ContainsKey(mob.OwnerID))
                             {
-                                SPAWNINFO owner = (SPAWNINFO)mobsHashTable[mob.OwnerID];
+                                Spawninfo owner = (Spawninfo)mobsHashTable[mob.OwnerID];
 
                                 if (owner.IsPlayer)
                                 {
@@ -1402,7 +1396,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawns(): ", ex); }
         }
 
-        private void MobLevelSetColor(SPAWNINFO si, ListViewPanel SpawnList, SPAWNINFO mob)
+        private void MobLevelSetColor(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
         {
             if (mob.Level != si.Level)
             {
@@ -1426,7 +1420,7 @@ namespace myseq
             }
         }
 
-        private void CheckBigMap(SPAWNINFO si, MapPane mapPane)
+        private void CheckBigMap(Spawninfo si, MapPane mapPane)
         {
             if (mapPane?.scale.Value == 100M && Settings.Default.AutoExpand)
             {
@@ -1452,7 +1446,7 @@ namespace myseq
             }
         }
 
-        private void HandleNPCs(SPAWNINFO si)
+        private void HandleNPCs(Spawninfo si)
         {
             if (!Settings.Default.ShowNPCs)
             {
@@ -1461,11 +1455,11 @@ namespace myseq
 
             if (si.OwnerID > 0)
             {
-                SPAWNINFO owner;
+                Spawninfo owner;
 
                 if (mobsHashTable.ContainsKey(si.OwnerID))
                 {
-                    owner = (SPAWNINFO)mobsHashTable[si.OwnerID];
+                    owner = (Spawninfo)mobsHashTable[si.OwnerID];
                     if (owner.IsPlayer)
                     {
                         si.isPet = true;
@@ -1529,7 +1523,7 @@ namespace myseq
             }
         }
 
-        private void HandleCorpses(SPAWNINFO si)
+        private void HandleCorpses(Spawninfo si)
         {
             si.isCorpse = true;
 
@@ -1566,7 +1560,7 @@ namespace myseq
             }
         }
 
-        private void AdjustMapForSpawns(SPAWNINFO si, MainForm f1, MapPane mapPane, SPAWNINFO mob)
+        private void AdjustMapForSpawns(Spawninfo si, MainForm f1, MapPane mapPane, Spawninfo mob)
         {
             CheckBigMap(si, mapPane);
 
@@ -1589,7 +1583,7 @@ namespace myseq
             mob.listitem.SubItems[16].Text = sd.ToString("#.000");
         }
 
-        private void UpdateMobTypes(SPAWNINFO si, ListViewPanel SpawnList, SPAWNINFO mob)
+        private void UpdateMobTypes(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
         {
             mob.Type = si.Type;
             mob.listitem.SubItems[8].Text = PrettyNames.GetSpawnType(si.Type);
@@ -1627,7 +1621,7 @@ namespace myseq
             }
         }
 
-        private void SetListColors(SPAWNINFO si, ListViewPanel SpawnList, SPAWNINFO mob)
+        private void SetListColors(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
         {
             mob.listitem.ForeColor = ConColors[si.Level].Color;
 
@@ -1650,7 +1644,7 @@ namespace myseq
             }
         }
 
-        private static bool UpdateHidden(SPAWNINFO si, bool listReAdd, SPAWNINFO mob)
+        private static bool UpdateHidden(Spawninfo si, bool listReAdd, Spawninfo mob)
         {
             if (mob.isCorpse)
             {
@@ -1723,7 +1717,7 @@ namespace myseq
             return listReAdd;
         }
 
-        private void IsSpawnInFilterLists(SPAWNINFO si, MainForm f1, ListViewPanel SpawnList, Filters filters)//, bool alert)
+        private void IsSpawnInFilterLists(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters)//, bool alert)
         {
             var mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
 
@@ -1852,7 +1846,7 @@ namespace myseq
                         Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
                         Settings.Default.BeepOnAlert, MatchFullTextA))
                 {
-                   mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
 
                     si.isAlert = true;
                 }
@@ -1899,9 +1893,8 @@ namespace myseq
             {
                 newSpawns.Add(item1);
             }
-
-
         }
+
         private string PrefixAffixLabel(string mname, string prefix)
         {
             if (PrefixStars)
@@ -1917,7 +1910,7 @@ namespace myseq
             return mname;
         }
 
-        private ListViewItem AddDetailsToList(SPAWNINFO si, ListViewPanel SpawnList, string mobnameWithInfo)
+        private ListViewItem AddDetailsToList(Spawninfo si, ListViewPanel SpawnList, string mobnameWithInfo)
         {
             ListViewItem item1 = new ListViewItem(mobnameWithInfo);
 
@@ -2003,9 +1996,6 @@ namespace myseq
                 }
             }
 
-            //if (alert)
-            //    item1.Font = Settings.Default.ListFont;
-
             si.gone = 0;
 
             si.refresh = rnd.Next(0, 10);
@@ -2014,10 +2004,10 @@ namespace myseq
             return item1;
         }
 
-        private float SpawnDistance(SPAWNINFO si)
+        private float SpawnDistance(Spawninfo si)
         => (float)Math.Sqrt(((si.X - gamerInfo.X) * (si.X - gamerInfo.X)) + ((si.Y - gamerInfo.Y) * (si.Y - gamerInfo.Y)) + ((si.Z - gamerInfo.Z) * (si.Z - gamerInfo.Z)));
 
-        private void NameChngOrDead(SPAWNINFO si, SPAWNINFO mob)
+        private void NameChngOrDead(Spawninfo si, Spawninfo mob)
         {
             var newname = RegexHelper.FixMobName(si.Name);
 
@@ -2046,7 +2036,7 @@ namespace myseq
             mob.Name = si.Name;
         }
 
-        private static void LookupBoxMatch(SPAWNINFO si, MainForm f1)
+        private static void LookupBoxMatch(Spawninfo si, MainForm f1)
         {
             si.isLookup = false;
             if (f1.toolStripLookupBox.Text.Length > 1
@@ -2085,13 +2075,13 @@ namespace myseq
             }
         }
 
-        private void OwnerFlag(SPAWNINFO si, ListViewItem item1)
+        private void OwnerFlag(Spawninfo si, ListViewItem item1)
         {
             if (si.OwnerID > 0)
             {
                 if (mobsHashTable.ContainsKey(si.OwnerID))
                 {
-                    SPAWNINFO owner = (SPAWNINFO)mobsHashTable[si.OwnerID];
+                    Spawninfo owner = (Spawninfo)mobsHashTable[si.OwnerID];
                     item1.SubItems.Add(RegexHelper.FixMobName(owner.Name));
                 }
                 else
@@ -2109,7 +2099,7 @@ namespace myseq
         {
             if (mobsHashTable != null)
             {
-                foreach (SPAWNINFO si in mobsHashTable.Values)
+                foreach (Spawninfo si in mobsHashTable.Values)
                 {
                     if (si.listitem != null)
                     {
@@ -2154,7 +2144,7 @@ namespace myseq
             }
         }
 
-        private bool FindMatches(ArrayList exps, string mobname, bool NoneOnMatch,
+        private bool FindMatches(List<string> exps, string mobname, bool NoneOnMatch,
              bool TalkOnMatch, string TalkDescr, bool PlayOnMatch, string AudioFile,
              bool BeepOnMatch, bool MatchFullText)
         {
@@ -2228,7 +2218,7 @@ namespace myseq
 
             sw.Write("Name\tLevel\t Class\tRace\tLastname\tType\tInvis\tRun\tSpeed\tSpawnID\tX\tY\tZ\tHeading");
 
-            foreach (SPAWNINFO si in mobsHashTable.Values)
+            foreach (Spawninfo si in mobsHashTable.Values)
             {
                 sw.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}",
                              si.Name,
@@ -2258,11 +2248,11 @@ namespace myseq
 
         public void SetSelectedTimer(float x, float y)
         {
-            SPAWNTIMER st = FindTimer(1.0f, x, y);
+            Spawntimer st = FindTimer(1.0f, x, y);
 
             if (st != null)
             {
-                SPAWNINFO sp = FindMobTimer(st.SpawnLoc);
+                Spawninfo sp = FindMobTimer(st.SpawnLoc);
 
                 selectedID = sp == null ? 99999 : sp.SpawnID;
 
@@ -2365,7 +2355,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItemList(): ", ex); }
         }
 
-        public float CalcRealHeading(SPAWNINFO sp) => sp.Heading >= 0 && sp.Heading < 512 ? sp.Heading / 512 * 360 : 0;
+        public float CalcRealHeading(Spawninfo sp) => sp.Heading >= 0 && sp.Heading < 512 ? sp.Heading / 512 * 360 : 0;
 
         public void LoadSpawnInfo()
         {
@@ -2399,7 +2389,7 @@ namespace myseq
         private int gLastconLevel = -1;
         private int gconLevel;
 
-        public void ProcessGamer(SPAWNINFO si, MainForm f1)//FrmMain f1)
+        public void ProcessGamer(Spawninfo si, MainForm f1)//FrmMain f1)
         {
             try
             {
@@ -2482,13 +2472,13 @@ namespace myseq
         {
             // Collect Mob Trails
 
-            foreach (SPAWNINFO sp in GetMobsReadonly().Values)
+            foreach (Spawninfo sp in GetMobsReadonly().Values)
             {
                 if (sp.Type == 1)
                 {
                     // Setup NPCs Trails
 
-                    //add point to mobtrails arraylist if not already there
+                    //add point to mobtrails list if not already there
 
                     MobTrailPoint work = new MobTrailPoint
                     {
@@ -2994,6 +2984,7 @@ namespace myseq
                 }
             }
         }
+
         public SolidBrush GetDistinctColor(SolidBrush curBrush)
         {
             curBrush.Color = GetDistinctColor(curBrush.Color, Settings.Default.BackColor);
@@ -3025,11 +3016,13 @@ namespace myseq
                 }
             }
         }
+
         public Pen GetDistinctColor(Pen curPen)
         {
             curPen.Color = GetDistinctColor(curPen.Color, Settings.Default.BackColor);
             return curPen;
         }
+
         public Color GetDistinctColor(Color curColor) => GetDistinctColor(curColor, Settings.Default.BackColor);
 
         private int GetColorDiff(Color foreColor, Color backColor)
@@ -3051,6 +3044,7 @@ namespace myseq
         }
 
         private Color GetInverseColor(Color foreColor) => Color.FromArgb((int)(192 - (foreColor.R * 0.75)), (int)(192 - (foreColor.G * 0.75)), (int)(192 - (foreColor.B * 0.75)));
+
         #endregion ColorOperations
     }
 }

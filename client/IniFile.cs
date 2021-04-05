@@ -1,12 +1,11 @@
-﻿
-using System.Text;
+﻿using System.Text;
 using myseq;
 
 namespace Structures
 {
     public class IniFile
     {
-        private string path;
+        private readonly string path;
 
         public IniFile(string INIPath)
         {

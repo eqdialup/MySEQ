@@ -16,11 +16,11 @@ namespace myseq
     public class MapCon : UserControl
     {
         // Events
-        public delegate void SelectPointHandler(SPAWNINFO playerinfo, double selectedX, double selectedY);
+        public delegate void SelectPointHandler(Spawninfo playerinfo, double selectedX, double selectedY);
 
         public event SelectPointHandler SelectPoint; // Fires when the user clicks the map (without a mob)
 
-        protected void OnSelectPoint(SPAWNINFO playerinfo, double selectedX, double selectedY) => SelectPoint?.Invoke(playerinfo, selectedX, selectedY);
+        protected void OnSelectPoint(Spawninfo playerinfo, double selectedX, double selectedY) => SelectPoint?.Invoke(playerinfo, selectedX, selectedY);
 
         private readonly System.ComponentModel.Container components;
 
@@ -586,7 +586,7 @@ namespace myseq
             MouseMapLoc(e, out var mousex, out var mousey);
 
             var delta = (float)(5.0 / m_ratio);
-            SPAWNINFO sp = eq.FindMobNoPetNoPlayerNoCorpse(delta, mousex, mousey);
+            Spawninfo sp = eq.FindMobNoPetNoPlayerNoCorpse(delta, mousex, mousey);
 
             if (sp?.Name.Length > 0)
             {
@@ -612,7 +612,7 @@ namespace myseq
                 else
                 {
                     f1.alertAddmobname = "";
-                    SPAWNTIMER st = eq.FindTimer(5.0f, mousex, mousey);
+                    Spawntimer st = eq.FindTimer(5.0f, mousex, mousey);
                     if (st != null)
                     {
                         foreach (var name in st.AllNames.Split(','))
@@ -720,11 +720,11 @@ namespace myseq
         {
             var delta = 5.0f / m_ratio;
 
-            SPAWNINFO sp = eq.FindMobNoPet(delta, x, y) ?? eq.FindMob(delta, x, y);
+            Spawninfo sp = eq.FindMobNoPet(delta, x, y) ?? eq.FindMob(delta, x, y);
 
             if (sp != null)
             {
-                SPAWNINFO st = eq.FindMobTimer(sp.SpawnLoc);
+                Spawninfo st = eq.FindMobTimer(sp.SpawnLoc);
 
                 if (st == null)
                 {
@@ -736,7 +736,7 @@ namespace myseq
                 else
                 {
                     eq.SetSelectedID(st.SpawnID);
-                    SPAWNTIMER spt = eq.FindTimer(1.0f, st.X, st.Y);
+                    Spawntimer spt = eq.FindTimer(1.0f, st.X, st.Y);
                     if (spt?.itmSpawnTimerList != null)
                     {
                         spt.itmSpawnTimerList.Selected = true;
@@ -804,7 +804,7 @@ namespace myseq
             MouseMapLoc(e, out var mousex, out var mousey);
             var delta = 5.0f / m_ratio;
 
-            SPAWNINFO sp = eq.FindMobNoPet(delta, mousex, mousey) ?? eq.FindMob(delta, mousex, mousey);
+            Spawninfo sp = eq.FindMobNoPet(delta, mousex, mousey) ?? eq.FindMob(delta, mousex, mousey);
 
             bool found;
             if (sp == null)
@@ -857,7 +857,7 @@ namespace myseq
             if (!found)
 
             {
-                SPAWNTIMER st = eq.mobsTimers.Find(delta, mousex, mousey);
+                Spawntimer st = eq.mobsTimers.Find(delta, mousex, mousey);
 
                 if (st != null)
 
@@ -935,7 +935,7 @@ namespace myseq
             }
             else if (Settings.Default.FollowOption == FollowOption.Target)
             {
-                SPAWNINFO siTarget = eq.GetSelectedMob();
+                Spawninfo siTarget = eq.GetSelectedMob();
 
                 if (siTarget != null)
                 {
@@ -995,6 +995,7 @@ namespace myseq
                     // if we have blank space at the top or botton repostion the center point appropriately
                     reposCenter(ScreenMinX, ScreenMaxX);
                 }
+                LogLib.WriteLine("Readjust Done");
             }
             x_adjust = m_panOffsetX + m_screenCenterX + (float)(m_mapCenterX * m_ratio);
             y_adjust = m_panOffsetY + m_screenCenterY + (float)(m_mapCenterY * m_ratio);
@@ -1013,6 +1014,7 @@ namespace myseq
         }
 
         public float CalcScreenCoordX(float mapCoordinateX) => x_adjust - (float)(mapCoordinateX * m_ratio);
+
         // Formula Should be
         // Screen X =CenterScreenX + ((mapCoordinateX - MapCenterX) * m_ratio)
 
@@ -1140,7 +1142,7 @@ namespace myseq
         //    catch (Exception ex) { LogLib.WriteLine($"error with drawarc({x1}, {y1}, {width}, {height}, {startangle}, {sweepangle}): ", ex); }
         //}
 
-        private string MobInfo(SPAWNINFO si, bool SetColor, bool ChangeSize)
+        private string MobInfo(Spawninfo si, bool SetColor, bool ChangeSize)
         {
             try
             {
@@ -1303,7 +1305,7 @@ namespace myseq
             }
         }
 
-        private StringBuilder SpawnInfoWindow(SPAWNINFO si)
+        private StringBuilder SpawnInfoWindow(Spawninfo si)
         {
             var sd = SpawnDistance(si);
 
@@ -1405,7 +1407,7 @@ namespace myseq
             return mobInfo;
         }
 
-        private float SpawnDistance(SPAWNINFO si)
+        private float SpawnDistance(Spawninfo si)
         {
             return (float)Math.Sqrt(((si.X - eq.gamerInfo.X) * (si.X - eq.gamerInfo.X)) +
 
@@ -1414,7 +1416,7 @@ namespace myseq
                                 ((si.Z - eq.gamerInfo.Z) * (si.Z - eq.gamerInfo.Z)));
         }
 
-        private string TimerInfo(SPAWNTIMER st)
+        private string TimerInfo(Spawntimer st)
 
         {
             var height_adder = 20;
@@ -1545,7 +1547,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error with TimerInfo(): ", ex); return ""; }
         }
 
-        private static int Spawnformbuild(SPAWNTIMER st, int height_adder, out StringBuilder spawnTimer, out string names_to_add)
+        private static int Spawnformbuild(Spawntimer st, int height_adder, out StringBuilder spawnTimer, out string names_to_add)
         {
             spawnTimer = new StringBuilder();
             spawnTimer.AppendFormat("Spawn Name: {0}\n", st.LastSpawnName);
@@ -1587,7 +1589,7 @@ namespace myseq
             return height_adder;
         }
 
-        private static string SpawnForm(SPAWNTIMER st, StringBuilder spawnTimer, string names_to_add)
+        private static string SpawnForm(Spawntimer st, StringBuilder spawnTimer, string names_to_add)
         {
             if (names_to_add.Length > 0)
             {
@@ -1849,7 +1851,7 @@ namespace myseq
 
             // Draw Spawns
 
-            foreach (SPAWNINFO sp in eq.GetMobsReadonly().Values)
+            foreach (Spawninfo sp in eq.GetMobsReadonly().Values)
 
             {
                 GetSpawnLoc(out var x, out var y, sp);
@@ -1906,7 +1908,7 @@ namespace myseq
             }
         }
 
-        private void GetSpawnLoc(out float x, out float y, SPAWNINFO sp)
+        private void GetSpawnLoc(out float x, out float y, Spawninfo sp)
         {
             x = (float)Math.Round(CalcScreenCoordX(sp.X), 0);
 
@@ -1938,7 +1940,7 @@ namespace myseq
 
             // Draw Spawns
 
-            foreach (SPAWNINFO sp in eq.GetMobsReadonly().Values)
+            foreach (Spawninfo sp in eq.GetMobsReadonly().Values)
             {
                 GetSpawnLoc(out var x, out var y, sp);
 
@@ -2049,7 +2051,7 @@ namespace myseq
             lookup_set = false;
         }
 
-        private void DrawNPCs(float x, float y, /*string gName,*/ bool DrawDirection, SPAWNINFO sp)
+        private void DrawNPCs(float x, float y, /*string gName,*/ bool DrawDirection, Spawninfo sp)
         {
             sp.filtered = false;
 
@@ -2104,7 +2106,7 @@ namespace myseq
             }
         }
 
-        private void DrawOtherPlayers(DrawOptions DrawOpts, float x, float y, /*string gName,*/ SPAWNINFO sp)
+        private void DrawOtherPlayers(DrawOptions DrawOpts, float x, float y, /*string gName,*/ Spawninfo sp)
         {
             sp.filtered = false;
             if (eq.ConColors[sp.Level] != null)
@@ -2185,7 +2187,7 @@ namespace myseq
             }
         }
 
-        private void ProxAlert(float pX, float pY, float pZ, bool NPCDepthFilter, SPAWNINFO sp)
+        private void ProxAlert(float pX, float pY, float pZ, bool NPCDepthFilter, Spawninfo sp)
         {
             if (sp.alertMob && (sp.Type != 2))
             {
@@ -2280,7 +2282,8 @@ namespace myseq
                 SystemSounds.Question.Play();
             }
         }
-        private void MarkSpecial(float pZ, bool NPCDepthFilter, float x, float y, bool ShowRings, SPAWNINFO sp)
+
+        private void MarkSpecial(float pZ, bool NPCDepthFilter, float x, float y, bool ShowRings, Spawninfo sp)
         {
             if (ShowRings && (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos))))
             {
@@ -2313,7 +2316,7 @@ namespace myseq
             }
         }
 
-        private void DrawFlashes(float pZ, bool NPCDepthFilter, float x, float y, SPAWNINFO sp)
+        private void DrawFlashes(float pZ, bool NPCDepthFilter, float x, float y, Spawninfo sp)
         {
             if (flash)
             {
@@ -2353,7 +2356,7 @@ namespace myseq
             }
         }
 
-        private void DrawRings(float x, float y, SPAWNINFO sp)
+        private void DrawRings(float x, float y, Spawninfo sp)
         {
             //            string gName = eq.GuildNumToString(sp.Guild);
             if (sp.isLookup && (!sp.isCorpse || Settings.Default.CorpseAlerts))
@@ -2749,7 +2752,7 @@ namespace myseq
 
                 Pen pen = new Pen(new SolidBrush(Color.LightGray));
 
-                foreach (SPAWNTIMER st in eq.mobsTimers.GetRespawned().Values)
+                foreach (Spawntimer st in eq.mobsTimers.GetRespawned().Values)
                 {
                     if (st.zone != eq.shortname)
                     {
@@ -2976,7 +2979,7 @@ namespace myseq
 
         #region DrawDirectionLines
 
-        public void DrawDirectionLines(SPAWNINFO sp, float x, float y)
+        public void DrawDirectionLines(Spawninfo sp, float x, float y)
         {
             try
 
@@ -3141,6 +3144,7 @@ namespace myseq
 
             ReAdjust();
         }
+
         public void SetUpdateSteps()
         {
             var update_steps = (1000 / Settings.Default.UpdateDelay) + 1;
@@ -3158,7 +3162,6 @@ namespace myseq
             UpdateSteps = update_steps;
             UpdateTicks = update_ticks;
         }
-
 
         public void Tick()
         {

@@ -11,12 +11,15 @@ namespace Structures
         Warning = 2,        // Used for les
         Info = 3,           // Used for information ("Loaded map XYZ")
         Debug = 4,          // Used for debug stuff, not too often though
+
         //
         Default = Error,        // Used when WriteLine is called without a level
+
         DefaultMaxLevel = Error // Starting log level
     };
 
     #region LogLib class
+
     public static class LogLib
     {
         public static LogLevel maxLogLevel;
@@ -40,9 +43,11 @@ namespace Structures
         {
             if (logLevel <= maxLogLevel && logLevel > LogLevel.Off)
             {
-                var logpath = Settings.Default.LogDir;
-                var logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";
+                var logpath = string.IsNullOrEmpty(Settings.Default.LogDir)
+                    ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs")
+                    : Settings.Default.LogDir;
 
+                var logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";
                 Directory.CreateDirectory(logpath);
 
                 FileStream fs = new FileStream(Path.Combine(logpath, logfile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
@@ -54,5 +59,6 @@ namespace Structures
             }
         }
     }
-    #endregion
+
+    #endregion LogLib class
 }

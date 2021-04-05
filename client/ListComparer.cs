@@ -5,19 +5,23 @@ namespace myseq
 {
     public class ListComparer : IComparer
     {
-        private int col;
+        private readonly int col;
+
         public ListComparer()
         {
             col = 0;
         }
+
         public ListComparer(int column)
         {
             col = column;
         }
+
         public int Compare(object x, object y)
         {
             return string.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
         }
+
         //public int Compare(object x, object y)
 
         //{
@@ -41,7 +45,7 @@ namespace myseq
         //        if (ia < ib) res = -1;
         //        else res = ia > ib ? 1 : 0;
         //    }
-        //    else if ((Column == 2) ||   // Class 
+        //    else if ((Column == 2) ||   // Class
 
         //        (Column == 3) ||    // Primary
 

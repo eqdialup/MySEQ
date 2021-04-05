@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -14,6 +14,8 @@ namespace myseq
     public partial class MainForm : Form
     {
         private readonly string Version = Application.ProductVersion;
+
+        private string myPath = AppDomain.CurrentDomain.BaseDirectory;
 
         private string BaseTitle = "MySEQ Open";
 
@@ -129,8 +131,7 @@ namespace myseq
 
             CreateSpawnlistView();
             toolStripVersion.Text = Version;
-            ReAdjust();
-
+            mapCon?.ReAdjust();
             eq.InitLookups();
 
             timPackets.Interval = Settings.Default.UpdateDelay;
@@ -150,6 +151,7 @@ namespace myseq
                 StartListening();
             }
         }
+
         private void SetFontandStyle()
         {
             SpawnList.listView.Font = new Font(Settings.Default.ListFont.FontFamily, Settings.Default.ListFont.Size, Settings.Default.ListFont.Style);
@@ -168,11 +170,7 @@ namespace myseq
         private void LoadPositionsFromConfigFile()
         {
             LogLib.WriteLine("Loading Position.Xml");
-
             var configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "positions.xml");
-
-            var myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
-            // This in the application data folder.
             var newConfigFile = Path.Combine(myPath, "positions.xml");
 
             if (File.Exists(configFile))
@@ -186,17 +184,7 @@ namespace myseq
                     LogLib.WriteLine("Error loading config from positions.xml: ", ex);
 
                     // Re-Set up initial windows - might have bad or incompatible positions file
-                    mapPane.Show(dockPanel, DockState.Document);
-
-                    SpawnList.Show(dockPanel, DockState.DockLeft);
-
-                    SpawnTimerList.Show(dockPanel, DockState.DockTop);
-
-                    GroundItemList.Show(dockPanel, DockState.DockBottom);
-
-                    SpawnTimerList.DockState = DockState.DockLeft;
-
-                    GroundItemList.DockState = DockState.DockLeft;
+                    defaultstates();
                 }
             }
             else if (File.Exists(newConfigFile))
@@ -210,22 +198,18 @@ namespace myseq
                     LogLib.WriteLine("Error loading config from AppData positions.xml: ", ex);
 
                     // Re-Set up initial windows - might have bad or incompatible positions file
-                    mapPane.Show(dockPanel, DockState.Document);
-
-                    SpawnList.Show(dockPanel, DockState.DockLeft);
-
-                    SpawnTimerList.Show(dockPanel, DockState.DockTop);
-
-                    GroundItemList.Show(dockPanel, DockState.DockBottom);
-
-                    SpawnTimerList.DockState = DockState.DockLeft;
-
-                    GroundItemList.DockState = DockState.DockLeft;
+                    defaultstates();
                 }
             }
             else
             {
                 // Set up initial windows, when no previous window layout exists
+                defaultstates();
+            }
+
+            void defaultstates()
+            {
+                LogLib.WriteLine("Setting Default states");
                 mapPane.Show(dockPanel, DockState.Document);
 
                 SpawnList.Show(dockPanel, DockState.DockLeft);
@@ -315,9 +299,7 @@ namespace myseq
         {
             if (Settings.Default.SaveOnExit)
             {
-                //                string mypath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
                 SavePrefs();
-                //                SmtpSettings.Default.Save(myseqFile);
             }
         }
 
@@ -659,8 +641,6 @@ namespace myseq
 
             mnuAutoConnect.Checked = Settings.Default.AutoConnect;
 
-//            eq.LoadSpawnInfo();
-
             // SpawnList
 
             SpawnList.listView.BackColor = Settings.Default.ListBackColor;
@@ -737,7 +717,7 @@ namespace myseq
         private void GroundItemList_VisibleChanged(object sender, EventArgs e)
             => Settings.Default.ShowGroundItemList = mnuShowGroundItemList.Checked = GroundItemList.Visible;
 
-        public void ShowCharsInList(SPAWNINFO si, ProcessInfo PI)
+        public void ShowCharsInList(Spawninfo si, ProcessInfo PI)
         {
             if (comm.colProcesses.Count == 1)
             {
@@ -869,7 +849,7 @@ namespace myseq
 
         #region ProccessMap
 
-        public void ProcessMap(SPAWNINFO si)
+        public void ProcessMap(Spawninfo si)
         {
             mapnameWithLabels = "";
 
@@ -932,7 +912,6 @@ namespace myseq
                     if (curZone.Length > 0 && curZone != "CLZ" && curZone != "DEFAULT")
                     {
                         // Try loading depth filter settings from file
-                        var myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
 
                         var ConfigFile = Path.Combine(myPath, "config.ini");
                         if (File.Exists(ConfigFile))
@@ -1031,7 +1010,7 @@ namespace myseq
 
                 eq.longname = mapPane.TabText;
 
-                filters.ClearArrays();
+                filters.ClearLists();
 
                 filters.LoadAlerts(mapname);
 
@@ -1225,8 +1204,6 @@ namespace myseq
 
             ServerSelection();
 
-//            eq?.LoadSpawnInfo();
-
             SetTitle();
 
             SavePrefs();
@@ -1271,7 +1248,6 @@ namespace myseq
         }
 
         private void MnuDepthFilter_Click(object sender, EventArgs e)
-
         {
             ToggleDepthFilter();
             if (curZone.Length > 0 && !string.Equals(curZone, "CLZ", StringComparison.OrdinalIgnoreCase) && !string.Equals(curZone, "DEFAULT", StringComparison.OrdinalIgnoreCase))
@@ -1279,12 +1255,7 @@ namespace myseq
                 try
                 {
                     // Save depth filter settings to file
-                    var myPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
-                    Directory.CreateDirectory(myPath);
-
-                    var ConfigFile = Path.Combine(myPath, "config.ini");
-
-                    IniFile ConIni = new IniFile(ConfigFile);
+                    IniFile ConIni = new IniFile(Path.Combine(myPath, "config.ini"));
                     if (Settings.Default.DepthFilter)
                     {
                         ConIni.WriteValue("Zones", curZone, "1");
@@ -1480,7 +1451,7 @@ namespace myseq
         {
             if (bIsRunning)
             {
-                filters.ClearArrays();
+                filters.ClearLists();
 
                 filters.LoadAlerts(curZone);
 
@@ -1859,6 +1830,7 @@ namespace myseq
                 comm.SwitchCharacter(1);
             }
         }
+
         private void MnuChar2_Click(object sender, EventArgs e)
         {
             if (!mnuChar2.Checked && comm.CanSwitchChars())
@@ -1866,6 +1838,7 @@ namespace myseq
                 comm.SwitchCharacter(2);
             }
         }
+
         private void MnuChar3_Click(object sender, EventArgs e)
         {
             if (!mnuChar3.Checked && comm.CanSwitchChars())
@@ -1873,6 +1846,7 @@ namespace myseq
                 comm.SwitchCharacter(3);
             }
         }
+
         private void MnuChar4_Click(object sender, EventArgs e)
         {
             if (!mnuChar4.Checked && comm.CanSwitchChars())
@@ -1880,6 +1854,7 @@ namespace myseq
                 comm.SwitchCharacter(4);
             }
         }
+
         private void MnuChar5_Click(object sender, EventArgs e)
         {
             if (!mnuChar5.Checked && comm.CanSwitchChars())
@@ -1887,6 +1862,7 @@ namespace myseq
                 comm.SwitchCharacter(5);
             }
         }
+
         private void MnuChar6_Click(object sender, EventArgs e)
         {
             if (!mnuChar6.Checked && comm.CanSwitchChars())
@@ -1894,6 +1870,7 @@ namespace myseq
                 comm.SwitchCharacter(6);
             }
         }
+
         private void MnuChar7_Click(object sender, EventArgs e)
         {
             if (!mnuChar7.Checked && comm.CanSwitchChars())
@@ -1901,6 +1878,7 @@ namespace myseq
                 comm.SwitchCharacter(7);
             }
         }
+
         private void MnuChar8_Click(object sender, EventArgs e)
         {
             if (!mnuChar8.Checked && comm.CanSwitchChars())
@@ -1908,6 +1886,7 @@ namespace myseq
                 comm.SwitchCharacter(8);
             }
         }
+
         private void MnuChar9_Click(object sender, EventArgs e)
         {
             if (!mnuChar9.Checked && comm.CanSwitchChars())
@@ -1915,6 +1894,7 @@ namespace myseq
                 comm.SwitchCharacter(9);
             }
         }
+
         private void MnuChar10_Click(object sender, EventArgs e)
         {
             if (!mnuChar10.Checked && comm.CanSwitchChars())
@@ -1922,6 +1902,7 @@ namespace myseq
                 comm.SwitchCharacter(10);
             }
         }
+
         private void MnuChar11_Click(object sender, EventArgs e)
         {
             if (!mnuChar11.Checked && comm.CanSwitchChars())
@@ -1929,6 +1910,7 @@ namespace myseq
                 comm.SwitchCharacter(11);
             }
         }
+
         private void MnuChar12_Click(object sender, EventArgs e)
         {
             if (!mnuChar12.Checked && comm.CanSwitchChars())
@@ -1948,7 +1930,7 @@ namespace myseq
 
         public void ReloadAlertFiles()
         {
-            filters.ClearArrays();
+            filters.ClearLists();
 
             filters.LoadAlerts(curZone);
 
@@ -1983,8 +1965,6 @@ namespace myseq
 
                 mapCon.drawFont1 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 0.9f, Settings.Default.MapLabel.Style);
                 mapCon.drawFont3 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 1.1f, Settings.Default.MapLabel.Style);
-
-                //map.ClearMap();
             }
         }
 
@@ -2464,7 +2444,7 @@ namespace myseq
             }
         }
 
-        private void AddToFilter(ArrayList filter, string mob)
+        private void AddToFilter(List<string> filter, string mob)
         {
             filters.AddToAlerts(filter, mob);
 
@@ -2928,15 +2908,12 @@ namespace myseq
         private void AddMapTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // add map text, to where the player is currently located
-            if (eq.longname.Length > 0)
+            if (eq.longname.Length > 0 && eq.gamerInfo?.Name.Length > 0)
             {
-                if (eq.gamerInfo?.Name.Length > 0)
-                {
-                    alertX = eq.gamerInfo.X;
-                    alertY = eq.gamerInfo.Y;
-                    alertZ = eq.gamerInfo.Z;
-                    AddMapText("Text to Add");
-                }
+                alertX = eq.gamerInfo.X;
+                alertY = eq.gamerInfo.Y;
+                alertZ = eq.gamerInfo.Z;
+                AddMapText("Text to Add");
             }
         }
 
@@ -3130,6 +3107,7 @@ namespace myseq
                 e.Handled = true;
             }
         }
+
         private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
@@ -3149,6 +3127,7 @@ namespace myseq
                 e.Handled = true;
             }
         }
+
         private void ToolStripTextBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
@@ -3168,6 +3147,7 @@ namespace myseq
                 e.Handled = true;
             }
         }
+
         private void ToolStripTextBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
@@ -3187,6 +3167,7 @@ namespace myseq
                 e.Handled = true;
             }
         }
+
         private void ToolStripTextBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
@@ -3206,6 +3187,7 @@ namespace myseq
                 e.Handled = true;
             }
         }
+
         private void ToolStripLookupBox_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox.Text == "Mob Search")
@@ -3214,6 +3196,7 @@ namespace myseq
                 toolStripLookupBox.ForeColor = SystemColors.WindowText;
             }
         }
+
         private void ToolStripLookupBox1_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox1.Text == "Mob Search")
@@ -3222,6 +3205,7 @@ namespace myseq
                 toolStripLookupBox1.ForeColor = SystemColors.WindowText;
             }
         }
+
         private void ToolStripLookupBox2_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox2.Text == "Mob Search")
@@ -3230,6 +3214,7 @@ namespace myseq
                 toolStripLookupBox2.ForeColor = SystemColors.WindowText;
             }
         }
+
         private void ToolStripLookupBox3_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox3.Text == "Mob Search")
@@ -3238,6 +3223,7 @@ namespace myseq
                 toolStripLookupBox3.ForeColor = SystemColors.WindowText;
             }
         }
+
         private void ToolStripLookupBox4_Click(object sender, EventArgs e)
         {
             if (toolStripLookupBox4.Text == "Mob Search")
@@ -3246,6 +3232,7 @@ namespace myseq
                 toolStripLookupBox4.ForeColor = SystemColors.WindowText;
             }
         }
+
         private void ToolStripLookupBox_Leave(object sender, EventArgs e)
         {
             if (toolStripLookupBox.Text.Length > 0 && toolStripLookupBox.Text != "Mob Search")
@@ -3259,6 +3246,7 @@ namespace myseq
                 toolStripLookupBox.Text = "Mob Search";
             }
         }
+
         private void ToolStripLookupBox1_Leave(object sender, EventArgs e)
         {
             if (toolStripLookupBox1.Text.Length > 0 && toolStripLookupBox1.Text != "Mob Search")
@@ -3272,6 +3260,7 @@ namespace myseq
                 toolStripLookupBox1.Text = "Mob Search";
             }
         }
+
         private void ToolStripLookupBox2_Leave(object sender, EventArgs e)
         {
             if (toolStripLookupBox2.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
@@ -3285,6 +3274,7 @@ namespace myseq
                 toolStripLookupBox2.Text = "Mob Search";
             }
         }
+
         private void ToolStripLookupBox3_Leave(object sender, EventArgs e)
         {
             if (toolStripLookupBox3.Text.Length > 0 && toolStripLookupBox3.Text != "Mob Search")
@@ -3298,6 +3288,7 @@ namespace myseq
                 toolStripLookupBox3.Text = "Mob Search";
             }
         }
+
         private void ToolStripLookupBox4_Leave(object sender, EventArgs e)
         {
             if (toolStripLookupBox4.Text.Length > 0 && toolStripLookupBox4.Text != "Mob Search")
@@ -3311,6 +3302,7 @@ namespace myseq
                 toolStripLookupBox4.Text = "Mob Search";
             }
         }
+
         #endregion lookupbox
 
         private void MnuFileMain_DropDownOpening(object sender, EventArgs e) => VisChar();
@@ -3433,7 +3425,6 @@ namespace myseq
             Settings.Default.ThinSpawnList = !Settings.Default.ThinSpawnList;
             thinSpawnlistToolStripMenuItem.Checked = Settings.Default.ThinSpawnList;
             // Need to build more on this to actually make a thin spawnlist
-
         }
     }
 }

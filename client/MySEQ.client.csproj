@@ -45,6 +45,8 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -123,7 +125,6 @@
     <Compile Include="ListComparer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ColorConverter.cs" />
     <Compile Include="EQCommunications.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -199,8 +200,8 @@
     <Compile Include="SafeNativeMethods.cs" />
     <Compile Include="SAudio.cs" />
     <Compile Include="SmtpSettings.cs" />
-    <Compile Include="SPAWNINFO.cs" />
-    <Compile Include="SPAWNTIMER.cs" />
+    <Compile Include="Spawninfo.cs" />
+    <Compile Include="Spawntimer.cs" />
     <Compile Include="Structures.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -276,6 +277,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -284,7 +290,7 @@
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0</ProductName>
-      <Install>true</Install>
+      <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>

@@ -32,9 +32,9 @@ namespace myseq
 
         // Used when the mouse is hovered over a timer (for the detail display)
 
-        public SPAWNTIMER Find(float delta, float x, float y)
+        public Spawntimer Find(float delta, float x, float y)
         {
-            foreach (SPAWNTIMER st in mobsTimer2.Values)
+            foreach (Spawntimer st in mobsTimer2.Values)
             {
                 var stXdelta = (st.X < x + delta) && (st.X > x - delta);
                 var stY_delta = (st.Y < y + delta) && (st.Y > y - delta);
@@ -76,7 +76,7 @@ namespace myseq
 
             ArrayList delTimerItems = new ArrayList();
 
-            foreach (SPAWNTIMER st in mobsTimer2.Values)
+            foreach (Spawntimer st in mobsTimer2.Values)
             {
                 if (!st.sticky)
                 {
@@ -84,7 +84,7 @@ namespace myseq
                 }
             }
 
-            foreach (SPAWNTIMER sp in delTimerItems)
+            foreach (Spawntimer sp in delTimerItems)
             {
                 mobsTimer2.Remove(sp.ZoneSpawnLoc);
             }
@@ -119,7 +119,7 @@ namespace myseq
 
         // Add a new spawn, or do a re-spawn
 
-        public void Spawn(SPAWNINFO si)
+        public void Spawn(Spawninfo si)
         {
             try
 
@@ -147,7 +147,7 @@ namespace myseq
                 {
                     // First spawn ever
 
-                    SPAWNTIMER st = new SPAWNTIMER(si, DateTime.Now)
+                    Spawntimer st = new Spawntimer(si, DateTime.Now)
                     {
                         zone = mapName
                     };
@@ -173,13 +173,13 @@ namespace myseq
 
                     LogSpawns($"[SPAWN] Loc: {si.SpawnLoc} Name: {si.Name}");
 
-                    SPAWNTIMER st = (SPAWNTIMER)mobsTimer[si.ZoneSpawnLoc];
+                    Spawntimer st = (Spawntimer)mobsTimer[si.ZoneSpawnLoc];
 
-                    SPAWNTIMER st2 = null;
+                    Spawntimer st2 = null;
 
                     if (mobsTimer2.ContainsKey(si.ZoneSpawnLoc))
                     {
-                        st2 = (SPAWNTIMER)mobsTimer2[si.ZoneSpawnLoc];
+                        st2 = (Spawntimer)mobsTimer2[si.ZoneSpawnLoc];
                     }
 
                     var log = "";
@@ -234,7 +234,7 @@ namespace myseq
 
         // We're pretty positive that the mob has been processed before, here.
         // This updates KillTime and NextSpawn.
-        public void Kill(SPAWNINFO mob)
+        public void Kill(Spawninfo mob)
 
         {
             try
@@ -246,14 +246,14 @@ namespace myseq
 
                 if (mobsTimer.ContainsKey(mob.ZoneSpawnLoc))
                 {
-                    SPAWNTIMER stold = (SPAWNTIMER)mobsTimer[mob.ZoneSpawnLoc];
+                    Spawntimer stold = (Spawntimer)mobsTimer[mob.ZoneSpawnLoc];
 
                     var log = stold.Kill(DateTime.Now);
 
                     // update mobsTimer2 also with kill info
                     if (mobsTimer2.ContainsKey(stold.ZoneSpawnLoc))
                     {
-                        SPAWNTIMER st2 = (SPAWNTIMER)mobsTimer2[stold.ZoneSpawnLoc];
+                        Spawntimer st2 = (Spawntimer)mobsTimer2[stold.ZoneSpawnLoc];
 
                         st2.KillTimeDT = stold.KillTimeDT;
                         st2.KillTimeStr = stold.KillTimeStr;
@@ -282,7 +282,7 @@ namespace myseq
             try
 
             {
-                foreach (SPAWNTIMER st in mobsTimer2.Values)
+                foreach (Spawntimer st in mobsTimer2.Values)
 
                 {
                     ListViewItem itmSpawnTimerList = st.GetListItem();
@@ -380,7 +380,7 @@ namespace myseq
                     var count = 0;
                     try
                     {
-                        SPAWNTIMER st = new SPAWNTIMER(line)
+                        Spawntimer st = new Spawntimer(line)
                         {
                             zone = mapName.ToLower()
                         };
@@ -394,7 +394,7 @@ namespace myseq
                         {
                             // We already know about this mob. Copy some of the information.
 
-                            SPAWNTIMER stold = (SPAWNTIMER)mobsTimer[st.ZoneSpawnLoc];
+                            Spawntimer stold = (Spawntimer)mobsTimer[st.ZoneSpawnLoc];
 
                             // check if we add names in the merge.  If so, make sure we save.
                             var startlen = stold.AllNames.Length;
@@ -493,7 +493,7 @@ namespace myseq
                 {
                     var count = 0;
 
-                    foreach (SPAWNTIMER st in mobsTimer2.Values)
+                    foreach (Spawntimer st in mobsTimer2.Values)
 
                     {
                         if (st.SpawnTimer > 10 && (string.Compare(st.zone, mapName, true) == 0))
@@ -516,7 +516,7 @@ namespace myseq
 
                         StreamWriter sw = new StreamWriter(File.Open(timerfile, FileMode.Create));
 
-                        foreach (SPAWNTIMER st in mobsTimer2.Values)
+                        foreach (Spawntimer st in mobsTimer2.Values)
 
                         {
                             if (st.SpawnTimer > 10 && (string.Compare(st.zone, mapName, true) == 0))

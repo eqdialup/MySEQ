@@ -1,11 +1,9 @@
 ﻿namespace Structures
-
 {
-    public partial class SPAWNINFO
+    public partial class Spawninfo
     {
         public enum PacketType
         {
-
             Spawn = 0,
 
             Target = 1,
@@ -21,8 +19,6 @@
             World = 8,
 
             Player = 253
-
         }
     }
 }
-

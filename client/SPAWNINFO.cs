@@ -7,10 +7,11 @@ namespace Structures
 
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-
-    public partial class SPAWNINFO
+    public partial class Spawninfo
     {
-        public SPAWNINFO() { }
+        public Spawninfo()
+        {
+        }
 
         private string BytesToString(byte[] b, int start, int maxlen)
         {
@@ -149,4 +150,3 @@ namespace Structures
         public bool IsPlayer => m_isPlayer;
     }
 }
-

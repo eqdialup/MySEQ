@@ -2013,7 +2013,7 @@ namespace myseq
         {
             if (chkSaveOnExit.Checked)  // This checkbox actually DO something now.
             {
-                Settings.Default.Save();//SaveSettings();
+                Settings.Default.Save();
             }
 
             Directory.CreateDirectory(txtMapDir.Text);
@@ -2068,7 +2068,6 @@ namespace myseq
         }
 
         private void CmdRangeCircleColor_Click(object sender, EventArgs e)
-
         {
             colorOptionPicker.Color = picRangeCircleColor.BackColor;
 
@@ -2082,67 +2081,43 @@ namespace myseq
         }
 
         private void CmdMapDirBrowse_Click(object sender, EventArgs e)
-
         {
-            fldrBrowser.Description = "Map Directory";
-
-            fldrBrowser.SelectedPath = Settings.Default.MapDir;
-
-            fldrBrowser.ShowDialog();
-
-            if (fldrBrowser.SelectedPath.Trim() != "")
-            {
-                txtMapDir.Text = fldrBrowser.SelectedPath;
-            }
+            FolderBrowser("Map Directory", Settings.Default.MapDir, out string text);
+            txtMapDir.Text = text;
+            Settings.Default.MapDir = txtMapDir.Text;
         }
 
         private void CmdCfgDirBrowse_Click(object sender, EventArgs e)
-
         {
-            fldrBrowser.Description = "Config Directory";
-
-            fldrBrowser.SelectedPath = Settings.Default.CfgDir;
-
-            fldrBrowser.ShowDialog();
-
-            if (fldrBrowser.SelectedPath.Trim() != "")
-            {
-                txtCfgDir.Text = fldrBrowser.SelectedPath;
-            }
+            FolderBrowser("Config Directory", Settings.Default.CfgDir, out string text);
+            txtCfgDir.Text = text;
+            Settings.Default.CfgDir = txtCfgDir.Text;
         }
 
         private void CmdFilterDirBrowse_Click(object sender, EventArgs e)
-
         {
-            fldrBrowser.Description = "Filter Directory";
-
-            fldrBrowser.SelectedPath = Settings.Default.FilterDir;
-
-            fldrBrowser.ShowDialog();
-
-            if (fldrBrowser.SelectedPath.Trim() != "")
-            {
-                txtFilterDir.Text = fldrBrowser.SelectedPath;
-            }
+            FolderBrowser("Filter Directory", Settings.Default.FilterDir, out string text);
+            txtFilterDir.Text = text;
+            Settings.Default.FilterDir = txtFilterDir.Text;
         }
 
         private void CmdLogDir_Click(object sender, EventArgs e)
 
         {
-            fldrBrowser.Description = "Log Directory";
+            FolderBrowser("Log Directory", Settings.Default.LogDir, out string text );
+            txtLogDir.Text = text;
+            Settings.Default.LogDir = txtLogDir.Text;
+        }
 
-            fldrBrowser.SelectedPath = Settings.Default.LogDir;
-
-            fldrBrowser.ShowDialog();
-
-            if (fldrBrowser.SelectedPath.Trim() != "")
-            {
-                txtLogDir.Text = fldrBrowser.SelectedPath;
-            }
+        private string FolderBrowser(string desc, string sPath, out string text)
+        {
+            text = sPath;
+            fldrBrowser.Description = desc;
+            fldrBrowser.SelectedPath = sPath;
+            return fldrBrowser.ShowDialog() == DialogResult.OK ? (text = fldrBrowser.SelectedPath) : null;
         }
 
         private void CmdSpawnTimers_Click(object sender, EventArgs e)
-
         {
             fldrBrowser.Description = "Timers Directory";
 
@@ -2152,6 +2127,7 @@ namespace myseq
 
             if (fldrBrowser.SelectedPath.Trim() != "")
             {
+                Settings.Default.TimerDir = fldrBrowser.SelectedPath;
                 txtTimerDir.Text = fldrBrowser.SelectedPath;
             }
         }

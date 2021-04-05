@@ -1,7 +1,6 @@
 // Class Files
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,21 +11,21 @@ namespace myseq
 {
     public class Filters
     {
-        public ArrayList Hunt { get; set; } = new ArrayList();
-        public ArrayList Caution { get; set; } = new ArrayList();
-        public ArrayList GlobalCaution { get; set; } = new ArrayList();
-        public ArrayList Danger { get; set; } = new ArrayList();
-        public ArrayList GlobalHunt { get; set; } = new ArrayList();
-        public ArrayList Alert { get; set; } = new ArrayList();
-        public ArrayList GlobalDanger { get; set; } = new ArrayList();
-        public ArrayList EmailAlert { get; set; } = new ArrayList();
-        public ArrayList WieldedItems { get; set; } = new ArrayList();
+        public List<string> Hunt { get; set; } = new List<string>();
+        public List<string> Caution { get; set; } = new List<string>();
+        public List<string> GlobalCaution { get; set; } = new List<string>();
+        public List<string> Danger { get; set; } = new List<string>();
+        public List<string> GlobalHunt { get; set; } = new List<string>();
+        public List<string> Alert { get; set; } = new List<string>();
+        public List<string> GlobalDanger { get; set; } = new List<string>();
+        public List<string> EmailAlert { get; set; } = new List<string>();
+        public List<string> WieldedItems { get; set; } = new List<string>();
 
-        public ArrayList GlobalAlert { get; set; } = new ArrayList();
+        public List<string> GlobalAlert { get; set; } = new List<string>();
 
         private readonly char[] anyOf = new char[] { '[', ':', '^', '*' };
 
-        public void ClearArrays()
+        public void ClearLists()
         {
             Hunt.Clear();
             Caution.Clear();
@@ -42,7 +41,7 @@ namespace myseq
             //            OffhandItem.Clear();
         }
 
-        public void AddToAlerts(ArrayList list, string additem)
+        public void AddToAlerts(List<string> list, string additem)
         {
             // only add to list, if not in list already
             try
@@ -129,34 +128,24 @@ namespace myseq
                         if (line.StartsWith("<oldfilter>"))
                         {
                             inputstring = line.Remove(0, 11);
-
-//                            inputstring = inputstring.Remove(0, 11);
                         }
                         if (line.StartsWith("<regex>"))
                         {
                             inputstring = line.Remove(0, 7);
-
-//                            inputstring = inputstring.Remove(0, 7);
                         }
 
                         if (line.EndsWith("</oldfilter>"))
                         {
                             inputstring = line.Remove(line.Length - 12, 12);
-
-                            //inputstring = inputstring.Remove(inputstring.Length - 12, 12);
                         }
                         if (line.EndsWith("</regex>"))
                         {
                             inputstring = line.Remove(line.Length - 8, 8);
-
-                            //inputstring = inputstring.Remove(inputstring.Length - 8, 8);
                         }
                         // remove Name: from line if it exists
                         if (line.StartsWith("name:"))
                         {
                             inputstring = line.Remove(0, 5);
-
-                            //inputstring = inputstring.Remove(0, 5);
                         }
 
                         // if there are any odd characters in the name, just skip it
@@ -164,11 +153,6 @@ namespace myseq
                         {
                             continue;
                         }
-
-                        //if (inputstring.IndexOfAny(anyOf) != -1)
-                        //{
-                        //    continue;
-                        //}
 
                         DetermineType(zoneName, type, inputstring);
                     }
