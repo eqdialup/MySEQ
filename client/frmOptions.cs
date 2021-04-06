@@ -16,6 +16,7 @@ namespace myseq
     /// </summary>
     public class FrmOptions : Form
     {
+        #region Design Components
         private ColorDialog colorOptionPicker;
 
         private Button cmdCommand;
@@ -291,10 +292,7 @@ namespace myseq
             //
             InitializeComponent();
 
-            foreach (var styleName in Enum.GetNames(typeof(HatchStyle)))
-            {
-                cmbHatch.Items.Add(styleName);
-            }
+            StyleEnums();
 
             cmbHatch.SelectedText = Settings.Default.HatchIndex;
 
@@ -437,6 +435,14 @@ namespace myseq
             SetFgDrawOptions(Settings.Default.DrawOptions);
         }
 
+        private void StyleEnums()
+        {
+            foreach (var styleName in Enum.GetNames(typeof(HatchStyle)))
+            {
+                cmbHatch.Items.Add(styleName);
+            }
+        }
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -449,7 +455,7 @@ namespace myseq
 
             base.Dispose(disposing);
         }
-
+        #endregion Design Components
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -2015,17 +2021,11 @@ namespace myseq
             {
                 Settings.Default.Save();
             }
-
-            Directory.CreateDirectory(txtMapDir.Text);
-
-            Directory.CreateDirectory(txtFilterDir.Text);
-
-            Directory.CreateDirectory(txtCfgDir.Text);
-
-            Directory.CreateDirectory(txtLogDir.Text);
-
-            Directory.CreateDirectory(txtTimerDir.Text);
-
+            //Directory.CreateDirectory(txtMapDir.Text);
+            //Directory.CreateDirectory(txtFilterDir.Text);
+            //Directory.CreateDirectory(txtCfgDir.Text);
+            //Directory.CreateDirectory(txtLogDir.Text);
+            //Directory.CreateDirectory(txtTimerDir.Text);
             Hide();
         }
 

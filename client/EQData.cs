@@ -122,134 +122,7 @@ namespace myseq
 
         private const int ditchGone = 2;
         private const string dflt = "Mob Search";
-        private string search0 = "";
-        private string search1 = "";
-        private string search2 = "";
-        private string search3 = "";
-        private string search4 = "";
-
-        private bool filter0;
-        private bool filter1;
-        private bool filter2;
-        private bool filter3;
-        private bool filter4;
-
-        public void MarkLookups(string name, bool filterMob = false)
-        {
-            if (name.Length > 2 && name.Substring(2) == dflt) { name = name.Substring(0, 2); }
-            if (name.Substring(0, 2) == "0:")
-            {
-                if (name.Length > 2)
-                {
-                    search0 = name.Substring(2);
-                    filter0 = filterMob;
-                }
-                else
-                {
-                    search0 = "";
-                    filter0 = false;
-                }
-            }
-            else if (name.Substring(0, 2) == "1:")
-            {
-                if (name.Length > 2)
-                {
-                    search1 = name.Substring(2);
-                    filter1 = filterMob;
-                }
-                else
-                {
-                    search1 = "";
-                    filter1 = false;
-                }
-            }
-            else if (name.Substring(0, 2) == "2:")
-            {
-                if (name.Length > 2)
-                {
-                    search2 = name.Substring(2);
-                    filter2 = filterMob;
-                }
-                else
-                {
-                    search2 = "";
-                    filter2 = false;
-                }
-            }
-            else if (name.Substring(0, 2) == "3:")
-            {
-                if (name.Length > 2)
-                {
-                    search3 = name.Substring(2);
-                    filter3 = filterMob;
-                }
-                else
-                {
-                    search3 = "";
-                    filter3 = false;
-                }
-            }
-            else if (name.Substring(0, 2) == "4:")
-            {
-                if (name.Length > 2)
-                {
-                    search4 = name.Substring(2);
-                    filter4 = filterMob;
-                }
-                else
-                {
-                    search4 = "";
-                    filter4 = false;
-                }
-            }
-
-            foreach (Spawninfo sp in mobsHashTable.Values)
-            {
-                sp.isLookup = false;
-                sp.lookupNumber = "";
-                if (search0.Length > 1)
-                {
-                    SubLookup(sp, search0, filter0, "1");
-                }
-                if (search1.Length > 1)
-                {
-                    SubLookup(sp, search1, filter1, "2");
-                }
-                if (search2.Length > 1)
-                {
-                    SubLookup(sp, search2, filter2, "3");
-                }
-                if (search3.Length > 1)
-                {
-                    SubLookup(sp, search3, filter3, "4");
-                }
-                if (search4.Length > 1)
-                {
-                    SubLookup(sp, search4, filter4, "5");
-                }
-            }
-        }
-
-        private void SubLookup(Spawninfo sp, string search, bool filter, string ln)
-        {
-            var levelCheck = false;
-            if (search.Length > 2 && string.Equals(search.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
-            {
-                int.TryParse(search.Substring(2), out var searchLevel);
-                if (searchLevel != 0 && (sp.Level == searchLevel))
-                {
-                    levelCheck = true;
-                }
-            }
-            if (levelCheck || RegexHelper.GetRegex(search).Match(sp.Name).Success)
-            {
-                sp.isLookup = true;
-                sp.lookupNumber = ln;
-                sp.hidden = false;
-                if (filter) { sp.hidden = true; }
-            }
-        }
-
+ 
         public Hashtable GetMobsReadonly() => mobsHashTable;
 
         public List<MobTrailPoint> GetMobTrailsReadonly() => mobtrails;
@@ -617,10 +490,10 @@ namespace myseq
                     point2.y = -(int)float.Parse(parsedLine[4], NumFormat);
                     point2.z = -(int)float.Parse(parsedLine[5], NumFormat);
 
-                    var r = int.Parse(parsedLine[6].PadRight(4).Substring(0, 3));
-                    var g = int.Parse(parsedLine[7].PadRight(4).Substring(0, 3));
-                    var b = int.Parse(parsedLine[8].PadRight(4).Substring(0, 3));
-                    work.color = new Pen(new SolidBrush(Color.FromArgb(r, g, b)));
+                    var R = int.Parse(parsedLine[6].PadRight(4).Substring(0, 3));
+                    var G = int.Parse(parsedLine[7].PadRight(4).Substring(0, 3));
+                    var B = int.Parse(parsedLine[8].PadRight(4).Substring(0, 3));
+                    work.color = new Pen(new SolidBrush(Color.FromArgb(R, G, B)));
 
                     work.aPoints.Add(point1);
 
@@ -2347,7 +2220,6 @@ namespace myseq
                     }
 
                     GroundItemList.listView.Items.AddRange(items);
-                    //GroundItemList.listView.Items.Add((string)items.GetValue(1));
 
                     newGroundItems.Clear();
                 }

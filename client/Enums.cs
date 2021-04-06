@@ -1,6 +1,38 @@
+﻿using System;
 
 namespace Structures
 {
+    public enum PacketType
+    {
+        Spawn = 0,
+
+        Target = 1,
+
+        Zone = 4,
+
+        GroundItem = 5,
+
+        GetProcessInfo = 6,
+
+        SetProcess = 7,
+
+        World = 8,
+
+        Player = 253
+    }
+
+    public enum LogLevel
+    {
+        Off = 0,            // Set maxLogLevel to Off and no logging occurs
+        Error = 1,          // Used for exceptions and other errors
+        Warning = 2,        // Used for les
+        Info = 3,           // Used for information ("Loaded map XYZ")
+        Debug = 4,          // Used for debug stuff, not too often though
+
+        Default = Error,        // Used when WriteLine is called without a level
+        DefaultMaxLevel = Error // Starting log level
+    };
+    [Flags]
     public enum DrawOptions
     {
         /// <summary>
@@ -67,5 +99,28 @@ namespace Structures
                                       + ZoneText,
 
         DrawAll = 0x0fffffff,
-    };
+    }
+
+    public enum FollowOption
+    {
+        None,
+        Player,
+        Target
+    }
+
+    public enum RequestTypes
+    {
+        None = 0,
+
+        //Bit Flags determining what data to send to the client
+        ZONE = 0x00000001,
+
+        PLAYER = 0x00000002,
+        TARGET = 0x00000004,
+        MOBS = 0x00000008,
+        GROUND_ITEMS = 0x00000010,
+        GET_PROCESSINFO = 0x00000020,
+        SET_PROCESSINFO = 0x00000040,
+        WORLD = 0x00000080
+    }
 }

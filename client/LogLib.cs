@@ -4,22 +4,7 @@ using myseq.Properties;
 
 namespace Structures
 {
-    public enum LogLevel
-    {
-        Off = 0,            // Set maxLogLevel to Off and no logging occurs
-        Error = 1,          // Used for exceptions and other errors
-        Warning = 2,        // Used for les
-        Info = 3,           // Used for information ("Loaded map XYZ")
-        Debug = 4,          // Used for debug stuff, not too often though
-
-        //
-        Default = Error,        // Used when WriteLine is called without a level
-
-        DefaultMaxLevel = Error // Starting log level
-    };
-
     #region LogLib class
-
     public static class LogLib
     {
         public static LogLevel maxLogLevel;
@@ -59,6 +44,5 @@ namespace Structures
             }
         }
     }
-
     #endregion LogLib class
 }

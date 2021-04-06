@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
@@ -14,7 +14,7 @@
     <RootNamespace>myseq</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>myseq.Program</StartupObject>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
@@ -46,7 +46,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -178,8 +178,9 @@
     <Compile Include="MapPane.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MarkLookup.cs" />
     <Compile Include="MobsTimers.cs" />
-    <Compile Include="PacketType.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="PrettyNames.cs" />
     <Compile Include="ProcessInfo.cs" />
     <Compile Include="Program.cs" />
@@ -194,9 +195,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RegexHelper.cs" />
-    <Compile Include="DrawOptions.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="SafeNativeMethods.cs" />
     <Compile Include="SAudio.cs" />
     <Compile Include="SmtpSettings.cs" />
@@ -310,7 +308,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2021/1/1" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

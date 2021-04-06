@@ -29,7 +29,7 @@ namespace myseq
         public string mapnameWithLabels = "";
 
         private string currentIPAddress = "";
-
+        private MarkLookup mark = new MarkLookup();
         public MapCon mapCon;
 
         public MapPane mapPane = new MapPane();
@@ -103,8 +103,8 @@ namespace myseq
             GroundItemList.VisibleChanged += new EventHandler(GroundItemList_VisibleChanged);
 
             mapCon.SetComponents(this, mapPane, eq, map);
-
-            mapPane.SetComponents(this, eq);
+            mark.SetComponents(eq);
+            mapPane.SetComponents(this);
 
             SpawnList.SetComponents(eq, mapCon, filters, this);
 
@@ -422,11 +422,13 @@ namespace myseq
             if (Settings.Default.ShowZoneName && eq.longname.Length > 0)
             {
                 Text += $" - {eq.longname}";
+                BaseTitle = Text;
             }
 
             if (Settings.Default.ShowCharName && eq.gamerInfo?.Name.Length > 1)
             {
                 Text += $" - {eq.gamerInfo.Name}";
+                BaseTitle = Text;
             }
         }
 
@@ -436,7 +438,6 @@ namespace myseq
             // Always want these off on starting up.
 
             Settings.Default.CollectMobTrails = false;
-            //            Settings.Default.EmailAlerts = false;
             Settings.Default.DepthFilter = false;
 
             SetGridInterval();
@@ -956,7 +957,7 @@ namespace myseq
 
                         map.LoadDummyMap(curZone);
 
-                        //this.Text = BaseTitle;
+                        this.Text = BaseTitle;
 
                         foundmap = true;
 
@@ -1578,10 +1579,8 @@ namespace myseq
         }
 
         private void MnuListColor_Click(object sender, EventArgs e)
-
         {
             if (colorPicker.ShowDialog() != DialogResult.Cancel)
-
             {
                 Settings.Default.ListBackColor = colorPicker.Color;
 
@@ -1825,33 +1824,24 @@ namespace myseq
 
         private void MnuChar1_Click(object sender, EventArgs e)
         {
-            if (!mnuChar1.Checked && comm.CanSwitchChars())
-            {
-                comm.SwitchCharacter(1);
-            }
+            ClickSwitchChar(mnuChar1, 1);
         }
 
         private void MnuChar2_Click(object sender, EventArgs e)
         {
-            if (!mnuChar2.Checked && comm.CanSwitchChars())
-            {
-                comm.SwitchCharacter(2);
-            }
+            ClickSwitchChar(mnuChar2, 2);
         }
 
         private void MnuChar3_Click(object sender, EventArgs e)
         {
-            if (!mnuChar3.Checked && comm.CanSwitchChars())
-            {
-                comm.SwitchCharacter(3);
-            }
+            ClickSwitchChar(mnuChar3, 3);
         }
 
         private void MnuChar4_Click(object sender, EventArgs e)
         {
             if (!mnuChar4.Checked && comm.CanSwitchChars())
             {
-                comm.SwitchCharacter(4);
+                ClickSwitchChar(mnuChar4, 4);
             }
         }
 
@@ -1859,7 +1849,7 @@ namespace myseq
         {
             if (!mnuChar5.Checked && comm.CanSwitchChars())
             {
-                comm.SwitchCharacter(5);
+                ClickSwitchChar(mnuChar5, 5);
             }
         }
 
@@ -1867,55 +1857,45 @@ namespace myseq
         {
             if (!mnuChar6.Checked && comm.CanSwitchChars())
             {
-                comm.SwitchCharacter(6);
+                ClickSwitchChar(mnuChar6, 6);
             }
         }
 
         private void MnuChar7_Click(object sender, EventArgs e)
         {
-            if (!mnuChar7.Checked && comm.CanSwitchChars())
-            {
-                comm.SwitchCharacter(7);
-            }
+            ClickSwitchChar(mnuChar7, 7);
         }
 
         private void MnuChar8_Click(object sender, EventArgs e)
         {
-            if (!mnuChar8.Checked && comm.CanSwitchChars())
-            {
-                comm.SwitchCharacter(8);
-            }
+            ClickSwitchChar(mnuChar8, 8);
         }
 
         private void MnuChar9_Click(object sender, EventArgs e)
         {
-            if (!mnuChar9.Checked && comm.CanSwitchChars())
-            {
-                comm.SwitchCharacter(9);
-            }
+            ClickSwitchChar(mnuChar9, 9);
         }
 
         private void MnuChar10_Click(object sender, EventArgs e)
         {
-            if (!mnuChar10.Checked && comm.CanSwitchChars())
-            {
-                comm.SwitchCharacter(10);
-            }
+            ClickSwitchChar(mnuChar10, 10);
         }
 
         private void MnuChar11_Click(object sender, EventArgs e)
         {
-            if (!mnuChar11.Checked && comm.CanSwitchChars())
-            {
-                comm.SwitchCharacter(11);
-            }
+            ClickSwitchChar(mnuChar11, 11);
         }
 
         private void MnuChar12_Click(object sender, EventArgs e)
         {
-            if (!mnuChar12.Checked && comm.CanSwitchChars())
+            ClickSwitchChar(mnuChar12, 12);
+        }
+
+        private void ClickSwitchChar(ToolStripMenuItem player, int index)
+        {
+            if (!player.Checked && comm.CanSwitchChars())
             {
-                comm.SwitchCharacter(12);
+                comm.SwitchCharacter(index);
             }
         }
 
@@ -1969,7 +1949,6 @@ namespace myseq
         }
 
         private void MnuClearSavedTimers_Click(object sender, EventArgs e)
-
         {
             // Clear Saved Spawn Timers
 
@@ -1989,10 +1968,8 @@ namespace myseq
         }
 
         private void MnuGridLabelColor_Click(object sender, EventArgs e)
-
         {
             if (colorPicker.ShowDialog() != DialogResult.Cancel)
-
             {
                 Settings.Default.GridLabelColor = colorPicker.Color;
 
@@ -2522,20 +2499,7 @@ namespace myseq
             // allow a value of 0 to 3500
             var Str = toolStripZPos.Text.Trim();
 
-            var validnum = true;
-            if (Str.Length > 0)
-            {
-                var isNum = decimal.TryParse(Str, out var Num);
-                validnum = false;
-                if (isNum)
-                {
-                    validnum = Num >= 0 && Num <= 3500;
-                }
-                if (Str.Length == 1 && Str == ".")
-                {
-                    validnum = true;
-                }
-            }
+            var validnum = ValidateZNum(Str);
             if (!validnum)
             {
                 toolStripZPos.Text = $"{mapPane.filterzpos.Value}";
@@ -2629,6 +2593,16 @@ namespace myseq
             // allow a value of 0 to 3500
             var Str = toolStripZNeg.Text.Trim();
 
+            var validnum = ValidateZNum(Str);
+            if (!validnum)
+            {
+                toolStripZNeg.Text = $"{mapPane.filterzneg.Value}";
+                MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Neg Value Entered.");
+            }
+        }
+
+        private static bool ValidateZNum(string Str)
+        {
             var validnum = true;
             if (Str.Length > 0)
             {
@@ -2643,11 +2617,8 @@ namespace myseq
                     validnum = true;
                 }
             }
-            if (!validnum)
-            {
-                toolStripZNeg.Text = $"{mapPane.filterzneg.Value}";
-                MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Neg Value Entered.");
-            }
+
+            return validnum;
         }
 
         private void ToolStripZNeg_Leave(object sender, EventArgs e)
@@ -2690,143 +2661,27 @@ namespace myseq
 
         #endregion depth filter
 
-        private void MnuAddMapLabel_Click(object sender, EventArgs e)
-        => AddMapText(alertAddmobname);
+        private void MnuAddMapLabel_Click(object sender, EventArgs e) => AddMapText(alertAddmobname);
 
         #region zoom
 
-        private void ToolStripZoomIn_Click(object sender, EventArgs e)
+        private void ToolStripZoomIn_Click(object sender, EventArgs e) => mapPane.ZoomIn();
+
+        private void ToolStripZoomOut_Click(object sender, EventArgs e) => mapPane.ZoomOut();
+
+        private void ToolStripScale_TextUpdate(object sender, EventArgs e) => CheckValidNum(toolStripScale.Text.Trim());
+
+        private void ToolStripScale_Leave(object sender, EventArgs e) => CheckValidNum(toolStripScale.Text.Trim());
+
+        private void CheckValidNum(string Str)
         {
-            var current_val = mapPane.scale.Value;
-            if (current_val < 100)
-            {
-                current_val += 10;
-                if (current_val > 100)
-                {
-                    current_val = 100;
-                }
-            }
-            else if (current_val < 200)
-            {
-                current_val += 25;
-                if (current_val > 200)
-                {
-                    current_val = 200;
-                }
-            }
-            else if (current_val < 300)
-            {
-                current_val += 25;
-                if (current_val > 300)
-                {
-                    current_val = 300;
-                }
-            }
-            else if (current_val < 500)
-            {
-                current_val += 50;
-                if (current_val > 500)
-                {
-                    current_val = 500;
-                }
-            }
-            else
-            {
-                current_val += 100;
-            }
-
-            if (current_val >= mapPane.scale.Minimum && current_val <= mapPane.scale.Maximum)
-            {
-                mapPane.scale.Value = current_val;
-            }
-        }
-
-        private void ToolStripZoomOut_Click(object sender, EventArgs e)
-        {
-            var current_val = mapPane.scale.Value;
-            if (current_val <= 100)
-            {
-                current_val -= 10;
-                if (current_val < 10)
-                {
-                    current_val = 10;
-                }
-            }
-            else if (current_val <= 200)
-            {
-                current_val -= 25;
-                if (current_val < 100)
-                {
-                    current_val = 100;
-                }
-            }
-            else if (current_val <= 300)
-            {
-                current_val -= 25;
-                if (current_val <= 200)
-                {
-                    current_val = 200;
-                }
-            }
-            else if (current_val <= 400)
-            {
-                current_val -= 25;
-                if (current_val < 300)
-                {
-                    current_val = 300;
-                }
-            }
-            else if (current_val <= 500)
-            {
-                current_val -= 25;
-                if (current_val < 400)
-                {
-                    current_val = 400;
-                }
-            }
-            else
-            {
-                current_val -= 100;
-            }
-
-            if (current_val >= mapPane.scale.Minimum && current_val <= mapPane.scale.Maximum)
-            {
-                mapPane.scale.Value = current_val;
-            }
-        }
-
-        private void ToolStripScale_TextUpdate(object sender, EventArgs e)
-        {
-            var Str = toolStripScale.Text.Trim();
-
-            var validnum = false;
-
-            if (!string.IsNullOrEmpty(Str))
-            {
-                Str = Str.Replace("%", "");
-                var isNum = decimal.TryParse(Str, out var Num);
-
-                if (isNum)
-                {
-                    validnum = Num >= 1 && Num <= mapPane.scale.Maximum;
-                }
-            }
-
-            if (!validnum)
-            {
-                toolStripScale.Text = $"{mapPane.scale.Value / 100:0%}";
-                MessageBox.Show($"1. Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
-            }
-        }
-
-        private void ToolStripScale_Leave(object sender, EventArgs e)
-        {
-            var Str = toolStripScale.Text.Trim();
             var validnum = false;
             if (!string.IsNullOrEmpty(Str))
             {
                 Str = Str.Replace("%", "");
                 var isNum = decimal.TryParse(Str, out var Num);
+                if (Num < mapPane.scale.Minimum)
+                { Num = mapPane.scale.Minimum; }
 
                 if (isNum && Num >= mapPane.scale.Minimum && Num <= mapPane.scale.Maximum)
                 {
@@ -2838,11 +2693,7 @@ namespace myseq
             if (!validnum)
             {
                 toolStripScale.Text = $"{mapPane.scale.Value / 100:0%}";
-                MessageBox.Show($"2. Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
-            }
-            else
-            {
-                toolStripScale.Text = $"{mapPane.scale.Value / 100:0%}";
+                MessageBox.Show($"Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
             }
         }
 
@@ -2850,60 +2701,14 @@ namespace myseq
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                var Str = toolStripScale.Text.Trim();
-                Str = Str.Replace("%", "");
-
-                if (Str.Length > 0)
-                {
-                    var isNum = decimal.TryParse(Str, out var Num);
-
-                    if (isNum && Num >= mapPane.scale.Minimum && Num <= mapPane.scale.Maximum)
-                    {
-                        mapPane.scale.Value = Num;
-                    }
-                }
-                toolStripScale.Focus();
-
+                CheckValidNum(toolStripScale.Text.Trim());
                 e.Handled = true;
             }
         }
 
-        private void ToolStripScale_DropDownClosed(object sender, EventArgs e)
-        {
-            var Str = toolStripScale.SelectedItem.ToString();
-
-            if (!string.IsNullOrEmpty(Str))
-
-            {
-                Str = Str.Replace("%", "");
-                var isNum = decimal.TryParse(Str, out var Num);
-
-                if (isNum && Num >= mapPane.scale.Minimum && Num <= mapPane.scale.Maximum)
-                {
-                    mapPane.scale.Value = Num; // lots of unneccessary number conversions removed. (string to double and back to decimal)
-                }
-            }
-        }
+        private void ToolStripScale_DropDownClosed(object sender, EventArgs e) => CheckValidNum(toolStripScale.SelectedItem.ToString());
 
         #endregion zoom
-
-        //private void SetUpdateSteps()
-        //{
-        //    var update_steps = (1000 / Settings.Default.UpdateDelay) + 1;
-        //    if (update_steps < 3)
-        //    {
-        //        update_steps = 3;
-        //    }
-
-        //    var update_ticks = 250 / Settings.Default.UpdateDelay;
-        //    if (update_ticks < 1)
-        //    {
-        //        update_ticks = 1;
-        //    }
-
-        //    mapCon.UpdateSteps = update_steps;
-        //    mapCon.UpdateTicks = update_ticks;
-        //}
 
         private void AddMapTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2975,326 +2780,131 @@ namespace myseq
 
         private void ToolStripResetLookup_Click(object sender, EventArgs e)
         {
-            toolStripLookupBox.Text = "";
-            toolStripLookupBox.Focus();
-            eq.MarkLookups("0:");
+            BoxReset(toolStripLookupBox, "0");
         }
 
         private void ToolStripResetLookup1_Click(object sender, EventArgs e)
         {
-            toolStripLookupBox1.Text = "";
-            toolStripLookupBox1.Focus();
-            eq.MarkLookups("1:");
+            BoxReset(toolStripLookupBox1, "1");
         }
 
         private void ToolStripResetLookup2_Click(object sender, EventArgs e)
         {
-            toolStripLookupBox2.Text = "";
-            toolStripLookupBox2.Focus();
-            eq.MarkLookups("2:");
+            BoxReset(toolStripLookupBox2, "2");
         }
 
         private void ToolStripResetLookup3_Click(object sender, EventArgs e)
         {
-            toolStripLookupBox3.Text = "";
-            toolStripLookupBox3.Focus();
-            eq.MarkLookups("3:");
+            BoxReset(toolStripLookupBox3, "3");
         }
 
         private void ToolStripResetLookup4_Click(object sender, EventArgs e)
         {
-            toolStripLookupBox4.Text = "";
-            toolStripLookupBox4.Focus();
-            eq.MarkLookups("4:");
+            BoxReset(toolStripLookupBox4, "4");
+        }
+
+        private void BoxReset(ToolStripTextBox box, string rank)
+        {
+            box.Text = "";
+            box.Focus();
+            mark.MarkLookups($"{rank}:");
         }
 
         private void ToolStripCheckLookup_CheckChanged(object sender, EventArgs e)
         {
-            if (toolStripCheckLookup.Checked)
-            {
-                toolStripCheckLookup.Text = "L";
-                bFilter0 = false;
-            }
-            else
-            {
-                toolStripCheckLookup.Text = "F";
-                bFilter0 = true;
-            }
-            var new_text = toolStripLookupBox.Text.Replace(" ", "_");
-            eq.MarkLookups("0:" + new_text, bFilter0);
+            BoxCheckChanged(toolStripCheckLookup, toolStripLookupBox, "0", bFilter0);
         }
 
         private void ToolStripCheckLookup1_CheckChanged(object sender, EventArgs e)
         {
-            if (toolStripCheckLookup1.Checked)
-            {
-                toolStripCheckLookup1.Text = "L";
-                bFilter1 = false;
-            }
-            else
-            {
-                toolStripCheckLookup1.Text = "F";
-                bFilter1 = true;
-            }
-            var new_text = toolStripLookupBox1.Text.Replace(" ", "_");
-            eq.MarkLookups("1:" + new_text, bFilter1);
+            BoxCheckChanged(toolStripCheckLookup1, toolStripLookupBox1, "1", bFilter1);
         }
 
         private void ToolStripCheckLookup2_CheckChanged(object sender, EventArgs e)
         {
-            if (toolStripCheckLookup2.Checked)
-            {
-                toolStripCheckLookup2.Text = "L";
-                bFilter2 = false;
-            }
-            else
-            {
-                toolStripCheckLookup2.Text = "F";
-                bFilter2 = true;
-            }
-            var new_text = toolStripLookupBox2.Text.Replace(" ", "_");
-            eq.MarkLookups("2:" + new_text, bFilter2);
+            BoxCheckChanged(toolStripCheckLookup2, toolStripLookupBox2, "2", bFilter2);
         }
 
         private void ToolStripCheckLookup3_CheckChanged(object sender, EventArgs e)
         {
-            if (toolStripCheckLookup3.Checked)
-            {
-                toolStripCheckLookup3.Text = "L";
-                bFilter3 = false;
-            }
-            else
-            {
-                toolStripCheckLookup3.Text = "F";
-                bFilter3 = true;
-            }
-            var new_text = toolStripLookupBox3.Text.Replace(" ", "_");
-            eq.MarkLookups("3:" + new_text, bFilter3);
+            BoxCheckChanged(toolStripCheckLookup3, toolStripLookupBox3, "3", bFilter3);
         }
 
         private void ToolStripCheckLookup4_CheckChanged(object sender, EventArgs e)
         {
-            if (toolStripCheckLookup4.Checked)
-            {
-                toolStripCheckLookup4.Text = "L";
-                bFilter4 = false;
-            }
-            else
-            {
-                toolStripCheckLookup4.Text = "F";
-                bFilter4 = true;
-            }
-            var new_text = toolStripLookupBox4.Text.Replace(" ", "_");
-            eq.MarkLookups("4:" + new_text, bFilter4);
+            BoxCheckChanged(toolStripCheckLookup4, toolStripLookupBox4, "4", bFilter4);
         }
 
         private void ToolStripTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                if (toolStripLookupBox.Text.Length > 0)
-                {
-                    var new_text = toolStripLookupBox.Text.Replace(" ", "_");
-                    eq.MarkLookups("0:" + new_text, bFilter0);
-                    mapCon?.Focus();
-                }
-                else
-                {
-                    // text is blank, enter was pressed, but leave focus here
-                    eq.MarkLookups("0:");
-                }
-
-                e.Handled = true;
-            }
+            BoxKeyPress(e, toolStripLookupBox, "0", bFilter0);
         }
 
         private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                if (toolStripLookupBox1.Text.Length > 0)
-                {
-                    var new_text = toolStripLookupBox1.Text.Replace(" ", "_");
-                    eq.MarkLookups("1:" + new_text, bFilter1);
-                    mapCon?.Focus();
-                }
-                else
-                {
-                    // text is blank, enter was pressed, but leave focus here
-                    eq.MarkLookups("1:");
-                }
-
-                e.Handled = true;
-            }
+            BoxKeyPress(e, toolStripLookupBox1, "1", bFilter1);
         }
 
         private void ToolStripTextBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                if (toolStripLookupBox2.Text.Length > 0)
-                {
-                    var new_text = toolStripLookupBox2.Text.Replace(" ", "_");
-                    eq.MarkLookups("2:" + new_text, bFilter2);
-                    mapCon?.Focus();
-                }
-                else
-                {
-                    // text is blank, enter was pressed, but leave focus here
-                    eq.MarkLookups("2:");
-                }
-
-                e.Handled = true;
-            }
+            BoxKeyPress(e, toolStripLookupBox2, "2", bFilter2);
         }
 
         private void ToolStripTextBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                if (toolStripLookupBox3.Text.Length > 0)
-                {
-                    var new_text = toolStripLookupBox3.Text.Replace(" ", "_");
-                    eq.MarkLookups("3:" + new_text, bFilter3);
-                    mapCon?.Focus();
-                }
-                else
-                {
-                    // text is blank, enter was pressed, but leave focus here
-                    eq.MarkLookups("3:");
-                }
-
-                e.Handled = true;
-            }
+            BoxKeyPress(e, toolStripLookupBox3, "3", bFilter3);
         }
 
         private void ToolStripTextBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
+            BoxKeyPress(e, toolStripLookupBox4, "4", bFilter4);
+        }
+
+        private void BoxCheckChanged(ToolStripButton button, ToolStripTextBox box, string rank, bool filter)
+        {
+            if (button.Checked)
+            {
+                button.Text = "L";
+                filter = false;
+            }
+            else
+            {
+                button.Text = "F";
+                filter = true;
+            }
+            NewTextMarkup(box, rank, filter);
+        }
+        private void BoxKeyPress(KeyPressEventArgs e, ToolStripTextBox box, string rank, bool filter)
+        {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                if (toolStripLookupBox4.Text.Length > 0)
+                if (box.Text.Length > 0)
                 {
-                    var new_text = toolStripLookupBox4.Text.Replace(" ", "_");
-                    eq.MarkLookups("4:" + new_text, bFilter4);
+                    NewTextMarkup(box, rank, filter);
                     mapCon?.Focus();
                 }
                 else
                 {
                     // text is blank, enter was pressed, but leave focus here
-                    eq.MarkLookups("4:");
+                    mark.MarkLookups($"{rank}:");
                 }
 
                 e.Handled = true;
             }
         }
-
-        private void ToolStripLookupBox_Click(object sender, EventArgs e)
+        private void BoxClick(ToolStripTextBox box)
         {
-            if (toolStripLookupBox.Text == "Mob Search")
+            if (box.Text == "Mob Search")
             {
-                toolStripLookupBox.Text = "";
-                toolStripLookupBox.ForeColor = SystemColors.WindowText;
+                box.Text = "";
+                box.ForeColor = SystemColors.WindowText;
             }
         }
-
-        private void ToolStripLookupBox1_Click(object sender, EventArgs e)
+        private void LeaveBox(ToolStripTextBox box, string rank, bool filter)
         {
-            if (toolStripLookupBox1.Text == "Mob Search")
+            if (box.Text.Length > 0 && box.Text != "Mob Search")
             {
-                toolStripLookupBox1.Text = "";
-                toolStripLookupBox1.ForeColor = SystemColors.WindowText;
-            }
-        }
-
-        private void ToolStripLookupBox2_Click(object sender, EventArgs e)
-        {
-            if (toolStripLookupBox2.Text == "Mob Search")
-            {
-                toolStripLookupBox2.Text = "";
-                toolStripLookupBox2.ForeColor = SystemColors.WindowText;
-            }
-        }
-
-        private void ToolStripLookupBox3_Click(object sender, EventArgs e)
-        {
-            if (toolStripLookupBox3.Text == "Mob Search")
-            {
-                toolStripLookupBox3.Text = "";
-                toolStripLookupBox3.ForeColor = SystemColors.WindowText;
-            }
-        }
-
-        private void ToolStripLookupBox4_Click(object sender, EventArgs e)
-        {
-            if (toolStripLookupBox4.Text == "Mob Search")
-            {
-                toolStripLookupBox4.Text = "";
-                toolStripLookupBox4.ForeColor = SystemColors.WindowText;
-            }
-        }
-
-        private void ToolStripLookupBox_Leave(object sender, EventArgs e)
-        {
-            if (toolStripLookupBox.Text.Length > 0 && toolStripLookupBox.Text != "Mob Search")
-            {
-                var new_text = toolStripLookupBox.Text.Replace(" ", "_");
-                eq.MarkLookups("0:" + new_text, bFilter0);
-            }
-            else
-            {
-                toolStripLookupBox.ForeColor = SystemColors.GrayText;
-                toolStripLookupBox.Text = "Mob Search";
-            }
-        }
-
-        private void ToolStripLookupBox1_Leave(object sender, EventArgs e)
-        {
-            if (toolStripLookupBox1.Text.Length > 0 && toolStripLookupBox1.Text != "Mob Search")
-            {
-                var new_text = toolStripLookupBox1.Text.Replace(" ", "_");
-                eq.MarkLookups("1:" + new_text, bFilter1);
-            }
-            else
-            {
-                toolStripLookupBox1.ForeColor = SystemColors.GrayText;
-                toolStripLookupBox1.Text = "Mob Search";
-            }
-        }
-
-        private void ToolStripLookupBox2_Leave(object sender, EventArgs e)
-        {
-            if (toolStripLookupBox2.Text.Length > 0 && toolStripLookupBox2.Text != "Mob Search")
-            {
-                var new_text = toolStripLookupBox2.Text.Replace(" ", "_");
-                eq.MarkLookups("2:" + new_text, bFilter2);
-            }
-            else
-            {
-                toolStripLookupBox2.ForeColor = SystemColors.GrayText;
-                toolStripLookupBox2.Text = "Mob Search";
-            }
-        }
-
-        private void ToolStripLookupBox3_Leave(object sender, EventArgs e)
-        {
-            if (toolStripLookupBox3.Text.Length > 0 && toolStripLookupBox3.Text != "Mob Search")
-            {
-                var new_text = toolStripLookupBox3.Text.Replace(" ", "_");
-                eq.MarkLookups("3:" + new_text, bFilter3);
-            }
-            else
-            {
-                toolStripLookupBox3.ForeColor = SystemColors.GrayText;
-                toolStripLookupBox3.Text = "Mob Search";
-            }
-        }
-
-        private void ToolStripLookupBox4_Leave(object sender, EventArgs e)
-        {
-            if (toolStripLookupBox4.Text.Length > 0 && toolStripLookupBox4.Text != "Mob Search")
-            {
-                var new_text = toolStripLookupBox4.Text.Replace(" ", "_");
-                eq.MarkLookups("4:" + new_text, bFilter4);
+                NewTextMarkup(box, rank, filter);
             }
             else
             {
@@ -3303,12 +2913,67 @@ namespace myseq
             }
         }
 
+        private void NewTextMarkup(ToolStripTextBox box, string rank, bool filter)
+        {
+            var new_text = box.Text.Replace(" ", "_");
+            mark.MarkLookups($"{rank}:{new_text}", filter);
+        }
+
+        private void ToolStripLookupBox_Click(object sender, EventArgs e)
+        {
+            BoxClick(toolStripLookupBox);
+        }
+
+        private void ToolStripLookupBox1_Click(object sender, EventArgs e)
+        {
+            BoxClick(toolStripLookupBox1);
+        }
+
+        private void ToolStripLookupBox2_Click(object sender, EventArgs e)
+        {
+            BoxClick(toolStripLookupBox2);
+        }
+
+        private void ToolStripLookupBox3_Click(object sender, EventArgs e)
+        {
+            BoxClick(toolStripLookupBox3);
+        }
+
+        private void ToolStripLookupBox4_Click(object sender, EventArgs e)
+        {
+            BoxClick(toolStripLookupBox4);
+        }
+
+        private void ToolStripLookupBox_Leave(object sender, EventArgs e)
+        {
+            LeaveBox(toolStripLookupBox, "0", bFilter0);
+        }
+
+        private void ToolStripLookupBox1_Leave(object sender, EventArgs e)
+        {
+            LeaveBox(toolStripLookupBox1, "1", bFilter1);
+        }
+
+        private void ToolStripLookupBox2_Leave(object sender, EventArgs e)
+        {
+            LeaveBox(toolStripLookupBox2, "2", bFilter2);
+        }
+
+        private void ToolStripLookupBox3_Leave(object sender, EventArgs e)
+        {
+            LeaveBox(toolStripLookupBox3, "3", bFilter3);
+        }
+
+        private void ToolStripLookupBox4_Leave(object sender, EventArgs e)
+        {
+            LeaveBox(toolStripLookupBox4, "4", bFilter4);
+        }
+
         #endregion lookupbox
 
         private void MnuFileMain_DropDownOpening(object sender, EventArgs e) => VisChar();
 
         // Update the Character Selection list
-
         private void VisChar()
         {
             mnuChar1.Visible = false;
@@ -3389,15 +3054,12 @@ namespace myseq
                 {
                     toolStripLevel.Text = Num.ToString();
                     Settings.Default.LevelOverride = Num;
-                    //gconLevel = Num;
                 }
             }
 
             if (!validnum)
             {
                 MessageBox.Show("Enter a number between 1-115 or Auto");
-                //} else {
-                //    gConBaseName = "";
             }
         }
 
@@ -3410,8 +3072,6 @@ namespace myseq
             if (e.KeyChar == (char)Keys.Enter)
             {
                 ToolStripLevelCheck(toolStripLevel.Text.Trim());
-                toolStripScale.Focus();
-
                 e.Handled = true;
             }
         }

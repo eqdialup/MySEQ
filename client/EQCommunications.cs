@@ -8,23 +8,6 @@ using myseq;
 namespace Structures
 
 {
-    [Flags]
-    public enum RequestTypes
-    {
-        None = 0,
-
-        //Bit Flags determining what data to send to the client
-        ZONE = 0x00000001,
-
-        PLAYER = 0x00000002,
-        TARGET = 0x00000004,
-        MOBS = 0x00000008,
-        GROUND_ITEMS = 0x00000010,
-        GET_PROCESSINFO = 0x00000020,
-        SET_PROCESSINFO = 0x00000040,
-        WORLD = 0x00000080
-    }
-
     public class EQCommunications
 
     {
@@ -296,43 +279,43 @@ namespace Structures
 
             switch (si.flags)
             {
-                case Spawninfo.PacketType.Zone:
+                case PacketType.Zone:
 
                     f1.ProcessMap(si);
 
                     break;
 
-                case Spawninfo.PacketType.Player:
+                case PacketType.Player:
 
                     eq.ProcessGamer(si, f1);
 
                     break;
 
-                case Spawninfo.PacketType.GroundItem:
+                case PacketType.GroundItem:
 
                     eq.ProcessGroundItems(si, filters);//,GroundItemList)
 
                     break;
 
-                case Spawninfo.PacketType.Target:
+                case PacketType.Target:
 
                     eq.ProcessTarget(si);
 
                     break;
 
-                case Spawninfo.PacketType.World:
+                case PacketType.World:
 
                     eq.ProcessWorld(si);
 
                     break;
 
-                case Spawninfo.PacketType.Spawn:
+                case PacketType.Spawn:
 
                     eq.ProcessSpawns(si, f1, f1.SpawnList, filters, f1.mapPane, update_hidden);
 
                     break;
 
-                case Spawninfo.PacketType.GetProcessInfo:
+                case PacketType.GetProcessInfo:
 
                     ProcessProcessInfo(si);
                     break;

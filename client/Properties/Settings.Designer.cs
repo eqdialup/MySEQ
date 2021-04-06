@@ -1562,9 +1562,9 @@ namespace myseq.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Player")]
-        public global::myseq.FollowOption FollowOption {
+        public global::Structures.FollowOption FollowOption {
             get {
-                return ((global::myseq.FollowOption)(this["FollowOption"]));
+                return ((global::Structures.FollowOption)(this["FollowOption"]));
             }
             set {
                 this["FollowOption"] = value;

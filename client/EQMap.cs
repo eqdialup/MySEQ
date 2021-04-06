@@ -87,6 +87,10 @@ namespace myseq
                 SpawnTimerList.listView.Items.Clear();
                 GroundItemList.listView.Items.Clear();
 
+                SpawnList.listView.BeginUpdate();
+                SpawnTimerList.listView.BeginUpdate();
+                GroundItemList.listView.BeginUpdate();
+
                 if (eq.mobsTimers.mobsTimer2.Count > 0)
                 {
                     foreach (Spawntimer st in eq.mobsTimers.mobsTimer2.Values)
@@ -94,7 +98,13 @@ namespace myseq
                         st.itmSpawnTimerList = null;
                     }
                 }
+
+                SpawnList.listView.EndUpdate();
+                SpawnTimerList.listView.EndUpdate();
+                GroundItemList.listView.EndUpdate();
+
                 eq.mobsTimers.ResetTimers();
+
             }
         }
 
