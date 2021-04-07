@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySEQ.client", "client\MySE
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MySEQ.server", "server\MySEQ.server.vcxproj", "{B2A33963-4874-4E74-B9F8-36666B4F9BEF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionTests", "..\FunctionTests\FunctionTests.csproj", "{A17882E6-9782-4F1B-9BC7-86F01F713589}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,12 +67,36 @@ Global
 		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Release|Win32.Build.0 = Release|Win32
 		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Release|x86.ActiveCfg = Release|Win32
 		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Release|x86.Build.0 = Release|Win32
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Debug|Win32.Build.0 = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Debug|x86.Build.0 = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Optimal|Any CPU.ActiveCfg = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Optimal|Any CPU.Build.0 = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Optimal|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Optimal|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Optimal|Win32.ActiveCfg = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Optimal|Win32.Build.0 = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Optimal|x86.ActiveCfg = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Optimal|x86.Build.0 = Debug|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Release|Win32.ActiveCfg = Release|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Release|Win32.Build.0 = Release|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Release|x86.ActiveCfg = Release|Any CPU
+		{A17882E6-9782-4F1B-9BC7-86F01F713589}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {B9705BA4-7FBF-44E1-AB87-51C0043E505A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

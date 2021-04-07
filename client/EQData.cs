@@ -403,6 +403,8 @@ namespace myseq
 
         public Spawninfo GetSelectedMob() => (Spawninfo)mobsHashTable[(uint)selectedID];
 
+        // Originally called when first loading program.
+        // Now called when reconnect(and char change), so we can modify these list more "on the fly"
         public void InitLookups()
         {
             Classes = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Classes.txt"));
@@ -415,8 +417,6 @@ namespace myseq
             //guildList.Clear();
 
             //ReadGuildList(Path.Combine(Settings.Default.CfgDir, "Guilds.txt"));
-
-            //            ColorChart.Initialise(Path.Combine(Settings.Default.CfgDir, "RGB.txt"));
         }
 
         public bool LoadLoYMapInternal(string filename) //ingame EQ format
@@ -877,106 +877,7 @@ namespace myseq
                     };
 
                     var itemname = gi.Desc.ToLower();
-
-                    /* ************************************* *
-                    * ************* ALERTS **************** *
-                    * ************************************* */
-
-                    // [hunt]
-
-                    if (filters.Hunt.Count > 0 && FindMatches(filters.Hunt, itemname, Settings.Default.NoneOnHunt,
-
-                            Settings.Default.TalkOnHunt, "Ground Item",
-
-                            Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-
-                            Settings.Default.BeepOnHunt, MatchFullTextH))
-                    {
-                        gi.isHunt = true;
-                    }
-
-                    if (filters.GlobalHunt.Count > 0 && FindMatches(filters.GlobalHunt, itemname, Settings.Default.NoneOnHunt,
-
-                            Settings.Default.TalkOnHunt, "Ground Item",
-
-                            Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-
-                            Settings.Default.BeepOnHunt, MatchFullTextH))
-                    {
-                        gi.isHunt = true;
-                    }
-
-                    // [caution]
-
-                    if (filters.Caution.Count > 0 && FindMatches(filters.Caution, itemname, Settings.Default.NoneOnCaution,
-
-                            Settings.Default.TalkOnCaution, "Ground Item",
-
-                            Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-
-                            Settings.Default.BeepOnCaution, MatchFullTextC))
-                    {
-                        gi.isCaution = true;
-                    }
-
-                    if (filters.GlobalCaution.Count > 0 && FindMatches(filters.GlobalCaution, itemname, Settings.Default.NoneOnCaution,
-
-                            Settings.Default.TalkOnCaution, "Ground Item",
-
-                            Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-
-                            Settings.Default.BeepOnCaution, MatchFullTextC))
-                    {
-                        gi.isCaution = true;
-                    }
-
-                    // [danger]
-
-                    if (filters.Danger.Count > 0 && FindMatches(filters.Danger, itemname, Settings.Default.NoneOnDanger,
-
-                            Settings.Default.TalkOnDanger, "Ground Item",
-
-                            Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-
-                            Settings.Default.BeepOnDanger, MatchFullTextD))
-                    {
-                        gi.isDanger = true;
-                    }
-
-                    if (filters.GlobalDanger.Count > 0 && FindMatches(filters.GlobalDanger, itemname, Settings.Default.NoneOnDanger,
-
-                            Settings.Default.TalkOnDanger, "Ground Item",
-
-                            Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-
-                            Settings.Default.BeepOnDanger, MatchFullTextD))
-                    {
-                        gi.isDanger = true;
-                    }
-
-                    // [rare]
-
-                    if (filters.Alert.Count > 0 && FindMatches(filters.Alert, itemname, Settings.Default.NoneOnAlert,
-
-                            Settings.Default.TalkOnAlert, "Ground Item",
-
-                            Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-
-                            Settings.Default.BeepOnAlert, MatchFullTextA))
-                    {
-                        gi.isAlert = true;
-                    }
-
-                    if (filters.GlobalAlert.Count > 0 && FindMatches(filters.GlobalAlert, itemname, Settings.Default.NoneOnAlert,
-
-                            Settings.Default.TalkOnAlert, "Ground Item",
-
-                            Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-
-                            Settings.Default.BeepOnAlert, MatchFullTextA))
-                    {
-                        gi.isAlert = true;
-                    }
+                    CheckGrounditemForAlerts(filters, gi, itemname);
 
                     ListViewItem item1 = new ListViewItem(gi.Desc);
 
@@ -1001,6 +902,101 @@ namespace myseq
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItems(): ", ex); }
+        }
+
+        private void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname)
+        {
+            // [hunt]
+            if (filters.Hunt.Count > 0 && FindMatches(filters.Hunt, itemname, Settings.Default.NoneOnHunt,
+
+                    Settings.Default.TalkOnHunt, "Ground Item",
+
+                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+
+                    Settings.Default.BeepOnHunt, MatchFullTextH))
+            {
+                gi.isHunt = true;
+            }
+
+            if (filters.GlobalHunt.Count > 0 && FindMatches(filters.GlobalHunt, itemname, Settings.Default.NoneOnHunt,
+
+                    Settings.Default.TalkOnHunt, "Ground Item",
+
+                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+
+                    Settings.Default.BeepOnHunt, MatchFullTextH))
+            {
+                gi.isHunt = true;
+            }
+
+            // [caution]
+            if (filters.Caution.Count > 0 && FindMatches(filters.Caution, itemname, Settings.Default.NoneOnCaution,
+
+                    Settings.Default.TalkOnCaution, "Ground Item",
+
+                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
+
+                    Settings.Default.BeepOnCaution, MatchFullTextC))
+            {
+                gi.isCaution = true;
+            }
+
+            if (filters.GlobalCaution.Count > 0 && FindMatches(filters.GlobalCaution, itemname, Settings.Default.NoneOnCaution,
+
+                    Settings.Default.TalkOnCaution, "Ground Item",
+
+                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
+
+                    Settings.Default.BeepOnCaution, MatchFullTextC))
+            {
+                gi.isCaution = true;
+            }
+
+            // [danger]
+            if (filters.Danger.Count > 0 && FindMatches(filters.Danger, itemname, Settings.Default.NoneOnDanger,
+
+                    Settings.Default.TalkOnDanger, "Ground Item",
+
+                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
+
+                    Settings.Default.BeepOnDanger, MatchFullTextD))
+            {
+                gi.isDanger = true;
+            }
+
+            if (filters.GlobalDanger.Count > 0 && FindMatches(filters.GlobalDanger, itemname, Settings.Default.NoneOnDanger,
+
+                    Settings.Default.TalkOnDanger, "Ground Item",
+
+                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
+
+                    Settings.Default.BeepOnDanger, MatchFullTextD))
+            {
+                gi.isDanger = true;
+            }
+
+            // [rare]
+            if (filters.Alert.Count > 0 && FindMatches(filters.Alert, itemname, Settings.Default.NoneOnAlert,
+
+                    Settings.Default.TalkOnAlert, "Ground Item",
+
+                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
+
+                    Settings.Default.BeepOnAlert, MatchFullTextA))
+            {
+                gi.isAlert = true;
+            }
+
+            if (filters.GlobalAlert.Count > 0 && FindMatches(filters.GlobalAlert, itemname, Settings.Default.NoneOnAlert,
+
+                    Settings.Default.TalkOnAlert, "Ground Item",
+
+                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
+
+                    Settings.Default.BeepOnAlert, MatchFullTextA))
+            {
+                gi.isAlert = true;
+            }
         }
 
         public void ProcessTarget(Spawninfo si)
@@ -1061,7 +1057,6 @@ namespace myseq
                 Spawninfo mob;
 
                 // Converted mob collection to a hashtable so we can do
-
                 // a fast lookup to see if a mob already exists
 
                 if (mobsHashTable.ContainsKey(si.SpawnID))
@@ -2017,13 +2012,13 @@ namespace myseq
             }
         }
 
-        private bool FindMatches(List<string> exps, string mobname, bool NoneOnMatch,
+        private bool FindMatches(List<string> filterlist, string mobname, bool NoneOnMatch,
              bool TalkOnMatch, string TalkDescr, bool PlayOnMatch, string AudioFile,
              bool BeepOnMatch, bool MatchFullText)
         {
             var alert = false;
             MainForm f1 = null;
-            foreach (string str in exps)
+            foreach (string str in filterlist)
             {
                 var matched = false;
 
@@ -2064,7 +2059,7 @@ namespace myseq
             {
                 ThreadStart threadDelegate = new ThreadStart(new Talker
                 {
-                    SpeakingText = $"{TalkDescr}, {RegexHelper.FixMobNameMatch(mobname)}, is up."
+                    SpeakingText = $"{TalkDescr}, {RegexHelper.SearchName(mobname)}, is up."
                 }.SpeakText);
 
                 new Thread(threadDelegate).Start();

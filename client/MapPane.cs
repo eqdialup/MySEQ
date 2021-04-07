@@ -518,12 +518,10 @@ namespace myseq
 
         private void CmdCommand_Click(object sender, EventArgs e)
         {
-            if (f1 == null)
+            if (f1 != null)
             {
-                return;
+                f1.CmdCommand_Click(sender, e);
             }
-
-            f1.CmdCommand_Click(sender, e);
         }
 
         private void Filterzpos_ValueChanged(object sender, EventArgs e)

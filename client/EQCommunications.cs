@@ -21,7 +21,7 @@ namespace Structures
         private CSocketClient pSocketClient;
 
         // Processing stuff-
-        private readonly Filters filters = new Filters();
+        private Filters filters;
 
         public ProcessInfo CurrentProcess = new ProcessInfo(0, "");
         private int processcount;
@@ -49,10 +49,11 @@ namespace Structures
             update_hidden = true;
         }
 
-        public EQCommunications(EQData eq, MainForm f1)//FrmMain f1)
+        public EQCommunications(EQData eq, MainForm f1, Filters filters)//FrmMain f1)
         {
             this.eq = eq;
             this.f1 = f1;
+            this.filters = filters;
         }
 
         public void StopListening()

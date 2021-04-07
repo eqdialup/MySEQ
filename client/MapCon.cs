@@ -1156,14 +1156,12 @@ namespace myseq
 
                 {
                     if (ChangeSize)
-
                     {
                         tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Absolute;
 
                         tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Absolute;
 
                         if (Settings.Default.ShowTargetInfo)
-
                         {
                             graphics = lblMobInfo.CreateGraphics();
 
@@ -1208,40 +1206,7 @@ namespace myseq
 
                 if (SetColor)
                 {
-                    if (si.Level < (eq.GreyRange + eq.gamerInfo.Level))
-                    {
-                        lblMobInfo.BackColor = Color.LightGray;
-                    }
-                    else if (si.Level < (eq.GreenRange + eq.gamerInfo.Level))
-                    {
-                        lblMobInfo.BackColor = Color.PaleGreen;
-                    }
-                    else if (si.Level < (eq.CyanRange + eq.gamerInfo.Level))
-                    {
-                        lblMobInfo.BackColor = Color.PowderBlue;
-                    }
-                    else if (si.Level < eq.gamerInfo.Level)
-                    {
-                        lblMobInfo.BackColor = Color.DeepSkyBlue;
-                    }
-                    else if (si.Level == eq.gamerInfo.Level)
-                    {
-                        lblMobInfo.BackColor = Color.White;
-                    }
-                    else
-                    {
-                        lblMobInfo.BackColor = si.Level <= eq.gamerInfo.Level + eq.YellowRange ? Color.Yellow : Color.Red;
-                    }
-
-                    if (si.isEventController)
-                    {
-                        lblMobInfo.BackColor = Color.Violet;
-                    }
-
-                    if (si.isLDONObject)
-                    {
-                        lblMobInfo.BackColor = Color.LightGray;
-                    }
+                    InfoSetColor(si);
                 }
 
                 graphics = lblMobInfo.CreateGraphics();
@@ -1256,54 +1221,95 @@ namespace myseq
                 graphics.Dispose();
 
                 tableLayoutPanel1.ColumnStyles[0].SizeType = SizeType.Absolute;
-
-                if (Settings.Default.ShowTargetInfo)
-
-                {
-                    lblMobInfo.Visible = true;
-
-                    if (ChangeSize)
-
-                    {
-                        var panel_width = sc.Width > sf.Width ? (int)sc.Width : (int)sf.Width;
-                        tableLayoutPanel1.Width = panel_width + (Settings.Default.SmallTargetInfo ? 40 : 10);
-
-                        tableLayoutPanel1.ColumnStyles[0].Width = panel_width + (Settings.Default.SmallTargetInfo ? 40 : 10);
-
-                        tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Absolute;
-
-                        tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Absolute;
-
-                        tableLayoutPanel1.RowStyles[1].Height = (int)sf.Height + (Settings.Default.SmallTargetInfo ? 11 : 17);
-
-                        tableLayoutPanel1.RowStyles[0].Height = (int)sc.Height + 7;
-                    }
-                }
-                else
-                {
-                    if (ChangeSize)
-
-                    {
-                        tableLayoutPanel1.Width = (int)sc.Width + 10;
-
-                        tableLayoutPanel1.ColumnStyles[0].Width = (int)sc.Width + 10;
-
-                        tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Absolute;
-
-                        tableLayoutPanel1.RowStyles[0].Height = 0;
-
-                        tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Absolute;
-
-                        tableLayoutPanel1.RowStyles[1].Height = 0;
-                    }
-                }
-
-                return mobInfo.ToString();
+                return MobshowInfo(ChangeSize, mobInfo, ref sf, ref sc);
             }
             catch (Exception ex)
             {
                 LogLib.WriteLine("Error with MobInfo(): ", ex);
                 return "";
+            }
+        }
+
+        private string MobshowInfo(bool ChangeSize, StringBuilder mobInfo, ref SizeF sf, ref SizeF sc)
+        {
+            if (Settings.Default.ShowTargetInfo)
+            {
+                lblMobInfo.Visible = true;
+
+                if (ChangeSize)
+
+                {
+                    var panel_width = sc.Width > sf.Width ? (int)sc.Width : (int)sf.Width;
+                    tableLayoutPanel1.Width = panel_width + (Settings.Default.SmallTargetInfo ? 40 : 10);
+
+                    tableLayoutPanel1.ColumnStyles[0].Width = panel_width + (Settings.Default.SmallTargetInfo ? 40 : 10);
+
+                    tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Absolute;
+
+                    tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Absolute;
+
+                    tableLayoutPanel1.RowStyles[1].Height = (int)sf.Height + (Settings.Default.SmallTargetInfo ? 11 : 17);
+
+                    tableLayoutPanel1.RowStyles[0].Height = (int)sc.Height + 7;
+                }
+            }
+            else
+            {
+                if (ChangeSize)
+
+                {
+                    tableLayoutPanel1.Width = (int)sc.Width + 10;
+
+                    tableLayoutPanel1.ColumnStyles[0].Width = (int)sc.Width + 10;
+
+                    tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Absolute;
+
+                    tableLayoutPanel1.RowStyles[0].Height = 0;
+
+                    tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Absolute;
+
+                    tableLayoutPanel1.RowStyles[1].Height = 0;
+                }
+            }
+
+            return mobInfo.ToString();
+        }
+
+        private void InfoSetColor(Spawninfo si)
+        {
+            if (si.Level < (eq.GreyRange + eq.gamerInfo.Level))
+            {
+                lblMobInfo.BackColor = Color.LightGray;
+            }
+            else if (si.Level < (eq.GreenRange + eq.gamerInfo.Level))
+            {
+                lblMobInfo.BackColor = Color.PaleGreen;
+            }
+            else if (si.Level < (eq.CyanRange + eq.gamerInfo.Level))
+            {
+                lblMobInfo.BackColor = Color.PowderBlue;
+            }
+            else if (si.Level < eq.gamerInfo.Level)
+            {
+                lblMobInfo.BackColor = Color.DeepSkyBlue;
+            }
+            else if (si.Level == eq.gamerInfo.Level)
+            {
+                lblMobInfo.BackColor = Color.White;
+            }
+            else
+            {
+                lblMobInfo.BackColor = si.Level <= eq.gamerInfo.Level + eq.YellowRange ? Color.Yellow : Color.Red;
+            }
+
+            if (si.isEventController)
+            {
+                lblMobInfo.BackColor = Color.Violet;
+            }
+
+            if (si.isLDONObject)
+            {
+                lblMobInfo.BackColor = Color.LightGray;
             }
         }
 
@@ -1948,23 +1954,11 @@ namespace myseq
 
                 //                gName = eq.GuildNumToString(sp.Guild);
 
-                // Draw Line from Player to the Selected Spawn
+                // Draw Line from Gamer to the Selected Spawn
 
                 if (eq.selectedID == sp.SpawnID)
                 {
-                    Pen pinkPen = new Pen(new SolidBrush(Color.Fuchsia));
-                    DrawEllipse(pinkPen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
-
-                    // Update the Spawn Information Window if not based on selected timer
-
-                    if (eq.SpawnX == -1)
-                    {
-                        lblMobInfo.Text = MobInfo(sp, true, true);
-
-                        DrawLine(pinkPen, playerx, playery, x, y);
-                    }
-
-                    sp.proxAlert = false;
+                    LineGamerToSelected(playerx, playery, sp, x, y);
                 }
                 else if (Settings.Default.ColorRangeCircle && RangeCircle > 0)
                 {
@@ -1998,27 +1992,11 @@ namespace myseq
 
                         if (sp.isEventController)
                         {
-                            if (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos)))
-                            {
-                                FillEllipse(new SolidBrush(Color.Purple), x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
-                                sp.filtered = false;
-                            }
-                            else
-                            {
-                                sp.filtered = true;
-                            }
+                            DrawSpecialMobs(pZ, NPCDepthFilter, sp, x, y, Color.Purple);
                         }
                         else if (sp.isLDONObject)
                         {
-                            if (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos)))
-                            {
-                                FillEllipse(new SolidBrush(Color.Gray), x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
-                                sp.filtered = false;
-                            }
-                            else
-                            {
-                                sp.filtered = true;
-                            }
+                            DrawSpecialMobs(pZ, NPCDepthFilter, sp, x, y, Color.Gray);
                         }
                         else if (sp.Type == 0)
                         {
@@ -2052,6 +2030,36 @@ namespace myseq
             }
 
             lookup_set = false;
+        }
+
+        private void DrawSpecialMobs(float pZ, bool NPCDepthFilter, Spawninfo sp, float x, float y, Color color)
+        {
+            if (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos)))
+            {
+                FillEllipse(new SolidBrush(color), x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
+                sp.filtered = false;
+            }
+            else
+            {
+                sp.filtered = true;
+            }
+        }
+
+        private void LineGamerToSelected(float playerx, float playery, Spawninfo sp, float x, float y)
+        {
+            Pen pinkPen = new Pen(new SolidBrush(Color.Fuchsia));
+            DrawEllipse(pinkPen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
+
+            // Update the Spawn Information Window if not based on selected timer
+
+            if (eq.SpawnX == -1)
+            {
+                lblMobInfo.Text = MobInfo(sp, true, true);
+
+                DrawLine(pinkPen, playerx, playery, x, y);
+            }
+
+            sp.proxAlert = false;
         }
 
         private void DrawNPCs(float x, float y, /*string gName,*/ bool DrawDirection, Spawninfo sp)
@@ -2415,7 +2423,6 @@ namespace myseq
         //}
 
         public void DrawMapLines(DrawOptions DrawOpts)
-
         {
             try
 
@@ -2450,58 +2457,63 @@ namespace myseq
                             }
                             else
                             {
-                                bool curValid, lastValid;
-
-                                float curX, curY, curZ, lastX, lastY, lastZ;
-
-                                lastX = mapLine.Point(0).x;
-
-                                lastY = mapLine.Point(0).y;
-
-                                lastZ = mapLine.Point(0).z;
-
-                                lastValid = (lastZ > minZ) && (lastZ < maxZ);
-
-                                for (var d = 1; d < mapLine.aPoints.Count; d++)
-                                {
-                                    curX = mapLine.Point(d).x;
-
-                                    curY = mapLine.Point(d).y;
-
-                                    curZ = mapLine.Point(d).z;
-
-                                    curValid = (curZ > minZ) && (curZ < maxZ);
-
-                                    // Original Depth Filter method (use z-axis values only)
-
-                                    // instead of not drawing filtered lines, we draw light ones
-
-                                    if (!curValid && !lastValid)
-                                    {
-                                        if (Settings.Default.UseDynamicAlpha)
-                                        {
-                                            DrawLine(mapLine.fade_color, lastX, lastY, curX, curY);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        DrawLine(mapLine.draw_color, lastX, lastY, curX, curY);
-                                    }
-
-                                    lastX = curX;
-
-                                    lastY = curY;
-
-                                    lastZ = curZ;
-
-                                    lastValid = curValid;
-                                }
+                                AlphaFiltering(minZ, maxZ, mapLine);
                             }
                         }
                     }
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in DrawMapLines(): ", ex); }
+        }
+
+        private void AlphaFiltering(float minZ, float maxZ, MapLine mapLine)
+        {
+            bool curValid, lastValid;
+
+            float curX, curY, curZ, lastX, lastY, lastZ;
+
+            lastX = mapLine.Point(0).x;
+
+            lastY = mapLine.Point(0).y;
+
+            lastZ = mapLine.Point(0).z;
+
+            lastValid = (lastZ > minZ) && (lastZ < maxZ);
+
+            for (var d = 1; d < mapLine.aPoints.Count; d++)
+            {
+                curX = mapLine.Point(d).x;
+
+                curY = mapLine.Point(d).y;
+
+                curZ = mapLine.Point(d).z;
+
+                curValid = (curZ > minZ) && (curZ < maxZ);
+
+                // Original Depth Filter method (use z-axis values only)
+
+                // instead of not drawing filtered lines, we draw light ones
+
+                if (!curValid && !lastValid)
+                {
+                    if (Settings.Default.UseDynamicAlpha)
+                    {
+                        DrawLine(mapLine.fade_color, lastX, lastY, curX, curY);
+                    }
+                }
+                else
+                {
+                    DrawLine(mapLine.draw_color, lastX, lastY, curX, curY);
+                }
+
+                lastX = curX;
+
+                lastY = curY;
+
+                lastZ = curZ;
+
+                lastValid = curValid;
+            }
         }
 
         private void MinMaxFilter(out float minZ, out float maxZ)

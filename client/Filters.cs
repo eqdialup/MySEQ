@@ -23,8 +23,6 @@ namespace myseq
 
         public List<string> GlobalAlert { get; set; } = new List<string>();
 
-        private readonly char[] anyOf = new char[] { '[', ':', '^', '*' };
-
         public void ClearLists()
         {
             Hunt.Clear();
@@ -37,8 +35,6 @@ namespace myseq
             GlobalAlert.Clear();
             EmailAlert.Clear();
             WieldedItems.Clear();
-
-            //            OffhandItem.Clear();
         }
 
         public void AddToAlerts(List<string> list, string additem)
@@ -83,32 +79,30 @@ namespace myseq
             // open the existing filter file
             foreach (var line in File.ReadAllLines(filterFile))
             {
-                line.Trim();
-                if (line.Length > 1 && !line.StartsWith("<!"))
+                var inp = line.Trim();
+                if (inp.Length > 1)
                 {
-                    line.ToLower();
-
-                    if (line.StartsWith("<section name=\"hunt\">"))
+                    if (inp.StartsWith("<section name=\"hunt\">",ignoreCase: true, culture: null))
                     {
                         type = 1;
                     }
-                    else if (line.StartsWith("<section name=\"caution\">"))
+                    else if (inp.StartsWith("<section name=\"caution\">",ignoreCase: true, culture: null))
                     {
                         type = 2;
                     }
-                    else if (line.StartsWith("<section name=\"danger\">"))
+                    else if (inp.StartsWith("<section name=\"danger\">",ignoreCase: true, culture: null))
                     {
                         type = 3;
                     }
-                    else if (line.StartsWith("<section name=\"alert\">") || line.StartsWith("<section name=\"locate\">"))
+                    else if (inp.StartsWith("<section name=\"alert\">",ignoreCase: true, culture: null))
                     {
                         type = 4;
                     }
-                    else if (line.StartsWith("<section name=\"email\">"))
+                    else if (inp.StartsWith("<section name=\"email\">",ignoreCase: true, culture: null) || inp.StartsWith("<section name=\"locate\">",ignoreCase: true, culture: null))
                     {
                         type = 5;
                     }
-                    else if (line.StartsWith("<section name=\"primary\">") || line.StartsWith("<section name=\"offhand\">"))
+                    else if (inp.StartsWith("<section name=\"primary\">",ignoreCase: true, culture: null) || inp.StartsWith("<section name=\"offhand\">",ignoreCase: true, culture: null))
                     {
                         type = 6;
                     }
@@ -116,7 +110,7 @@ namespace myseq
                     {
                         // unknown section headers
 
-                        if (line.StartsWith("</section>"))
+                        if (inp.StartsWith("</section>",ignoreCase: true, culture: null))
                         {
                             type = 0;
                             continue;
@@ -125,36 +119,28 @@ namespace myseq
                         var inputstring = line;
                         // Remove extra stuff
 
-                        if (line.StartsWith("<oldfilter>"))
+                        if (inp.StartsWith("<oldfilter>",ignoreCase: true, culture: null))
                         {
-                            inputstring = line.Remove(0, 11);
+                            inputstring = inp.Remove(0, 11);
                         }
-                        if (line.StartsWith("<regex>"))
+                        if (inputstring.StartsWith("<regex>",ignoreCase: true, culture: null))
                         {
-                            inputstring = line.Remove(0, 7);
+                            inputstring = inputstring.Remove(0, 7);
                         }
-
-                        if (line.EndsWith("</oldfilter>"))
+                        if (inputstring.EndsWith("</oldfilter>",ignoreCase: true, culture: null))
                         {
-                            inputstring = line.Remove(line.Length - 12, 12);
+                            inputstring = inputstring.Remove(inputstring.Length - 12, 12);
                         }
-                        if (line.EndsWith("</regex>"))
+                        if (inputstring.EndsWith("</regex>",ignoreCase: true, culture: null))
                         {
-                            inputstring = line.Remove(line.Length - 8, 8);
+                            inputstring = inputstring.Remove(inputstring.Length - 8, 8);
                         }
                         // remove Name: from line if it exists
-                        if (line.StartsWith("name:"))
+                        if (inputstring.StartsWith("name:",ignoreCase: true, culture: null))
                         {
-                            inputstring = line.Remove(0, 5);
+                            inputstring = inputstring.Remove(0, 5);
+                            DetermineType(zoneName, type, inputstring);
                         }
-
-                        // if there are any odd characters in the name, just skip it
-                        if (line.IndexOfAny(anyOf) != -1)
-                        {
-                            continue;
-                        }
-
-                        DetermineType(zoneName, type, inputstring);
                     }
                 }
             }
@@ -239,7 +225,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                 }
@@ -249,7 +235,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                 }
@@ -265,7 +251,7 @@ namespace myseq
                         if (str.Length > 0)
 
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                 }
@@ -275,7 +261,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                 }
@@ -289,7 +275,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                 }
@@ -299,7 +285,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                 }
@@ -313,7 +299,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                 }
@@ -323,7 +309,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                 }
@@ -336,7 +322,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                     lines.Add("    </section>");
@@ -345,7 +331,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                     lines.Add("    </section>");
@@ -354,7 +340,7 @@ namespace myseq
                     {
                         if (str.Length > 0)
                         {
-                            lines.Add("        <oldfilter><regex>Name:" + str + "</regex></oldfilter>");
+                            lines.Add($"        Name:{str}");
                         }
                     }
                     lines.Add("    </section>");

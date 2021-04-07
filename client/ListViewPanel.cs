@@ -24,7 +24,7 @@ namespace myseq
 
         private TextBox txtSpawnList;
 
-        private Button cmdReset;
+        private Button SearchBoxReset;
 
         public ListView listView;
 
@@ -49,32 +49,35 @@ namespace myseq
 
         private ToolStripMenuItem mnuAddZoneRareFilter;
 
-        //        private ToolStripMenuItem addZoneEmailAlertFilter;
-
         private ToolStripMenuItem mnuEditGlobalFilters;
 
         private ToolStripMenuItem mnuEditZoneFilters;
-
-        public string mobname = "";
-
-        public string smoblevel = "1";
-
-        public int moblevel = 1;
 
         private ToolStripMenuItem mnuAddDangerFilter;
 
         private ToolStripMenuItem mnuReloadZoneFilters;
 
         private ToolStripMenuItem mnuSearchAllakhazam;
-        private ToolStripSeparator menuItem3;
-        private ToolStripSeparator menuItem2;
+
+        private ToolStripMenuItem addMapLabelToolStripMenuItem;
+
+        private ToolStripMenuItem mnuStickyTimer;
+
+        private ToolStripMenuItem toolStriConcolor;
+
+        //        private ToolStripMenuItem addZoneEmailAlertFilter;
         private ToolStripSeparator mnuSep1;
         private ToolStripSeparator mnuSep2;
-        private ToolStripSeparator toolStripSeparator1;
-        private ToolStripMenuItem addMapLabelToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem mnuStickyTimer;
-        private ToolStripMenuItem toolStriConcolor;
+        private ToolStripSeparator mnuSep3;
+        private ToolStripSeparator mnuSep4;
+        private ToolStripSeparator mnuSep5;
+        private ToolStripSeparator mnuSep6;
+
+        public string mobname = "";
+
+        public string smoblevel = "1";
+
+        public int moblevel = 1;
 
         private readonly int ListType;
 
@@ -101,7 +104,7 @@ namespace myseq
 
         public void HideSearchBox()
         {
-            cmdReset.Visible = false;
+            SearchBoxReset.Visible = false;
             txtSpawnList.Visible = false;
             txtSpawnList.Text = "";
             listView.Location = new Point(0, 0);
@@ -109,7 +112,7 @@ namespace myseq
 
         public void ShowSearchBox()
         {
-            cmdReset.Visible = true;
+            SearchBoxReset.Visible = true;
             txtSpawnList.Visible = true;
             listView.Location = new Point(0, 24);
         }
@@ -144,18 +147,18 @@ namespace myseq
             components = new Container();
             ComponentResourceManager resources = new ComponentResourceManager(typeof(ListViewPanel));
             txtSpawnList = new TextBox();
-            cmdReset = new Button();
+            SearchBoxReset = new Button();
             listView = new ListView();
             mnuContext = new ContextMenuStrip(components);
             mnuAddZoneFilter = new ToolStripMenuItem();
             mnuStickyTimer = new ToolStripMenuItem();
-            menuItem3 = new ToolStripSeparator();
+            mnuSep3 = new ToolStripSeparator();
             mnuAddZoneHuntFilter = new ToolStripMenuItem();
             mnuAddZoneCautionFilter = new ToolStripMenuItem();
             mnuAddZoneDangerFilter = new ToolStripMenuItem();
             mnuAddZoneRareFilter = new ToolStripMenuItem();
             //            addZoneEmailAlertFilter = new ToolStripMenuItem();
-            menuItem2 = new ToolStripSeparator();
+            mnuSep4 = new ToolStripSeparator();
             mnuAddGlobalFilter = new ToolStripMenuItem();
             mnuAddHuntFilter = new ToolStripMenuItem();
             mnuAddCautionFilter = new ToolStripMenuItem();
@@ -166,9 +169,9 @@ namespace myseq
             mnuEditZoneFilters = new ToolStripMenuItem();
             mnuSep2 = new ToolStripSeparator();
             mnuReloadZoneFilters = new ToolStripMenuItem();
-            toolStripSeparator1 = new ToolStripSeparator();
+            mnuSep5 = new ToolStripSeparator();
             addMapLabelToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator2 = new ToolStripSeparator();
+            mnuSep6 = new ToolStripSeparator();
             mnuSearchAllakhazam = new ToolStripMenuItem();
             toolStriConcolor = new ToolStripMenuItem();
             mnuContext.SuspendLayout();
@@ -184,12 +187,12 @@ namespace myseq
             //
             // cmdReset
             //
-            cmdReset.Location = new Point(0, 0);
-            cmdReset.Name = "cmdReset";
-            cmdReset.Size = new Size(48, 20);
-            cmdReset.TabIndex = 0;
-            cmdReset.Text = "Reset";
-            cmdReset.Click += new EventHandler(CmdReset_Click);
+            SearchBoxReset.Location = new Point(0, 0);
+            SearchBoxReset.Name = "cmdReset";
+            SearchBoxReset.Size = new Size(48, 20);
+            SearchBoxReset.TabIndex = 0;
+            SearchBoxReset.Text = "Reset";
+            SearchBoxReset.Click += new EventHandler(SearchboxReset_Click);
             //
             // listView
             //
@@ -218,22 +221,22 @@ namespace myseq
             mnuAddZoneFilter,
             mnuStickyTimer,
             toolStriConcolor,
-            menuItem3,
+            mnuSep3,
             mnuAddZoneHuntFilter,
             mnuAddZoneCautionFilter,
             mnuAddZoneDangerFilter,
             mnuAddZoneRareFilter,
 //            addZoneEmailAlertFilter,
-            menuItem2,
+            mnuSep4,
             mnuAddGlobalFilter,
             mnuSep1,
             mnuEditGlobalFilters,
             mnuEditZoneFilters,
             mnuSep2,
             mnuReloadZoneFilters,
-            toolStripSeparator1,
+            mnuSep5,
             addMapLabelToolStripMenuItem,
-            toolStripSeparator2,
+            mnuSep6,
             mnuSearchAllakhazam});
             mnuContext.Name = "mnuContext";
             mnuContext.Size = new Size(342, 370);
@@ -255,8 +258,8 @@ namespace myseq
             //
             // menuItem3
             //
-            menuItem3.Name = "menuItem3";
-            menuItem3.Size = new Size(304, 6);
+            mnuSep3.Name = "menuItem3";
+            mnuSep3.Size = new Size(304, 6);
             //
             // mnuAddZoneHuntFilter
             //
@@ -295,8 +298,8 @@ namespace myseq
             //
             // menuItem2
             //
-            menuItem2.Name = "menuItem2";
-            menuItem2.Size = new Size(304, 6);
+            mnuSep4.Name = "menuItem2";
+            mnuSep4.Size = new Size(304, 6);
             //
             // mnuAddGlobalFilter
             //
@@ -371,8 +374,8 @@ namespace myseq
             //
             // toolStripSeparator1
             //
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(304, 6);
+            mnuSep5.Name = "toolStripSeparator1";
+            mnuSep5.Size = new Size(304, 6);
             //
             // addMapLabelToolStripMenuItem
             //
@@ -383,8 +386,8 @@ namespace myseq
             //
             // toolStripSeparator2
             //
-            toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(304, 6);
+            mnuSep6.Name = "toolStripSeparator2";
+            mnuSep6.Size = new Size(304, 6);
             //
             // mnuSearchAllakhazam
             //
@@ -412,7 +415,7 @@ namespace myseq
             BackColor = SystemColors.Window;
             ClientSize = new Size(200, 191);
             Controls.Add(listView);
-            Controls.Add(cmdReset);
+            Controls.Add(SearchBoxReset);
             Controls.Add(txtSpawnList);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -458,7 +461,7 @@ namespace myseq
                 toolStriConcolor.Text = $"Base Concolor on '{mobname}' ({smoblevel})";
                 mnuAddZoneFilter.Visible = true;
 
-                menuItem3.Visible = true;
+                mnuSep3.Visible = true;
 
                 mnuAddZoneFilter.Enabled = true;
 
@@ -522,7 +525,7 @@ namespace myseq
 
             mnuAddZoneFilter.Visible = false;
 
-            menuItem3.Visible = false;
+            mnuSep3.Visible = false;
 
             mnuAddGlobalFilter.Enabled = false;
 
@@ -555,21 +558,22 @@ namespace myseq
             mobname = mobname.Replace("_", " ");
             mobname = mobname.Trim();
             //smoblevel = "";
+            MobLevel(sel);
+        }
+
+        private void MobLevel(ListView.SelectedIndexCollection sel)
+        {
             smoblevel = listView.Items[sel[0]].SubItems[1].Text;
-            if (smoblevel.Length > 0)
+            if (smoblevel.Length > 0 && int.TryParse(smoblevel, out var Num))
             {
-                GetMobLevel();
+                moblevel = Num;
             }
         }
 
         private void ListType1(ListView.SelectedIndexCollection sel)
         {
             smoblevel = "";
-            smoblevel = listView.Items[sel[0]].SubItems[1].Text;
-            if (smoblevel.Length > 0)
-            {
-                GetMobLevel();
-            }
+            MobLevel(sel);
             mobname = RegexHelper.FixMobNameMatch(listView.Items[sel[0]].SubItems[0].Text);
             mobname = mobname.Trim();
         }
@@ -592,14 +596,6 @@ namespace myseq
             }
         }
 
-        private void GetMobLevel()
-        {
-            if (int.TryParse(smoblevel, out var Num))
-            {
-                moblevel = Num;
-            }
-        }
-
         private void ListViewPanel_Resize(object sender, EventArgs e)
         {
             try
@@ -613,21 +609,15 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.ListViewPanel_Resize: ", ex); }
         }
 
-        private void CmdReset_Click(object sender, EventArgs e)
+        private void SearchboxReset_Click(object sender, EventArgs e)
         {
-            try
-            {
-                txtSpawnList.Text = "";
-
-                txtSpawnList.Focus();
-            }
-            catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.cmdReset_Click: ", ex); }
+            txtSpawnList.Text = "";
+            txtSpawnList.Focus();
         }
 
         private void TxtSpawnList_TextChanged(object sender, EventArgs e) => SearchName(txtSpawnList.Text);
 
         public void SearchName(string name)
-
         {
             try
             {
@@ -665,22 +655,7 @@ namespace myseq
             {
                 curDescend = !curDescend;
 
-                this.listView.ListViewItemSorter = new ListComparer(e.Column);
-                //if (ListType == 0)
-
-                //{
-                //    listView.ListViewItemSorter = new ListBoxComparerSpawnList(listView.Items, curDescend, e.Column);
-                //}
-                //else if (ListType == 1)
-
-                //{
-                //    listView.ListViewItemSorter = new ListBoxComparerSpawnTimerList(listView.Items, curDescend, e.Column);
-                //}
-                //else if (ListType == 2)
-
-                //{
-                //    listView.ListViewItemSorter = new ListBoxComparerGroundItemsList(listView.Items, curDescend, e.Column);
-                //}
+                listView.ListViewItemSorter = new ListComparer(e.Column);
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ListViewPanel.listView_ColumnClick: ", ex); }
         }
@@ -736,9 +711,9 @@ namespace myseq
                     listView.Columns.RemoveByKey("Last Name");
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                LogLib.WriteLine("ListViewPanel.RemoveColumn: ", e);
+                LogLib.WriteLine("ListViewPanel.RemoveColumn: ", ex);
             }
         }
 
@@ -830,7 +805,7 @@ namespace myseq
         private void MnuReloadFilters_Click(object sender, EventArgs e)
 
         {
-            filters.ClearLists();
+            //filters.ClearLists();
 
             f1.ReloadAlertFiles();
         }
@@ -888,9 +863,7 @@ namespace myseq
 
         private void ToolStriConcolor_Click(object sender, EventArgs e)
         {
-            //mobname;
             Settings.Default.LevelOverride = moblevel;
-            //f1.gconLevel = moblevel;
             eq.GConBaseName = mobname;
         }
     }

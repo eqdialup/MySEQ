@@ -64,7 +64,7 @@ namespace myseq
 
             eq = new EQData();
             map = new EQMap();
-            comm = new EQCommunications(eq, this);
+            comm = new EQCommunications(eq, this, filters);
 
             InitializeComponent();
             LogLib.maxLogLevel = LogLevel.DefaultMaxLevel;
@@ -132,7 +132,6 @@ namespace myseq
             CreateSpawnlistView();
             toolStripVersion.Text = Version;
             mapCon?.ReAdjust();
-            eq.InitLookups();
 
             timPackets.Interval = Settings.Default.UpdateDelay;
 
@@ -364,14 +363,15 @@ namespace myseq
             }
 
             // Clear map
-
             map.ClearMap();
 
             // Start the timer
-
             timPackets.Start();
 
             mapCon.Focus();
+            //sets some variables | Loads race, class, gi files.
+            eq.LoadSpawnInfo();
+            eq.InitLookups();
 
             mapPane.cmdCommand.Text = "Stop";
 
@@ -382,7 +382,7 @@ namespace myseq
             toolStripStartStop.Text = "Stop";
             toolStripStartStop.ToolTipText = "Disconnect from Server";
             toolStripStartStop.Image = Resources.RedDelete;
-
+            
             bIsRunning = true;
         }
 
@@ -433,7 +433,6 @@ namespace myseq
         }
 
         private void LoadPrefs()
-
         {
             // Always want these off on starting up.
 
@@ -1011,7 +1010,7 @@ namespace myseq
 
                 eq.longname = mapPane.TabText;
 
-                filters.ClearLists();
+                //filters.ClearLists();
 
                 filters.LoadAlerts(mapname);
 
@@ -1086,7 +1085,7 @@ namespace myseq
             {
                 ContextMenuStrip = mnuContextAddFilter;
                 // set text for mob name in the top
-                mnuMobName.Text = "'" + alertAddmobname + "'";
+                mnuMobName.Text = $"'{alertAddmobname}'";
                 mnuMobName.Enabled = true;
                 mnuMobName.Visible = true;
                 // dont add email alerts for ground items
@@ -1452,7 +1451,7 @@ namespace myseq
         {
             if (bIsRunning)
             {
-                filters.ClearLists();
+                //filters.ClearLists();
 
                 filters.LoadAlerts(curZone);
 
@@ -1910,7 +1909,7 @@ namespace myseq
 
         public void ReloadAlertFiles()
         {
-            filters.ClearLists();
+            //filters.ClearLists();
 
             filters.LoadAlerts(curZone);
 
