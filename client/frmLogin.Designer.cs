@@ -40,8 +40,8 @@
             this.lblSMTPDomain = new System.Windows.Forms.Label();
             this.textBoxSMTPDomain = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBoxSMTPUseNetworkCredentials = new System.Windows.Forms.CheckBox();
-            this.checkBoxSMTPUseSecureAuthentication = new System.Windows.Forms.CheckBox();
+            this.SMTPUseNetworkCreds = new System.Windows.Forms.CheckBox();
+            this.SMTPUseSecureAuthn = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.lblSMTPPort = new System.Windows.Forms.Label();
             this.textSMTPPort = new System.Windows.Forms.TextBox();
@@ -148,8 +148,8 @@
             this.groupBox3.Controls.Add(this.lblSMTPDomain);
             this.groupBox3.Controls.Add(this.textBoxSMTPDomain);
             this.groupBox3.Controls.Add(this.checkBox1);
-            this.groupBox3.Controls.Add(this.checkBoxSMTPUseNetworkCredentials);
-            this.groupBox3.Controls.Add(this.checkBoxSMTPUseSecureAuthentication);
+            this.groupBox3.Controls.Add(this.SMTPUseNetworkCreds);
+            this.groupBox3.Controls.Add(this.SMTPUseSecureAuthn);
             this.groupBox3.Controls.Add(this.textBox1);
             this.groupBox3.Controls.Add(this.lblSMTPPort);
             this.groupBox3.Controls.Add(this.textSMTPPort);
@@ -194,25 +194,25 @@
             // 
             // checkBoxSMTPUseNetworkCredentials
             // 
-            this.checkBoxSMTPUseNetworkCredentials.AutoSize = true;
-            this.checkBoxSMTPUseNetworkCredentials.Location = new System.Drawing.Point(8, 105);
-            this.checkBoxSMTPUseNetworkCredentials.Name = "checkBoxSMTPUseNetworkCredentials";
-            this.checkBoxSMTPUseNetworkCredentials.Size = new System.Drawing.Size(143, 17);
-            this.checkBoxSMTPUseNetworkCredentials.TabIndex = 4;
-            this.checkBoxSMTPUseNetworkCredentials.Text = "Use Network Credentials";
-            this.checkBoxSMTPUseNetworkCredentials.UseVisualStyleBackColor = true;
-            this.checkBoxSMTPUseNetworkCredentials.Click += new System.EventHandler(this.CheckBoxSMTPUseNetworkCredentials_Click);
+            this.SMTPUseNetworkCreds.AutoSize = true;
+            this.SMTPUseNetworkCreds.Location = new System.Drawing.Point(8, 105);
+            this.SMTPUseNetworkCreds.Name = "checkBoxSMTPUseNetworkCredentials";
+            this.SMTPUseNetworkCreds.Size = new System.Drawing.Size(143, 17);
+            this.SMTPUseNetworkCreds.TabIndex = 4;
+            this.SMTPUseNetworkCreds.Text = "Use Network Credentials";
+            this.SMTPUseNetworkCreds.UseVisualStyleBackColor = true;
+            this.SMTPUseNetworkCreds.Click += new System.EventHandler(this.CheckBoxSMTPUseNetworkCredentials_Click);
             // 
             // checkBoxSMTPUseSecureAuthentication
             // 
-            this.checkBoxSMTPUseSecureAuthentication.AutoSize = true;
-            this.checkBoxSMTPUseSecureAuthentication.Location = new System.Drawing.Point(8, 82);
-            this.checkBoxSMTPUseSecureAuthentication.Name = "checkBoxSMTPUseSecureAuthentication";
-            this.checkBoxSMTPUseSecureAuthentication.Size = new System.Drawing.Size(153, 17);
-            this.checkBoxSMTPUseSecureAuthentication.TabIndex = 3;
-            this.checkBoxSMTPUseSecureAuthentication.Text = "Use Secure Authentication";
-            this.checkBoxSMTPUseSecureAuthentication.UseVisualStyleBackColor = true;
-            this.checkBoxSMTPUseSecureAuthentication.Click += new System.EventHandler(this.CheckBoxSMTPUseSecureAuthentication_Click);
+            this.SMTPUseSecureAuthn.AutoSize = true;
+            this.SMTPUseSecureAuthn.Location = new System.Drawing.Point(8, 82);
+            this.SMTPUseSecureAuthn.Name = "checkBoxSMTPUseSecureAuthentication";
+            this.SMTPUseSecureAuthn.Size = new System.Drawing.Size(153, 17);
+            this.SMTPUseSecureAuthn.TabIndex = 3;
+            this.SMTPUseSecureAuthn.Text = "Use Secure Authentication";
+            this.SMTPUseSecureAuthn.UseVisualStyleBackColor = true;
+            this.SMTPUseSecureAuthn.Click += new System.EventHandler(this.CheckBoxSMTPUseSecureAuthentication_Click);
             // 
             // textBox1
             // 
@@ -386,8 +386,8 @@
         private System.Windows.Forms.Label lblSMTPDomain;
         private System.Windows.Forms.TextBox textBoxSMTPDomain;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBoxSMTPUseNetworkCredentials;
-        private System.Windows.Forms.CheckBox checkBoxSMTPUseSecureAuthentication;
+        private System.Windows.Forms.CheckBox SMTPUseNetworkCreds;
+        private System.Windows.Forms.CheckBox SMTPUseSecureAuthn;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label lblSMTPPort;
         private System.Windows.Forms.TextBox textSMTPPort;

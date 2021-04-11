@@ -84,7 +84,8 @@ namespace myseq
                 return ((AssemblyCompanyAttribute)attributes[0]).Company;
             }
         }
-        #endregion
+
+        #endregion Assembly Attribute Accessors
 
         private static void DockpanelClick(object sender, LinkLabelLinkClickedEventArgs e) =>
             Process.Start(dockpanel);

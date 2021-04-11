@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using myseq.Properties;
 using Structures;
@@ -17,6 +18,8 @@ namespace myseq
     public class EQData
     {
         private static readonly Spawninfo sPAWNINFO = new Spawninfo();
+
+        private ConColors GetConColors = new ConColors();
 
         // player details
         public Spawninfo gamerInfo = sPAWNINFO;
@@ -121,8 +124,7 @@ namespace myseq
         public SolidBrush[] ConColors { get; set; } = new SolidBrush[500];
 
         private const int ditchGone = 2;
-        private const string dflt = "Mob Search";
- 
+
         public Hashtable GetMobsReadonly() => mobsHashTable;
 
         public List<MobTrailPoint> GetMobTrailsReadonly() => mobtrails;
@@ -133,9 +135,9 @@ namespace myseq
 
         public List<GroundItem> GetItemsReadonly() => itemcollection;
 
-        public bool SelectTimer(float delta, float x, float y)
+        public bool SelectTimer(float x, float y, float delta)
         {
-            Spawntimer st = FindTimer(delta, x, y);
+            Spawntimer st = FindTimer(x, y, delta);
 
             if (st != null)
             {
@@ -160,9 +162,9 @@ namespace myseq
             }
         }
 
-        public bool SelectGroundItem(float delta, float x, float y)
+        public bool SelectGroundItem(float x, float y, float delta)
         {
-            GroundItem gi = FindGroundItem(delta, x, y);
+            GroundItem gi = FindGroundItem(x, y, delta);
 
             if (gi != null)
             {
@@ -187,9 +189,9 @@ namespace myseq
             }
         }
 
-        public bool SelectMob(float delta, float x, float y)
+        public bool SelectMob(float x, float y, float delta)
         {
-            Spawninfo sp = FindMobNoPet(delta, x, y) ?? FindMob(delta, x, y);
+            Spawninfo sp = FindMobNoPet(x, y, delta) ?? FindMob(x, y, delta);
 
             if (sp != null)
             {
@@ -214,7 +216,7 @@ namespace myseq
             }
         }
 
-        public Spawninfo FindMobNoPet(float delta, float x, float y)
+        public Spawninfo FindMobNoPet(float x, float y, float delta)
         {
             try
             {
@@ -238,7 +240,7 @@ namespace myseq
             }
         }
 
-        public Spawninfo FindMobNoPetNoPlayerNoCorpse(float delta, float x, float y)
+        public Spawninfo FindMobNoPetNoPlayerNoCorpse(float x, float y, float delta)
         {
             try
             {
@@ -262,7 +264,7 @@ namespace myseq
             }
         }
 
-        public Spawninfo FindMobNoPetNoPlayer(float delta, float x, float y)
+        public Spawninfo FindMobNoPetNoPlayer(float x, float y, float delta)
         {
             try
             {
@@ -286,7 +288,7 @@ namespace myseq
 
         private static bool HiddenFamPet(Spawninfo sp) => !sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isMerc;
 
-        public Spawninfo FindMob(float delta, float x, float y)
+        public Spawninfo FindMob(float x, float y, float delta)
         {
             try
             {
@@ -352,7 +354,7 @@ namespace myseq
             }
         }
 
-        public Spawntimer FindTimer(float delta, float x, float y)
+        public Spawntimer FindTimer(float x, float y, float delta)
         {
             try
             {
@@ -375,7 +377,7 @@ namespace myseq
             }
         }
 
-        public GroundItem FindGroundItem(float delta, float x, float y)
+        public GroundItem FindGroundItem(float x, float y, float delta)
         {
             foreach (GroundItem gi in itemcollection)
             {
@@ -388,7 +390,7 @@ namespace myseq
             return null;
         }
 
-        public GroundItem FindGroundItemNoFilter(float delta, float x, float y)
+        public GroundItem FindGroundItemNoFilter(float x, float y, float delta)
         {
             foreach (GroundItem gi in itemcollection)
             {
@@ -561,13 +563,10 @@ namespace myseq
             {
                 foreach (var line in File.ReadAllLines(filePath))
                 {
-                    if (line != null)
+                    var ln = line.Trim();
+                    if (ln != null && ln.Substring(0, 1) != "#")
                     {
-                        line.Trim();
-                        if (line != "" && line.Substring(0, 1) != "#")
-                        {
-                            arList.Add(line);
-                        }
+                        arList.Add(ln);
                     }
                 }
             }
@@ -576,8 +575,6 @@ namespace myseq
 
         private void ReadItemList(string filePath)
         {
-//            IFormatProvider NumFormat = new CultureInfo("en-US"); //no commaseparation on numbers, so this is pointless.
-
             if (!File.Exists(filePath))
             {
                 LogLib.WriteLine("GroundItems.ini file not found", LogLevel.Warning);
@@ -850,7 +847,8 @@ namespace myseq
             }
         }
 
-        public void ProcessGroundItems(Spawninfo si, Filters filters)//, ListViewPanel GroundItemList)
+        //public void ProcessGroundItems(Spawninfo si, Filters filters)
+        public async Task ProcessGroundItems(Spawninfo si, Filters filters)
         {
             try
             {
@@ -877,8 +875,8 @@ namespace myseq
                     };
 
                     var itemname = gi.Desc.ToLower();
-                    CheckGrounditemForAlerts(filters, gi, itemname);
-
+                    //CheckGrounditemForAlerts(filters, gi, itemname);
+                    await Task.Run(() => CheckGrounditemForAlerts(filters, gi, itemname));
                     ListViewItem item1 = new ListViewItem(gi.Desc);
 
                     item1.SubItems.Add(si.Name);
@@ -1031,7 +1029,6 @@ namespace myseq
         }
 
         public void ProcessWorld(Spawninfo si) => gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0);
-
         /*  yy/mm/dd/hh/min
          * gameYear = si.Race
          * gameMonth = si.Hide
@@ -1040,7 +1037,8 @@ namespace myseq
          * gameMin = si.Class
         */
 
-        public void ProcessSpawns(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
+        //public void ProcessSpawns(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
+        public async Task ProcessSpawnsAsync(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
         {
             CorpseAlerts = Settings.Default.CorpseAlerts;
             if (si.Name.Contains("a_tainted_egg"))
@@ -1096,32 +1094,32 @@ namespace myseq
 
                         MobLevelSetColor(si, SpawnList, mob);
 
-                        if (mob.Class != si.Class)
-                        {
+                        //if (mob.Class != si.Class)
+                        //{
                             mob.Class = si.Class;
                             mob.listitem.SubItems[2].Text = GetClass(si.Class);
-                        }
+                        //}
 
-                        if (mob.Primary != si.Primary)
-                        {
+                        //if (mob.Primary != si.Primary)
+                        //{
                             mob.Primary = si.Primary;
                             mob.listitem.SubItems[3].Text = si.Primary > 0 ? ItemNumToString(si.Primary) : "";
-                        }
+                        //}
 
-                        if (mob.Offhand != si.Offhand)
-                        {
+                        //if (mob.Offhand != si.Offhand)
+                        //{
                             mob.Offhand = si.Offhand;
                             mob.listitem.SubItems[4].Text = si.Offhand > 0 ? ItemNumToString(si.Offhand) : "";
-                        }
+                        //}
 
-                        if (mob.Race != si.Race)
-                        {
+                        //if (mob.Race != si.Race)
+                        //{
                             mob.Race = si.Race;
                             mob.listitem.SubItems[5].Text = GetRace(si.Race);
-                        }
+                        //}
 
-                        if (mob.OwnerID != si.OwnerID)
-                        {
+                        //if (mob.OwnerID != si.OwnerID)
+                        //{
                             mob.OwnerID = si.OwnerID;
                             if (mob.OwnerID == 0)
                             {
@@ -1148,13 +1146,13 @@ namespace myseq
                                 mob.listitem.SubItems[6].Text = mob.OwnerID.ToString();
                                 mob.isPet = false;
                             }
-                        }
+                        //}
 
-                        if (mob.Hide != si.Hide)
-                        {
+                        //if (mob.Hide != si.Hide)
+                        //{
                             mob.Hide = si.Hide;
                             mob.listitem.SubItems[9].Text = PrettyNames.GetHideStatus(si.Hide);
-                        }
+                        //}
 
                         //if (mob.Guild != si.Guild)
                         //{
@@ -1178,7 +1176,6 @@ namespace myseq
                         if (mob.X != si.X)
                         {
                             // ensure that map is big enough to show all spawns.
-
                             CheckBigMap(si, mapPane);
 
                             mob.X = si.X;
@@ -1208,8 +1205,8 @@ namespace myseq
                     {
                         // this should be the selected id
                         // ensure that map is big enough to show all spawns.
-
-                        AdjustMapForSpawns(si, f1, mapPane, mob);
+                        CheckBigMap(si, mapPane);
+                        PopulateListview(si, f1, mob);
                     }
 
                     if (listReAdd)
@@ -1222,14 +1219,10 @@ namespace myseq
 
                 if (!found && si.Name.Length > 0)
                 {
-                    //                    bool alert = false;
-
                     // ensure that map is big enough to show all spawns.
-
                     CheckBigMap(si, mapPane);
 
                     // Set mob type info
-
                     if (si.Type == 0)
                     {
                         // Players
@@ -1249,7 +1242,6 @@ namespace myseq
                     else
                     {
                         // non-corpse, non-player spawn (aka NPC)
-
                         HandleNPCs(si);
                     }
 
@@ -1257,7 +1249,8 @@ namespace myseq
 
                     if (si.Name.Length > 0)
                     {
-                        IsSpawnInFilterLists(si, f1, SpawnList, filters);//, alert);
+                        //IsSpawnInFilterLists(si, f1, SpawnList, filters);
+                        await Task.Run(() => IsSpawnInFilterLists(si, f1, SpawnList, filters));
                     }
                 }
             }
@@ -1428,10 +1421,8 @@ namespace myseq
             }
         }
 
-        private void AdjustMapForSpawns(Spawninfo si, MainForm f1, MapPane mapPane, Spawninfo mob)
+        private void PopulateListview(Spawninfo si, MainForm f1, Spawninfo mob)
         {
-            CheckBigMap(si, mapPane);
-
             mob.X = si.X;
             mob.listitem.SubItems[14].Text = si.Y.ToString();
 
@@ -1441,14 +1432,12 @@ namespace myseq
             mob.Z = si.Z;
             mob.listitem.SubItems[15].Text = si.Z.ToString();
 
-            var sd = SpawnDistance(si);
-
             if (Settings.Default.FollowOption == FollowOption.Target)
             {
                 f1.ReAdjust();
             }
 
-            mob.listitem.SubItems[16].Text = sd.ToString("#.000");
+            mob.listitem.SubItems[16].Text = si.SpawnDistance(si, gamerInfo).ToString("#.00");
         }
 
         private void UpdateMobTypes(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
@@ -1598,18 +1587,10 @@ namespace myseq
 
             var mobnameWithInfo = mobname;
 
-            var primaryName = "";
-
             if (si.Primary > 0 || si.Offhand > 0)
             {
-                primaryName = ItemNumToString(si.Primary);
-            }
-
-            var offhandName = "";
-
-            if (si.Offhand > 0)
-            {
-                offhandName = ItemNumToString(si.Offhand);
+                si.PrimaryName = ItemNumToString(si.Primary);
+                si.OffhandName = ItemNumToString(si.Offhand);
             }
 
             // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
@@ -1620,136 +1601,9 @@ namespace myseq
                 * ************************************* */
 
                 // [hunt]
+                AssignAlertStatus(si, filters, matchmobname, ref alert, ref mobnameWithInfo);
 
-                var corpse = !si.isCorpse || CorpseAlerts;
-                if (filters.Hunt.Count > 0 && corpse && FindMatches(filters.Hunt, matchmobname, Settings.Default.NoneOnHunt,
-                    Settings.Default.TalkOnHunt, "Hunt Mob",
-                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                    Settings.Default.BeepOnHunt, MatchFullTextH))
-                {
-                    alert = true;
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-
-                    si.isHunt = true;
-                }
-                if (filters.GlobalHunt.Count > 0 && !alert && corpse && FindMatches(filters.GlobalHunt, matchmobname, Settings.Default.NoneOnHunt,
-
-                        Settings.Default.TalkOnHunt, "Hunt Mob",
-                        Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                        Settings.Default.BeepOnHunt, MatchFullTextH))
-                {
-                    alert = true;
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-                    si.isHunt = true;
-                }
-
-                // [caution]
-                if (filters.Caution.Count > 0 && !alert && corpse && FindMatches(filters.Caution, matchmobname, Settings.Default.NoneOnCaution,
-
-                        Settings.Default.TalkOnCaution, "Caution Mob",
-                        Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-                        Settings.Default.BeepOnCaution, MatchFullTextC))
-                {
-                    alert = true;
-                    si.isCaution = true;
-
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
-
-                    si.isCaution = true;
-                }
-                if (filters.GlobalCaution.Count > 0 && !alert && corpse && FindMatches(filters.GlobalCaution, matchmobname, Settings.Default.NoneOnCaution,
-
-                        Settings.Default.TalkOnCaution, "Caution Mob",
-                        Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-                        Settings.Default.BeepOnCaution, MatchFullTextC))
-                {
-                    alert = true;
-
-                    si.isCaution = true;
-
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
-                }
-
-                // [danger]
-                if (filters.Danger.Count > 0 && !alert && corpse && FindMatches(filters.Danger, matchmobname, Settings.Default.NoneOnDanger,
-
-                        Settings.Default.TalkOnDanger, "Danger Mob",
-
-                        Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-
-                        Settings.Default.BeepOnDanger, MatchFullTextD))
-                {
-                    alert = true;
-
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
-
-                    si.isDanger = true;
-                }
-                if (filters.GlobalDanger.Count > 0 && !alert && corpse && FindMatches(filters.GlobalDanger, matchmobname, Settings.Default.NoneOnDanger,
-                        Settings.Default.TalkOnDanger, "Danger Mob",
-                        Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-                        Settings.Default.BeepOnDanger, MatchFullTextD))
-                {
-                    alert = true;
-
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
-
-                    si.isDanger = true;
-                }
-
-                // [rare]
-                if (filters.Alert.Count > 0 && !alert && corpse && FindMatches(filters.Alert, matchmobname, Settings.Default.NoneOnAlert,
-                        Settings.Default.TalkOnAlert, "Rare Mob",
-                        Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-                        Settings.Default.BeepOnAlert, MatchFullTextA))
-                {
-                    alert = true;
-
-                    si.isAlert = true;
-
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
-                }
-                if (filters.GlobalAlert.Count > 0 && !alert && corpse && FindMatches(filters.GlobalAlert, matchmobname, Settings.Default.NoneOnAlert,
-                        Settings.Default.TalkOnAlert, "Rare Mob",
-                        Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-                        Settings.Default.BeepOnAlert, MatchFullTextA))
-                {
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
-
-                    si.isAlert = true;
-                }
-                //// [Email]
-                //if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, false, false, "", false, "", !si.isAlert && !si.isCaution && !si.isDanger && !si.isHunt, true))
-                //{
-                //    // Flag on map as an alert mob
-                //    si.isAlert = true;
-                //}
-
-                // [Wielded Items]
-                // Acts like a hunt mob.
-                if (filters.WieldedItems.Count > 0 && corpse && FindMatches(filters.WieldedItems, primaryName, Settings.Default.NoneOnHunt,
-                        Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
-                        Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                        Settings.Default.BeepOnHunt, MatchFullTextH))
-                {
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-
-                    si.isHunt = true;
-                }
-
-                // [Offhand]
-                // Acts like a hunt mob.
-                if (filters.WieldedItems.Count > 0 && corpse && FindMatches(filters.WieldedItems, offhandName,
-                    Settings.Default.NoneOnHunt,
-                        Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
-                        Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                        Settings.Default.BeepOnHunt, MatchFullTextH))
-                {
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-                    si.isAlert = true;
-                }
-
-                LookupBoxMatch(si, f1);
+                PrettyNames.LookupBoxMatch(si, f1);
             }
 
             ListViewItem item1 = AddDetailsToList(si, SpawnList, mobnameWithInfo);
@@ -1760,6 +1614,137 @@ namespace myseq
             if (!si.hidden)
             {
                 newSpawns.Add(item1);
+            }
+        }
+
+        private void AssignAlertStatus(Spawninfo si, Filters filters, string matchmobname, ref bool alert, ref string mobnameWithInfo)
+        {
+            var corpse = !si.isCorpse || CorpseAlerts;
+            if (filters.Hunt.Count > 0 && corpse && FindMatches(filters.Hunt, matchmobname, Settings.Default.NoneOnHunt,
+                Settings.Default.TalkOnHunt, "Hunt Mob",
+                Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                Settings.Default.BeepOnHunt, MatchFullTextH))
+            {
+                alert = true;
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
+
+                si.isHunt = true;
+            }
+            if (filters.GlobalHunt.Count > 0 && !alert && corpse && FindMatches(filters.GlobalHunt, matchmobname, Settings.Default.NoneOnHunt,
+
+                    Settings.Default.TalkOnHunt, "Hunt Mob",
+                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                    Settings.Default.BeepOnHunt, MatchFullTextH))
+            {
+                alert = true;
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
+                si.isHunt = true;
+            }
+
+            // [caution]
+            if (filters.Caution.Count > 0 && !alert && corpse && FindMatches(filters.Caution, matchmobname, Settings.Default.NoneOnCaution,
+
+                    Settings.Default.TalkOnCaution, "Caution Mob",
+                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
+                    Settings.Default.BeepOnCaution, MatchFullTextC))
+            {
+                alert = true;
+                si.isCaution = true;
+
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
+
+                si.isCaution = true;
+            }
+            if (filters.GlobalCaution.Count > 0 && !alert && corpse && FindMatches(filters.GlobalCaution, matchmobname, Settings.Default.NoneOnCaution,
+
+                    Settings.Default.TalkOnCaution, "Caution Mob",
+                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
+                    Settings.Default.BeepOnCaution, MatchFullTextC))
+            {
+                alert = true;
+
+                si.isCaution = true;
+
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
+            }
+
+            // [danger]
+            if (filters.Danger.Count > 0 && !alert && corpse && FindMatches(filters.Danger, matchmobname, Settings.Default.NoneOnDanger,
+
+                    Settings.Default.TalkOnDanger, "Danger Mob",
+
+                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
+
+                    Settings.Default.BeepOnDanger, MatchFullTextD))
+            {
+                alert = true;
+
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
+
+                si.isDanger = true;
+            }
+            if (filters.GlobalDanger.Count > 0 && !alert && corpse && FindMatches(filters.GlobalDanger, matchmobname, Settings.Default.NoneOnDanger,
+                    Settings.Default.TalkOnDanger, "Danger Mob",
+                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
+                    Settings.Default.BeepOnDanger, MatchFullTextD))
+            {
+                alert = true;
+
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
+
+                si.isDanger = true;
+            }
+
+            // [rare]
+            if (filters.Alert.Count > 0 && !alert && corpse && FindMatches(filters.Alert, matchmobname, Settings.Default.NoneOnAlert,
+                    Settings.Default.TalkOnAlert, "Rare Mob",
+                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
+                    Settings.Default.BeepOnAlert, MatchFullTextA))
+            {
+                alert = true;
+
+                si.isAlert = true;
+
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
+            }
+            if (filters.GlobalAlert.Count > 0 && !alert && corpse && FindMatches(filters.GlobalAlert, matchmobname, Settings.Default.NoneOnAlert,
+                    Settings.Default.TalkOnAlert, "Rare Mob",
+                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
+                    Settings.Default.BeepOnAlert, MatchFullTextA))
+            {
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
+
+                si.isAlert = true;
+            }
+            //// [Email]
+            //if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, false, false, "", false, "", !si.isAlert && !si.isCaution && !si.isDanger && !si.isHunt, true))
+            //{
+            //    // Flag on map as an alert mob
+            //    si.isAlert = true;
+            //}
+
+            // [Wielded Items]
+            // Acts like a hunt mob.
+            if (filters.WieldedItems.Count > 0 && corpse && FindMatches(filters.WieldedItems, si.PrimaryName, Settings.Default.NoneOnHunt,
+                    Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
+                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                    Settings.Default.BeepOnHunt, MatchFullTextH))
+            {
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
+
+                si.isHunt = true;
+            }
+
+            // [Offhand]
+            // Acts like a hunt mob.
+            if (filters.WieldedItems.Count > 0 && corpse && FindMatches(filters.WieldedItems, si.OffhandName,
+                Settings.Default.NoneOnHunt,
+                    Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
+                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
+                    Settings.Default.BeepOnHunt, MatchFullTextH))
+            {
+                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
+                si.isAlert = true;
             }
         }
 
@@ -1826,7 +1811,7 @@ namespace myseq
 
             item1.SubItems.Add(si.Z.ToString("#.00"));
 
-            item1.SubItems.Add(SpawnDistance(si).ToString("#.00"));
+            item1.SubItems.Add(si.SpawnDistance(si, gamerInfo).ToString("#.00"));
 
             //            item1.SubItems.Add(GuildNumToString(si.Guild));
 
@@ -1872,9 +1857,6 @@ namespace myseq
             return item1;
         }
 
-        private float SpawnDistance(Spawninfo si)
-        => (float)Math.Sqrt(((si.X - gamerInfo.X) * (si.X - gamerInfo.X)) + ((si.Y - gamerInfo.Y) * (si.Y - gamerInfo.Y)) + ((si.Z - gamerInfo.Z) * (si.Z - gamerInfo.Z)));
-
         private void NameChngOrDead(Spawninfo si, Spawninfo mob)
         {
             var newname = RegexHelper.FixMobName(si.Name);
@@ -1902,45 +1884,6 @@ namespace myseq
             }
 
             mob.Name = si.Name;
-        }
-
-        private static void LookupBoxMatch(Spawninfo si, MainForm f1)
-        {
-            si.isLookup = false;
-            if (f1.toolStripLookupBox.Text.Length > 1
-                && f1.toolStripLookupBox.Text != dflt
-                && RegexHelper.GetRegex(f1.toolStripLookupBox.Text).Match(si.Name).Success)
-            {
-                si.isLookup = true;
-            }
-
-            if (f1.toolStripLookupBox1.Text.Length > 1
-                && f1.toolStripLookupBox1.Text != dflt
-                && RegexHelper.GetRegex(f1.toolStripLookupBox1.Text).Match(si.Name).Success)
-            {
-                si.isLookup = true;
-            }
-
-            if (f1.toolStripLookupBox2.Text.Length > 1
-                && f1.toolStripLookupBox2.Text != dflt
-                && RegexHelper.GetRegex(f1.toolStripLookupBox2.Text).Match(si.Name).Success)
-            {
-                si.isLookup = true;
-            }
-
-            if (f1.toolStripLookupBox3.Text.Length > 1
-                && f1.toolStripLookupBox3.Text != dflt
-                && RegexHelper.GetRegex(f1.toolStripLookupBox3.Text).Match(si.Name).Success)
-            {
-                si.isLookup = true;
-            }
-
-            if (f1.toolStripLookupBox4.Text.Length > 1
-                && f1.toolStripLookupBox4.Text != dflt
-                && RegexHelper.GetRegex(f1.toolStripLookupBox4.Text).Match(si.Name).Success)
-            {
-                si.isLookup = true;
-            }
         }
 
         private void OwnerFlag(Spawninfo si, ListViewItem item1)
@@ -2116,7 +2059,7 @@ namespace myseq
 
         public void SetSelectedTimer(float x, float y)
         {
-            Spawntimer st = FindTimer(1.0f, x, y);
+            Spawntimer st = FindTimer(x, y, 1.0f);
 
             if (st != null)
             {
@@ -2132,7 +2075,7 @@ namespace myseq
 
         public void SetSelectedGroundItem(float x, float y)
         {
-            GroundItem gi = FindGroundItemNoFilter(1.0f, x, y);
+            GroundItem gi = FindGroundItemNoFilter(x, y, 1.0f);
 
             if (gi != null)
             {
@@ -2256,7 +2199,7 @@ namespace myseq
         private int gLastconLevel = -1;
         private int gconLevel;
 
-        public void ProcessGamer(Spawninfo si, MainForm f1)//FrmMain f1)
+        public void ProcessGamer(Spawninfo si, MainForm f1)
         {
             try
             {
@@ -2310,7 +2253,7 @@ namespace myseq
                         Settings.Default.LevelOverride = gconLevel;
                     }
                     gamerInfo.Level = si.Level;
-                    FillConColors(f1);
+                    GetConColors.FillConColors(f1, gamerInfo, ConColors);
 
                     // update mob list con colors
 
@@ -2319,7 +2262,7 @@ namespace myseq
                 if (gLastconLevel != gconLevel)
                 {
                     gLastconLevel = gconLevel;
-                    FillConColors(f1);
+                    GetConColors.FillConColors(f1, gamerInfo, ConColors);
                     UpdateMobListColors();
                 }
             }
@@ -2362,466 +2305,47 @@ namespace myseq
             }
         }
 
+        public void ModKeyControl(MapCon mapCon, float x, float y)
+        {
+            var delta = 5.0f / mapCon.m_ratio;
+
+            Spawninfo sp = FindMobNoPet(x, y, delta) ?? FindMob(x, y, delta);
+
+            if (sp != null)
+            {
+                Spawninfo st = FindMobTimer(sp.SpawnLoc);
+
+                if (st == null)
+                {
+                    SetSelectedID(sp.SpawnID);
+
+                    SpawnX = -1.0f;
+                    SpawnY = -1.0f;
+                }
+                else
+                {
+                    SetSelectedID(st.SpawnID);
+                    Spawntimer spawntimer = FindTimer(st.X, st.Y, 1.0f);
+                    if (spawntimer?.itmSpawnTimerList != null)
+                    {
+                        spawntimer.itmSpawnTimerList.Selected = true;
+                        spawntimer.itmSpawnTimerList.EnsureVisible();
+                    }
+
+                    SpawnX = st.X;
+                    SpawnY = st.Y;
+                }
+            }
+            else
+            {
+                if (!SelectTimer(x, y, delta))
+                {
+                    SelectGroundItem(x, y, delta);
+                }
+            }
+        }
+
         #region ColorOperations
-
-        public void FillConColors(MainForm f1)//FrmMain f1)
-        {
-            int level;
-            if (Settings.Default.LevelOverride == -1)
-            {
-                f1.toolStripLevel.Text = "Auto";
-                level = gamerInfo.Level;
-            }
-            else
-            {
-                level = Settings.Default.LevelOverride;
-                f1.toolStripLevel.Text = level.ToString();
-            }
-            YellowRange = 3;
-
-            CyanRange = -5;
-
-            GreenRange = (-1) * level;
-
-            GreyRange = (-1) * level;
-
-            // If using SoD/Titanium Con Colors
-            VersionColorVariation(level);
-
-            int c;
-            // Set the Grey Cons
-            for (c = 0; c < (GreyRange + level); c++)
-            {
-                ConColors[c] = new SolidBrush(Color.Gray);
-            }
-
-            // Set the Green Cons
-            for (; c < (GreenRange + level); c++)
-            {
-                ConColors[c] = new SolidBrush(Color.Lime);
-            }
-
-            // Set the Light Blue Cons
-            for (; c < (CyanRange + level); c++)
-            {
-                ConColors[c] = new SolidBrush(Color.Aqua);
-            }
-
-            // Set the Dark Blue Cons
-            for (; c < level; c++)
-            {
-                ConColors[c] = new SolidBrush(Color.Blue);
-            }
-
-            // Set the Same Level Con
-            ConColors[c++] = new SolidBrush(Color.White);
-
-            // Yellow Cons
-            for (; c < (level + YellowRange + 1); c++)
-            {
-                ConColors[c] = new SolidBrush(Color.Yellow);
-            }
-
-            // 4 levels of bright red
-            ConColors[c++] = new SolidBrush(Color.Red);
-            ConColors[c++] = new SolidBrush(Color.Red);
-            ConColors[c++] = new SolidBrush(Color.Red);
-            ConColors[c++] = new SolidBrush(Color.Red);
-
-            // Set the remaining levels to dark red
-            for (; c < 500; c++)
-            {
-                ConColors[c] = new SolidBrush(Color.Maroon);
-            }
-        }
-
-        private void VersionColorVariation(int level)
-        // Check for SoD, SoF or Real EQ con levels in use
-        {
-            var ConColorsFile = Path.Combine(Settings.Default.CfgDir, "ConLevels.Ini");
-            if (Settings.Default.SoDCon)
-            {
-                SoDCon(level);
-            }
-
-            // If using SoF Con Colors
-            else if (Settings.Default.SoFCon)
-            {
-                SoFCon(level);
-            }
-            else if (File.Exists(ConColorsFile))
-            {
-                ConLevelFile(level, ConColorsFile);
-            }
-            else if (Settings.Default.DefaultCon)
-            {
-                // Using Default Con Colors
-                DefaultCon(level);
-            }
-        }
-
-        private void ConLevelFile(int level, string ConColorsFile)
-        {
-            IniFile Ini = new IniFile(ConColorsFile);
-
-            var sIniValue = Ini.ReadValue("Con Levels", level.ToString(), "0/0/0");
-            var yellowLevels = Ini.ReadValue("Con Levels", "0", "3");
-            var ConLevels = sIniValue.Split('/');
-
-            GreyRange = Convert.ToInt32(ConLevels[0]) - level + 1;
-
-            GreenRange = Convert.ToInt32(ConLevels[1]) - level + 1;
-
-            CyanRange = Convert.ToInt32(ConLevels[2]) - level + 1;
-
-            YellowRange = Convert.ToInt32(yellowLevels);
-        }
-
-        private void DefaultCon(int level)
-        {
-            CyanRange = -5;
-
-            if (level < 16) // verified
-            {
-                GreyRange = -5;
-
-                GreenRange = -5;
-            }
-            else if (level < 19) // verified
-            {
-                GreyRange = -6;
-
-                GreenRange = -5;
-            }
-            else if (level < 21) // verified
-            {
-                GreyRange = -7;
-
-                GreenRange = -5;
-            }
-            else if (level < 22) // verified
-            {
-                GreyRange = -7;
-
-                GreenRange = -6;
-            }
-            else if (level < 25) // verified
-            {
-                GreyRange = -8;
-
-                GreenRange = -6;
-            }
-            else if (level < 28) // verified
-            {
-                GreyRange = -9;
-
-                GreenRange = -7;
-            }
-            else if (level < 29) // verified
-            {
-                GreyRange = -10;
-
-                GreenRange = -7;
-            }
-            else if (level < 31) // verified
-            {
-                GreyRange = -10;
-
-                GreenRange = -8;
-            }
-            else if (level < 33) // verified
-            {
-                GreyRange = -11;
-
-                GreenRange = -8;
-            }
-            else if (level < 34) // verified
-            {
-                GreyRange = -11;
-
-                GreenRange = -9;
-            }
-            else if (level < 37) // verified
-            {
-                GreyRange = -12;
-
-                GreenRange = -9;
-            }
-            else if (level < 40) // verified
-            {
-                GreyRange = -13;
-
-                GreenRange = -10;
-            }
-            else if (level < 41) // Verified
-            {
-                GreyRange = -14;
-
-                GreenRange = -10;
-            }
-            else if (level < 43) // Verified
-            {
-                GreyRange = -14;
-
-                GreenRange = -11;
-            }
-            else if (level < 45)  // Verified
-            {
-                GreyRange = -15;
-
-                GreenRange = -11;
-            }
-            else if (level < 46)  // Verified
-            {
-                GreyRange = -15;
-
-                GreenRange = -12;
-            }
-            else if (level < 49)  // Verified
-            {
-                GreyRange = -16;
-
-                GreenRange = -12;
-            }
-            else if (level < 51) // Verified at 50
-            {
-                GreyRange = -17;
-
-                GreenRange = -13;
-            }
-            else if (level < 53)
-            {
-                GreyRange = -18;
-
-                GreenRange = -14;
-            }
-            else if (level < 57)
-            {
-                GreyRange = -20;
-
-                GreenRange = -15;
-            }
-            else
-            {
-                GreyRange = -21;
-
-                GreenRange = -16;
-            }
-        }
-
-        private void SoFCon(int level)
-        {
-            YellowRange = 3;
-
-            CyanRange = -5;
-
-            if (level < 9)
-            {
-                GreyRange = -3;
-
-                GreenRange = -7;
-            }
-            else if (level < 10)
-            {
-                GreyRange = -4;
-
-                GreenRange = -3;
-            }
-            else if (level < 13)
-            {
-                GreyRange = -5;
-
-                GreenRange = -3;
-            }
-            else if (level < 17)
-            {
-                GreyRange = -6;
-
-                GreenRange = -4;
-            }
-            else if (level < 21)
-            {
-                GreyRange = -7;
-
-                GreenRange = -5;
-            }
-            else if (level < 25)
-            {
-                GreyRange = -8;
-
-                GreenRange = -6;
-            }
-            else if (level < 29)
-            {
-                GreyRange = -9;
-
-                GreenRange = -7;
-            }
-            else if (level < 31)
-            {
-                GreyRange = -10;
-
-                GreenRange = -8;
-            }
-            else if (level < 33)
-            {
-                GreyRange = -11;
-
-                GreenRange = -8;
-            }
-            else if (level < 37)
-            {
-                GreyRange = -12;
-
-                GreenRange = -9;
-            }
-            else if (level < 41)
-            {
-                GreyRange = -13;
-
-                GreenRange = -10;
-            }
-            else if (level < 45)
-            {
-                GreyRange = -15;
-
-                GreenRange = -11;
-            }
-            else if (level < 49)
-            {
-                GreyRange = -16;
-
-                GreenRange = -12;
-            }
-            else if (level < 53)
-            {
-                GreyRange = -17;
-
-                GreenRange = -13;
-            }
-            else if (level < 55)
-            {
-                GreyRange = -18;
-
-                GreenRange = -14;
-            }
-            else if (level < 57)
-            {
-                GreyRange = -19;
-
-                GreenRange = -14;
-            }
-            else
-            {
-                GreyRange = -20;
-
-                GreenRange = -15;
-            }
-        }
-
-        private void SoDCon(int level)
-        {
-            YellowRange = 2;
-
-            GreyRange = (-1) * level;
-
-            if (level < 9)
-            {
-                GreenRange = -3;
-
-                CyanRange = -7;
-            }
-            else if (level < 13)
-            {
-                GreenRange = -5;
-
-                CyanRange = -3;
-            }
-            else if (level < 17)
-            {
-                GreenRange = -6;
-
-                CyanRange = -4;
-            }
-            else if (level < 21)
-            {
-                GreenRange = -7;
-
-                CyanRange = -5;
-            }
-            else if (level < 25)
-            {
-                GreenRange = -8;
-
-                CyanRange = -6;
-            }
-            else if (level < 29)
-            {
-                GreenRange = -9;
-
-                CyanRange = -7;
-            }
-            else if (level < 31)
-            {
-                GreenRange = -10;
-
-                CyanRange = -8;
-            }
-            else if (level < 33)
-            {
-                GreenRange = -11;
-
-                CyanRange = -8;
-            }
-            else if (level < 37)
-            {
-                GreenRange = -12;
-
-                CyanRange = -9;
-            }
-            else if (level < 41)
-            {
-                GreenRange = -13;
-
-                CyanRange = -10;
-            }
-            else if (level < 45)
-            {
-                GreenRange = -15;
-
-                CyanRange = -11;
-            }
-            else if (level < 49)
-            {
-                GreenRange = -16;
-
-                CyanRange = -12;
-            }
-            else if (level < 53)
-            {
-                GreenRange = -17;
-
-                CyanRange = -13;
-            }
-            else if (level < 55)
-            {
-                GreenRange = -18;
-
-                CyanRange = -14;
-            }
-            else if (level < 57)
-            {
-                GreenRange = -19;
-
-                CyanRange = -14;
-            }
-            else
-            {
-                GreenRange = -20;
-
-                CyanRange = -15;
-            }
-        }
 
         public void CalculateMapLinePens()
         {

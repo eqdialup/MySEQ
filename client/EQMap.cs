@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using myseq.Properties;
@@ -62,7 +61,7 @@ namespace myseq
             EnterMap?.Invoke(this);
         }
 
-        public void SetComponents(MapCon mapCon, ListViewPanel SpawnList, ListViewPanel SpawnTimerList, ListViewPanel GroundItemList, MapPane mapPane, EQData eq)
+        public void SetComponents(MapCon mapCon, ListViewPanel SpawnList, ListViewPanel SpawnTimerList, ListViewPanel GroundItemList, EQData eq)
 
         {
             this.mapCon = mapCon;
@@ -104,7 +103,6 @@ namespace myseq
                 GroundItemList.listView.EndUpdate();
 
                 eq.mobsTimers.ResetTimers();
-
             }
         }
 

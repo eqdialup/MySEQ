@@ -32,7 +32,7 @@ namespace Structures
         Default = Error,        // Used when WriteLine is called without a level
         DefaultMaxLevel = Error // Starting log level
     };
-    [Flags]
+
     public enum DrawOptions
     {
         /// <summary>
@@ -108,6 +108,7 @@ namespace Structures
         Target
     }
 
+    [Flags]
     public enum RequestTypes
     {
         None = 0,

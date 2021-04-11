@@ -15,7 +15,7 @@ namespace myseq
     {
         private readonly string Version = Application.ProductVersion;
 
-        private string myPath = AppDomain.CurrentDomain.BaseDirectory;
+        private string myPath = Application.ExecutablePath;
 
         private string BaseTitle = "MySEQ Open";
 
@@ -25,8 +25,9 @@ namespace myseq
         public ListViewPanel SpawnTimerList = new ListViewPanel(1);
         public ListViewPanel GroundItemList = new ListViewPanel(2);
 
-        public string curZone = "map_pane";
-        public string mapnameWithLabels = "";
+        public string curZone { get; private set; } = "map_pane";
+
+        public string mapnameWithLabels { get; private set; } = "";
 
         private string currentIPAddress = "";
         private MarkLookup mark = new MarkLookup();
@@ -38,6 +39,8 @@ namespace myseq
 
         private readonly EQCommunications comm;
         private readonly EQMap map;
+
+        private ConColors GetConColors = new ConColors();
 
         public DrawOptions DrawOpts = DrawOptions.DrawNormal;
 
@@ -102,7 +105,7 @@ namespace myseq
 
             GroundItemList.VisibleChanged += new EventHandler(GroundItemList_VisibleChanged);
 
-            mapCon.SetComponents(this, mapPane, eq, map);
+            mapCon.SetComponents(this, mapPane, eq, map, GetConColors);
             mark.SetComponents(eq);
             mapPane.SetComponents(this);
 
@@ -112,7 +115,7 @@ namespace myseq
 
             GroundItemList.SetComponents(eq, mapCon, filters, this);
 
-            map.SetComponents(mapCon, SpawnList, SpawnTimerList, GroundItemList, mapPane, eq);
+            map.SetComponents(mapCon, SpawnList, SpawnTimerList, GroundItemList, eq);
 
             eq.mobsTimers.SetComponents(map);
 
@@ -157,13 +160,13 @@ namespace myseq
             SpawnTimerList.listView.Font = new Font(Settings.Default.ListFont.Name, Settings.Default.ListFont.Size, Settings.Default.ListFont.Style);
             GroundItemList.listView.Font = Settings.Default.ListFontStyle;
 
-            mapCon.drawFont = Settings.Default.MapLabel;
-            mapCon.drawFont1 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 0.9f, Settings.Default.MapLabel.Style);
-            mapCon.drawFont3 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 1.1f, Settings.Default.MapLabel.Style);
+//            mapCon.drawFont = Settings.Default.MapLabel;
+//            mapCon.drawFont1 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 0.9f, Settings.Default.MapLabel.Style);
+//            mapCon.drawFont3 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 1.1f, Settings.Default.MapLabel.Style);
 
             // Set the Font, Size, Style to the Spawn Info Window
-            mapCon.lblMobInfo.Font = Settings.Default.TargetInfoFont;
-            mapCon.lblGameClock.Font = new Font(Settings.Default.TargetInfoFont, FontStyle.Bold);
+//            mapCon.lblMobInfo.Font = Settings.Default.TargetInfoFont;
+//            mapCon.lblGameClock.Font = new Font(Settings.Default.TargetInfoFont, FontStyle.Bold);
         }
 
         private void LoadPositionsFromConfigFile()
@@ -302,6 +305,17 @@ namespace myseq
             }
         }
 
+        private void GetFPSValue()
+        {
+            if (mapCon != null)
+            {
+                toolStripFPS.Text =  $"FPS: {mapCon.FpsValue}";
+            }
+            else
+            { toolStripFPS.Text = "0"; }
+
+        }
+
         public void CmdCommand_Click(object sender, EventArgs e)
 
         {
@@ -382,7 +396,7 @@ namespace myseq
             toolStripStartStop.Text = "Stop";
             toolStripStartStop.ToolTipText = "Disconnect from Server";
             toolStripStartStop.Image = Resources.RedDelete;
-            
+
             bIsRunning = true;
         }
 
@@ -419,13 +433,13 @@ namespace myseq
         {
             Text = BaseTitle;
 
-            if (Settings.Default.ShowZoneName && eq.longname.Length > 0)
+            if (Settings.Default.ShowZoneName)
             {
                 Text += $" - {eq.longname}";
                 BaseTitle = Text;
             }
 
-            if (Settings.Default.ShowCharName && eq.gamerInfo?.Name.Length > 1)
+            if (Settings.Default.ShowCharName)
             {
                 Text += $" - {eq.gamerInfo.Name}";
                 BaseTitle = Text;
@@ -685,7 +699,7 @@ namespace myseq
         private void TimPackets_Tick(object sender, EventArgs e)
         {
             DrawOpts = Settings.Default.DrawOptions;
-
+            GetFPSValue();
             comm.Tick();
             mapCon.Tick();
         }
@@ -719,6 +733,7 @@ namespace myseq
 
         public void ShowCharsInList(Spawninfo si, ProcessInfo PI)
         {
+            var EqualProcessID = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
             if (comm.colProcesses.Count == 1)
             {
                 mnuChar1.Text = si.Name;
@@ -728,7 +743,7 @@ namespace myseq
                 mnuChar2.Text = "Char 2";
                 mnuChar2.Checked = false;
 
-                mnuChar1.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar1.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 2)
             {
@@ -739,7 +754,7 @@ namespace myseq
                 mnuChar3.Text = "Char 3";
                 mnuChar3.Checked = false;
 
-                mnuChar2.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar2.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 3)
             {
@@ -750,7 +765,7 @@ namespace myseq
                 mnuChar4.Text = "Char 4";
                 mnuChar4.Checked = false;
 
-                mnuChar3.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar3.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 4)
             {
@@ -761,7 +776,7 @@ namespace myseq
                 mnuChar5.Text = "Char 5";
                 mnuChar5.Checked = false;
 
-                mnuChar4.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar4.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 5)
             {
@@ -772,7 +787,7 @@ namespace myseq
                 mnuChar6.Text = "Char 6";
                 mnuChar6.Checked = false;
 
-                mnuChar5.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar5.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 6)
             {
@@ -783,7 +798,7 @@ namespace myseq
                 mnuChar7.Text = "Char 7";
                 mnuChar7.Checked = false;
 
-                mnuChar6.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar6.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 7)
             {
@@ -794,7 +809,7 @@ namespace myseq
                 mnuChar8.Text = "Char 8";
                 mnuChar8.Checked = false;
 
-                mnuChar7.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar7.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 8)
             {
@@ -805,7 +820,7 @@ namespace myseq
                 mnuChar9.Text = "Char 9";
                 mnuChar9.Checked = false;
 
-                mnuChar8.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar8.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 9)
             {
@@ -816,7 +831,7 @@ namespace myseq
                 mnuChar10.Text = "Char 10";
                 mnuChar10.Checked = false;
 
-                mnuChar9.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar9.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 10)
             {
@@ -827,7 +842,7 @@ namespace myseq
                 mnuChar11.Text = "Char 11";
                 mnuChar11.Checked = false;
 
-                mnuChar10.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar10.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 11)
             {
@@ -837,13 +852,13 @@ namespace myseq
                 mnuChar12.Text = "Char 12";
                 mnuChar12.Checked = false;
 
-                mnuChar11.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar11.Checked = EqualProcessID;
             }
             else if (comm.colProcesses.Count == 12)
             {
                 mnuChar12.Text = si.Name;
                 mnuChar12.Visible = true;
-                mnuChar12.Checked = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+                mnuChar12.Checked = EqualProcessID;
             }
         }
 
@@ -856,46 +871,13 @@ namespace myseq
             try
             {
                 LogLib.WriteLine($"ProcesssMap: Short Zone Name: ({si.Name})");
-
-                var foundmap = false;
-
-                var mapfolder = $"{Settings.Default.MapDir}\\";
-
-                var mapname = si.Name.Trim();
-
-                var location = mapname.IndexOf("_", 0);
-
-                if (location > 0)
-                {
-                    mapname = mapname.Substring(0, location);
-                }
-
+                var mapname = si.Name.Trim().Split('_')[0];
                 LogLib.WriteLine($"Using Short Zone Name: ({mapname})");
-
-                var fullmap = mapfolder + mapname;
-
                 toolStripShortName.Text = mapname.ToUpper();
 
-                curZone = mapname.ToUpper().Trim();
+                curZone = mapname.ToUpper();
 
-                var ZonesFile = Path.Combine(Settings.Default.CfgDir, "Zones.ini");
-
-                if (File.Exists(ZonesFile))
-                {
-                    IniFile Ini = new IniFile(ZonesFile);
-                    if (curZone.Length == 0)
-                    {
-                        mapPane.TabText = "map_pane";
-                    }
-                    else
-                    {
-                        mapPane.TabText = Ini.ReadValue("Zones", curZone, curZone.ToLower());
-                    }
-                }
-                else
-                {
-                    mapPane.TabText = curZone.Length > 0 ? curZone.ToLower() : "map_pane";
-                }
+                CheckZoneFile();
 
                 // Turn off collecting mob trails anytime load a new map
 
@@ -909,96 +891,7 @@ namespace myseq
 
                 try
                 {
-                    if (curZone.Length > 0 && curZone != "CLZ" && curZone != "DEFAULT")
-                    {
-                        // Try loading depth filter settings from file
-
-                        var ConfigFile = Path.Combine(myPath, "config.ini");
-                        if (File.Exists(ConfigFile))
-                        {
-                            var strIniValue = new IniFile(ConfigFile).ReadValue("Zones", curZone, "");
-                            if (strIniValue.Length > 0)
-                            {
-                                if ((strIniValue == "0" && Settings.Default.DepthFilter) ||
-                                (strIniValue == "1" && !Settings.Default.DepthFilter))
-                                {
-                                    ToggleDepthFilter();
-                                }
-                            }
-                            else
-                            {
-                                // We dont currently have a setting for this zone, so set to off
-                                if (Settings.Default.DepthFilter)
-                                {
-                                    ToggleDepthFilter();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // We dont currently have a setting file, so set depth filter to off
-                            if (Settings.Default.DepthFilter)
-                            {
-                                ToggleDepthFilter();
-                            }
-                        }
-                    }
-
-                    if (curZone.Length == 0 || curZone == "CLZ" || curZone == "DEFAULT")
-
-                    {
-                        if (Settings.Default.DepthFilter)
-                        {
-                            ToggleDepthFilter();
-                        }
-
-                        eq.Zoning = true;
-
-                        map.LoadDummyMap(curZone);
-
-                        this.Text = BaseTitle;
-
-                        foundmap = true;
-
-                        mapnameWithLabels = "";
-                    }
-                    else
-                    {
-                        eq.Zoning = false;
-                        if (map.Loadmap($"{fullmap}.txt"))
-                        {
-                            foundmap = true;
-                        }
-
-                        if (Settings.Default.ShowLayer1 && map.Loadmap($"{fullmap}_1.txt"))
-                        {
-                            foundmap = true;
-                        }
-
-                        if (Settings.Default.ShowLayer2 && map.Loadmap($"{fullmap}_2.txt"))
-                        {
-                            foundmap = true;
-                        }
-
-                        if (Settings.Default.ShowLayer3 && map.Loadmap($"{fullmap}_3.txt"))
-                        {
-                            foundmap = true;
-                        }
-
-                        // use _3.txt file for map labels
-                        if (foundmap)
-                        {
-                            mapnameWithLabels = $"{fullmap}_3.txt";
-                        }
-
-                        //SetTitle();
-                    }
-                    //... Missing map
-
-                    if (!foundmap)
-                    {
-                        map.LoadDummyMap(mapname);
-                    }
+                    FindMapNotZoning(si, mapname);
                 }
                 catch (Exception ex)
 
@@ -1009,14 +902,138 @@ namespace myseq
                 }
 
                 eq.longname = mapPane.TabText;
-
-                //filters.ClearLists();
-
                 filters.LoadAlerts(mapname);
-
                 SetTitle();
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessMap(): ", ex); }
+        }
+
+        private void FindMapNotZoning(Spawninfo si, string mapname)
+        {
+            if (curZone.Length > 0 && curZone != "CLZ" && curZone != "DEFAULT")
+            {
+                // Try loading depth filter settings from file
+                LoadDepthFilter();
+            }
+
+            var foundmap = false;
+            if (curZone.Length == 0 || curZone == "CLZ" || curZone == "DEFAULT")
+
+            {
+                foundmap = ZoningOrCharLoading();
+            }
+            else
+            {
+                var fullmap = Path.Combine(Settings.Default.MapDir, si.Name.Trim());
+                foundmap = NotZoningShowLayers(foundmap, fullmap);
+            }
+            //... Missing map
+            if (!foundmap)
+            {
+                map.LoadDummyMap(mapname);
+            }
+        }
+
+        private void LoadDepthFilter()
+        {
+            var ConfigFile = Path.Combine(myPath, "config.ini");
+            if (File.Exists(ConfigFile))
+            {
+                var strIniValue = new IniFile(ConfigFile).ReadValue("Zones", curZone, "");
+                if (strIniValue.Length > 0)
+                {
+                    if ((strIniValue == "0" && Settings.Default.DepthFilter) ||
+                    (strIniValue == "1" && !Settings.Default.DepthFilter))
+                    {
+                        ToggleDepthFilter();
+                    }
+                }
+                else
+                {
+                    // We dont currently have a setting for this zone, so set to off
+                    ToggleDepth();
+                }
+            }
+            else
+            {
+                // We dont currently have a setting file, so set depth filter to off
+                ToggleDepth();
+            }
+
+            void ToggleDepth()
+            {
+                if (Settings.Default.DepthFilter)
+                {
+                    ToggleDepthFilter();
+                }
+            }
+        }
+
+        private void CheckZoneFile()
+        {
+            var ZonesFile = Path.Combine(Settings.Default.CfgDir, "Zones.ini");
+
+            if (File.Exists(ZonesFile))
+            {
+                mapPane.TabText = string.IsNullOrEmpty(curZone) ? "map_pane" : new IniFile(ZonesFile).ReadValue("Zones", curZone, curZone.ToLower());
+            }
+            else
+            {
+                mapPane.TabText = curZone.Length > 0 ? curZone.ToLower() : "map_pane";
+            }
+        }
+
+        private bool NotZoningShowLayers(bool foundmap, string fullmap)
+        {
+            eq.Zoning = false;
+            if (map.Loadmap($"{fullmap}.txt"))
+            {
+                foundmap = true;
+            }
+
+            if (Settings.Default.ShowLayer1 && map.Loadmap($"{fullmap}_1.txt"))
+            {
+                foundmap = true;
+            }
+
+            if (Settings.Default.ShowLayer2 && map.Loadmap($"{fullmap}_2.txt"))
+            {
+                foundmap = true;
+            }
+
+            if (Settings.Default.ShowLayer3 && map.Loadmap($"{fullmap}_3.txt"))
+            {
+                foundmap = true;
+            }
+
+            // use _3.txt file for map labels
+            if (foundmap)
+            {
+                mapnameWithLabels = $"{fullmap}_3.txt";
+            }
+
+            SetTitle();
+            return foundmap;
+        }
+
+        private bool ZoningOrCharLoading()
+        {
+            bool foundmap;
+            if (Settings.Default.DepthFilter)
+            {
+                ToggleDepthFilter();
+            }
+
+            eq.Zoning = true;
+
+            map.LoadDummyMap(curZone);
+
+            Text = BaseTitle;
+
+            foundmap = true;
+
+            mapnameWithLabels = "";
+            return foundmap;
         }
 
         #endregion ProccessMap
@@ -1112,7 +1129,7 @@ namespace myseq
             {
                 mapnameWithLabels = "";
 
-                var filename = openFileDialog.SafeFileName;
+                var filename = openFileDialog.FileName;
 
                 map.Loadmap(filename);
 
@@ -2165,7 +2182,7 @@ namespace myseq
             Settings.Default.SoDCon = true;
             Settings.Default.SoFCon = false;
             Settings.Default.DefaultCon = false;
-            eq.FillConColors(this);
+            GetConColors.FillConColors(this, eq.gamerInfo, eq.ConColors);
             eq.UpdateMobListColors();
         }
 
@@ -2177,7 +2194,7 @@ namespace myseq
             Settings.Default.SoDCon = false;
             Settings.Default.SoFCon = false;
             Settings.Default.DefaultCon = true;
-            eq.FillConColors(this);
+            GetConColors.FillConColors(this, eq.gamerInfo, eq.ConColors);
             eq.UpdateMobListColors();
         }
 
@@ -2189,7 +2206,7 @@ namespace myseq
             Settings.Default.SoDCon = false;
             Settings.Default.SoFCon = true;
             Settings.Default.DefaultCon = false;
-            eq.FillConColors(this);
+            GetConColors.FillConColors(this, eq.gamerInfo, eq.ConColors);
             eq.UpdateMobListColors();
         }
 
@@ -2811,55 +2828,55 @@ namespace myseq
 
         private void ToolStripCheckLookup_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup, toolStripLookupBox, "0", bFilter0);
+            BoxCheckChanged(toolStripCheckLookup, toolStripLookupBox, "0", ref bFilter0);
         }
 
         private void ToolStripCheckLookup1_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup1, toolStripLookupBox1, "1", bFilter1);
+            BoxCheckChanged(toolStripCheckLookup1, toolStripLookupBox1, "1", ref bFilter1);
         }
 
         private void ToolStripCheckLookup2_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup2, toolStripLookupBox2, "2", bFilter2);
+            BoxCheckChanged(toolStripCheckLookup2, toolStripLookupBox2, "2", ref bFilter2);
         }
 
         private void ToolStripCheckLookup3_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup3, toolStripLookupBox3, "3", bFilter3);
+            BoxCheckChanged(toolStripCheckLookup3, toolStripLookupBox3, "3", ref bFilter3);
         }
 
         private void ToolStripCheckLookup4_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup4, toolStripLookupBox4, "4", bFilter4);
+            BoxCheckChanged(toolStripCheckLookup4, toolStripLookupBox4, "4", ref bFilter4);
         }
 
         private void ToolStripTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox, "0", bFilter0);
+            BoxKeyPress(e, toolStripLookupBox, "0", ref bFilter0);
         }
 
         private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox1, "1", bFilter1);
+            BoxKeyPress(e, toolStripLookupBox1, "1", ref bFilter1);
         }
 
         private void ToolStripTextBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox2, "2", bFilter2);
+            BoxKeyPress(e, toolStripLookupBox2, "2", ref bFilter2);
         }
 
         private void ToolStripTextBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox3, "3", bFilter3);
+            BoxKeyPress(e, toolStripLookupBox3, "3", ref bFilter3);
         }
 
         private void ToolStripTextBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox4, "4", bFilter4);
+            BoxKeyPress(e, toolStripLookupBox4, "4", ref bFilter4);
         }
 
-        private void BoxCheckChanged(ToolStripButton button, ToolStripTextBox box, string rank, bool filter)
+        private void BoxCheckChanged(ToolStripButton button, ToolStripTextBox box, string rank, ref bool filter)
         {
             if (button.Checked)
             {
@@ -2871,15 +2888,16 @@ namespace myseq
                 button.Text = "F";
                 filter = true;
             }
-            NewTextMarkup(box, rank, filter);
+            NewTextMarkup(box, rank, ref filter);
         }
-        private void BoxKeyPress(KeyPressEventArgs e, ToolStripTextBox box, string rank, bool filter)
+
+        private void BoxKeyPress(KeyPressEventArgs e, ToolStripTextBox box, string rank, ref bool filter)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
                 if (box.Text.Length > 0)
                 {
-                    NewTextMarkup(box, rank, filter);
+                    NewTextMarkup(box, rank, ref filter);
                     mapCon?.Focus();
                 }
                 else
@@ -2891,6 +2909,7 @@ namespace myseq
                 e.Handled = true;
             }
         }
+
         private void BoxClick(ToolStripTextBox box)
         {
             if (box.Text == "Mob Search")
@@ -2899,11 +2918,12 @@ namespace myseq
                 box.ForeColor = SystemColors.WindowText;
             }
         }
-        private void LeaveBox(ToolStripTextBox box, string rank, bool filter)
+
+        private void LeaveBox(ToolStripTextBox box, string rank, ref bool filter)
         {
             if (box.Text.Length > 0 && box.Text != "Mob Search")
             {
-                NewTextMarkup(box, rank, filter);
+                NewTextMarkup(box, rank, ref filter);
             }
             else
             {
@@ -2912,7 +2932,7 @@ namespace myseq
             }
         }
 
-        private void NewTextMarkup(ToolStripTextBox box, string rank, bool filter)
+        private void NewTextMarkup(ToolStripTextBox box, string rank, ref bool filter)
         {
             var new_text = box.Text.Replace(" ", "_");
             mark.MarkLookups($"{rank}:{new_text}", filter);
@@ -2945,27 +2965,27 @@ namespace myseq
 
         private void ToolStripLookupBox_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox, "0", bFilter0);
+            LeaveBox(toolStripLookupBox, "0", ref bFilter0);
         }
 
         private void ToolStripLookupBox1_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox1, "1", bFilter1);
+            LeaveBox(toolStripLookupBox1, "1", ref bFilter1);
         }
 
         private void ToolStripLookupBox2_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox2, "2", bFilter2);
+            LeaveBox(toolStripLookupBox2, "2", ref bFilter2);
         }
 
         private void ToolStripLookupBox3_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox3, "3", bFilter3);
+            LeaveBox(toolStripLookupBox3, "3", ref bFilter3);
         }
 
         private void ToolStripLookupBox4_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox4, "4", bFilter4);
+            LeaveBox(toolStripLookupBox4, "4", ref bFilter4);
         }
 
         #endregion lookupbox
@@ -3079,7 +3099,7 @@ namespace myseq
 
         public void DisablePlayAlerts() => playAlerts = false;
 
-        private void ThinSpawnlistToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ThinSpawnlist_Click(object sender, EventArgs e)
         {
             Settings.Default.ThinSpawnList = !Settings.Default.ThinSpawnList;
             thinSpawnlistToolStripMenuItem.Checked = Settings.Default.ThinSpawnList;

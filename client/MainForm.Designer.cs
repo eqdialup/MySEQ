@@ -857,7 +857,7 @@ namespace myseq
             this.thinSpawnlistToolStripMenuItem.Name = "thinSpawnlistToolStripMenuItem";
             this.thinSpawnlistToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.thinSpawnlistToolStripMenuItem.Text = "Show thin Lists";
-            this.thinSpawnlistToolStripMenuItem.Click += new System.EventHandler(this.ThinSpawnlistToolStripMenuItem_Click);
+            this.thinSpawnlistToolStripMenuItem.Click += new System.EventHandler(this.ThinSpawnlist_Click);
             // 
             // toolStripSeparator7
             // 

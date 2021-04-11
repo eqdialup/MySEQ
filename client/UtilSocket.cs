@@ -62,6 +62,7 @@ namespace Structures
             GetCallbackReadMethod = new AsyncCallback(ReceiveComplete);
             GetCallbackWriteMethod = new AsyncCallback(SendComplete);
         }
+
         // Private Methods
         //********************************************************************
         /// <summary> Called when a message arrives </summary>

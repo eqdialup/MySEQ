@@ -19,7 +19,6 @@ namespace myseq
         internal static extern bool Beep(uint freq, uint dur);
 
         [DllImport("winmm.dll")]
-
         internal static extern long PlaySound(string lpszName, System.IntPtr hModule, System.IntPtr dwFlags);
     }
 }

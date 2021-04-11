@@ -31,8 +31,8 @@ namespace myseq
             textSMTPToEmail.Text = SmtpSettings.Instance.ToEmail;
             textSMTPFromEmail.Text = SmtpSettings.Instance.FromEmail;
             textSMTPCCEmail.Text = SmtpSettings.Instance.CCEmail;
-            checkBoxSMTPUseNetworkCredentials.Checked = SmtpSettings.Instance.UseNetworkCredentials;
-            checkBoxSMTPUseSecureAuthentication.Checked = SmtpSettings.Instance.UseSSL;
+            SMTPUseNetworkCreds.Checked = SmtpSettings.Instance.UseNetworkCredentials;
+            SMTPUseSecureAuthn.Checked = SmtpSettings.Instance.UseSSL;
             checkBoxSavePassword.Checked = SmtpSettings.Instance.SavePassword;
 
             if (SmtpSettings.Instance.UseNetworkCredentials)
@@ -51,6 +51,7 @@ namespace myseq
             }
             LoadSettings();
         }
+
         private void BtnCancel_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -61,6 +62,7 @@ namespace myseq
             SaveSettings();
             this.Hide();
         }
+
         private void BtnTestEmail_Click(object sender, EventArgs e)
         {
             UpdateSMTPSettings();
@@ -179,7 +181,7 @@ namespace myseq
         {
             SmtpSettings.Instance.UseNetworkCredentials = !SmtpSettings.Instance.UseNetworkCredentials;
 
-            checkBoxSMTPUseNetworkCredentials.Checked = SmtpSettings.Instance.UseNetworkCredentials;
+            SMTPUseNetworkCreds.Checked = SmtpSettings.Instance.UseNetworkCredentials;
 
             if (SmtpSettings.Instance.UseNetworkCredentials)
             {
@@ -212,7 +214,7 @@ namespace myseq
                 textSMTPPort.Text = SmtpSettings.Instance.SmtpPort.ToString();
             }
 
-            checkBoxSMTPUseSecureAuthentication.Checked = SmtpSettings.Instance.UseSSL;
+            SMTPUseSecureAuthn.Checked = SmtpSettings.Instance.UseSSL;
         }
 
         private void LoadSettings()
@@ -269,6 +271,7 @@ namespace myseq
 
             Settings.Default.EmailAlerts = !Settings.Default.EmailAlerts;
         }
+
         private void SmtpClient_OnCompleted(object sender, AsyncCompletedEventArgs e)
         {
             //Get the Original MailMessage object
@@ -294,7 +297,7 @@ namespace myseq
         private void UpdateSMTPSettings()
         {
             StringBuilder addr = new StringBuilder();
-            SmtpSettings.Instance.UseSSL = this.checkBoxSMTPUseSecureAuthentication.Checked;
+            SmtpSettings.Instance.UseSSL = this.SMTPUseSecureAuthn.Checked;
             if (this.textSMTPPassword.ToString().Length > 0 && this.textSMTPPassword.Text != "Password:::1")
             {
                 SmtpSettings.Instance.SmtpPassword = this.textSMTPPassword.Text;

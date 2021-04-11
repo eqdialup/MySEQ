@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 //
 
-// General Information about an assembly is controlled through the following 
+// General Information about an assembly is controlled through the following
 
 // set of attributes. Change these attribute values to modify the information
 
@@ -13,19 +13,12 @@ using System.Runtime.InteropServices;
 //
 
 [assembly: AssemblyTitle("MySEQ Open Client")]
-
 [assembly: AssemblyDescription("Visit the forums at http://showeq.net for information and any questions.")]
-
 [assembly: AssemblyConfiguration("MySEQ")]
-
 [assembly: AssemblyCompany("MySEQ Project")]
-
 [assembly: AssemblyProduct("MySEQ Production")]
-
 [assembly: AssemblyCopyright("MySEQ Open (GPL)")]
-
 [assembly: AssemblyTrademark("MySEQ Open")]
-
 [assembly: AssemblyCulture("")]
 
 //
@@ -36,7 +29,7 @@ using System.Runtime.InteropServices;
 
 //      Major Version
 
-//      Minor Version 
+//      Minor Version
 
 //      Build Number
 
@@ -44,7 +37,7 @@ using System.Runtime.InteropServices;
 
 //
 
-// You can specify all the values or you can default the Revision and Build Numbers 
+// You can specify all the values or you can default the Revision and Build Numbers
 
 // by using the '*' as shown below:
 
@@ -53,10 +46,6 @@ using System.Runtime.InteropServices;
 //
 
 [assembly: AssemblyDelaySign(false)]
-
 [assembly: AssemblyKeyFile("")]
-
 [assembly: AssemblyKeyName("")]
-
 [assembly: ComVisible(true)]
-

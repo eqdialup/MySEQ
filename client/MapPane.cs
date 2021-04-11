@@ -39,7 +39,7 @@ namespace myseq
 
         private Label lblLookup;
 
-        private System.ComponentModel.Container components = null;
+        private readonly System.ComponentModel.Container components = null;
         # endregion Designer components
 
         public MapPane()
@@ -100,6 +100,7 @@ namespace myseq
         }
 
         protected override string GetPersistString() => "MapWindow";
+
         #region Component Designer generated code
 
         private void InitializeComponent()
@@ -125,27 +126,27 @@ namespace myseq
             filterzneg.BeginInit();
             filterzpos.BeginInit();
             SuspendLayout();
-            // 
+            //
             // offsetx
-            // 
+            //
             offsetx.Location = new Point(114, 448);
             offsetx.Name = "offsetx";
             offsetx.Size = new Size(58, 20);
             offsetx.TabIndex = 3;
             offsetx.Visible = false;
             offsetx.ValueChanged += new EventHandler(Offsetx_ValueChanged);
-            // 
+            //
             // offsety
-            // 
+            //
             offsety.Location = new Point(217, 448);
             offsety.Name = "offsety";
             offsety.Size = new Size(56, 20);
             offsety.TabIndex = 5;
             offsety.Visible = false;
             offsety.ValueChanged += new EventHandler(Offsety_ValueChanged);
-            // 
+            //
             // scale
-            // 
+            //
             scale.Location = new Point(313, 447);
             scale.Maximum = new decimal(new int[] {
             10000,
@@ -167,9 +168,9 @@ namespace myseq
             0});
             scale.Visible = false;
             scale.ValueChanged += new EventHandler(Scale_ValueChanged);
-            // 
+            //
             // lblScale
-            // 
+            //
             lblScale.ForeColor = SystemColors.WindowText;
             lblScale.Location = new Point(279, 450);
             lblScale.Name = "lblScale";
@@ -177,9 +178,9 @@ namespace myseq
             lblScale.TabIndex = 6;
             lblScale.Text = "Scale";
             lblScale.Visible = false;
-            // 
+            //
             // lblOffsetY
-            // 
+            //
             lblOffsetY.ForeColor = SystemColors.WindowText;
             lblOffsetY.Location = new Point(174, 451);
             lblOffsetY.Name = "lblOffsetY";
@@ -187,9 +188,9 @@ namespace myseq
             lblOffsetY.TabIndex = 4;
             lblOffsetY.Text = "Offset Y";
             lblOffsetY.Visible = false;
-            // 
+            //
             // lblOffsetX
-            // 
+            //
             lblOffsetX.ForeColor = SystemColors.WindowText;
             lblOffsetX.Location = new Point(69, 452);
             lblOffsetX.Name = "lblOffsetX";
@@ -197,9 +198,9 @@ namespace myseq
             lblOffsetX.TabIndex = 2;
             lblOffsetX.Text = "Offset X";
             lblOffsetX.Visible = false;
-            // 
+            //
             // cmdCommand
-            // 
+            //
             cmdCommand.Location = new Point(8, 448);
             cmdCommand.Name = "cmdCommand";
             cmdCommand.Size = new Size(55, 23);
@@ -207,9 +208,9 @@ namespace myseq
             cmdCommand.Text = "GO";
             cmdCommand.Visible = false;
             cmdCommand.Click += new EventHandler(CmdCommand_Click);
-            // 
+            //
             // filterzneg
-            // 
+            //
             filterzneg.Increment = new decimal(new int[] {
             5,
             0,
@@ -226,9 +227,9 @@ namespace myseq
             filterzneg.TabIndex = 9;
             filterzneg.Visible = false;
             filterzneg.ValueChanged += new EventHandler(Filterzneg_ValueChanged);
-            // 
+            //
             // lblZNeg
-            // 
+            //
             lblZNeg.ForeColor = SystemColors.WindowText;
             lblZNeg.Location = new Point(367, 450);
             lblZNeg.Name = "lblZNeg";
@@ -236,9 +237,9 @@ namespace myseq
             lblZNeg.TabIndex = 8;
             lblZNeg.Text = "Z Neg";
             lblZNeg.Visible = false;
-            // 
+            //
             // filterzpos
-            // 
+            //
             filterzpos.Increment = new decimal(new int[] {
             5,
             0,
@@ -255,9 +256,9 @@ namespace myseq
             filterzpos.TabIndex = 11;
             filterzpos.Visible = false;
             filterzpos.ValueChanged += new EventHandler(Filterzpos_ValueChanged);
-            // 
+            //
             // lblZPos
-            // 
+            //
             lblZPos.ForeColor = SystemColors.WindowText;
             lblZPos.Location = new Point(475, 450);
             lblZPos.Name = "lblZPos";
@@ -265,9 +266,9 @@ namespace myseq
             lblZPos.TabIndex = 10;
             lblZPos.Text = "Z Pos";
             lblZPos.Visible = false;
-            // 
+            //
             // cmdLookup
-            // 
+            //
             cmdLookup.Location = new Point(687, 447);
             cmdLookup.Name = "cmdLookup";
             cmdLookup.Size = new Size(48, 22);
@@ -275,27 +276,27 @@ namespace myseq
             cmdLookup.Text = "Reset";
             cmdLookup.Visible = false;
             cmdLookup.Click += new EventHandler(CmdLookup_Click);
-            // 
+            //
             // txtLookup
-            // 
+            //
             txtLookup.Location = new Point(615, 448);
             txtLookup.Name = "txtLookup";
             txtLookup.Size = new Size(56, 20);
             txtLookup.TabIndex = 5;
             txtLookup.Visible = false;
             txtLookup.KeyPress += new KeyPressEventHandler(TxtLookup_KeyPress);
-            // 
+            //
             // lblLookup
-            // 
+            //
             lblLookup.Location = new Point(572, 450);
             lblLookup.Name = "lblLookup";
             lblLookup.Size = new Size(47, 23);
             lblLookup.TabIndex = 12;
             lblLookup.Text = "Lookup";
             lblLookup.Visible = false;
-            // 
+            //
             // mapCon
-            // 
+            //
             mapCon.AutoScroll = true;
             mapCon.BackColor = SystemColors.ControlLightLight;
             mapCon.Location = new Point(0, 0);
@@ -304,10 +305,10 @@ namespace myseq
             mapCon.TabIndex = 0;
             mapCon.UpdateSteps = 5;
             mapCon.UpdateTicks = 1;
-            mapCon.MouseEnter += new EventHandler(mapCon_MouseEnter);
-            // 
+            mapCon.MouseEnter += new EventHandler(MapCon_MouseEnter);
+            //
             // MapPane
-            // 
+            //
             AutoValidate = AutoValidate.EnablePreventFocusChange;
             BackColor = SystemColors.Control;
             ClientSize = new Size(760, 441);
@@ -339,7 +340,7 @@ namespace myseq
             PerformLayout();
         }
 
-        #endregion
+        #endregion Component Designer generated code
 
         private void CmdLookup_Click(object sender, EventArgs e)
         {
@@ -363,6 +364,7 @@ namespace myseq
             MarkLookups(name);
             mapCon.Invalidate();
         }
+
         private void MapPane_Resize(object sender, EventArgs e)
         {
             Size s = mapCon.Size;
@@ -518,10 +520,7 @@ namespace myseq
 
         private void CmdCommand_Click(object sender, EventArgs e)
         {
-            if (f1 != null)
-            {
-                f1.CmdCommand_Click(sender, e);
-            }
+            f1?.CmdCommand_Click(sender, e);
         }
 
         private void Filterzpos_ValueChanged(object sender, EventArgs e)
@@ -543,12 +542,12 @@ namespace myseq
             }
         }
 
-        private void mapCon_MouseEnter(object sender, EventArgs e)
+        private void MapCon_MouseEnter(object sender, EventArgs e)
         {
             var dockstate = f1.SpawnList.DockState == DockState.DockLeftAutoHide ||
-                                                 f1.SpawnList.DockState == DockState.DockRightAutoHide ||
-                                                 f1.SpawnList.DockState == DockState.DockTopAutoHide ||
-                                                 f1.SpawnList.DockState == DockState.DockBottomAutoHide;
+                            f1.SpawnList.DockState == DockState.DockRightAutoHide ||
+                            f1.SpawnList.DockState == DockState.DockTopAutoHide ||
+                            f1.SpawnList.DockState == DockState.DockBottomAutoHide;
             // focus for docking panel changes, to autohide panels that may be visible
             if (f1.SpawnList.ContainsFocus && dockstate)
             {
@@ -566,6 +565,8 @@ namespace myseq
             }
         }
 
-        public void MarkLookups(string name, bool filterMob = false){ }
+        public void MarkLookups(string name, bool filterMob = false)
+        {
+        }
     }
 }

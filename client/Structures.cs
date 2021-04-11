@@ -32,7 +32,7 @@ namespace Structures
         public bool filtered { get; set; }
     }
 
-    #endregion
+    #endregion GroundItem class
 
     #region ListItem struct
 
@@ -43,5 +43,5 @@ namespace Structures
         public string Name { get; set; }
     }
 
-    #endregion
+    #endregion ListItem struct
 }

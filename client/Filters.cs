@@ -60,6 +60,8 @@ namespace myseq
 
         public void ReadNewAlertFile(string zoneName)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             var type = 0;
             zoneName = zoneName.ToLower();
 
@@ -82,27 +84,27 @@ namespace myseq
                 var inp = line.Trim();
                 if (inp.Length > 1)
                 {
-                    if (inp.StartsWith("<section name=\"hunt\">",ignoreCase: true, culture: null))
+                    if (inp.StartsWith("<section name=\"hunt\">", ignoreCase: true, culture: null))
                     {
                         type = 1;
                     }
-                    else if (inp.StartsWith("<section name=\"caution\">",ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"caution\">", ignoreCase: true, culture: null))
                     {
                         type = 2;
                     }
-                    else if (inp.StartsWith("<section name=\"danger\">",ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"danger\">", ignoreCase: true, culture: null))
                     {
                         type = 3;
                     }
-                    else if (inp.StartsWith("<section name=\"alert\">",ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"alert\">", ignoreCase: true, culture: null))
                     {
                         type = 4;
                     }
-                    else if (inp.StartsWith("<section name=\"email\">",ignoreCase: true, culture: null) || inp.StartsWith("<section name=\"locate\">",ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"email\">", ignoreCase: true, culture: null) || inp.StartsWith("<section name=\"locate\">", ignoreCase: true, culture: null))
                     {
                         type = 5;
                     }
-                    else if (inp.StartsWith("<section name=\"primary\">",ignoreCase: true, culture: null) || inp.StartsWith("<section name=\"offhand\">",ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"primary\">", ignoreCase: true, culture: null) || inp.StartsWith("<section name=\"offhand\">", ignoreCase: true, culture: null))
                     {
                         type = 6;
                     }
@@ -110,7 +112,7 @@ namespace myseq
                     {
                         // unknown section headers
 
-                        if (inp.StartsWith("</section>",ignoreCase: true, culture: null))
+                        if (inp.StartsWith("</section>", ignoreCase: true, culture: null))
                         {
                             type = 0;
                             continue;
@@ -119,34 +121,36 @@ namespace myseq
                         var inputstring = line;
                         // Remove extra stuff
 
-                        if (inp.StartsWith("<oldfilter>",ignoreCase: true, culture: null))
+                        if (inp.StartsWith("<oldfilter>", ignoreCase: true, culture: null))
                         {
                             inputstring = inp.Remove(0, 11);
                         }
-                        if (inputstring.StartsWith("<regex>",ignoreCase: true, culture: null))
+                        if (inputstring.StartsWith("<regex>", ignoreCase: true, culture: null))
                         {
                             inputstring = inputstring.Remove(0, 7);
                         }
-                        if (inputstring.EndsWith("</oldfilter>",ignoreCase: true, culture: null))
+                        if (inputstring.EndsWith("</oldfilter>", ignoreCase: true, culture: null))
                         {
                             inputstring = inputstring.Remove(inputstring.Length - 12, 12);
                         }
-                        if (inputstring.EndsWith("</regex>",ignoreCase: true, culture: null))
+                        if (inputstring.EndsWith("</regex>", ignoreCase: true, culture: null))
                         {
                             inputstring = inputstring.Remove(inputstring.Length - 8, 8);
                         }
                         // remove Name: from line if it exists
-                        if (inputstring.StartsWith("name:",ignoreCase: true, culture: null))
+                        if (inputstring.StartsWith("name:", ignoreCase: true, culture: null))
                         {
                             inputstring = inputstring.Remove(0, 5);
-                            DetermineType(zoneName, type, inputstring);
+                            DetermineType(type, inputstring, zoneName);
                         }
                     }
                 }
             }
+            sw.Stop();
+            LogLib.WriteLine($"Reading alertfile and adding to Lists took {sw.Elapsed.Ticks} Tics.");
         }
 
-        private void DetermineType(string zoneName, int type, string inputstring)
+        private void DetermineType(int type, string inputstring, string zoneName)
         {
             if (zoneName == "global")
             {
@@ -221,23 +225,11 @@ namespace myseq
 
                 if (zoneName == "global")
                 {
-                    foreach (string str in GlobalHunt)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, GlobalHunt);
                 }
                 else
                 {
-                    foreach (string str in Hunt)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, Hunt);
                 }
 
                 lines.Add("    </section>");
@@ -245,25 +237,11 @@ namespace myseq
 
                 if (zoneName == "global")
                 {
-                    foreach (string str in GlobalCaution)
-
-                    {
-                        if (str.Length > 0)
-
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, GlobalCaution);
                 }
                 else
                 {
-                    foreach (string str in Caution)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, Caution);
                 }
 
                 lines.Add("    </section>");
@@ -271,23 +249,11 @@ namespace myseq
 
                 if (zoneName == "global")
                 {
-                    foreach (string str in GlobalDanger)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, GlobalDanger);
                 }
                 else
                 {
-                    foreach (string str in Danger)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, Danger);
                 }
 
                 lines.Add("    </section>");
@@ -295,54 +261,23 @@ namespace myseq
 
                 if (zoneName == "global")
                 {
-                    foreach (string str in GlobalAlert)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, GlobalAlert);
                 }
                 else
                 {
-                    foreach (string str in Alert)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, Alert);
                 }
                 lines.Add("    </section>");
 
                 if (zoneName != "global")
                 {
                     lines.Add("    <section name=\"Email\">");  // Email Alerts - zone only
-                    foreach (string str in EmailAlert)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
-                    lines.Add("    </section>");
+                    AddNameFromList(lines, EmailAlert);
                     lines.Add("    <section name=\"Primary\">");  // Item In Primary Hand Alerts - zone only
-                    foreach (string str in WieldedItems)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, WieldedItems);
                     lines.Add("    </section>");
                     lines.Add("    <section name=\"Offhand\">");  // Item In Offhand Hand Alerts - zone only
-                    foreach (string str in WieldedItems)
-                    {
-                        if (str.Length > 0)
-                        {
-                            lines.Add($"        Name:{str}");
-                        }
-                    }
+                    AddNameFromList(lines, WieldedItems);
                     lines.Add("    </section>");
                 }
                 lines.Add("</seqfilters>");
@@ -354,6 +289,14 @@ namespace myseq
             catch (Exception ex)
             {
                 LogLib.WriteLine($"Error opening writing filter file for {zoneName}: ", ex);
+            }
+        }
+
+        private void AddNameFromList(List<string> lines, List<string> alertlist)
+        {
+            foreach (string str in alertlist)
+            {
+                lines.Add($"        Name:{str}");
             }
         }
 

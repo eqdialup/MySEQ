@@ -61,6 +61,9 @@ namespace Structures
             //            Guild = BitConverter.ToInt32(b, 100 + offset);
         }
 
+        public float SpawnDistance(Spawninfo si, Spawninfo gamerInfo)
+        => (float)Math.Sqrt(((si.X - gamerInfo.X) * (si.X - gamerInfo.X)) + ((si.Y - gamerInfo.Y) * (si.Y - gamerInfo.Y)) + ((si.Z - gamerInfo.Z) * (si.Z - gamerInfo.Z)));
+
         public string Name = "";
 
         public float Y;
@@ -86,6 +89,9 @@ namespace Structures
         public int Primary;
 
         public int Offhand;
+
+        public string PrimaryName;
+        public string OffhandName;
 
         //        public int Guild;
 

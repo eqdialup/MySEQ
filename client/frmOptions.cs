@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
 using System.Media;
 using System.Windows.Forms;
 using myseq.Properties;
@@ -17,6 +16,7 @@ namespace myseq
     public class FrmOptions : Form
     {
         #region Design Components
+
         private ColorDialog colorOptionPicker;
 
         private Button cmdCommand;
@@ -455,7 +455,9 @@ namespace myseq
 
             base.Dispose(disposing);
         }
+
         #endregion Design Components
+
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -2104,17 +2106,17 @@ namespace myseq
         private void CmdLogDir_Click(object sender, EventArgs e)
 
         {
-            FolderBrowser("Log Directory", Settings.Default.LogDir, out string text );
+            FolderBrowser("Log Directory", Settings.Default.LogDir, out string text);
             txtLogDir.Text = text;
             Settings.Default.LogDir = txtLogDir.Text;
         }
 
-        private string FolderBrowser(string desc, string sPath, out string text)
+        private void FolderBrowser(string desc, string sPath, out string text)
         {
             text = sPath;
             fldrBrowser.Description = desc;
             fldrBrowser.SelectedPath = sPath;
-            return fldrBrowser.ShowDialog() == DialogResult.OK ? (text = fldrBrowser.SelectedPath) : null;
+            _ = fldrBrowser.ShowDialog() == DialogResult.OK ? (text = fldrBrowser.SelectedPath) : null;
         }
 
         private void CmdSpawnTimers_Click(object sender, EventArgs e)
@@ -2131,74 +2133,6 @@ namespace myseq
                 txtTimerDir.Text = fldrBrowser.SelectedPath;
             }
         }
-
-        //public DrawOptions GetDrawOptions()
-
-        //{
-        //    DrawOptions DrawOpts = DrawOptions.None;
-
-        //    if (chkMap.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.DrawMap;
-        //    }
-
-        //    if (chkAddjust.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.Readjust;
-        //    }
-
-        //    if (chkPlayer.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.Player;
-        //    }
-
-        //    if (chkLineToPoint.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.SpotLine;
-        //    }
-
-        //    if (chkSpawns.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.Spawns;
-        //    }
-
-        //    if (chkTrails.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.SpawnTrails;
-        //    }
-
-        //    if (chkGround.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.GroundItems;
-        //    }
-
-        //    if (chkTimers.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.SpawnTimers;
-        //    }
-
-        //    if (chkDirection.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.DirectionLines;
-        //    }
-
-        //    if (chkHighlight.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.SpawnRings;
-        //    }
-
-        //    if (chkGrid.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.GridLines;
-        //    }
-
-        //    if (chkText.Checked)
-        //    {
-        //        DrawOpts |= DrawOptions.ZoneText;
-        //    }
-
-        //    return DrawOpts;
-        //}
 
         public void SetFgDrawOptions(DrawOptions DrawOpts)
 
