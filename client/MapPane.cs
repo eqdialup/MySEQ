@@ -360,8 +360,8 @@ namespace myseq
         }
 
         private void Lookup(string name)
-        {
-            MarkLookups(name);
+        {bool filtermob = false;
+            MarkLookups(name, ref filtermob);
             mapCon.Invalidate();
         }
 
@@ -565,7 +565,7 @@ namespace myseq
             }
         }
 
-        public void MarkLookups(string name, bool filterMob = false)
+        public void MarkLookups(string name, ref bool filterMob)
         {
         }
     }

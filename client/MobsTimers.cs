@@ -355,38 +355,43 @@ namespace myseq
                 {
                     foreach (var line in File.ReadAllLines(timerfile))
                     {
-                        var count = 0;
-                        try
-                        {
-                            Spawntimer st = new Spawntimer(line)
-                            {
-                                zone = mapName.ToLower()
-                            };
-
-                            st.ZoneSpawnLoc = st.zone + st.SpawnLoc;
-
-                            count++;
-
-                            if (mobsTimer.ContainsKey(st.ZoneSpawnLoc))
-
-                            {
-                                // We already know about this mob. Copy some of the information.
-
-                                GetKnownMobInfo(st);
-                            }
-                            else if (st.SpawnCount > 1)
-                            {
-                                SetNewMobTimeInfo(st);
-
-                                mobsTimer.Add(st.ZoneSpawnLoc, st);
-                            }
-                        }
-                        catch (Exception ex) { LogLib.WriteLine($"Error in LoadTimers(), processing line:\r\n{line}", ex); }
-
-                        LogLib.WriteLine($"Spawns read: {count}", LogLevel.Debug);
+                        TimersFileLines(line);
                     }
                 }
             }
+        }
+
+        private void TimersFileLines(string line)
+        {
+            var count = 0;
+            try
+            {
+                Spawntimer st = new Spawntimer(line)
+                {
+                    zone = mapName.ToLower()
+                };
+
+                st.ZoneSpawnLoc = st.zone + st.SpawnLoc;
+
+                count++;
+
+                if (mobsTimer.ContainsKey(st.ZoneSpawnLoc))
+
+                {
+                    // We already know about this mob. Copy some of the information.
+
+                    GetKnownMobInfo(st);
+                }
+                else if (st.SpawnCount > 1)
+                {
+                    SetNewMobTimeInfo(st);
+
+                    mobsTimer.Add(st.ZoneSpawnLoc, st);
+                }
+            }
+            catch (Exception ex) { LogLib.WriteLine($"Error in LoadTimers(), processing line:\r\n{line}", ex); }
+
+            LogLib.WriteLine($"Spawns read: {count}", LogLevel.Debug);
         }
 
         private void SetNewMobTimeInfo(Spawntimer st)

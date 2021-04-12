@@ -5,13 +5,12 @@ namespace myseq
 {
     public interface IMarkLookup
     {
-        void MarkLookups(string name, bool filterMob = false);
+        void MarkLookups(string name, ref bool filterMob);
     }
 
     public class MarkLookup : IMarkLookup
     {
         private EQData eq;
-        private const string dflt = "Mob Search";
         private string search0 = "";
         private string search1 = "";
         private string search2 = "";
@@ -29,9 +28,9 @@ namespace myseq
             this.eq = eq;
         }
 
-        public void MarkLookups(string name, bool filterMob = false)
+        public void MarkLookups(string name, ref bool filterMob)
         {
-            name = GetName(name);
+            //name = GetName(name);
             GetCheckNameLength(name, filterMob, ref search0, ref filter0, "1:");
             GetCheckNameLength(name, filterMob, ref search1, ref filter1, "2");
             GetCheckNameLength(name, filterMob, ref search2, ref filter2, "3");
@@ -48,14 +47,6 @@ namespace myseq
                 GetSubLookup(sp, search3, filter3, "4");
                 GetSubLookup(sp, search4, filter4, "5");
             }
-        }
-
-        private static string GetName(string name)
-        {
-            if (name.Length > 2 && name.Substring(2) == dflt)
-            { name = name.Substring(0, 2); }
-
-            return name;
         }
 
         private void GetCheckNameLength(string name, bool filterMob, ref string search, ref bool filter, string rank)

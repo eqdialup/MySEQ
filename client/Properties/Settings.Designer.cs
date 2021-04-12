@@ -1882,5 +1882,17 @@ namespace myseq.Properties {
                 this["ThinSpawnList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool playAlerts {
+            get {
+                return ((bool)(this["playAlerts"]));
+            }
+            set {
+                this["playAlerts"] = value;
+            }
+        }
     }
 }

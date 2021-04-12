@@ -33,6 +33,7 @@ namespace Structures
         DefaultMaxLevel = Error // Starting log level
     };
 
+    [Flags]
     public enum DrawOptions
     {
         /// <summary>

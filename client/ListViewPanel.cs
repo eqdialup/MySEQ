@@ -12,7 +12,7 @@ namespace myseq
 {
     public class ListViewPanel : DockContent
     {
-        public bool curDescend = false;
+        private bool curDescend;
 
         private EQData eq;
 
@@ -75,9 +75,9 @@ namespace myseq
 
         public string mobname = "";
 
-        public string smoblevel = "1";
+        private string smoblevel = "1";
 
-        public int moblevel = 1;
+        private int moblevel = 1;
 
         private readonly int ListType;
 
@@ -100,7 +100,8 @@ namespace myseq
             listProperty.SetValue(listView, true, null);
         }
 
-        protected override string GetPersistString() => ListType == 0 ? "SpawnList" : ListType == 1 ? "SpawnTimerList" : "GroundSpawnList";
+        protected override string GetPersistString() =>
+            ListType == 0 ? "SpawnList" : ListType == 1 ? "SpawnTimerList" : "GroundSpawnList";
 
         public void HideSearchBox()
         {
@@ -429,7 +430,6 @@ namespace myseq
         #endregion Component Designer generated code
 
         private void MnuContext_Opened(object sender, EventArgs e)
-
         {
             mobname = "";
 
@@ -802,13 +802,9 @@ namespace myseq
 
         private void MnuEditZoneFilters_Click(object sender, EventArgs e) => filters.EditAlertFile(f1.curZone);
 
-        private void MnuReloadFilters_Click(object sender, EventArgs e)
-
-        {
+        private void MnuReloadFilters_Click(object sender, EventArgs e) =>
             //filters.ClearLists();
-
             f1.ReloadAlertFiles();
-        }
 
         private void MnuSearchAllakhazam_Click(object sender, EventArgs e)
         {
@@ -844,19 +840,15 @@ namespace myseq
         {
             // Set or unset the sticky flag for the timer selected
             ListView.SelectedIndexCollection sel = listView.SelectedIndices;
-
-            if (sel.Count > 0)
+            // We only do this for the Spawn Timer List
+            if (sel.Count > 0 && ListType == 1)
             {
-                // We only do this for the Spawn Timer List
-                if (ListType == 1)
+                // This returns mobsTimer2
+                Spawntimer st = eq.FindListViewTimer(listView.Items[sel[0]]);
+                if (st != null)
                 {
-                    // This returns mobsTimer2
-                    Spawntimer st = eq.FindListViewTimer(listView.Items[sel[0]]);
-                    if (st != null)
-                    {
-                        mnuStickyTimer.Checked = st.sticky;
-                        st.sticky = !st.sticky;
-                    }
+                    mnuStickyTimer.Checked = st.sticky;
+                    st.sticky = !st.sticky;
                 }
             }
         }

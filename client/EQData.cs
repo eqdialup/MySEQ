@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using myseq.Properties;
 using Structures;
@@ -28,11 +27,11 @@ namespace myseq
         public string longname = "";
 
         public string shortname = "";
-
+        private static readonly List<MapLine> mapLines = new List<MapLine>();
+        private static readonly List<MapText> mapTexts = new List<MapText>();
         // Map data
-        public List<MapLine> lines = new List<MapLine>();
-
-        public List<MapText> texts = new List<MapText>();
+        public List<MapLine> lines {get; } = mapLines;
+        public List<MapText> texts {get; } = mapTexts;
 
         private readonly List<MobTrailPoint> mobtrails = new List<MobTrailPoint>();
 
@@ -134,6 +133,14 @@ namespace myseq
         public List<MapText> GetTextsReadonly() => texts;
 
         public List<GroundItem> GetItemsReadonly() => itemcollection;
+
+        public void ProcessSpawnTimer(MainForm f1)
+        {
+            if (mobsTimers.mobsTimer2.Count > 0)
+            {
+                mobsTimers.UpdateList(f1.SpawnTimerList);
+            }
+        }
 
         public bool SelectTimer(float x, float y, float delta)
         {
@@ -403,7 +410,7 @@ namespace myseq
             return null;
         }
 
-        public Spawninfo GetSelectedMob() => (Spawninfo)mobsHashTable[(uint)selectedID];
+        public Spawninfo GetSelectedMob() => (Spawninfo)mobsHashTable[selectedID];
 
         // Originally called when first loading program.
         // Now called when reconnect(and char change), so we can modify these list more "on the fly"
@@ -847,8 +854,7 @@ namespace myseq
             }
         }
 
-        //public void ProcessGroundItems(Spawninfo si, Filters filters)
-        public async Task ProcessGroundItems(Spawninfo si, Filters filters)
+        public void ProcessGroundItems(Spawninfo si, Filters filters)
         {
             try
             {
@@ -875,8 +881,7 @@ namespace myseq
                     };
 
                     var itemname = gi.Desc.ToLower();
-                    //CheckGrounditemForAlerts(filters, gi, itemname);
-                    await Task.Run(() => CheckGrounditemForAlerts(filters, gi, itemname));
+                    CheckGrounditemForAlerts(filters, gi, itemname);
                     ListViewItem item1 = new ListViewItem(gi.Desc);
 
                     item1.SubItems.Add(si.Name);
@@ -1037,8 +1042,7 @@ namespace myseq
          * gameMin = si.Class
         */
 
-        //public void ProcessSpawns(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
-        public async Task ProcessSpawnsAsync(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
+        public void ProcessSpawns(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
         {
             CorpseAlerts = Settings.Default.CorpseAlerts;
             if (si.Name.Contains("a_tainted_egg"))
@@ -1146,10 +1150,6 @@ namespace myseq
                                 mob.listitem.SubItems[6].Text = mob.OwnerID.ToString();
                                 mob.isPet = false;
                             }
-                        //}
-
-                        //if (mob.Hide != si.Hide)
-                        //{
                             mob.Hide = si.Hide;
                             mob.listitem.SubItems[9].Text = PrettyNames.GetHideStatus(si.Hide);
                         //}
@@ -1247,10 +1247,9 @@ namespace myseq
 
                     mobsTimers.Spawn(si);
 
-                    if (si.Name.Length > 0)
+                    if ( !string.IsNullOrEmpty(si.Name ))
                     {
-                        //IsSpawnInFilterLists(si, f1, SpawnList, filters);
-                        await Task.Run(() => IsSpawnInFilterLists(si, f1, SpawnList, filters));
+                        IsSpawnInFilterLists(si, f1, SpawnList, filters);
                     }
                 }
             }
@@ -1960,7 +1959,6 @@ namespace myseq
              bool BeepOnMatch, bool MatchFullText)
         {
             var alert = false;
-            MainForm f1 = null;
             foreach (string str in filterlist)
             {
                 var matched = false;
@@ -1982,7 +1980,7 @@ namespace myseq
 
                 if (matched)
                 {
-                    if (!NoneOnMatch && f1.playAlerts)
+                    if (!NoneOnMatch && Settings.Default.playAlerts)
                     {
                         AudioMatch(mobname, TalkOnMatch, TalkDescr, PlayOnMatch, AudioFile, BeepOnMatch);
                     }
@@ -2128,7 +2126,10 @@ namespace myseq
 
                     foreach (ListViewItem i in newSpawns)
                     {
-                        items[d++] = i;
+                        if (i != null)
+                        {
+                            items[d++] = i;
+                        }
                     }
 
                     SpawnList.listView.Items.AddRange(items);

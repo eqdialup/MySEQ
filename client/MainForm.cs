@@ -56,8 +56,6 @@ namespace myseq
         private bool bFilter3;
         private bool bFilter4;
 
-        public bool playAlerts;
-
         public MainForm()
         {
             // This shuts up the error messages when running under a debugger
@@ -159,14 +157,6 @@ namespace myseq
             SpawnList.listView.Font = new Font(Settings.Default.ListFont.FontFamily, Settings.Default.ListFont.Size, Settings.Default.ListFont.Style);
             SpawnTimerList.listView.Font = new Font(Settings.Default.ListFont.Name, Settings.Default.ListFont.Size, Settings.Default.ListFont.Style);
             GroundItemList.listView.Font = Settings.Default.ListFontStyle;
-
-//            mapCon.drawFont = Settings.Default.MapLabel;
-//            mapCon.drawFont1 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 0.9f, Settings.Default.MapLabel.Style);
-//            mapCon.drawFont3 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 1.1f, Settings.Default.MapLabel.Style);
-
-            // Set the Font, Size, Style to the Spawn Info Window
-//            mapCon.lblMobInfo.Font = Settings.Default.TargetInfoFont;
-//            mapCon.lblGameClock.Font = new Font(Settings.Default.TargetInfoFont, FontStyle.Bold);
         }
 
         private void LoadPositionsFromConfigFile()
@@ -303,17 +293,6 @@ namespace myseq
             {
                 SavePrefs();
             }
-        }
-
-        private void GetFPSValue()
-        {
-            if (mapCon != null)
-            {
-                toolStripFPS.Text =  $"FPS: {mapCon.FpsValue}";
-            }
-            else
-            { toolStripFPS.Text = "0"; }
-
         }
 
         public void CmdCommand_Click(object sender, EventArgs e)
@@ -699,7 +678,6 @@ namespace myseq
         private void TimPackets_Tick(object sender, EventArgs e)
         {
             DrawOpts = Settings.Default.DrawOptions;
-            GetFPSValue();
             comm.Tick();
             mapCon.Tick();
         }
@@ -714,7 +692,7 @@ namespace myseq
         private void TimProcessTimers_Tick(object sender, EventArgs e)
         {
             // allow processing timers.
-            ProcessSpawnTimer();
+            eq.ProcessSpawnTimer(this);
 
             if (!bIsRunning && mapCon != null)
             {
@@ -1037,18 +1015,6 @@ namespace myseq
         }
 
         #endregion ProccessMap
-
-        #region ProcessSpawnTimer
-
-        private void ProcessSpawnTimer()
-        {
-            if (eq.mobsTimers.mobsTimer2.Count > 0)
-            {
-                eq.mobsTimers.UpdateList(SpawnTimerList);
-            }
-        }
-
-        #endregion ProcessSpawnTimer
 
         private void SetGridInterval()
 
@@ -2796,84 +2762,84 @@ namespace myseq
 
         private void ToolStripResetLookup_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox, "0");
+            BoxReset(toolStripLookupBox, "0", bFilter0);
         }
 
         private void ToolStripResetLookup1_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox1, "1");
+            BoxReset(toolStripLookupBox1, "1", bFilter1);
         }
 
         private void ToolStripResetLookup2_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox2, "2");
+            BoxReset(toolStripLookupBox2, "2", bFilter2);
         }
 
         private void ToolStripResetLookup3_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox3, "3");
+            BoxReset(toolStripLookupBox3, "3", bFilter3);
         }
 
         private void ToolStripResetLookup4_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox4, "4");
+            BoxReset(toolStripLookupBox4, "4", bFilter4);
         }
 
-        private void BoxReset(ToolStripTextBox box, string rank)
+        private void BoxReset(ToolStripTextBox box, string rank, bool filter)
         {
             box.Text = "";
             box.Focus();
-            mark.MarkLookups($"{rank}:");
+            mark.MarkLookups($"{rank}:", ref filter);
         }
 
         private void ToolStripCheckLookup_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup, toolStripLookupBox, "0", ref bFilter0);
+            BoxCheckChanged(toolStripCheckLookup, toolStripLookupBox, "1", ref bFilter0);
         }
 
         private void ToolStripCheckLookup1_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup1, toolStripLookupBox1, "1", ref bFilter1);
+            BoxCheckChanged(toolStripCheckLookup1, toolStripLookupBox1, "2", ref bFilter1);
         }
 
         private void ToolStripCheckLookup2_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup2, toolStripLookupBox2, "2", ref bFilter2);
+            BoxCheckChanged(toolStripCheckLookup2, toolStripLookupBox2, "3", ref bFilter2);
         }
 
         private void ToolStripCheckLookup3_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup3, toolStripLookupBox3, "3", ref bFilter3);
+            BoxCheckChanged(toolStripCheckLookup3, toolStripLookupBox3, "4", ref bFilter3);
         }
 
         private void ToolStripCheckLookup4_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup4, toolStripLookupBox4, "4", ref bFilter4);
+            BoxCheckChanged(toolStripCheckLookup4, toolStripLookupBox4, "5", ref bFilter4);
         }
 
         private void ToolStripTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox, "0", ref bFilter0);
+            BoxKeyPress(e, toolStripLookupBox, "1", ref bFilter0);
         }
 
         private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox1, "1", ref bFilter1);
+            BoxKeyPress(e, toolStripLookupBox1, "2", ref bFilter1);
         }
 
         private void ToolStripTextBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox2, "2", ref bFilter2);
+            BoxKeyPress(e, toolStripLookupBox2, "3", ref bFilter2);
         }
 
         private void ToolStripTextBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox3, "3", ref bFilter3);
+            BoxKeyPress(e, toolStripLookupBox3, "4", ref bFilter3);
         }
 
         private void ToolStripTextBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox4, "4", ref bFilter4);
+            BoxKeyPress(e, toolStripLookupBox4, "5", ref bFilter4);
         }
 
         private void BoxCheckChanged(ToolStripButton button, ToolStripTextBox box, string rank, ref bool filter)
@@ -2903,19 +2869,10 @@ namespace myseq
                 else
                 {
                     // text is blank, enter was pressed, but leave focus here
-                    mark.MarkLookups($"{rank}:");
+                    mark.MarkLookups($"{rank}:", ref filter);
                 }
 
                 e.Handled = true;
-            }
-        }
-
-        private void BoxClick(ToolStripTextBox box)
-        {
-            if (box.Text == "Mob Search")
-            {
-                box.Text = "";
-                box.ForeColor = SystemColors.WindowText;
             }
         }
 
@@ -2935,14 +2892,21 @@ namespace myseq
         private void NewTextMarkup(ToolStripTextBox box, string rank, ref bool filter)
         {
             var new_text = box.Text.Replace(" ", "_");
-            mark.MarkLookups($"{rank}:{new_text}", filter);
+            mark.MarkLookups($"{rank}:{new_text}", ref filter);
         }
 
         private void ToolStripLookupBox_Click(object sender, EventArgs e)
         {
             BoxClick(toolStripLookupBox);
         }
-
+        private void BoxClick(ToolStripTextBox box)
+        {
+            if (box.Text == "Mob Search")
+            {
+                box.Text = "";
+                box.ForeColor = SystemColors.WindowText;
+            }
+        }
         private void ToolStripLookupBox1_Click(object sender, EventArgs e)
         {
             BoxClick(toolStripLookupBox1);
@@ -3095,9 +3059,9 @@ namespace myseq
             }
         }
 
-        public void EnablePlayAlerts() => playAlerts = true;
+        public void EnablePlayAlerts() => Settings.Default.playAlerts = true;
 
-        public void DisablePlayAlerts() => playAlerts = false;
+        public void DisablePlayAlerts() => Settings.Default.playAlerts = false;
 
         private void ThinSpawnlist_Click(object sender, EventArgs e)
         {

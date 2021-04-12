@@ -312,7 +312,7 @@ namespace Structures
 
                 case PacketType.Spawn:
 
-                    eq.ProcessSpawnsAsync(si, f1, f1.SpawnList, filters, f1.mapPane, update_hidden);
+                    eq.ProcessSpawns(si, f1, f1.SpawnList, filters, f1.mapPane, update_hidden);
 
                     break;
 

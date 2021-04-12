@@ -323,7 +323,7 @@ namespace myseq
                 foreach (var tname in AllNames.Split(','))
                 {
                     var bname = RegexHelper.TrimName(tname);
-                    if (newnames.IndexOf(bname) < 0 && namecount < 12)
+                    if (newnames.IndexOf(bname) < 0 && namecount < 8)
                     {
                         builder.Append(", ").Append(bname);
                         namecount++;
@@ -377,13 +377,11 @@ namespace myseq
         {
             KillTimeDT = dt;
 
-            KillTimeStr = dt.ToLongTimeString() + " " + dt.ToShortDateString();
+            KillTimeStr = $"{dt.ToLongTimeString()} {dt.ToShortDateString()}";
 
-            TimeSpan Diff = new TimeSpan(0, 0, 0, Convert.ToInt32(SpawnTimer));
+            NextSpawnDT = KillTimeDT.Add(new TimeSpan(0, 0, 0, Convert.ToInt32(SpawnTimer)));
 
-            NextSpawnDT = KillTimeDT.Add(Diff);
-
-            NextSpawnStr = NextSpawnDT.ToLongTimeString() + " " + NextSpawnDT.ToShortDateString();
+            NextSpawnStr = $"{NextSpawnDT.ToLongTimeString()} {NextSpawnDT.ToShortDateString()}";
 
             listNeedsUpdate = true;
 
