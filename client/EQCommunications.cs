@@ -21,7 +21,7 @@ namespace Structures
         private CSocketClient pSocketClient;
 
         // Processing stuff-
-        private Filters filters;
+        private readonly Filters filters;
 
         public ProcessInfo CurrentProcess = new ProcessInfo(0, "");
         private int processcount;
@@ -49,7 +49,7 @@ namespace Structures
             update_hidden = true;
         }
 
-        public EQCommunications(EQData eq, MainForm f1, Filters filters)//FrmMain f1)
+        public EQCommunications(EQData eq, MainForm f1, Filters filters)
         {
             this.eq = eq;
             this.f1 = f1;
@@ -312,7 +312,7 @@ namespace Structures
 
                 case PacketType.Spawn:
 
-                    eq.ProcessSpawns(si, f1, f1.SpawnList, filters, f1.mapPane, update_hidden);
+                    eq.ProcessSpawns(si, f1, filters, update_hidden);
 
                     break;
 
@@ -323,7 +323,7 @@ namespace Structures
 
                 default:
 
-                    LogLib.WriteLine("Unknown Packet Type: " + si.flags.ToString());
+                    LogLib.WriteLine("Unknown Packet Type: " + si.flags.ToString(), LogLevel.Warning);
 
                     break;
             }

@@ -342,6 +342,17 @@ namespace myseq
 
         #endregion Component Designer generated code
 
+        public void MapReset()
+        {
+            scale.Value = 100M;
+            mapCon.scale = 1.0f;
+            offsetx.Value = 0;
+            offsety.Value = 0;
+            filterzneg.Value = 75;
+            filterzpos.Value = 75;
+            mapCon.ClearPan();
+        }
+
         private void CmdLookup_Click(object sender, EventArgs e)
         {
             txtLookup.Text = "";

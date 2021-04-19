@@ -38,7 +38,7 @@ namespace myseq
         private readonly EQData eq;
 
         private readonly EQCommunications comm;
-        private readonly EQMap map;
+        public readonly EQMap map;
 
         private ConColors GetConColors = new ConColors();
 
@@ -142,7 +142,7 @@ namespace myseq
             // This is for processing timers, do it once per second.
             timProcessTimers.Interval = 1000;
 
-            mapCon.SetUpdateSteps();
+            mapCon?.SetUpdateSteps();
 
             Text = BaseTitle;
 
@@ -287,19 +287,17 @@ namespace myseq
         }
 
         private void MainForm_Closing(object sender, CancelEventArgs e)
-
         {
             if (Settings.Default.SaveOnExit)
             {
                 SavePrefs();
             }
+            StopListening();
         }
 
         public void CmdCommand_Click(object sender, EventArgs e)
-
         {
             if (!bIsRunning)
-
             {
                 StartListening();
             }
@@ -410,18 +408,16 @@ namespace myseq
 
         public void SetTitle()
         {
-            Text = BaseTitle;
+            this.Text = BaseTitle;
 
             if (Settings.Default.ShowZoneName)
             {
                 Text += $" - {eq.longname}";
-                BaseTitle = Text;
             }
 
             if (Settings.Default.ShowCharName)
             {
                 Text += $" - {eq.gamerInfo.Name}";
-                BaseTitle = Text;
             }
         }
 
@@ -712,132 +708,69 @@ namespace myseq
         public void ShowCharsInList(Spawninfo si, ProcessInfo PI)
         {
             var EqualProcessID = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+
             if (comm.colProcesses.Count == 1)
             {
-                mnuChar1.Text = si.Name;
-                mnuChar1.Visible = true;
-
-                mnuChar2.Visible = false;
-                mnuChar2.Text = "Char 2";
-                mnuChar2.Checked = false;
-
-                mnuChar1.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar1, mnuChar2, "Char 2", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 2)
+            if (comm.colProcesses.Count == 2)
             {
-                mnuChar2.Text = si.Name;
-                mnuChar2.Visible = true;
-
-                mnuChar3.Visible = false;
-                mnuChar3.Text = "Char 3";
-                mnuChar3.Checked = false;
-
-                mnuChar2.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar2, mnuChar3, "Char 3", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 3)
+            if (comm.colProcesses.Count == 3)
             {
-                mnuChar3.Text = si.Name;
-                mnuChar3.Visible = true;
-
-                mnuChar4.Visible = false;
-                mnuChar4.Text = "Char 4";
-                mnuChar4.Checked = false;
-
-                mnuChar3.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar3, mnuChar4, "Char 4", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 4)
+            if (comm.colProcesses.Count == 4)
             {
-                mnuChar4.Text = si.Name;
-                mnuChar4.Visible = true;
-
-                mnuChar5.Visible = false;
-                mnuChar5.Text = "Char 5";
-                mnuChar5.Checked = false;
-
-                mnuChar4.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar4, mnuChar5, "Char 5", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 5)
+            if (comm.colProcesses.Count == 5)
             {
-                mnuChar5.Text = si.Name;
-                mnuChar5.Visible = true;
-
-                mnuChar6.Visible = false;
-                mnuChar6.Text = "Char 6";
-                mnuChar6.Checked = false;
-
-                mnuChar5.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar5, mnuChar6, "Char 6", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 6)
+            if (comm.colProcesses.Count == 6)
             {
-                mnuChar6.Text = si.Name;
-                mnuChar6.Visible = true;
-
-                mnuChar7.Visible = false;
-                mnuChar7.Text = "Char 7";
-                mnuChar7.Checked = false;
-
-                mnuChar6.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar6, mnuChar7, "Char 7", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 7)
+            if (comm.colProcesses.Count == 7)
             {
-                mnuChar7.Text = si.Name;
-                mnuChar7.Visible = true;
-
-                mnuChar8.Visible = false;
-                mnuChar8.Text = "Char 8";
-                mnuChar8.Checked = false;
-
-                mnuChar7.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar7, mnuChar8, "Char 8", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 8)
+            if (comm.colProcesses.Count == 8)
             {
-                mnuChar8.Text = si.Name;
-                mnuChar8.Visible = true;
-
-                mnuChar9.Visible = false;
-                mnuChar9.Text = "Char 9";
-                mnuChar9.Checked = false;
-
-                mnuChar8.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar8, mnuChar9, "Char 9", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 9)
+            if (comm.colProcesses.Count == 9)
             {
-                mnuChar9.Text = si.Name;
-                mnuChar9.Visible = true;
-
-                mnuChar10.Visible = false;
-                mnuChar10.Text = "Char 10";
-                mnuChar10.Checked = false;
-
-                mnuChar9.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar9, mnuChar10, "Char 10", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 10)
+            if (comm.colProcesses.Count == 10)
             {
-                mnuChar10.Text = si.Name;
-                mnuChar10.Visible = true;
-
-                mnuChar11.Visible = false;
-                mnuChar11.Text = "Char 11";
-                mnuChar11.Checked = false;
-
-                mnuChar10.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar10, mnuChar11, "Char 11", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 11)
+            if (comm.colProcesses.Count == 11)
             {
-                mnuChar11.Text = si.Name;
-                mnuChar11.Visible = true;
-                mnuChar12.Visible = false;
-                mnuChar12.Text = "Char 12";
-                mnuChar12.Checked = false;
-
-                mnuChar11.Checked = EqualProcessID;
+                ShowCharInList(si, mnuChar11, mnuChar12, "Char 12", EqualProcessID);
             }
-            else if (comm.colProcesses.Count == 12)
+            if (comm.colProcesses.Count == 12)
             {
                 mnuChar12.Text = si.Name;
                 mnuChar12.Visible = true;
                 mnuChar12.Checked = EqualProcessID;
             }
+        }
+
+        private void ShowCharInList(Spawninfo si, ToolStripMenuItem CharThis, ToolStripMenuItem CharNext, string char2, bool EqualProcessID)
+        {
+            CharThis.Text = si.Name;
+            CharThis.Visible = true;
+
+            CharNext.Visible = false;
+            CharNext.Text = char2;
+            CharNext.Checked = false;
+
+            CharThis.Checked = EqualProcessID;
         }
 
         #region ProccessMap
@@ -879,8 +812,8 @@ namespace myseq
                     map.LoadDummyMap(mapname);
                 }
 
-                eq.longname = mapPane.TabText;
-                filters.LoadAlerts(mapname);
+                eq.longname = mapname;
+                System.Threading.Tasks.Task.Run(() => filters.LoadAlerts(mapname));
                 SetTitle();
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessMap(): ", ex); }
@@ -915,9 +848,10 @@ namespace myseq
         private void LoadDepthFilter()
         {
             var ConfigFile = Path.Combine(myPath, "config.ini");
+            var strIniValue = new IniFile(ConfigFile).ReadValue("Zones", curZone, "");
+
             if (File.Exists(ConfigFile))
             {
-                var strIniValue = new IniFile(ConfigFile).ReadValue("Zones", curZone, "");
                 if (strIniValue.Length > 0)
                 {
                     if ((strIniValue == "0" && Settings.Default.DepthFilter) ||
@@ -1144,7 +1078,6 @@ namespace myseq
         }
 
         private void MnuOptions_Click(object sender, EventArgs e)
-
         {
             FrmOptions f3 = new FrmOptions();
             if (Settings.Default.OptionsWindowsLocation.X != 0 && Settings.Default.OptionsWindowsLocation.Y != 0)
@@ -1233,23 +1166,25 @@ namespace myseq
         private void MnuDepthFilter_Click(object sender, EventArgs e)
         {
             ToggleDepthFilter();
-            if (curZone.Length > 0 && !string.Equals(curZone, "CLZ", StringComparison.OrdinalIgnoreCase) && !string.Equals(curZone, "DEFAULT", StringComparison.OrdinalIgnoreCase))
+            if ((curZone.Length == 0) || string.Equals(curZone, "CLZ", StringComparison.OrdinalIgnoreCase) || string.Equals(curZone, "DEFAULT", StringComparison.OrdinalIgnoreCase))
             {
-                try
-                {
-                    // Save depth filter settings to file
-                    IniFile ConIni = new IniFile(Path.Combine(myPath, "config.ini"));
-                    if (Settings.Default.DepthFilter)
-                    {
-                        ConIni.WriteValue("Zones", curZone, "1");
-                    }
-                    else
-                    {
-                        ConIni.WriteValue("Zones", curZone, "0");
-                    }
-                }
-                catch (Exception ex) { LogLib.WriteLine("Error writing depth filter setting to ini file: ", ex); }
+                return;
             }
+
+            try
+            {
+                // Save depth filter settings to file
+                IniFile ConIni = new IniFile(Path.Combine(myPath, "config.ini"));
+                if (Settings.Default.DepthFilter)
+                {
+                    ConIni.WriteValue("Zones", curZone, "1");
+                }
+                else
+                {
+                    ConIni.WriteValue("Zones", curZone, "0");
+                }
+            }
+            catch (Exception ex) { LogLib.WriteLine("Error writing depth filter setting to ini file: ", ex); }
         }
 
         private void ToggleDepthFilter()
@@ -1909,7 +1844,7 @@ namespace myseq
 
         private void ResetMapPens()
         {
-            eq.CalculateMapLinePens();
+            eq.CalculateMapLinePens(map.lines, map.texts);
             mapCon?.Invalidate();
         }
 
@@ -2006,25 +1941,16 @@ namespace myseq
 
         private void SOEMapTextAdd(FrmAddMapText mapBox, string new_text)
         {
-            MapText work = new MapText
-            {
-                label = new_text,
-                x = (int)alertX,
-                y = (int)alertY,
-                z = (int)alertZ,
-                size = mapBox.txtSize,
-                color = new SolidBrush(mapBox.txtColr)
-                //draw_pen = new Pen(work.color)
-            };
-            work.draw_color = eq.GetDistinctColor(work.color);
-            work.draw_pen = new Pen(work.color);
-            eq.AddMapText(work);
-
             // string to append to map file
-            new_text = new_text.Replace(" ", "_");
             var soe_maptext = $"P {alertX * -1:f4}, {alertY * -1:f4}, {alertZ:f4}," +
                 $"{mapBox.txtColr.R}, {mapBox.txtColr.G}, {mapBox.txtColr.B}, {mapBox.txtSize}, {new_text}\n";
-            LogLib.WriteLine($"soe mapText {soe_maptext}");
+
+            MapText work = new MapText(soe_maptext);
+
+            work.draw_color = eq.GetDistinctColor(work.color);
+            work.draw_pen = new Pen(work.color);
+            map.AddMapText(work);
+
             if (DialogResult.Yes == MessageBox.Show($"Do you want to write the label to {mapBox.mapName}?" +
                 Environment.NewLine + Environment.NewLine + soe_maptext, "Write label to map",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
@@ -2035,12 +1961,13 @@ namespace myseq
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Access Violation {ex}", "Error");
+                    MessageBox.Show($"Access Violation {ex}", "Add text to Map Error",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                eq.DeleteMapText(work);
+                map.DeleteMapText(work);
             }
         }
 
@@ -2089,7 +2016,7 @@ namespace myseq
             mapCon?.Invalidate();
         }
 
-        private void MnuMapReset_Click(object sender, EventArgs e) => mapCon.MapReset();
+        private void MnuMapReset_Click(object sender, EventArgs e) => mapPane.MapReset();
 
         private void MnuShowLayer1_Click(object sender, EventArgs e)
         {

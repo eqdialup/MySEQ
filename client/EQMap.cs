@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using myseq.Properties;
 using Structures;
+
 
 namespace myseq
 {
@@ -11,6 +13,7 @@ namespace myseq
     public class EQMap
     {
         private MapCon mapCon;
+        public MobTrails trails = new MobTrails();
 
         private ListViewPanel SpawnList;
 
@@ -24,6 +27,11 @@ namespace myseq
 
         public EQData eq;
 
+        private static readonly List<MapLine> mapLines = new List<MapLine>();
+        private static readonly List<MapText> mapTexts = new List<MapText>();
+        public List<MapLine> lines { get; } = mapLines;
+        public List<MapText> texts { get; } = mapTexts;
+
         // Events
 
         public delegate void ExitMapHandler(EQMap Map);
@@ -31,6 +39,7 @@ namespace myseq
         public event ExitMapHandler ExitMap; // Fires when the map is unloaded
 
         public delegate void EnterMapHandler(EQMap Map);
+
 
         public event EnterMapHandler EnterMap; // Fires when the map is loaded
 
@@ -77,11 +86,18 @@ namespace myseq
             initialized = true;
         }
 
+        public void ClearMapStructures()
+        {
+            lines.Clear();
+            texts.Clear();
+            eq.CalcExtents(lines);
+        }
         public void ClearMap()
         {
             if (initialized)
             {
                 eq.Clear();
+                trails.Clear();
                 SpawnList.listView.Items.Clear();
                 SpawnTimerList.listView.Items.Clear();
                 GroundItemList.listView.Items.Clear();
@@ -105,15 +121,138 @@ namespace myseq
                 eq.mobsTimers.ResetTimers();
             }
         }
+        public bool LoadLoYMap(string filename, bool resetmap)
+        {
+            if (resetmap)
+            {
+                eq.mobsTimers.ResetTimers();
+                OnExitMap();
+                ClearMap();
+                ClearMapStructures();
+            }
+
+            var rc = LoadLoYMapInternal(filename);
+
+            if (rc)
+            {
+                OptimizeMap();
+
+                eq.CalculateMapLinePens(lines, texts); // pre-calculate all pen colors used for map drawing.
+
+                OnEnterMap();
+            }
+
+            return rc;
+        }
+
+        public bool Loadmap(string filename)
+        {
+            try
+            {
+                if (System.IO.File.Exists(filename))
+                {
+                    if (filename.EndsWith("_1.txt") || filename.EndsWith("_2.txt") || filename.EndsWith("_3.txt"))
+                    {
+                        if (!LoadLoYMap(filename, false))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (!LoadLoYMap(filename, true))
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                var msg = $"Failed to load map {filename}: {ex.Message}";
+                LogLib.WriteLine(msg);
+                return false;
+            }
+        }
+
+        public bool LoadLoYMapInternal(string filename) //ingame EQ format
+        {
+            var numtexts = 0;
+            var numlines = 0;
+            var curLine = 0;
+
+            if (!File.Exists(filename))
+            {
+                LogLib.WriteLine($"File not found loading {filename} in loadLoYMap", LogLevel.Error);
+                return false;
+            }
+
+            LogLib.WriteLine($"Loading Zone Map (LoY): {filename}");
+
+            foreach (var line in File.ReadAllLines(filename))
+            {
+                if (line.StartsWith("L") || line.StartsWith("P"))
+                {
+                    ParseLP(line, ref numtexts, ref numlines);
+                    curLine++;
+                }
+                else
+                {
+                    LogLib.WriteLine($"Warning - {line} in map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
+                }
+            }
+            LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
+            LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
+
+            if (numtexts > 0 || lines.Count > 0)
+            {
+                eq.shortname = Path.GetFileNameWithoutExtension(filename);
+                if (eq.shortname.IndexOf("_") > 0)
+                {
+                    eq.shortname = eq.shortname.Substring(0, eq.shortname.Length - 2);
+                }
+
+                eq.longname = eq.shortname;
+
+                eq.CalcExtents(lines);
+
+                return true;
+            }
+            return false;
+        }
+
+        private void ParseLP(string line, ref int numtexts, ref int numlines)
+        {
+            if (line.StartsWith("L"))
+            {
+                MapLine work = new MapLine(line);
+                lines.Add(work);
+                numlines++;
+            }
+            else if (line.StartsWith("P"))
+            {
+                MapText work = new MapText(line);
+                texts.Add(work);
+                numtexts++;
+            }
+        }
+
+        public void AddMapText(MapText work)
+        {
+            texts.Add(work);
+        }
+
+        public void DeleteMapText(MapText work)
+        {
+            texts.Remove(work);
+        }
 
         public void LoadDummyMap(string mapname)
-
         {
             OnExitMap();
 
             ClearMap();
 
-            eq.ClearMapStructures();
+            ClearMapStructures();
 
             eq.shortname = mapname;
 
@@ -125,60 +264,13 @@ namespace myseq
             OnEnterMap();
         }
 
-        public bool Loadmap(string filename)
-        {
-            try
-            {
-                if (filename.EndsWith("_1.txt") || filename.EndsWith("_2.txt") || filename.EndsWith("_3.txt"))
-                {
-                    if (!LoadLoYMap(filename, false))
-                    {
-                        return false;
-                    }
-                }
-                else if (!LoadLoYMap(filename, true))
-                {
-                    return false;
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var msg = $"Failed to load map {filename}: {ex.Message}";
-                LogLib.WriteLine(msg);
-                return false;
-            }
-        }
 
-        public bool LoadLoYMap(string filename, bool resetmap)
-        {
-            if (resetmap)
-            {
-                eq.mobsTimers.ResetTimers();
-                OnExitMap();
-                ClearMap();
-                eq.ClearMapStructures();
-            }
-
-            var rc = eq.LoadLoYMapInternal(filename);
-
-            if (rc)
-            {
-                OptimizeMap();
-
-                eq.CalculateMapLinePens(); // pre-calculate all pen colors used for map drawing.
-
-                OnEnterMap();
-            }
-
-            return rc;
-        }
 
         #region Optimize Map
 
         public void OptimizeMap()
         {
-            if (eq.lines != null)
+            if (lines != null)
             {
                 List<MapLine> linesToRemove = new List<MapLine>();
                 MapLine lastline = null;
@@ -193,7 +285,7 @@ namespace myseq
         private void FindvoidLines(List<MapLine> linesToRemove, MapLine lastline)
         {
             float prod;
-            foreach (MapLine line in eq.lines)
+            foreach (MapLine line in lines)
             {
                 MapLine thisline = line;
                 if (thisline != null && lastline != null)
@@ -210,7 +302,7 @@ namespace myseq
                     Pen lastColor = lastline.color;
 
                     int droppoint;
-                    if (lastpoint.x == thispoint.x && lastpoint.y == thispoint.y && lastpoint.z == thispoint.z && thisColor.Color == lastColor.Color)
+                    if (PointsAreEqual(ref thispoint, ref lastpoint, thisColor, lastColor))
                     {
                         droppoint = 0;
 
@@ -220,12 +312,10 @@ namespace myseq
 
                         if ((thiscount > 1) && (lastcount > 1))
                         {
-                            prod = CalcDotProduct(lastprev.x, lastprev.y, lastprev.z, thispoint.x, thispoint.y, thispoint.z, thisnext.x, thisnext.y, thisnext.z);
+                            prod = CalcDotProduct(lastprev, thispoint, thisnext);
 
                             if (prod > 0.9999f)
                             {
-                                //                                    pointsdrop++;
-
                                 droppoint = 1;
                             }
                         }
@@ -253,9 +343,7 @@ namespace myseq
 
                             lastline.aPoints.Add(temp);
                         }
-
                         linesToRemove.Add(thisline);
-
                         thisline = lastline;
                     }
                     else
@@ -271,15 +359,14 @@ namespace myseq
 
                         if (lastpoint.x == thispoint.x && lastpoint.y == thispoint.y && lastpoint.z == thispoint.z && thisColor.Color == lastColor.Color)
                         {
-                            prod = CalcDotProduct(thisprev.x, thisprev.y, thisprev.z, thispoint.x, thispoint.y, thispoint.z, lastnext.x, lastnext.y, lastnext.z);
+                            prod = CalcDotProduct(thisprev, thispoint, lastnext);
 
                             if (prod > 0.9999f)
                             {
-                                //                                    pointsdrop++;
                                 droppoint = 1;
                             }
 
-                            // Second Line is at beginning of first line
+                            // Second Line Starts at End of First Line
 
                             lastline.linePoints = new PointF[thiscount + lastcount - 1 - droppoint];
 
@@ -315,6 +402,8 @@ namespace myseq
             }
         }
 
+        private static bool PointsAreEqual(ref MapPoint thispoint, ref MapPoint lastpoint, Pen thisColor, Pen lastColor) => lastpoint.x == thispoint.x && lastpoint.y == thispoint.y && lastpoint.z == thispoint.z && thisColor.Color == lastColor.Color;
+
         private static MapPoint GetMapPoint(MapLine thisline, int p)
         {
             MapPoint tmp = (MapPoint)thisline.aPoints[p];
@@ -328,7 +417,7 @@ namespace myseq
 
         private void NormalizeMaxMinZ()
         {
-            foreach (MapLine line in eq.lines)
+            foreach (MapLine line in lines)
             {
                 line.maxZ = line.minZ = line.Point(0).z;
                 for (var j = 1; j < line.aPoints.Count; j++)
@@ -350,17 +439,17 @@ namespace myseq
         {
             foreach (MapLine lineToRemove in linesToRemove)
             {
-                eq.lines.Remove(lineToRemove);
+                lines.Remove(lineToRemove);
             }
         }
 
         private void OptimizeText()
         {
             var index = 0;
-            foreach (MapText tex1 in eq.texts)
+            foreach (MapText tex1 in texts)
             {
                 var index2 = 0;
-                foreach (MapText tex2 in eq.texts)
+                foreach (MapText tex2 in texts)
                 {
                     if (index2 > index && tex1.x == tex2.x && tex1.y == tex2.y && tex1.z == tex2.z && tex1.label != tex2.label)
                     {
@@ -372,8 +461,18 @@ namespace myseq
             }
         }
 
-        private float CalcDotProduct(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
+        private float CalcDotProduct(MapPoint lastprev, MapPoint thispoint, MapPoint thisnext)
         {
+            float x1 = lastprev.x;
+            float y1 = lastprev.y;
+            float z1 = lastprev.z;
+            float x2 = thispoint.x;
+            float y2 = thispoint.y;
+            float z2 = thispoint.z;
+            float x3 = thisnext.x;
+            float y3 = thisnext.y;
+            float z3 = thisnext.z;
+
             if ((x1 == x2 && y1 == y2 && z1 == z2) || (x2 == x3 && y2 == y3 && z2 == z3))
             {
                 return 1.0f;

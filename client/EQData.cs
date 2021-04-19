@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using myseq.Properties;
 using Structures;
@@ -14,7 +12,7 @@ namespace myseq
 {
     // This is the "model" part - no UI related things in here, only hard EQ data.
 
-    public class EQData
+    public class EQData : IAlertStatus
     {
         private static readonly Spawninfo sPAWNINFO = new Spawninfo();
 
@@ -27,14 +25,7 @@ namespace myseq
         public string longname = "";
 
         public string shortname = "";
-        private static readonly List<MapLine> mapLines = new List<MapLine>();
-        private static readonly List<MapText> mapTexts = new List<MapText>();
-        // Map data
-        public List<MapLine> lines {get; } = mapLines;
-        public List<MapText> texts {get; } = mapTexts;
-
-        private readonly List<MobTrailPoint> mobtrails = new List<MobTrailPoint>();
-
+        //// Map data
         // Max + Min map coordinates - define the bounds of the zone
 
         public float minx = -1000;
@@ -49,13 +40,11 @@ namespace myseq
 
         public float maxz = 1000;
 
-        // Mobs
-
         private readonly List<GroundItem> itemcollection = new List<GroundItem>();          // Hold the items that are on the ground
 
-        private readonly Hashtable mobsHashTable = new Hashtable();           // Holds the details of the mobs in the current zone.
+        private readonly Hashtable mobsHashTable = new Hashtable();             // Holds the details of the mobs in the current zone.
 
-        public MobsTimers mobsTimers { get; } = new MobsTimers();   // Manages the timers
+        public MobsTimers mobsTimers { get; } = new MobsTimers();               // Manages the timers
 
         public int selectedID = 99999;
 
@@ -71,9 +60,9 @@ namespace myseq
 
         // Mobs / UI Lists
 
-        private List<ListViewItem> newSpawns { get; } = new List<ListViewItem>();
+        private List<ListViewItem> NewSpawns { get; } = new List<ListViewItem>();
 
-        private List<ListViewItem> newGroundItems { get; } = new List<ListViewItem>();
+        private List<ListViewItem> NewGroundItems { get; } = new List<ListViewItem>();
 
         // Items List by ID and Description loaded from file
 
@@ -83,38 +72,7 @@ namespace myseq
 
         //        public Hashtable guildList = new Hashtable();
 
-        // Mobs / Filters
-
-        // Used to improve packet processing speed
-
-        private bool PrefixStars = true;
-
-        private bool AffixStars = true;
-
         private bool CorpseAlerts = true;
-
-        private bool MatchFullTextH;
-
-        private bool MatchFullTextC;
-
-        private bool MatchFullTextD;
-
-        private bool MatchFullTextA;
-
-        private string HuntPrefix = "";
-
-        private string CautionPrefix = "";
-
-        private string DangerPrefix = "";
-
-        private string AlertPrefix = "";
-
-        public int GreenRange { get; set; }
-
-        public int CyanRange { get; set; }
-
-        public int GreyRange { get; set; }
-        public int YellowRange { get; set; } = 3;
 
         public bool Zoning { get; set; }
         public string[] Classes { get; private set; }
@@ -125,12 +83,6 @@ namespace myseq
         private const int ditchGone = 2;
 
         public Hashtable GetMobsReadonly() => mobsHashTable;
-
-        public List<MobTrailPoint> GetMobTrailsReadonly() => mobtrails;
-
-        public List<MapLine> GetLinesReadonly() => lines;
-
-        public List<MapText> GetTextsReadonly() => texts;
 
         public List<GroundItem> GetItemsReadonly() => itemcollection;
 
@@ -388,7 +340,7 @@ namespace myseq
         {
             foreach (GroundItem gi in itemcollection)
             {
-                if (!gi.filtered && gi.X < x + delta && gi.X > x - delta && gi.Y < y + delta && gi.Y > y - delta)
+                if (!gi.Filtered && gi.X < x + delta && gi.X > x - delta && gi.Y < y + delta && gi.Y > y - delta)
                 {
                     return gi;
                 }
@@ -426,141 +378,6 @@ namespace myseq
             //guildList.Clear();
 
             //ReadGuildList(Path.Combine(Settings.Default.CfgDir, "Guilds.txt"));
-        }
-
-        public bool LoadLoYMapInternal(string filename) //ingame EQ format
-        {
-            IFormatProvider NumFormat = new CultureInfo("en-US");
-            var numtexts = 0;
-            var numlines = 0;
-            var curLine = 0;
-            var lineCount = 0;
-
-            if (!File.Exists(filename))
-            {
-                LogLib.WriteLine($"File not found loading {filename} in loadLoYMap");
-                return false;
-            }
-
-            LogLib.WriteLine($"Loading Zone Map (LoY): {filename}");
-
-            foreach (var line in File.ReadAllLines(filename))
-            {
-                if (line.StartsWith("L") || line.StartsWith("P"))
-                {
-                    ParseLP(filename, NumFormat, line, ref numtexts, ref numlines, curLine);
-                }
-                else
-                {
-                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-                }
-
-                LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
-                LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
-
-                if (numtexts > 0 || lineCount > 0)
-                {
-                    shortname = Path.GetFileNameWithoutExtension(filename);
-
-                    if (shortname.IndexOf("_") > 0)
-                    {
-                        shortname = shortname.Substring(0, shortname.Length - 2);
-                    }
-
-                    longname = shortname;
-
-                    CalcExtents();
-
-                    return true;
-                }
-            }
-            return false; // LOY / EQ folder maps
-        }
-
-        private void ParseLP(string filename, IFormatProvider NumFormat, string line, ref int numtexts, ref int numlines, int curLine)
-        {
-            if (line.StartsWith("L"))
-            {
-                MapLine work = new MapLine();
-
-                MapPoint point1 = new MapPoint();
-
-                MapPoint point2 = new MapPoint();
-
-                var parsedLine = line.Remove(0, 1).Split(",".ToCharArray());
-
-                if (parsedLine.Length == 9)
-                {
-                    point1.x = -(int)float.Parse(parsedLine[0], NumFormat);
-                    point1.y = -(int)float.Parse(parsedLine[1], NumFormat);
-                    point1.z = (int)float.Parse(parsedLine[2], NumFormat);
-
-                    point2.x = -(int)float.Parse(parsedLine[3], NumFormat);
-                    point2.y = -(int)float.Parse(parsedLine[4], NumFormat);
-                    point2.z = -(int)float.Parse(parsedLine[5], NumFormat);
-
-                    var R = int.Parse(parsedLine[6].PadRight(4).Substring(0, 3));
-                    var G = int.Parse(parsedLine[7].PadRight(4).Substring(0, 3));
-                    var B = int.Parse(parsedLine[8].PadRight(4).Substring(0, 3));
-                    work.color = new Pen(new SolidBrush(Color.FromArgb(R, G, B)));
-
-                    work.aPoints.Add(point1);
-
-                    work.aPoints.Add(point2);
-
-                    work.linePoints = new PointF[2];
-
-                    work.linePoints[0] = new PointF(point1.x, point1.y);
-
-                    work.linePoints[1] = new PointF(point2.x, point2.y);
-
-                    lines.Add(work);
-
-                    numlines++;
-                }
-                else
-                {
-                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-                }
-            }
-            else if (line.StartsWith("P"))
-            {// string format "P 175.5915{0}, 894.8506{1}, 148.1645{2},  240{3}, 240{4}, 240{5},  2{6},  Tower{7}"
-                MapText work = new MapText();
-                var dataRecord = line.Remove(0, 1);
-                var parsedline = dataRecord.Split(",".ToCharArray());
-
-                if (parsedline.Length >= 7)
-                {
-                    work.x = -(int)float.Parse(parsedline[0], NumFormat);
-                    work.y = -(int)float.Parse(parsedline[1], NumFormat);
-                    work.z = (int)float.Parse(parsedline[2], NumFormat);
-                    var r = int.Parse(parsedline[3], NumFormat);
-                    var g = int.Parse(parsedline[4], NumFormat);
-                    var b = int.Parse(parsedline[5], NumFormat);
-                    work.color = new SolidBrush(Color.FromArgb(r, g, b));
-                    work.size = int.Parse(parsedline[6], NumFormat);
-                    for (var i = 7; i < parsedline.Length; i++)
-                    {
-                        work.label = parsedline[i];
-                    }
-                }
-                else
-                {
-                    LogLib.WriteLine($"Warning - Line {curLine} of map '{filename}' has an invalid format and will be ignored.", LogLevel.Warning);
-                }
-                texts.Add(work);
-                numtexts++;
-            }
-        }
-
-        public void AddMapText(MapText work)
-        {
-            texts.Add(work);
-        }
-
-        public void DeleteMapText(MapText work)
-        {
-            texts.Remove(work);
         }
 
         private string[] GetStrArrayFromTextFile(string filePath)
@@ -604,20 +421,6 @@ namespace myseq
                     GroundSpawn.Add(newGround);
                 }
             }
-        }
-
-        public string GetItemDescription(string ActorDef)
-        {//sample:  IT0_ACTORDEF
-            var lookupid = int.Parse(ActorDef.Remove(0, 2).Split('_')[0]);
-
-            for (var i = 0; i < GroundSpawn.Count; i++)
-            {
-                if (GroundSpawn[i].ID.Equals(lookupid))
-                {
-                    return GroundSpawn[i].Name;
-                }
-            }
-            return ActorDef;
         }
 
         //private void ReadGuildList(string filePath)
@@ -690,14 +493,7 @@ namespace myseq
 
         private string ArrayIndextoStr(string[] source, int index) => index < source.GetLowerBound(0) || index > source.GetUpperBound(0) ? $"{index}: Unknown" : source[index];
 
-        public void ClearMapStructures()
-        {
-            lines.Clear();
-            texts.Clear();
-            CalcExtents();
-        }
-
-        public void CalcExtents()
+        public void CalcExtents(List<MapLine> lines)
         {
             if (longname != "" && lines.Count > 0)
             {
@@ -709,35 +505,7 @@ namespace myseq
 
                 foreach (MapLine mapLine in lines)
                 {
-                    foreach (MapPoint mapPoint in mapLine.aPoints)
-                    {
-                        if (mapPoint.x > maxx)
-                        {
-                            maxx = mapPoint.x;
-                        }
-                        else if (mapPoint.x < minx)
-                        {
-                            minx = mapPoint.x;
-                        }
-
-                        if (mapPoint.y > maxy)
-                        {
-                            maxy = mapPoint.y;
-                        }
-                        else if (mapPoint.y < miny)
-                        {
-                            miny = mapPoint.y;
-                        }
-
-                        if (mapPoint.z > maxz)
-                        {
-                            maxz = mapPoint.z;
-                        }
-                        else if (mapPoint.z < minz)
-                        {
-                            minz = mapPoint.z;
-                        }
-                    }
+                    ExtendMapLines(mapLine);
                 }
             }
             else
@@ -753,6 +521,39 @@ namespace myseq
                 minz = -1000;
 
                 maxz = 1000;
+            }
+        }
+
+        private void ExtendMapLines(MapLine mapLine)
+        {
+            foreach (MapPoint mapPoint in mapLine.aPoints)
+            {
+                if (mapPoint.x > maxx)
+                {
+                    maxx = mapPoint.x;
+                }
+                else if (mapPoint.x < minx)
+                {
+                    minx = mapPoint.x;
+                }
+
+                if (mapPoint.y > maxy)
+                {
+                    maxy = mapPoint.y;
+                }
+                else if (mapPoint.y < miny)
+                {
+                    miny = mapPoint.y;
+                }
+
+                if (mapPoint.z > maxz)
+                {
+                    maxz = mapPoint.z;
+                }
+                else if (mapPoint.z < minz)
+                {
+                    minz = mapPoint.z;
+                }
             }
         }
 
@@ -800,8 +601,6 @@ namespace myseq
             }
             deletedItems.Clear();
 
-            // Increment the remove timers on all the mobs
-
             foreach (Spawninfo sp in mobsHashTable.Values)
             {
                 if (sp.delFromList)
@@ -820,37 +619,33 @@ namespace myseq
                 }
             }
 
-            // Remove any that have been marked for deletion
-
-            if (deletedItems.Count > 0 || delListItems.Count > 0)
+            if (deletedItems.Count > 5 || delListItems.Count > 5)
             {
-                if (Zoning || deletedItems.Count > 5 || delListItems.Count > 5)
-                {
-                    SpawnList.listView.BeginUpdate();
-                }
+                SpawnList.listView.BeginUpdate();
 
-                foreach (Spawninfo sp in deletedItems)
-                {
-                    SpawnList.listView.Items.Remove(sp.listitem);
+                RenoveDeadEntries(SpawnList, deletedItems, delListItems);
 
-                    sp.listitem = null;
-
-                    mobsHashTable.Remove(sp.SpawnID);
-                }
-
-                foreach (Spawninfo sp in delListItems)
-                {
-                    SpawnList.listView.Items.Remove(sp.listitem);
-                }
-
-                if (Zoning || deletedItems.Count > 5 || delListItems.Count > 5)
-                {
-                    SpawnList.listView.EndUpdate();
-                }
-
+                SpawnList.listView.EndUpdate();
                 delListItems.Clear();
 
                 deletedItems.Clear();
+            }
+        }
+
+        private void RenoveDeadEntries(ListViewPanel SpawnList, ArrayList deletedItems, ArrayList delListItems)
+        {
+            foreach (Spawninfo sp in deletedItems)
+            {
+                SpawnList.listView.Items.Remove(sp.listitem);
+
+                sp.listitem = null;
+
+                mobsHashTable.Remove(sp.SpawnID);
+            }
+
+            foreach (Spawninfo sp in delListItems)
+            {
+                SpawnList.listView.Items.Remove(sp.listitem);
             }
         }
 
@@ -871,14 +666,7 @@ namespace myseq
 
                 if (!found)
                 {
-                    GroundItem gi = new GroundItem
-                    {
-                        X = si.X,
-                        Y = si.Y,
-                        Z = si.Z,
-                        Name = si.Name,
-                        Desc = GetItemDescription(si.Name)
-                    };
+                    GroundItem gi = new GroundItem(si, this);
 
                     var itemname = gi.Desc.ToLower();
                     CheckGrounditemForAlerts(filters, gi, itemname);
@@ -901,105 +689,10 @@ namespace myseq
                     itemcollection.Add(gi);
 
                     // Add it to the ground item list
-                    newGroundItems.Add(item1);
+                    NewGroundItems.Add(item1);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItems(): ", ex); }
-        }
-
-        private void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname)
-        {
-            // [hunt]
-            if (filters.Hunt.Count > 0 && FindMatches(filters.Hunt, itemname, Settings.Default.NoneOnHunt,
-
-                    Settings.Default.TalkOnHunt, "Ground Item",
-
-                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-
-                    Settings.Default.BeepOnHunt, MatchFullTextH))
-            {
-                gi.isHunt = true;
-            }
-
-            if (filters.GlobalHunt.Count > 0 && FindMatches(filters.GlobalHunt, itemname, Settings.Default.NoneOnHunt,
-
-                    Settings.Default.TalkOnHunt, "Ground Item",
-
-                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-
-                    Settings.Default.BeepOnHunt, MatchFullTextH))
-            {
-                gi.isHunt = true;
-            }
-
-            // [caution]
-            if (filters.Caution.Count > 0 && FindMatches(filters.Caution, itemname, Settings.Default.NoneOnCaution,
-
-                    Settings.Default.TalkOnCaution, "Ground Item",
-
-                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-
-                    Settings.Default.BeepOnCaution, MatchFullTextC))
-            {
-                gi.isCaution = true;
-            }
-
-            if (filters.GlobalCaution.Count > 0 && FindMatches(filters.GlobalCaution, itemname, Settings.Default.NoneOnCaution,
-
-                    Settings.Default.TalkOnCaution, "Ground Item",
-
-                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-
-                    Settings.Default.BeepOnCaution, MatchFullTextC))
-            {
-                gi.isCaution = true;
-            }
-
-            // [danger]
-            if (filters.Danger.Count > 0 && FindMatches(filters.Danger, itemname, Settings.Default.NoneOnDanger,
-
-                    Settings.Default.TalkOnDanger, "Ground Item",
-
-                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-
-                    Settings.Default.BeepOnDanger, MatchFullTextD))
-            {
-                gi.isDanger = true;
-            }
-
-            if (filters.GlobalDanger.Count > 0 && FindMatches(filters.GlobalDanger, itemname, Settings.Default.NoneOnDanger,
-
-                    Settings.Default.TalkOnDanger, "Ground Item",
-
-                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-
-                    Settings.Default.BeepOnDanger, MatchFullTextD))
-            {
-                gi.isDanger = true;
-            }
-
-            // [rare]
-            if (filters.Alert.Count > 0 && FindMatches(filters.Alert, itemname, Settings.Default.NoneOnAlert,
-
-                    Settings.Default.TalkOnAlert, "Ground Item",
-
-                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-
-                    Settings.Default.BeepOnAlert, MatchFullTextA))
-            {
-                gi.isAlert = true;
-            }
-
-            if (filters.GlobalAlert.Count > 0 && FindMatches(filters.GlobalAlert, itemname, Settings.Default.NoneOnAlert,
-
-                    Settings.Default.TalkOnAlert, "Ground Item",
-
-                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-
-                    Settings.Default.BeepOnAlert, MatchFullTextA))
-            {
-                gi.isAlert = true;
-            }
         }
 
         public void ProcessTarget(Spawninfo si)
@@ -1042,13 +735,9 @@ namespace myseq
          * gameMin = si.Class
         */
 
-        public void ProcessSpawns(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters, MapPane mapPane, bool update_hidden)
+        public void ProcessSpawns(Spawninfo si, MainForm f1, Filters filters, bool update_hidden)
         {
-            CorpseAlerts = Settings.Default.CorpseAlerts;
-            if (si.Name.Contains("a_tainted_egg"))
-            {
-                si.Class = 1;
-            }
+            Tainted_Egg(si);
 
             try
             {
@@ -1076,83 +765,60 @@ namespace myseq
 
                     // some of these should not change often, so only check every 10 times through
                     if (mob.refresh > 10)
-                    {
+                    {   // Update mob types
+                        if (mob.Type != si.Type)
+                        {
+                            UpdateMobTypes(si, f1.SpawnList, mob);
+                        }
+                        MobLevelSetColor(si, f1.SpawnList, mob);
+
                         // Update Hidden flags
                         if (update_hidden)
                         {
-                            listReAdd = UpdateHidden(si, listReAdd, mob);
-                        } // end update_hidden
-
-                        // Update mob types
-                        if (mob.Type != si.Type)
-                        {
-                            UpdateMobTypes(si, SpawnList, mob);
+                            UpdateHidden(si, mob);
+                            if (!si.hidden && mob.hidden)
+                            {
+                                listReAdd = true;
+                            }
                         }
 
                         // check if the mob name has changed - eg when a mob dies.
-
                         if ((si.Name.Length > 0) && (string.Compare(mob.Name, si.Name) != 0))
                         {
                             NameChngOrDead(si, mob);
                         }
 
-                        MobLevelSetColor(si, SpawnList, mob);
-
-                        //if (mob.Class != si.Class)
-                        //{
+                        if (mob.Class != si.Class)
+                        {
                             mob.Class = si.Class;
                             mob.listitem.SubItems[2].Text = GetClass(si.Class);
-                        //}
+                        }
 
-                        //if (mob.Primary != si.Primary)
-                        //{
+                        if (mob.Primary != si.Primary)
+                        {
                             mob.Primary = si.Primary;
                             mob.listitem.SubItems[3].Text = si.Primary > 0 ? ItemNumToString(si.Primary) : "";
-                        //}
+                        }
 
-                        //if (mob.Offhand != si.Offhand)
-                        //{
+                        if (mob.Offhand != si.Offhand)
+                        {
                             mob.Offhand = si.Offhand;
                             mob.listitem.SubItems[4].Text = si.Offhand > 0 ? ItemNumToString(si.Offhand) : "";
-                        //}
+                        }
 
-                        //if (mob.Race != si.Race)
-                        //{
+                        if (mob.Race != si.Race)
+                        {
                             mob.Race = si.Race;
                             mob.listitem.SubItems[5].Text = GetRace(si.Race);
-                        //}
+                        }
 
-                        //if (mob.OwnerID != si.OwnerID)
-                        //{
+                        if (mob.OwnerID != si.OwnerID)
+                        {
                             mob.OwnerID = si.OwnerID;
-                            if (mob.OwnerID == 0)
-                            {
-                                mob.listitem.SubItems[6].Text = "";
-                                mob.isPet = false;
-                            }
-                            else if (mobsHashTable.ContainsKey(mob.OwnerID))
-                            {
-                                Spawninfo owner = (Spawninfo)mobsHashTable[mob.OwnerID];
-
-                                if (owner.IsPlayer)
-                                {
-                                    mob.isPet = true;
-                                    mob.listitem.ForeColor = Color.Gray;
-                                }
-                                else
-                                {
-                                    mob.isPet = false;
-                                }
-                                mob.listitem.SubItems[6].Text = RegexHelper.FixMobName(owner.Name);
-                            }
-                            else
-                            {
-                                mob.listitem.SubItems[6].Text = mob.OwnerID.ToString();
-                                mob.isPet = false;
-                            }
+                            MobHasOwner(mob);
                             mob.Hide = si.Hide;
                             mob.listitem.SubItems[9].Text = PrettyNames.GetHideStatus(si.Hide);
-                        //}
+                        }
 
                         //if (mob.Guild != si.Guild)
                         //{
@@ -1170,26 +836,7 @@ namespace myseq
                     mob.refresh++;
 
                     // Set variables we dont want to trigger list update
-
-                    if (selectedID != mob.SpawnID)
-                    {
-                        if (mob.X != si.X)
-                        {
-                            // ensure that map is big enough to show all spawns.
-                            CheckBigMap(si, mapPane);
-
-                            mob.X = si.X;
-
-                            mob.Y = si.Y;
-                        }
-                        else if (mob.Y != si.Y)
-                        {
-                            mob.Y = si.Y;
-                        }
-
-                        // update these for all but selected mob, so they do not refresh for all mobs
-                        mob.Z = si.Z;
-                    }
+                    UpdateMobPosition(si, f1, mob);
 
                     mob.Heading = si.Heading;
 
@@ -1205,55 +852,117 @@ namespace myseq
                     {
                         // this should be the selected id
                         // ensure that map is big enough to show all spawns.
-                        CheckBigMap(si, mapPane);
+                        CheckBigMap(si, f1.mapPane);
                         PopulateListview(si, f1, mob);
                     }
 
                     if (listReAdd)
                     {
-                        newSpawns.Add(mob.listitem);
+                        NewSpawns.Add(mob.listitem);
                     }
                 } // end of if found
 
                 // If it's not already in there, add it
 
-                if (!found && si.Name.Length > 0)
+                if (!found && !string.IsNullOrEmpty(si.Name))
                 {
-                    // ensure that map is big enough to show all spawns.
-                    CheckBigMap(si, mapPane);
-
-                    // Set mob type info
-                    if (si.Type == 0)
-                    {
-                        // Players
-
-                        si.m_isPlayer = true;
-
-                        if (!Settings.Default.ShowPlayers)
-                        {
-                            si.hidden = true;
-                        }
-                    }
-                    else if (si.Type == 2 || si.Type == 3)
-                    {
-                        // Corpses
-                        HandleCorpses(si);
-                    }
-                    else
-                    {
-                        // non-corpse, non-player spawn (aka NPC)
-                        HandleNPCs(si);
-                    }
-
-                    mobsTimers.Spawn(si);
-
-                    if ( !string.IsNullOrEmpty(si.Name ))
-                    {
-                        IsSpawnInFilterLists(si, f1, SpawnList, filters);
-                    }
+                    SpawnNotFound(si, f1, filters);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawns(): ", ex); }
+        }
+
+        private void UpdateMobPosition(Spawninfo si, MainForm f1, Spawninfo mob)
+        {
+            if (selectedID != mob.SpawnID)
+            {
+                if (mob.X != si.X)
+                {
+                    // ensure that map is big enough to show all spawns.
+                    CheckBigMap(si, f1.mapPane);
+
+                    mob.X = si.X;
+
+                    mob.Y = si.Y;
+                }
+                else if (mob.Y != si.Y)
+                {
+                    mob.Y = si.Y;
+                }
+
+                // update these for all but selected mob, so they do not refresh for all mobs
+                mob.Z = si.Z;
+            }
+        }
+
+        private void SpawnNotFound(Spawninfo si, MainForm f1, Filters filters)
+        {
+            // ensure that map is big enough to show all spawns.
+            CheckBigMap(si, f1.mapPane);
+
+            // Set mob type info
+            if (si.Type == 0)
+            {
+                // Players
+
+                si.m_isPlayer = true;
+
+                if (!Settings.Default.ShowPlayers)
+                {
+                    si.hidden = true;
+                }
+            }
+            else if (si.Type == 2 || si.Type == 3)
+            {
+                // Corpses
+                HandleCorpses(si);
+            }
+            else
+            {
+                // non-corpse, non-player spawn (aka NPC)
+                HandleNPCs(si);
+            }
+
+            mobsTimers.Spawn(si);
+
+            IsSpawnInFilterLists(si, f1, filters);
+        }
+
+        private static void Tainted_Egg(Spawninfo si)
+        {
+            if (si.Name.Contains("a_tainted_egg"))
+            {
+                si.Class = 1;
+            }
+        }
+
+        private void MobHasOwner(Spawninfo mob)
+        {
+            if (mob.OwnerID == 0)
+            {
+                mob.listitem.SubItems[6].Text = "";
+                mob.isPet = false;
+            }
+            else if (mobsHashTable.ContainsKey(mob.OwnerID))
+            {
+                Spawninfo owner = (Spawninfo)mobsHashTable[mob.OwnerID];
+
+                if (owner.IsPlayer)
+                {
+                    mob.isPet = true;
+                    mob.listitem.ForeColor = Color.Gray;
+                }
+                else
+                {
+                    mob.isPet = false;
+                }
+                mob.listitem.SubItems[6].Text = RegexHelper.FixMobName(owner.Name);
+            }
+            else
+            {
+                mob.listitem.SubItems[6].Text = mob.OwnerID.ToString();
+                mob.isPet = false;
+            }
         }
 
         private void MobLevelSetColor(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
@@ -1274,7 +983,6 @@ namespace myseq
                 }
                 else
                 {
-                    // a duplicate codeblock was found, extracted as common method.
                     SetListColors(si, SpawnList, mob);
                 }
             }
@@ -1313,27 +1021,16 @@ namespace myseq
                 si.hidden = true;
             }
 
-            if (si.OwnerID > 0)
+            if (si.OwnerID > 0 && mobsHashTable.ContainsKey(si.OwnerID))
             {
-                Spawninfo owner;
-
-                if (mobsHashTable.ContainsKey(si.OwnerID))
+                Spawninfo owner = (Spawninfo)mobsHashTable[si.OwnerID];
+                if (owner.IsPlayer)
                 {
-                    owner = (Spawninfo)mobsHashTable[si.OwnerID];
-                    if (owner.IsPlayer)
+                    si.isPet = true;
+                    if (!Settings.Default.ShowPets)
                     {
-                        si.isPet = true;
-                        if (!Settings.Default.ShowPets)
-                        {
-                            si.hidden = true;
-                        }
+                        si.hidden = true;
                     }
-                }
-                else
-                {
-                    // we didnt find owner, so set to 0
-                    // so we can check again next update
-                    si.OwnerID = 0;
                 }
             }
 
@@ -1352,12 +1049,9 @@ namespace myseq
 
             // Mercenary Identification - Only do it once now
 
-            if (!string.IsNullOrEmpty(si.Lastname))
+            if (!string.IsNullOrEmpty(si.Lastname) && RegexHelper.IsMerc(si.Lastname))
             {
-                if (RegexHelper.IsMerc(si.Lastname))
-                {
-                    si.isMerc = true;
-                }
+                si.isMerc = true;
             }
             else if (RegexHelper.IsMount(si.Name)) // Mounts
             {
@@ -1385,6 +1079,7 @@ namespace myseq
 
         private void HandleCorpses(Spawninfo si)
         {
+            CorpseAlerts = Settings.Default.CorpseAlerts;
             si.isCorpse = true;
 
             if (!CorpseAlerts)
@@ -1500,7 +1195,7 @@ namespace myseq
             }
         }
 
-        private static bool UpdateHidden(Spawninfo si, bool listReAdd, Spawninfo mob)
+        private static void UpdateHidden(Spawninfo si, Spawninfo mob)
         {
             if (mob.isCorpse)
             {
@@ -1563,17 +1258,10 @@ namespace myseq
             {
                 mob.delFromList = true;
             }
-
-            if (!si.hidden && mob.hidden)
-            {
-                listReAdd = true;
-            }
-
             mob.hidden = si.hidden;
-            return listReAdd;
         }
 
-        private void IsSpawnInFilterLists(Spawninfo si, MainForm f1, ListViewPanel SpawnList, Filters filters)//, bool alert)
+        private void IsSpawnInFilterLists(Spawninfo si, MainForm f1, Filters filters)//, bool alert)
         {
             var mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
 
@@ -1595,171 +1283,22 @@ namespace myseq
             // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
             if (!(si.isLDONObject || si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
             {
-                /* ************************************* *
-                * ************* ALERTS **************** *
-                * ************************************* */
-
-                // [hunt]
                 AssignAlertStatus(si, filters, matchmobname, ref alert, ref mobnameWithInfo);
 
                 PrettyNames.LookupBoxMatch(si, f1);
             }
 
-            ListViewItem item1 = AddDetailsToList(si, SpawnList, mobnameWithInfo);
+            ListViewItem item1 = AddDetailsToList(si, f1.SpawnList, mobnameWithInfo);
+            PlayAudioMatch(si, mobnameWithInfo);
+
             try { mobsHashTable.Add(si.SpawnID, si); }
             catch (Exception ex) { LogLib.WriteLine($"Error adding {si.Name} to mobs hashtable: ", ex); }
 
             // Add it to the spawn list if it's not supposed to be hidden
             if (!si.hidden)
             {
-                newSpawns.Add(item1);
+                NewSpawns.Add(item1);
             }
-        }
-
-        private void AssignAlertStatus(Spawninfo si, Filters filters, string matchmobname, ref bool alert, ref string mobnameWithInfo)
-        {
-            var corpse = !si.isCorpse || CorpseAlerts;
-            if (filters.Hunt.Count > 0 && corpse && FindMatches(filters.Hunt, matchmobname, Settings.Default.NoneOnHunt,
-                Settings.Default.TalkOnHunt, "Hunt Mob",
-                Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                Settings.Default.BeepOnHunt, MatchFullTextH))
-            {
-                alert = true;
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-
-                si.isHunt = true;
-            }
-            if (filters.GlobalHunt.Count > 0 && !alert && corpse && FindMatches(filters.GlobalHunt, matchmobname, Settings.Default.NoneOnHunt,
-
-                    Settings.Default.TalkOnHunt, "Hunt Mob",
-                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                    Settings.Default.BeepOnHunt, MatchFullTextH))
-            {
-                alert = true;
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-                si.isHunt = true;
-            }
-
-            // [caution]
-            if (filters.Caution.Count > 0 && !alert && corpse && FindMatches(filters.Caution, matchmobname, Settings.Default.NoneOnCaution,
-
-                    Settings.Default.TalkOnCaution, "Caution Mob",
-                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-                    Settings.Default.BeepOnCaution, MatchFullTextC))
-            {
-                alert = true;
-                si.isCaution = true;
-
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
-
-                si.isCaution = true;
-            }
-            if (filters.GlobalCaution.Count > 0 && !alert && corpse && FindMatches(filters.GlobalCaution, matchmobname, Settings.Default.NoneOnCaution,
-
-                    Settings.Default.TalkOnCaution, "Caution Mob",
-                    Settings.Default.PlayOnCaution, Settings.Default.CautionAudioFile,
-                    Settings.Default.BeepOnCaution, MatchFullTextC))
-            {
-                alert = true;
-
-                si.isCaution = true;
-
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
-            }
-
-            // [danger]
-            if (filters.Danger.Count > 0 && !alert && corpse && FindMatches(filters.Danger, matchmobname, Settings.Default.NoneOnDanger,
-
-                    Settings.Default.TalkOnDanger, "Danger Mob",
-
-                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-
-                    Settings.Default.BeepOnDanger, MatchFullTextD))
-            {
-                alert = true;
-
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
-
-                si.isDanger = true;
-            }
-            if (filters.GlobalDanger.Count > 0 && !alert && corpse && FindMatches(filters.GlobalDanger, matchmobname, Settings.Default.NoneOnDanger,
-                    Settings.Default.TalkOnDanger, "Danger Mob",
-                    Settings.Default.PlayOnDanger, Settings.Default.DangerAudioFile,
-                    Settings.Default.BeepOnDanger, MatchFullTextD))
-            {
-                alert = true;
-
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
-
-                si.isDanger = true;
-            }
-
-            // [rare]
-            if (filters.Alert.Count > 0 && !alert && corpse && FindMatches(filters.Alert, matchmobname, Settings.Default.NoneOnAlert,
-                    Settings.Default.TalkOnAlert, "Rare Mob",
-                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-                    Settings.Default.BeepOnAlert, MatchFullTextA))
-            {
-                alert = true;
-
-                si.isAlert = true;
-
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
-            }
-            if (filters.GlobalAlert.Count > 0 && !alert && corpse && FindMatches(filters.GlobalAlert, matchmobname, Settings.Default.NoneOnAlert,
-                    Settings.Default.TalkOnAlert, "Rare Mob",
-                    Settings.Default.PlayOnAlert, Settings.Default.AlertAudioFile,
-                    Settings.Default.BeepOnAlert, MatchFullTextA))
-            {
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
-
-                si.isAlert = true;
-            }
-            //// [Email]
-            //if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, false, false, "", false, "", !si.isAlert && !si.isCaution && !si.isDanger && !si.isHunt, true))
-            //{
-            //    // Flag on map as an alert mob
-            //    si.isAlert = true;
-            //}
-
-            // [Wielded Items]
-            // Acts like a hunt mob.
-            if (filters.WieldedItems.Count > 0 && corpse && FindMatches(filters.WieldedItems, si.PrimaryName, Settings.Default.NoneOnHunt,
-                    Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
-                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                    Settings.Default.BeepOnHunt, MatchFullTextH))
-            {
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-
-                si.isHunt = true;
-            }
-
-            // [Offhand]
-            // Acts like a hunt mob.
-            if (filters.WieldedItems.Count > 0 && corpse && FindMatches(filters.WieldedItems, si.OffhandName,
-                Settings.Default.NoneOnHunt,
-                    Settings.Default.TalkOnHunt, "Hunt Mob Wielded",
-                    Settings.Default.PlayOnHunt, Settings.Default.HuntAudioFile,
-                    Settings.Default.BeepOnHunt, MatchFullTextH))
-            {
-                mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-                si.isAlert = true;
-            }
-        }
-
-        private string PrefixAffixLabel(string mname, string prefix)
-        {
-            if (PrefixStars)
-            {
-                mname = prefix + " " + mname;
-            }
-
-            if (AffixStars)
-            {
-                mname += " " + prefix;
-            }
-
-            return mname;
         }
 
         private ListViewItem AddDetailsToList(Spawninfo si, ListViewPanel SpawnList, string mobnameWithInfo)
@@ -1954,67 +1493,6 @@ namespace myseq
             }
         }
 
-        private bool FindMatches(List<string> filterlist, string mobname, bool NoneOnMatch,
-             bool TalkOnMatch, string TalkDescr, bool PlayOnMatch, string AudioFile,
-             bool BeepOnMatch, bool MatchFullText)
-        {
-            var alert = false;
-            foreach (string str in filterlist)
-            {
-                var matched = false;
-
-                // if "match full text" is ON...
-
-                if (MatchFullText)
-                {
-                    if (string.Compare(mobname, str, true) == 0)
-                    {
-                        matched = true;
-                    }
-                }
-                else if (RegexHelper.IsSubstring(mobname, str))
-                {
-                    matched = true;
-                }
-                // if item has been matched...
-
-                if (matched)
-                {
-                    if (!NoneOnMatch && Settings.Default.playAlerts)
-                    {
-                        AudioMatch(mobname, TalkOnMatch, TalkDescr, PlayOnMatch, AudioFile, BeepOnMatch);
-                    }
-
-                    alert = true;
-
-                    break;
-                }
-            }
-
-            return alert;
-        }
-
-        private static void AudioMatch(string mobname, bool TalkOnMatch, string TalkDescr, bool PlayOnMatch, string AudioFile, bool BeepOnMatch)
-        {
-            if (TalkOnMatch)
-            {
-                ThreadStart threadDelegate = new ThreadStart(new Talker
-                {
-                    SpeakingText = $"{TalkDescr}, {RegexHelper.SearchName(mobname)}, is up."
-                }.SpeakText);
-
-                new Thread(threadDelegate).Start();
-            }
-            else if (PlayOnMatch)
-            {
-                SAudio.Play(AudioFile.Replace("\\", "\\\\"));
-            }
-            else if (BeepOnMatch)
-            {
-                SafeNativeMethods.Beep(300, 100);
-            }
-        }
-
         public bool CheckMyCorpse(string mobname) => (mobname.Length < (gamerInfo.Name.Length + 14)) && (mobname.IndexOf(gamerInfo.Name) == 0);
 
         public void SaveMobs()
@@ -2105,26 +1583,26 @@ namespace myseq
 
         public void BeginProcessPacket()
         {
-            newSpawns.Clear();
-            newGroundItems.Clear();
+            NewSpawns.Clear();
+            NewGroundItems.Clear();
         }
 
         public void ProcessSpawnList(ListViewPanel SpawnList)
         {
             try
             {
-                if (newSpawns.Count > 0)
+                if (NewSpawns.Count > 0)
                 {
                     if (Zoning)
                     {
                         SpawnList.listView.BeginUpdate();
                     }
 
-                    ListViewItem[] items = new ListViewItem[newSpawns.Count];
+                    ListViewItem[] items = new ListViewItem[NewSpawns.Count];
 
                     var d = 0;
 
-                    foreach (ListViewItem i in newSpawns)
+                    foreach (ListViewItem i in NewSpawns)
                     {
                         if (i != null)
                         {
@@ -2133,7 +1611,7 @@ namespace myseq
                     }
 
                     SpawnList.listView.Items.AddRange(items);
-                    newSpawns.Clear();
+                    NewSpawns.Clear();
                     if (Zoning)
                     {
                         SpawnList.listView.EndUpdate();
@@ -2147,53 +1625,26 @@ namespace myseq
         {
             try
             {
-                if (newGroundItems.Count > 0)
+                if (NewGroundItems.Count > 0)
                 {
-                    ListViewItem[] items = new ListViewItem[newGroundItems.Count];
+                    ListViewItem[] items = new ListViewItem[NewGroundItems.Count];
 
                     var d = 0;
 
-                    foreach (ListViewItem i in newGroundItems)
+                    foreach (ListViewItem i in NewGroundItems)
                     {
                         items[d++] = i;
                     }
 
                     GroundItemList.listView.Items.AddRange(items);
 
-                    newGroundItems.Clear();
+                    NewGroundItems.Clear();
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItemList(): ", ex); }
         }
 
         public float CalcRealHeading(Spawninfo sp) => sp.Heading >= 0 && sp.Heading < 512 ? sp.Heading / 512 * 360 : 0;
-
-        public void LoadSpawnInfo()
-        {
-            // Used to improve packet processing speed
-
-            PrefixStars = Settings.Default.PrefixStars;
-
-            AffixStars = Settings.Default.AffixStars;
-
-            CorpseAlerts = Settings.Default.CorpseAlerts;
-
-            MatchFullTextH = Settings.Default.MatchFullTextH;
-
-            MatchFullTextC = Settings.Default.MatchFullTextC;
-
-            MatchFullTextD = Settings.Default.MatchFullTextD;
-
-            MatchFullTextA = Settings.Default.MatchFullTextA;
-
-            HuntPrefix = Settings.Default.HuntPrefix;
-
-            CautionPrefix = Settings.Default.CautionPrefix;
-
-            DangerPrefix = Settings.Default.DangerPrefix;
-
-            AlertPrefix = Settings.Default.AlertPrefix;
-        }
 
         #region ProcessGamer
 
@@ -2276,34 +1727,6 @@ namespace myseq
         {
             mobsHashTable.Clear();
             itemcollection.Clear();
-            mobtrails.Clear();
-        }
-
-        public void CollectMobTrails()
-        {
-            // Collect Mob Trails
-
-            foreach (Spawninfo sp in GetMobsReadonly().Values)
-            {
-                if (sp.Type == 1)
-                {
-                    // Setup NPCs Trails
-
-                    //add point to mobtrails list if not already there
-
-                    MobTrailPoint work = new MobTrailPoint
-                    {
-                        x = (int)sp.X,
-
-                        y = (int)sp.Y
-                    };
-
-                    if (!mobtrails.Contains(work))
-                    {
-                        mobtrails.Add(work);
-                    }
-                }
-            }
         }
 
         public void ModKeyControl(MapCon mapCon, float x, float y)
@@ -2348,32 +1771,34 @@ namespace myseq
 
         #region ColorOperations
 
-        public void CalculateMapLinePens()
+        public void CalculateMapLinePens(List<MapLine> lines, List<MapText> texts)
         {
             if (lines != null)
             {
-                Pen darkpen = new Pen(Color.Black);
                 var alpha = Settings.Default.FadedLines * 255 / 100;
-
                 foreach (MapLine mapline in lines)
                 {
-                    if (Settings.Default.ForceDistinct)
-                    {
-                        mapline.draw_color = GetDistinctColor(darkpen);
-                        mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
-                    }
-                    else
-                    {
-                        mapline.draw_color = GetDistinctColor(new Pen(mapline.color.Color));
-                        mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
-                    }
+                    SetMaplineColor(alpha, mapline);
                 }
-                SolidBrush distinctbrush = new SolidBrush(Color.Black);
                 foreach (MapText maptxt in texts)
                 {
-                    maptxt.draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(distinctbrush) : GetDistinctColor(maptxt.color);
+                    maptxt.draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(new SolidBrush(Color.Black)) : GetDistinctColor(maptxt.color);
                     maptxt.draw_pen = new Pen(maptxt.draw_color.Color);
                 }
+            }
+        }
+
+        private void SetMaplineColor(int alpha, MapLine mapline)
+        {
+            if (Settings.Default.ForceDistinct)
+            {
+                mapline.draw_color = GetDistinctColor(new Pen(Color.Black));
+                mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
+            }
+            else
+            {
+                mapline.draw_color = GetDistinctColor(new Pen(mapline.color.Color));
+                mapline.fade_color = new Pen(Color.FromArgb(alpha, mapline.draw_color.Color));
             }
         }
 
@@ -2436,6 +1861,10 @@ namespace myseq
         }
 
         private Color GetInverseColor(Color foreColor) => Color.FromArgb((int)(192 - (foreColor.R * 0.75)), (int)(192 - (foreColor.G * 0.75)), (int)(192 - (foreColor.B * 0.75)));
+        public void AssignAlertStatus(Spawninfo si, Filters filters, string matchmobname, ref bool alert, ref string mobnameWithInfo){}
+        public void PlayAudioMatch(Spawninfo si, string matchmobname) {}
+        public void LoadSpawnInfo(){}
+        public void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname) {}
 
         #endregion ColorOperations
     }

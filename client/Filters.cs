@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using myseq.Properties;
 using Structures;
 
@@ -58,11 +59,8 @@ namespace myseq
             }
         }
 
-        public void ReadNewAlertFile(string zoneName)
+        public async Task ReadNewAlertFile(string zoneName)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-            var type = 0;
             zoneName = zoneName.ToLower();
 
             var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
@@ -79,32 +77,38 @@ namespace myseq
 
             // Load the 5.xx version alerts
             // open the existing filter file
+            ReadAlertLines(zoneName, filterFile);
+        }
+
+        private void ReadAlertLines(string zoneName, string filterFile)
+        {
+            var type = 0;
             foreach (var line in File.ReadAllLines(filterFile))
             {
                 var inp = line.Trim();
                 if (inp.Length > 1)
                 {
-                    if (inp.StartsWith("<section name=\"hunt\">", ignoreCase: true, culture: null))
+                    if (inp.StartsWith("<section name=\"hunt\">", true, null))
                     {
                         type = 1;
                     }
-                    else if (inp.StartsWith("<section name=\"caution\">", ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"caution\">", true, null))
                     {
                         type = 2;
                     }
-                    else if (inp.StartsWith("<section name=\"danger\">", ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"danger\">", true, null))
                     {
                         type = 3;
                     }
-                    else if (inp.StartsWith("<section name=\"alert\">", ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"alert\">", true, null))
                     {
                         type = 4;
                     }
-                    else if (inp.StartsWith("<section name=\"email\">", ignoreCase: true, culture: null) || inp.StartsWith("<section name=\"locate\">", ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"email\">", true, null) || inp.StartsWith("<section name=\"locate\">", true, null))
                     {
                         type = 5;
                     }
-                    else if (inp.StartsWith("<section name=\"primary\">", ignoreCase: true, culture: null) || inp.StartsWith("<section name=\"offhand\">", ignoreCase: true, culture: null))
+                    else if (inp.StartsWith("<section name=\"primary\">", true, null) || inp.StartsWith("<section name=\"offhand\">", true, null))
                     {
                         type = 6;
                     }
@@ -112,7 +116,7 @@ namespace myseq
                     {
                         // unknown section headers
 
-                        if (inp.StartsWith("</section>", ignoreCase: true, culture: null))
+                        if (inp.StartsWith("</section>", true, null))
                         {
                             type = 0;
                             continue;
@@ -121,33 +125,38 @@ namespace myseq
                         var inputstring = line;
                         // Remove extra stuff
 
-                        if (inp.StartsWith("<oldfilter>", ignoreCase: true, culture: null))
-                        {
-                            inputstring = inp.Remove(0, 11);
-                        }
-                        if (inputstring.StartsWith("<regex>", ignoreCase: true, culture: null))
-                        {
-                            inputstring = inputstring.Remove(0, 7);
-                        }
-                        if (inputstring.EndsWith("</oldfilter>", ignoreCase: true, culture: null))
-                        {
-                            inputstring = inputstring.Remove(inputstring.Length - 12, 12);
-                        }
-                        if (inputstring.EndsWith("</regex>", ignoreCase: true, culture: null))
-                        {
-                            inputstring = inputstring.Remove(inputstring.Length - 8, 8);
-                        }
+                        inputstring = FormatStrings(inp, inputstring);
                         // remove Name: from line if it exists
-                        if (inputstring.StartsWith("name:", ignoreCase: true, culture: null))
-                        {
-                            inputstring = inputstring.Remove(0, 5);
-                            DetermineType(type, inputstring, zoneName);
-                        }
+                        DetermineType(type, inputstring, zoneName);
                     }
                 }
             }
-            sw.Stop();
-            LogLib.WriteLine($"Reading alertfile and adding to Lists took {sw.Elapsed.Ticks} Tics.");
+        }
+
+        private static string FormatStrings(string inp, string inputstring)
+        {
+            if (inp.StartsWith("<oldfilter>"))
+            {
+                inputstring = inp.Remove(0, 11);
+            }
+            if (inputstring.StartsWith("<regex>"))
+            {
+                inputstring = inputstring.Remove(0, 7);
+            }
+            if (inputstring.EndsWith("</oldfilter>"))
+            {
+                inputstring = inputstring.Remove(inputstring.Length - 12, 12);
+            }
+            if (inputstring.EndsWith("</regex>"))
+            {
+                inputstring = inputstring.Remove(inputstring.Length - 8, 8);
+            }
+            if (inputstring.StartsWith("name:"))
+            {
+                inputstring = inputstring.Remove(0, 5);
+            }
+
+            return inputstring;
         }
 
         private void DetermineType(int type, string inputstring, string zoneName)
@@ -315,50 +324,50 @@ namespace myseq
             }
         }
 
-        public void LoadAlerts(string zoneName)
+        public async Task LoadAlerts(string zoneName)
         {
             if (!string.IsNullOrEmpty(zoneName))
             {
-                ReadNewAlertFile(zoneName);
-                ReadNewAlertFile("global");
+                await ReadNewAlertFile(zoneName);
+                await ReadNewAlertFile("global");
             }
         }
 
         private void CreateAlertFile(string fileName)
         {
-            StreamWriter sw = new StreamWriter(fileName);
-
-            var isglobal = false;
-
-            if (fileName.EndsWith("global.xml"))
+            using (StreamWriter sw = new StreamWriter(fileName))
             {
-                isglobal = true;
-            }
+                var isglobal = false;
 
-            sw.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            sw.WriteLine("<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">");
-            sw.WriteLine("<seqfilters>");
-            sw.WriteLine("    <section name=\"Hunt\">");
-            sw.WriteLine("    </section>");
-            sw.WriteLine("    <section name=\"Caution\">");
-            sw.WriteLine("    </section>");
-            sw.WriteLine("    <section name=\"Danger\">");
-            sw.WriteLine("    </section>");
-            sw.WriteLine("    <section name=\"Locate\">"); // Not Used in MySEQ
-            sw.WriteLine("    </section>");
-            sw.WriteLine("    <section name=\"Alert\">");  // Rares
-            sw.WriteLine("    </section>");
-            sw.WriteLine("    <section name=\"Filtered\">");
-            sw.WriteLine("    </section>");
-            if (!isglobal)
-            {
-                sw.WriteLine("    <section name=\"Email\">");
-                sw.WriteLine("    <section name=\"Primary\">");
-                sw.WriteLine("    <section name=\"Offhand\">");
+                if (fileName.EndsWith("global.xml"))
+                {
+                    isglobal = true;
+                }
+
+                sw.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                sw.WriteLine("<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">");
+                sw.WriteLine("<seqfilters>");
+                sw.WriteLine("    <section name=\"Hunt\">");
                 sw.WriteLine("    </section>");
+                sw.WriteLine("    <section name=\"Caution\">");
+                sw.WriteLine("    </section>");
+                sw.WriteLine("    <section name=\"Danger\">");
+                sw.WriteLine("    </section>");
+                sw.WriteLine("    <section name=\"Locate\">"); // Not Used in MySEQ
+                sw.WriteLine("    </section>");
+                sw.WriteLine("    <section name=\"Alert\">");  // Rares
+                sw.WriteLine("    </section>");
+                sw.WriteLine("    <section name=\"Filtered\">");
+                sw.WriteLine("    </section>");
+                if (!isglobal)
+                {
+                    sw.WriteLine("    <section name=\"Email\">");
+                    sw.WriteLine("    <section name=\"Primary\">");
+                    sw.WriteLine("    <section name=\"Offhand\">");
+                    sw.WriteLine("    </section>");
+                }
+                sw.WriteLine("</seqfilters>");
             }
-            sw.WriteLine("</seqfilters>");
-            sw.Close();
         }
 
         public void EditAlertFile(string zoneName)

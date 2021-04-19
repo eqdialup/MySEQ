@@ -119,6 +119,7 @@
     <Compile Include="AboutDialog.designer.cs">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="AlertStatus.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -182,6 +183,7 @@
     <Compile Include="MarkLookup.cs" />
     <Compile Include="MobsTimers.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="MobTrails.cs" />
     <Compile Include="PrettyNames.cs" />
     <Compile Include="ProcessInfo.cs" />
     <Compile Include="Program.cs" />
@@ -201,7 +203,7 @@
     <Compile Include="SmtpSettings.cs" />
     <Compile Include="Spawninfo.cs" />
     <Compile Include="Spawntimer.cs" />
-    <Compile Include="Structures.cs">
+    <Compile Include="GroundItem.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Talker.cs" />
