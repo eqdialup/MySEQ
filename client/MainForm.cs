@@ -15,8 +15,6 @@ namespace myseq
     {
         private readonly string Version = Application.ProductVersion;
 
-        private string myPath = Application.ExecutablePath;
-
         private string BaseTitle = "MySEQ Open";
 
         private Point addTextFormLocation = new Point(0, 0);
@@ -78,7 +76,7 @@ namespace myseq
 
             // Set Map Window Options
             mapPane.DockAreas = DockAreas.Document;
-            mapPane.CloseButtonVisible = false;
+            mapPane.CloseButton = false;
             mapPane.TabText = "map_pane";
 
             LogLib.WriteLine("Creating SpawnList Window");
@@ -162,8 +160,7 @@ namespace myseq
         private void LoadPositionsFromConfigFile()
         {
             LogLib.WriteLine("Loading Position.Xml");
-            var configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "positions.xml");
-            var newConfigFile = Path.Combine(myPath, "positions.xml");
+            var configFile = Path.Combine(Settings.Default.CfgDir, "positions.xml");
 
             if (File.Exists(configFile))
             {
@@ -174,21 +171,6 @@ namespace myseq
                 catch (Exception ex)
                 {
                     LogLib.WriteLine("Error loading config from positions.xml: ", ex);
-
-                    // Re-Set up initial windows - might have bad or incompatible positions file
-                    defaultstates();
-                }
-            }
-            else if (File.Exists(newConfigFile))
-            {
-                try
-                {
-                    dockPanel.LoadFromXml(newConfigFile, m_deserializeDockContent);
-                }
-                catch (Exception ex)
-                {
-                    LogLib.WriteLine("Error loading config from AppData positions.xml: ", ex);
-
                     // Re-Set up initial windows - might have bad or incompatible positions file
                     defaultstates();
                 }
@@ -201,7 +183,6 @@ namespace myseq
 
             void defaultstates()
             {
-                LogLib.WriteLine("Setting Default states");
                 mapPane.Show(dockPanel, DockState.Document);
 
                 SpawnList.Show(dockPanel, DockState.DockLeft);
@@ -644,7 +625,7 @@ namespace myseq
 
             GroundItemList.listView.GridLines = Settings.Default.ShowListGridLines;
 
-            RegexHelper.CreateFolders();
+            FileOps.CreateFolders();
 
             DrawOpts = Settings.Default.DrawOptions;
 
@@ -847,7 +828,7 @@ namespace myseq
 
         private void LoadDepthFilter()
         {
-            var ConfigFile = Path.Combine(myPath, "config.ini");
+            var ConfigFile = FileOps.CombineCfgDir("config.ini");
             var strIniValue = new IniFile(ConfigFile).ReadValue("Zones", curZone, "");
 
             if (File.Exists(ConfigFile))
@@ -883,7 +864,7 @@ namespace myseq
 
         private void CheckZoneFile()
         {
-            var ZonesFile = Path.Combine(Settings.Default.CfgDir, "Zones.ini");
+            var ZonesFile = FileOps.CombineCfgDir("Zones.ini");
 
             if (File.Exists(ZonesFile))
             {
@@ -1174,7 +1155,7 @@ namespace myseq
             try
             {
                 // Save depth filter settings to file
-                IniFile ConIni = new IniFile(Path.Combine(myPath, "config.ini"));
+                IniFile ConIni = new IniFile("DepthConfig.ini");
                 if (Settings.Default.DepthFilter)
                 {
                     ConIni.WriteValue("Zones", curZone, "1");
@@ -1369,7 +1350,7 @@ namespace myseq
         {
             if (bIsRunning)
             {
-                //filters.ClearLists();
+                filters.ClearLists();
 
                 filters.LoadAlerts(curZone);
 
@@ -1827,7 +1808,7 @@ namespace myseq
 
         public void ReloadAlertFiles()
         {
-            //filters.ClearLists();
+            filters.ClearLists();
 
             filters.LoadAlerts(curZone);
 
@@ -1844,7 +1825,7 @@ namespace myseq
 
         private void ResetMapPens()
         {
-            eq.CalculateMapLinePens(map.lines, map.texts);
+            eq.CalculateMapLinePens(map.Lines, map.Texts);
             mapCon?.Invalidate();
         }
 

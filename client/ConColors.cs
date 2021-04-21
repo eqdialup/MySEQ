@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.IO;
 using myseq.Properties;
 using Structures;
 
@@ -106,7 +105,7 @@ namespace myseq
 
         private void ConLevelFile(int level)
         {
-            var Ini = new IniFile(Path.Combine(Settings.Default.CfgDir, "ConLevels.Ini"));
+            var Ini = new IniFile("ConLevels.Ini");
 
             var sIniValue = Ini.ReadValue("Con Levels", level.ToString(), "0/0/0");
             var yellowLevels = Ini.ReadValue("Con Levels", "0", "3");

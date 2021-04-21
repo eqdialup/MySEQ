@@ -1,5 +1,7 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using myseq;
+using myseq.Properties;
 
 namespace Structures
 {
@@ -9,7 +11,7 @@ namespace Structures
 
         public IniFile(string INIPath)
         {
-            path = INIPath;
+            path = Path.Combine(Settings.Default.CfgDir, INIPath);
         }
 
         public void WriteValue(string Section, string Key, string Value) => SafeNativeMethods.WritePrivateProfileString(Section, Key, Value, path);

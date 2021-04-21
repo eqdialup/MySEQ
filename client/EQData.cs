@@ -16,7 +16,8 @@ namespace myseq
     {
         private static readonly Spawninfo sPAWNINFO = new Spawninfo();
 
-        private ConColors GetConColors = new ConColors();
+        private readonly ConColors GetConColors = new ConColors();
+        private readonly FileOps fileop = new FileOps();
 
         // player details
         public Spawninfo gamerInfo = sPAWNINFO;
@@ -349,18 +350,18 @@ namespace myseq
             return null;
         }
 
-        public GroundItem FindGroundItemNoFilter(float x, float y, float delta)
-        {
-            foreach (GroundItem gi in itemcollection)
-            {
-                if (gi.X < x + delta && gi.X > x - delta && gi.Y < y + delta && gi.Y > y - delta)
-                {
-                    return gi;
-                }
-            }
+        //public GroundItem FindGroundItemNoFilter(float x, float y, float delta)
+        //{
+        //    foreach (GroundItem gi in itemcollection)
+        //    {
+        //        if (gi.X < x + delta && gi.X > x - delta && gi.Y < y + delta && gi.Y > y - delta)
+        //        {
+        //            return gi;
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public Spawninfo GetSelectedMob() => (Spawninfo)mobsHashTable[selectedID];
 
@@ -368,59 +369,16 @@ namespace myseq
         // Now called when reconnect(and char change), so we can modify these list more "on the fly"
         public void InitLookups()
         {
-            Classes = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Classes.txt"));
+            Classes = fileop.GetStrArrayFromTextFile("Classes.txt");
 
-            Races = GetStrArrayFromTextFile(Path.Combine(Settings.Default.CfgDir, "Races.txt"));
+            Races = fileop.GetStrArrayFromTextFile("Races.txt");
 
             GroundSpawn.Clear();
 
-            ReadItemList(Path.Combine(Settings.Default.CfgDir, "GroundItems.ini"));
+            fileop.ReadItemList("GroundItems.ini", ref GroundSpawn);
             //guildList.Clear();
 
-            //ReadGuildList(Path.Combine(Settings.Default.CfgDir, "Guilds.txt"));
-        }
-
-        private string[] GetStrArrayFromTextFile(string filePath)
-        {
-            List<string> arList = new List<string>();
-            if (File.Exists(filePath))
-            {
-                foreach (var line in File.ReadAllLines(filePath))
-                {
-                    var ln = line.Trim();
-                    if (ln != null && ln.Substring(0, 1) != "#")
-                    {
-                        arList.Add(ln);
-                    }
-                }
-            }
-            return arList.ToArray();
-        }
-
-        private void ReadItemList(string filePath)
-        {
-            if (!File.Exists(filePath))
-            {
-                LogLib.WriteLine("GroundItems.ini file not found", LogLevel.Warning);
-                return;
-            }
-
-            foreach (var line in File.ReadAllLines(filePath).ToList())
-            {
-                //sample:  IT0_ACTORDEF = Generic
-                if (!line.StartsWith("[") && !string.IsNullOrWhiteSpace(line))
-                {
-                    var entries = line.Split('=');
-                    var tmp = entries[0].Split('_');
-                    ListItem newGround = new ListItem
-                    {
-                        ID = int.Parse(tmp[0].Remove(0, 2)),/* NumFormat),*/ //0
-                        ActorDef = entries[0], //IT0_ACTORDEF
-                        Name = entries[1] //NAME
-                    };
-                    GroundSpawn.Add(newGround);
-                }
-            }
+            //ReadGuildList(FileOps.CombineCfgDir("Guilds.txt"));
         }
 
         //private void ReadGuildList(string filePath)
@@ -490,8 +448,6 @@ namespace myseq
         //        ? ((ListItem)guildList[int.Parse(tok, new CultureInfo("en-US"))]).Name
         //        : guildDef;
         //}
-
-        private string ArrayIndextoStr(string[] source, int index) => index < source.GetLowerBound(0) || index > source.GetUpperBound(0) ? $"{index}: Unknown" : source[index];
 
         public void CalcExtents(List<MapLine> lines)
         {
@@ -735,7 +691,7 @@ namespace myseq
          * gameMin = si.Class
         */
 
-        public void ProcessSpawns(Spawninfo si, MainForm f1, Filters filters, bool update_hidden)
+        public void ProcessSpawns(Spawninfo si, MainForm f1, bool update_hidden)
         {
             Tainted_Egg(si);
 
@@ -866,7 +822,7 @@ namespace myseq
 
                 if (!found && !string.IsNullOrEmpty(si.Name))
                 {
-                    SpawnNotFound(si, f1, filters);
+                    SpawnNotFound(si, f1);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawns(): ", ex); }
@@ -895,7 +851,7 @@ namespace myseq
             }
         }
 
-        private void SpawnNotFound(Spawninfo si, MainForm f1, Filters filters)
+        private void SpawnNotFound(Spawninfo si, MainForm f1)
         {
             // ensure that map is big enough to show all spawns.
             CheckBigMap(si, f1.mapPane);
@@ -925,7 +881,7 @@ namespace myseq
 
             mobsTimers.Spawn(si);
 
-            IsSpawnInFilterLists(si, f1, filters);
+            IsSpawnInFilterLists(si, f1);
         }
 
         private static void Tainted_Egg(Spawninfo si)
@@ -1261,7 +1217,7 @@ namespace myseq
             mob.hidden = si.hidden;
         }
 
-        private void IsSpawnInFilterLists(Spawninfo si, MainForm f1, Filters filters)//, bool alert)
+        private void IsSpawnInFilterLists(Spawninfo si, MainForm f1)//, bool alert)
         {
             var mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
 
@@ -1274,16 +1230,12 @@ namespace myseq
 
             var mobnameWithInfo = mobname;
 
-            if (si.Primary > 0 || si.Offhand > 0)
-            {
-                si.PrimaryName = ItemNumToString(si.Primary);
-                si.OffhandName = ItemNumToString(si.Offhand);
-            }
+            SetWieldedNames(si);
 
             // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
             if (!(si.isLDONObject || si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
             {
-                AssignAlertStatus(si, filters, matchmobname, ref alert, ref mobnameWithInfo);
+                AssignAlertStatus(si, matchmobname, ref alert, ref mobnameWithInfo);
 
                 PrettyNames.LookupBoxMatch(si, f1);
             }
@@ -1298,6 +1250,15 @@ namespace myseq
             if (!si.hidden)
             {
                 NewSpawns.Add(item1);
+            }
+        }
+
+        private void SetWieldedNames(Spawninfo si)
+        {
+            if (si.Primary > 0 || si.Offhand > 0)
+            {
+                si.PrimaryName = ItemNumToString(si.Primary);
+                si.OffhandName = ItemNumToString(si.Offhand);
             }
         }
 
@@ -1398,29 +1359,23 @@ namespace myseq
         private void NameChngOrDead(Spawninfo si, Spawninfo mob)
         {
             var newname = RegexHelper.FixMobName(si.Name);
-
             var oldname = RegexHelper.FixMobName(mob.Name);
+
             mob.listitem.Text = mob.listitem.Text.Replace(oldname, newname);
 
             if (!si.IsPlayer && (si.Type == 2 || si.Type == 3))
             {
                 // Corpses - lose alerts on map
-
                 si.isCorpse = true;
-
                 si.isHunt = false;
-
                 si.isCaution = false;
-
                 si.isDanger = false;
-
                 si.isAlert = false;
 
                 // moved the type change before this.  So now only trigger kills
                 // for name changes of corpses.
                 mobsTimers.Kill(mob);
             }
-
             mob.Name = si.Name;
         }
 
@@ -1471,17 +1426,7 @@ namespace myseq
 
                             // Change the colors to be more visible on white if the background is white
 
-                            if (Settings.Default.ListBackColor == Color.White)
-                            {
-                                if (si.listitem.ForeColor == Color.White)
-                                {
-                                    si.listitem.ForeColor = Color.Black;
-                                }
-                                else if (si.listitem.ForeColor == Color.Yellow)
-                                {
-                                    si.listitem.ForeColor = Color.Goldenrod;
-                                }
-                            }
+                            MakeVisOnWhite(si);
 
                             if (Settings.Default.ListBackColor == Color.Black && si.listitem.ForeColor == Color.Black)
                             {
@@ -1489,6 +1434,21 @@ namespace myseq
                             }
                         }
                     }
+                }
+            }
+        }
+
+        private static void MakeVisOnWhite(Spawninfo si)
+        {
+            if (Settings.Default.ListBackColor == Color.White)
+            {
+                if (si.listitem.ForeColor == Color.White)
+                {
+                    si.listitem.ForeColor = Color.Black;
+                }
+                else if (si.listitem.ForeColor == Color.Yellow)
+                {
+                    si.listitem.ForeColor = Color.Goldenrod;
                 }
             }
         }
@@ -1551,7 +1511,7 @@ namespace myseq
 
         public void SetSelectedGroundItem(float x, float y)
         {
-            GroundItem gi = FindGroundItemNoFilter(x, y, 1.0f);
+            GroundItem gi = FindGroundItem(x, y, 1.0f); // was FindGroundItemNoFilter
 
             if (gi != null)
             {
@@ -1576,6 +1536,8 @@ namespace myseq
             }
             return num.ToString();
         }
+
+        private string ArrayIndextoStr(string[] source, int index) => index < source.GetLowerBound(0) || index > source.GetUpperBound(0) ? $"{index}: Unknown" : source[index];
 
         //        public string GuildNumToString(int num) => guildList.ContainsKey(num) ? ((ListItem)guildList[num]).Name : num.ToString();
 
@@ -1861,11 +1823,14 @@ namespace myseq
         }
 
         private Color GetInverseColor(Color foreColor) => Color.FromArgb((int)(192 - (foreColor.R * 0.75)), (int)(192 - (foreColor.G * 0.75)), (int)(192 - (foreColor.B * 0.75)));
-        public void AssignAlertStatus(Spawninfo si, Filters filters, string matchmobname, ref bool alert, ref string mobnameWithInfo){}
-        public void PlayAudioMatch(Spawninfo si, string matchmobname) {}
-        public void LoadSpawnInfo(){}
-        public void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname) {}
-
         #endregion ColorOperations
+
+// Interface methods //
+        public void AssignAlertStatus(Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo) { }
+        public void PlayAudioMatch(Spawninfo si, string matchmobname) { }
+        public void LoadSpawnInfo() { }
+        public void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname) { }
+
+
     }
 }

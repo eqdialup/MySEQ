@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -371,7 +372,8 @@ namespace myseq
         }
 
         private void Lookup(string name)
-        {bool filtermob = false;
+        {
+            bool filtermob = false;
             MarkLookups(name, ref filtermob);
             mapCon.Invalidate();
         }
@@ -575,6 +577,113 @@ namespace myseq
                 mapCon.Focus();
             }
         }
+
+        #region KeyPress
+        public void MapCon_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Dictionary<char, Action> KeyInstructions = new Dictionary<char, Action>()
+                {
+                    {'1', OneKey },
+                    {'2', TwoKey },
+                    {'3', ThreeKey},
+                    {'4', FourKey},
+                    {'5', Cor5Key},
+                    {'c', Cor5Key},
+                    {'6', SixKey},
+                    {'7', SevenKey},
+                    {'8', EightKey},
+                    {'9', NineKey},
+                    {'+', PlusKey},
+                    {'-', MinusKey}
+                };
+            if (!KeyInstructions.ContainsKey(e.KeyChar)) return;
+            KeyInstructions[char.ToLower(e.KeyChar)]();
+            mapCon.ReAdjust();
+        }
+
+        private void OneKey()
+        {
+            offsety.Value += 50;
+
+            offsetx.Value -= 50;
+
+        }
+
+        private void TwoKey()
+        {
+            offsety.Value += 50;
+
+        }
+
+        private void ThreeKey()
+        {
+            offsety.Value += 50;
+
+            offsetx.Value += 50;
+
+        }
+
+        private void SixKey()
+        {
+            offsetx.Value += 50;
+
+        }
+
+        private void NineKey()
+        {
+            offsety.Value -= 50;
+
+            offsetx.Value += 50;
+
+        }
+
+        private void EightKey()
+        {
+            offsety.Value -= 50;
+
+        }
+
+        private void SevenKey()
+        {
+            offsetx.Value -= 50;
+
+            offsety.Value -= 50;
+
+        }
+
+        private void FourKey()
+        {
+            offsetx.Value -= 50;
+        }
+
+        private void Cor5Key()
+        {
+            offsetx.Value = 0;
+
+            offsety.Value = 0;
+        }
+
+        private void MinusKey()
+        {
+            if (mapCon.scale - 0.2 >= 0.1)
+            {
+                mapCon.scale -= 0.2f;
+
+                scale.Value = (decimal)(mapCon.scale * 100);
+            }
+
+            Invalidate();
+        }
+
+        private void PlusKey()
+        {
+            mapCon.scale += 0.2f;
+
+            scale.Value = (decimal)(mapCon.scale * 100);
+
+            Invalidate();
+        }
+        #endregion
 
         public void MarkLookups(string name, ref bool filterMob)
         {

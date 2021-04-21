@@ -31,7 +31,7 @@ namespace Structures
             if (logLevel <= maxLogLevel && logLevel > LogLevel.Off)
             {
                 var logpath = string.IsNullOrEmpty(Settings.Default.LogDir)
-                    ? Path.Combine(Application.ExecutablePath, "logs")
+                    ? Path.Combine(Application.StartupPath, "logs")
                     : Settings.Default.LogDir;
 
                 var logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";

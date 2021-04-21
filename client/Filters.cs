@@ -12,6 +12,8 @@ namespace myseq
 {
     public class Filters
     {
+        private readonly FileOps fileop = new FileOps();
+
         public List<string> Hunt { get; set; } = new List<string>();
         public List<string> Caution { get; set; } = new List<string>();
         public List<string> GlobalCaution { get; set; } = new List<string>();
@@ -65,18 +67,8 @@ namespace myseq
 
             var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
 
-            if (!File.Exists(filterFile))
-            {
-                // we did not find the alert file
-                // create an empty alerts file.
-                LogLib.WriteLine($"file not found for {zoneName}, creating empty one.", LogLevel.Warning);
+            fileop.makeFilterexist(filterFile);
 
-                CreateAlertFile(filterFile);
-                return;
-            }
-
-            // Load the 5.xx version alerts
-            // open the existing filter file
             ReadAlertLines(zoneName, filterFile);
         }
 
@@ -218,10 +210,7 @@ namespace myseq
 
                 var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
 
-                if (File.Exists(filterFile))
-                {
-                    File.Delete(filterFile);
-                }
+                FileOps.DeleteFile(filterFile);
                 // create the filter file - truncate if exists - going to write all the filters
 
                 List<string> lines = new List<string>
@@ -312,16 +301,10 @@ namespace myseq
         private static void PurgeFilters(string zoneName)
         {
             var filterFile = Path.Combine(Settings.Default.FilterDir, $"custom_{zoneName}.conf");
-            if (File.Exists(filterFile))
-            {
-                File.Delete(filterFile);
-            }
+            FileOps.DeleteFile(filterFile);
 
             filterFile = Path.Combine(Settings.Default.FilterDir, $"filters_{zoneName}.conf");
-            if (File.Exists(filterFile))
-            {
-                File.Delete(filterFile);
-            }
+            FileOps.DeleteFile(filterFile);
         }
 
         public async Task LoadAlerts(string zoneName)
@@ -333,43 +316,6 @@ namespace myseq
             }
         }
 
-        private void CreateAlertFile(string fileName)
-        {
-            using (StreamWriter sw = new StreamWriter(fileName))
-            {
-                var isglobal = false;
-
-                if (fileName.EndsWith("global.xml"))
-                {
-                    isglobal = true;
-                }
-
-                sw.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                sw.WriteLine("<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">");
-                sw.WriteLine("<seqfilters>");
-                sw.WriteLine("    <section name=\"Hunt\">");
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Caution\">");
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Danger\">");
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Locate\">"); // Not Used in MySEQ
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Alert\">");  // Rares
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Filtered\">");
-                sw.WriteLine("    </section>");
-                if (!isglobal)
-                {
-                    sw.WriteLine("    <section name=\"Email\">");
-                    sw.WriteLine("    <section name=\"Primary\">");
-                    sw.WriteLine("    <section name=\"Offhand\">");
-                    sw.WriteLine("    </section>");
-                }
-                sw.WriteLine("</seqfilters>");
-            }
-        }
-
         public void EditAlertFile(string zoneName)
         {
             if (!string.IsNullOrEmpty(zoneName))
@@ -378,10 +324,7 @@ namespace myseq
 
                 var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
 
-                if (!File.Exists(filterFile))
-                {
-                    CreateAlertFile(filterFile);
-                }
+                fileop.makeFilterexist(filterFile);
 
                 Process.Start("notepad.exe", filterFile);
             }

@@ -24,7 +24,7 @@ namespace myseq
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            if (colorDialog1.ShowDialog() != DialogResult.Cancel && colorDialog1.Color != selectedColor)
+            if (colorDialog1.ShowDialog() ==DialogResult.OK)
             {
                 selectedColor = colorDialog1.Color;
                 Settings.Default.SelectedAddMapText = colorDialog1.Color;

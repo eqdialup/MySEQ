@@ -105,7 +105,7 @@ namespace Structures
         {
             if (prefsDir?.Length == 0)
             {
-                prefsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySEQ");
+                prefsDir = Path.Combine(Application.StartupPath, "Prefs");
             }
 
             // Dont save password if we are not selecting to save it
@@ -130,10 +130,7 @@ namespace Structures
             fs.Close();
 
             var oldconfigFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "myseq.xml");
-            if (File.Exists(oldconfigFile))
-            {
-                File.Delete(oldconfigFile);
-            }
+            FileOps.DeleteFile(oldconfigFile);
         }
 
         public void Load(string filename)

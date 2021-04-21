@@ -87,7 +87,6 @@ namespace myseq
         public string GetAsString() => $"{SpawnLoc};{SpawnCount};{SpawnTimer};{SpawnTimeStr};{KillTimeStr};{NextSpawnStr};{LastSpawnName};{AllNames};{X};{Y};{Z}";
 
         // st has been loaded from a file, and is the same spawn as "this" one.
-
         // Glean all useful information.
 
         public void Merge(Spawntimer st)
@@ -481,13 +480,13 @@ namespace myseq
 
         public bool sticky;
 
-        public float Y = 0;
+        public float Y;
 
-        public float X = 0;
+        public float X;
 
-        public float Z = 0;
+        public float Z;
 
-        public bool filtered = false;
+        public bool filtered;
 
         public int SpawnCount = 0;          // Updated on true re-spawn
 
@@ -509,9 +508,9 @@ namespace myseq
 
         public string LastSpawnName = "";   // Updated on each spawn
 
-        public ListViewItem itmSpawnTimerList = null;
+        public ListViewItem itmSpawnTimerList;
 
-        private bool listNeedsUpdate = false;
+        private bool listNeedsUpdate;
 
         public string AllNames { get; set; } = "";
     }

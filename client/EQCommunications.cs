@@ -250,7 +250,7 @@ namespace Structures
                         }
 
                         numProcessed++;
-                        ProcessPacket(si, update_hidden);
+                        ProcessPacket(si);
                     }
 
                     eq.ProcessSpawnList(f1.SpawnList);
@@ -262,7 +262,7 @@ namespace Structures
             ProcessedPackets(packet, bytes, offset);
         }
 
-        private void ProcessPacket(Spawninfo si, bool update_hidden)
+        private void ProcessPacket(Spawninfo si)
         {
             // SPAWN  // si.flags == 0
 
@@ -312,7 +312,7 @@ namespace Structures
 
                 case PacketType.Spawn:
 
-                    eq.ProcessSpawns(si, f1, filters, update_hidden);
+                    eq.ProcessSpawns(si, f1, update_hidden);
 
                     break;
 
@@ -407,10 +407,7 @@ namespace Structures
         private void FinalizeProcess()
         {
             RequestPending = false;
-            if (update_hidden)
-            {
-                update_hidden = false;
-            }
+            update_hidden = false;
 
             numPackets = numProcessed = 0;
 

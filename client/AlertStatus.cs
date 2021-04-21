@@ -3,12 +3,11 @@ using System.Threading;
 using myseq.Properties;
 using Structures;
 
-
 namespace myseq
 {
     public interface IAlertStatus
     {
-        void AssignAlertStatus(Spawninfo si, Filters filters, string matchmobname, ref bool alert, ref string mobnameWithInfo);
+        void AssignAlertStatus(Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo);
         void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname);
         void LoadSpawnInfo();
         void PlayAudioMatch(Spawninfo si, string matchmobname);
@@ -38,6 +37,7 @@ namespace myseq
         private bool MatchFullTextH;
 
         private bool PrefixStars = true;
+        private readonly Filters filters = new Filters();
 
         private static void AudioMatch(string mobname, string TalkDescr, bool TalkOnMatch, bool PlayOnMatch, bool BeepOnMatch, string AudioFile)
         {
@@ -105,7 +105,7 @@ namespace myseq
             return mname;
         }
 
-        public void AssignAlertStatus(Spawninfo si, Filters filters, string matchmobname, ref bool alert, ref string mobnameWithInfo)
+        public void AssignAlertStatus(Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo)
         {
             if ((!si.isCorpse || CorpseAlerts) && !alert)
             {
@@ -128,19 +128,15 @@ namespace myseq
                 if (((!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, MatchFullTextD)) || FindMatches(filters.GlobalDanger, matchmobname, MatchFullTextD))
                 {
                     alert = true;
-
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
-
                     si.isDanger = true;
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
                 }
 
                 // [rare]
                 if (FindMatches(filters.Alert, matchmobname, MatchFullTextA) || FindMatches(filters.GlobalAlert, matchmobname, MatchFullTextA))
                 {
                     alert = true;
-
                     si.isAlert = true;
-
                     mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
                 }
                 // [Email]
@@ -154,9 +150,8 @@ namespace myseq
                 // Acts like a hunt mob.
                 if (FindMatches(filters.WieldedItems, si.PrimaryName, MatchFullTextH) || FindMatches(filters.WieldedItems, si.OffhandName, MatchFullTextH))
                 {
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-
                     si.isHunt = true;
+                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
                 }
             }
         }
@@ -256,7 +251,6 @@ namespace myseq
                     AudioMatch(matchmobname, "Rare Mob", Settings.Default.TalkOnAlert, Settings.Default.PlayOnAlert, Settings.Default.BeepOnAlert, Settings.Default.AlertAudioFile);
                 }
             }
-
         }
     }
 }

@@ -109,12 +109,10 @@ namespace myseq
                 return;
             }
 
-            if (File.Exists(timerfile))
-
-            {
-                File.Delete(timerfile);
-            }
+            FileOps.DeleteFile(timerfile);
         }
+
+
 
         // Add a new spawn, or do a re-spawn
 
@@ -502,16 +500,11 @@ namespace myseq
             LastSaveTime = DateTime.Now;
 
             // We are not saving timers for these zone.  If they exist, then delete them.
-            var timerpath = Settings.Default.TimerDir;
-
-            if (!Directory.Exists(timerpath))
+            if (!Directory.Exists(Settings.Default.TimerDir))
             {
                 return;
             }
-            if (File.Exists(timerfile))
-            {
-                File.Delete(timerfile);
-            }
+            FileOps.DeleteFile(timerfile);
         }
 
         internal bool Voidmaps => mapName == "clz" || mapName == "default" || mapName == "bazaar" || mapName.Contains("guild") || mapName == "poknowledge" || mapName == "nexus";

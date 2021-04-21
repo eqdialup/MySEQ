@@ -23,14 +23,14 @@ namespace myseq
 
         private bool initialized;
 
-        public MapPane mapPane;
+        private MapPane mapPane;
 
         public EQData eq;
 
         private static readonly List<MapLine> mapLines = new List<MapLine>();
         private static readonly List<MapText> mapTexts = new List<MapText>();
-        public List<MapLine> lines { get; } = mapLines;
-        public List<MapText> texts { get; } = mapTexts;
+        public List<MapLine> Lines { get; } = mapLines;
+        public List<MapText> Texts { get; } = mapTexts;
 
         // Events
 
@@ -88,9 +88,9 @@ namespace myseq
 
         public void ClearMapStructures()
         {
-            lines.Clear();
-            texts.Clear();
-            eq.CalcExtents(lines);
+            Lines.Clear();
+            Texts.Clear();
+            eq.CalcExtents(Lines);
         }
         public void ClearMap()
         {
@@ -137,7 +137,7 @@ namespace myseq
             {
                 OptimizeMap();
 
-                eq.CalculateMapLinePens(lines, texts); // pre-calculate all pen colors used for map drawing.
+                eq.CalculateMapLinePens(Lines, Texts); // pre-calculate all pen colors used for map drawing.
 
                 OnEnterMap();
             }
@@ -149,7 +149,7 @@ namespace myseq
         {
             try
             {
-                if (System.IO.File.Exists(filename))
+                if (File.Exists(filename))
                 {
                     if (filename.EndsWith("_1.txt") || filename.EndsWith("_2.txt") || filename.EndsWith("_3.txt"))
                     {
@@ -201,9 +201,9 @@ namespace myseq
                 }
             }
             LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
-            LogLib.WriteLine($"Loaded {lines.Count} lines", LogLevel.Debug);
+            LogLib.WriteLine($"Loaded {Lines.Count} lines", LogLevel.Debug);
 
-            if (numtexts > 0 || lines.Count > 0)
+            if (numtexts > 0 || Lines.Count > 0)
             {
                 eq.shortname = Path.GetFileNameWithoutExtension(filename);
                 if (eq.shortname.IndexOf("_") > 0)
@@ -213,7 +213,7 @@ namespace myseq
 
                 eq.longname = eq.shortname;
 
-                eq.CalcExtents(lines);
+                eq.CalcExtents(Lines);
 
                 return true;
             }
@@ -225,25 +225,25 @@ namespace myseq
             if (line.StartsWith("L"))
             {
                 MapLine work = new MapLine(line);
-                lines.Add(work);
+                Lines.Add(work);
                 numlines++;
             }
             else if (line.StartsWith("P"))
             {
                 MapText work = new MapText(line);
-                texts.Add(work);
+                Texts.Add(work);
                 numtexts++;
             }
         }
 
         public void AddMapText(MapText work)
         {
-            texts.Add(work);
+            Texts.Add(work);
         }
 
         public void DeleteMapText(MapText work)
         {
-            texts.Remove(work);
+            Texts.Remove(work);
         }
 
         public void LoadDummyMap(string mapname)
@@ -264,13 +264,11 @@ namespace myseq
             OnEnterMap();
         }
 
-
-
         #region Optimize Map
 
         public void OptimizeMap()
         {
-            if (lines != null)
+            if (Lines != null)
             {
                 List<MapLine> linesToRemove = new List<MapLine>();
                 MapLine lastline = null;
@@ -285,7 +283,7 @@ namespace myseq
         private void FindvoidLines(List<MapLine> linesToRemove, MapLine lastline)
         {
             float prod;
-            foreach (MapLine line in lines)
+            foreach (MapLine line in Lines)
             {
                 MapLine thisline = line;
                 if (thisline != null && lastline != null)
@@ -417,7 +415,7 @@ namespace myseq
 
         private void NormalizeMaxMinZ()
         {
-            foreach (MapLine line in lines)
+            foreach (MapLine line in Lines)
             {
                 line.maxZ = line.minZ = line.Point(0).z;
                 for (var j = 1; j < line.aPoints.Count; j++)
@@ -439,17 +437,17 @@ namespace myseq
         {
             foreach (MapLine lineToRemove in linesToRemove)
             {
-                lines.Remove(lineToRemove);
+                Lines.Remove(lineToRemove);
             }
         }
 
         private void OptimizeText()
         {
             var index = 0;
-            foreach (MapText tex1 in texts)
+            foreach (MapText tex1 in Texts)
             {
                 var index2 = 0;
-                foreach (MapText tex2 in texts)
+                foreach (MapText tex2 in Texts)
                 {
                     if (index2 > index && tex1.x == tex2.x && tex1.y == tex2.y && tex1.z == tex2.z && tex1.label != tex2.label)
                     {

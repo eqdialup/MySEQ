@@ -121,7 +121,7 @@ namespace myseq
 
         private BufferedGraphics bkgBuffer;
 
-        private ToolTip tt;
+        private ToolTip toolTip;
 
         public bool flash; // used for flashing warning lights
 
@@ -324,6 +324,8 @@ namespace myseq
             this.PerformLayout();
         }
 
+        private void MapCon_KeyPress(object sender, KeyPressEventArgs e) => mapPane.MapCon_KeyPress(sender, e);
+
         #endregion Component Designer generated code
 
         private void InitializeVariables()
@@ -337,12 +339,12 @@ namespace myseq
             m_panOffsetX = m_panOffsetY = 0;
             ClearSelectedPoint();
 
-            tt = new ToolTip
+            toolTip = new ToolTip
             {
                 AutomaticDelay = 500
             };
-            tt.SetToolTip(this, "ABCD\nEFGH");
-            tt.Active = true;
+            toolTip.SetToolTip(this, "ABCD\nEFGH");
+            toolTip.Active = true;
 
             // Set sine and cosine values to use with headings
             for (var p = 0; p < 512; p++)
@@ -389,116 +391,6 @@ namespace myseq
 
             Invalidate();
         }
-
-        #region KeyPress
-        private void MapCon_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (mapPane != null)
-            {
-                Dictionary<char, Action> KeyInstructions = new Dictionary<char, Action>()
-                {
-                    {'1', OneKey },
-                    {'2', TwoKey },
-                    {'3', ThreeKey},
-                    {'4', FourKey},
-                    {'5', Cor5Key},
-                    {'c', Cor5Key},
-                    {'6', SixKey},
-                    {'7', SevenKey},
-                    {'8', EightKey},
-                    {'9', NineKey},
-                    {'+', PlusKey},
-                    {'-', MinusKey}
-                        };
-                if (!KeyInstructions.ContainsKey(e.KeyChar)) return;
-                KeyInstructions[char.ToLower(e.KeyChar)]();
-                ReAdjust();
-            }
-        }
-
-        private void OneKey()
-        {
-            mapPane.offsety.Value += 50;
-
-            mapPane.offsetx.Value -= 50;
-
-        }
-
-        private void TwoKey()
-        {
-            mapPane.offsety.Value += 50;
-
-        }
-
-        private void ThreeKey()
-        {
-            mapPane.offsety.Value += 50;
-
-            mapPane.offsetx.Value += 50;
-
-        }
-
-        private void SixKey()
-        {
-            mapPane.offsetx.Value += 50;
-
-        }
-
-        private void NineKey()
-        {
-            mapPane.offsety.Value -= 50;
-
-            mapPane.offsetx.Value += 50;
-
-        }
-
-        private void EightKey()
-        {
-            mapPane.offsety.Value -= 50;
-
-        }
-
-        private void SevenKey()
-        {
-            mapPane.offsetx.Value -= 50;
-
-            mapPane.offsety.Value -= 50;
-
-        }
-
-        private void FourKey()
-        {
-            mapPane.offsetx.Value -= 50;
-        }
-
-        private void Cor5Key()
-        {
-            mapPane.offsetx.Value = 0;
-
-            mapPane.offsety.Value = 0;
-        }
-
-        private void MinusKey()
-        {
-            if (scale - 0.2 >= 0.1)
-            {
-                scale -= 0.2f;
-
-                mapPane.scale.Value = (decimal)(scale * 100);
-            }
-
-            Invalidate();
-        }
-
-        private void PlusKey()
-        {
-            scale += 0.2f;
-
-            mapPane.scale.Value = (decimal)(scale * 100);
-
-            Invalidate();
-        }
-        #endregion
 
         private void MapCon_MouseDown(object sender, MouseEventArgs e)
         {
@@ -744,7 +636,7 @@ namespace myseq
         {
             MouseMapLoc(e, out var mousex, out var mousey);
             var delta = 5.0f / m_ratio;
-
+            
             Spawninfo sp = eq.FindMobNoPet(mousex, mousey, delta) ?? eq.FindMob(mousex, mousey, delta);
 
             bool found;
@@ -756,9 +648,9 @@ namespace myseq
             {
                 found = true;
                 LastTTtime = DateTime.Now;
-                tt.SetToolTip(this, MobInfo(sp, false, false));
-                tt.AutomaticDelay = 0;
-                tt.Active = true;
+                toolTip.SetToolTip(this, MobInfo(sp, false, false));
+                toolTip.AutomaticDelay = 0;
+                toolTip.Active = true;
             }
 
             if (!found)
@@ -776,7 +668,7 @@ namespace myseq
 
             if (!found)
             {
-                tt.SetToolTip(this, "");
+                toolTip.SetToolTip(this, "");
             }
         }
 
@@ -787,11 +679,9 @@ namespace myseq
             {
                 var ItemName = gi.Name;
 
-                foreach (ListItem listItem in eq.GroundSpawn)//eq.itemList.Values)
-
+                foreach (ListItem listItem in eq.GroundSpawn)
                 {
                     if (gi.Name == listItem.ActorDef)
-
                     {
                         ItemName = listItem.Name;
                     }
@@ -799,11 +689,11 @@ namespace myseq
 
                 var s = $"Name: {ItemName}\n{gi.Name}";
 
-                tt.SetToolTip(this, s);
+                toolTip.SetToolTip(this, s);
 
-                tt.AutomaticDelay = 0;
+                toolTip.AutomaticDelay = 0;
 
-                tt.Active = true;
+                toolTip.Active = true;
 
                 LastTTtime = DateTime.Now;
 
@@ -820,9 +710,9 @@ namespace myseq
                 var description = st.GetDescription();
                 if (description != null)
                 {
-                    tt.SetToolTip(this, description);
-                    tt.AutomaticDelay = 0;
-                    tt.Active = true;
+                    toolTip.SetToolTip(this, description);
+                    toolTip.AutomaticDelay = 0;
+                    toolTip.Active = true;
                 }
                 LastTTtime = DateTime.Now;
                 found = true;
@@ -2274,7 +2164,7 @@ namespace myseq
                     if (!Settings.Default.DepthFilter || (Settings.Default.DepthFilter && !Settings.Default.FilterMapLines))
                     // No depth filtering
                     {
-                        foreach (MapLine mapLine in map.lines)
+                        foreach (MapLine mapLine in map.Lines)
                         {
                             DrawLines(mapLine.draw_color, mapLine.linePoints);
                         }
@@ -2283,7 +2173,7 @@ namespace myseq
                     {
                         MinMaxFilter(out var minZ, out var maxZ);
 
-                        foreach (MapLine mapLine in map.lines)
+                        foreach (MapLine mapLine in map.Lines)
                         {
                             // All the points in this set of lines are good
                             if (mapLine.maxZ < maxZ && mapLine.minZ > minZ)
@@ -2433,7 +2323,7 @@ namespace myseq
                 // Depth Filter
                 MinMaxFilter(out var minZ, out var maxZ);
 
-                foreach (MapText t in map.texts)
+                foreach (MapText t in map.Texts)
                 {
                     if (t.z != -99999 && t.z > minZ && t.z < maxZ)
                     {
@@ -2444,7 +2334,7 @@ namespace myseq
             else
             {
                 // No Depth Filtering
-                foreach (MapText t in map.texts)
+                foreach (MapText t in map.Texts)
                 {
                     AddTextToDrawnMap(t);
                 }
@@ -2859,24 +2749,6 @@ namespace myseq
 
         #endregion DrawDirectionLines
 
-        //public void MapReset()
-
-        //{
-        //    f1.mapPane.scale.Value = 100M;
-
-        //    scale = 1.0f;
-
-        //    f1.mapPane.offsetx.Value = 0;
-
-        //    f1.mapPane.offsety.Value = 0;
-
-        //    f1.mapPane.filterzneg.Value = 75;
-
-        //    f1.mapPane.filterzpos.Value = 75;
-
-        //    ClearPan();
-        //}
-
         private void MapChanged(EQMap map)
         {
             DrawOptions DrawOpts = f1.DrawOpts;
@@ -2960,7 +2832,7 @@ namespace myseq
                 xlabel = bkgBuffer.Graphics.MeasureString("10000", drawFont).Width;
             }
 
-            foreach (MapText t in map.texts)
+            foreach (MapText t in map.Texts)
 
             {
                 SizeF tf = bkgBuffer.Graphics.MeasureString(t.label, drawFont);
