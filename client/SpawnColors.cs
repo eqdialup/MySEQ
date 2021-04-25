@@ -1,12 +1,12 @@
 ﻿using System.Drawing;
+using myseq;
 using myseq.Properties;
-using Structures;
 
-namespace myseq
+namespace Structures
 {
-    public class ConColors
+    public class SpawnColors
     {
-        public int GreenRange { get; set; }  = -4;
+        public int GreenRange { get; set; } = -4;
 
         public int CyanRange { get; set; } = -5;
 
@@ -14,7 +14,9 @@ namespace myseq
 
         public int YellowRange { get; set; } = 3;
 
-        public void FillConColors(MainForm f1, Spawninfo GamerInfo, SolidBrush[] conColors)
+        public SolidBrush[] ConColors { get; set; } = new SolidBrush[500];
+
+        public void FillConColors(MainForm f1, Spawninfo GamerInfo)//, SolidBrush[] conColors
         {
             int level = GamerInfo.Level;
             f1.toolStripLevel.Text = "Auto";
@@ -25,66 +27,63 @@ namespace myseq
                 f1.toolStripLevel.Text = level.ToString();
             }
 
-            GreenRange = (-1) * level;
+            GreenRange = -1 * level;
 
-            GreyRange = (-1) * level;
+            GreyRange = -1 * level;
 
             // Variation on level depending on EQ version (SOD, SOF, LIVE)
             VersionColorVariation(level);
 
             int c;
             // Set the Grey Cons
-            for (c = 0; c < (GreyRange + level); c++)
+            for (c = 0; c < GreyRange + level; c++)
             {
-                conColors[c] = new SolidBrush(Color.Gray);
+                ConColors[c] = new SolidBrush(Color.Gray);
             }
 
             // Set the Green Cons
-            for (; c < (GreenRange + level); c++)
+            for (; c < GreenRange + level; c++)
             {
-                conColors[c] = new SolidBrush(Color.Lime);
+                ConColors[c] = new SolidBrush(Color.Lime);
             }
 
             // Set the Light Blue Cons
-            for (; c < (CyanRange + level); c++)
+            for (; c < CyanRange + level; c++)
             {
-                conColors[c] = new SolidBrush(Color.Aqua);
+                ConColors[c] = new SolidBrush(Color.Aqua);
             }
 
             // Set the Dark Blue Cons
             for (; c < level; c++)
             {
-                conColors[c] = new SolidBrush(Color.Blue);
+                ConColors[c] = new SolidBrush(Color.Blue);
             }
 
             // Set the Same Level Con
-            conColors[c++] = new SolidBrush(Color.White);
+            ConColors[c++] = new SolidBrush(Color.White);
 
             // Yellow Cons
-            for (; c < (level + YellowRange + 1); c++)
+            for (; c < level + YellowRange + 1; c++)
             {
-                conColors[c] = new SolidBrush(Color.Yellow);
+                ConColors[c] = new SolidBrush(Color.Yellow);
             }
 
             // 4 levels of bright red
-            conColors[c++] = new SolidBrush(Color.Red);
-            conColors[c++] = new SolidBrush(Color.Red);
-            conColors[c++] = new SolidBrush(Color.Red);
-            conColors[c++] = new SolidBrush(Color.Red);
+            ConColors[c++] = new SolidBrush(Color.Red);
+            ConColors[c++] = new SolidBrush(Color.Red);
+            ConColors[c++] = new SolidBrush(Color.Red);
+            ConColors[c++] = new SolidBrush(Color.Red);
 
             // Set the remaining levels to dark red
             for (; c < 500; c++)
             {
-                conColors[c] = new SolidBrush(Color.Maroon);
+                ConColors[c] = new SolidBrush(Color.Maroon);
             }
         }
 
         private void VersionColorVariation(int level)
         // Check for SoD, SoF or Live EQ con levels in use
         {
-
-
-
             if (Settings.Default.SoDCon)
             {
                 SoDCon(level);
@@ -344,7 +343,7 @@ namespace myseq
         private void SoDCon(int level)
         {
             YellowRange = 2;
-            GreyRange = (-1) * level;
+            GreyRange = -1 * level;
 
             if (level < 9)
             {

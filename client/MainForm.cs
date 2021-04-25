@@ -23,9 +23,9 @@ namespace myseq
         public ListViewPanel SpawnTimerList = new ListViewPanel(1);
         public ListViewPanel GroundItemList = new ListViewPanel(2);
 
-        public string curZone { get; private set; } = "map_pane";
+        public string curZone { get; set; } = "map_pane";
 
-        public string mapnameWithLabels { get; private set; } = "";
+        public string mapnameWithLabels { get; set; } = "";
 
         private string currentIPAddress = "";
         private MarkLookup mark = new MarkLookup();
@@ -38,7 +38,7 @@ namespace myseq
         private readonly EQCommunications comm;
         public readonly EQMap map;
 
-        private ConColors GetConColors = new ConColors();
+        private readonly SpawnColors GetConColors = new SpawnColors();
 
         public DrawOptions DrawOpts = DrawOptions.DrawNormal;
 
@@ -53,6 +53,7 @@ namespace myseq
         private bool bFilter2;
         private bool bFilter3;
         private bool bFilter4;
+        private FormMethods formMethod = new FormMethods();
 
         public MainForm()
         {
@@ -66,56 +67,51 @@ namespace myseq
             comm = new EQCommunications(eq, this, filters);
 
             InitializeComponent();
+
             LogLib.maxLogLevel = LogLevel.DefaultMaxLevel;
             LogLib.WriteLine("MySEQ Open Version: " + Version);
 
             LoadPrefs();
-            LogLib.WriteLine("Loaded Prefs");
 
             mapCon = mapPane.mapCon;
+
+            LogLib.WriteLine("Loaded Prefs");
 
             // Set Map Window Options
             mapPane.DockAreas = DockAreas.Document;
             mapPane.CloseButton = false;
             mapPane.TabText = "map_pane";
 
-            LogLib.WriteLine("Creating SpawnList Window");
-            // Set Spawn List Window Options
-            SpawnList.HideOnClose = true;
-            SpawnList.TabText = "Spawn List";
-
-            SpawnList.VisibleChanged += new EventHandler(SpawnList_VisibleChanged);
-
-            LogLib.WriteLine("Creating SpawnTimerList Window");
-
-            // Set Spawn Timer Window Options
-            SpawnTimerList.HideOnClose = true;
-            SpawnTimerList.TabText = "Spawn Timer List";
-            SpawnTimerList.VisibleChanged += new EventHandler(SpawnTimerList_VisibleChanged);
-
-            LogLib.WriteLine("Creating GroundItemList Window");
-
-            // Set Ground Item Window Options
-            GroundItemList.HideOnClose = true;
-            GroundItemList.TabText = "Ground Items";
-
-            GroundItemList.VisibleChanged += new EventHandler(GroundItemList_VisibleChanged);
-
             mapCon.SetComponents(this, mapPane, eq, map, GetConColors);
             mark.SetComponents(eq);
             mapPane.SetComponents(this);
 
+            // Set Spawn List Window Options
+            LogLib.WriteLine("Creating SpawnList Window", LogLevel.Debug);
+            SpawnList.HideOnClose = true;
+            SpawnList.TabText = "Spawn List";
+            SpawnList.VisibleChanged += new EventHandler(SpawnList_VisibleChanged);
             SpawnList.SetComponents(eq, mapCon, filters, this);
 
+            // Set Spawn Timer Window Options
+            LogLib.WriteLine("Creating SpawnTimerList Window", LogLevel.Debug);
+            SpawnTimerList.HideOnClose = true;
+            SpawnTimerList.TabText = "Spawn Timer List";
+            SpawnTimerList.VisibleChanged += new EventHandler(SpawnTimerList_VisibleChanged);
             SpawnTimerList.SetComponents(eq, mapCon, filters, this);
 
+            // Set Ground Item Window Options
+            LogLib.WriteLine("Creating GroundItemList Window", LogLevel.Debug);
+            GroundItemList.HideOnClose = true;
+            GroundItemList.TabText = "Ground Items";
+            GroundItemList.VisibleChanged += new EventHandler(GroundItemList_VisibleChanged);
             GroundItemList.SetComponents(eq, mapCon, filters, this);
 
             map.SetComponents(mapCon, SpawnList, SpawnTimerList, GroundItemList, eq);
 
             eq.mobsTimers.SetComponents(map);
 
-            LoadPositionsFromConfigFile();
+            formMethod.LoadPositionsFromConfigFile(this);
 
             if (Settings.Default.AlwaysOnTop)
             {
@@ -128,7 +124,7 @@ namespace myseq
             // Set the Font, Size, Style for the list windows
             SetFontandStyle();
 
-            CreateSpawnlistView();
+            formMethod.CreateSpawnlistView(this);
             toolStripVersion.Text = Version;
             mapCon?.ReAdjust();
 
@@ -157,95 +153,93 @@ namespace myseq
             GroundItemList.listView.Font = Settings.Default.ListFontStyle;
         }
 
-        private void LoadPositionsFromConfigFile()
-        {
-            LogLib.WriteLine("Loading Position.Xml");
-            var configFile = Path.Combine(Settings.Default.CfgDir, "positions.xml");
+        //private void LoadPositionsFromConfigFile()
+        //{
+        //    LogLib.WriteLine("Loading Position.Xml", LogLevel.Debug);
+        //    var configFile = Path.Combine(Settings.Default.CfgDir, "positions.xml");
 
-            if (File.Exists(configFile))
-            {
-                try
-                {
-                    dockPanel.LoadFromXml(configFile, m_deserializeDockContent);
-                }
-                catch (Exception ex)
-                {
-                    LogLib.WriteLine("Error loading config from positions.xml: ", ex);
-                    // Re-Set up initial windows - might have bad or incompatible positions file
-                    defaultstates();
-                }
-            }
-            else
-            {
-                // Set up initial windows, when no previous window layout exists
-                defaultstates();
-            }
+        //    if (File.Exists(configFile))
+        //    {
+        //        try
+        //        {
+        //            dockPanel.LoadFromXml(configFile, m_deserializeDockContent);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            LogLib.WriteLine("Error loading config from positions.xml: ", ex);
+        //            // Re-Set up initial windows - might have bad or incompatible positions file
+        //            defaultstates();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // Set up initial windows, when no previous window layout exists
+        //        defaultstates();
+        //    }
 
-            void defaultstates()
-            {
-                mapPane.Show(dockPanel, DockState.Document);
+        //    void defaultstates()
+        //    {
+        //        mapPane.Show(dockPanel, DockState.Document);
 
-                SpawnList.Show(dockPanel, DockState.DockLeft);
+        //        SpawnList.Show(dockPanel, DockState.DockLeft);
 
-                SpawnTimerList.Show(dockPanel, DockState.DockTop);
+        //        SpawnTimerList.Show(dockPanel, DockState.DockTop);
 
-                GroundItemList.Show(dockPanel, DockState.DockBottom);
+        //        GroundItemList.Show(dockPanel, DockState.DockBottom);
 
-                SpawnTimerList.DockState = DockState.DockLeft;
+        //        SpawnTimerList.DockState = DockState.DockLeft;
 
-                GroundItemList.DockState = DockState.DockLeft;
-            }
-        }
+        //        GroundItemList.DockState = DockState.DockLeft;
+        //    }
+        //}
 
-        private void CreateSpawnlistView()
-        {
-            // Add Columns to Spawnlist window
-            SpawnList.ColumnsAdd("Name", Settings.Default.c1w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Level", Settings.Default.c2w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Class", Settings.Default.c3w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Primary", Settings.Default.c3w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Offhand", Settings.Default.c3w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Race", Settings.Default.c4w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Owner", Settings.Default.c4w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Last Name", Settings.Default.c5w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Type", Settings.Default.c6w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Invis", Settings.Default.c7w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Run Speed", Settings.Default.c8w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("SpawnID", Settings.Default.c9w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("X", Settings.Default.c11w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Y", Settings.Default.c12w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
-            SpawnList.ColumnsAdd("Distance", Settings.Default.c14w, HorizontalAlignment.Left);
-            //            SpawnList.ColumnsAdd("Guild", Settings.Default.c14w, HorizontalAlignment.Left); //17
+        //private void CreateSpawnlistView()
+        //{
+        //    // Add Columns to Spawnlist window
+        //    SpawnList.ColumnsAdd("Name", Settings.Default.c1w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Level", Settings.Default.c2w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Class", Settings.Default.c3w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Primary", Settings.Default.c3w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Offhand", Settings.Default.c3w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Race", Settings.Default.c4w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Owner", Settings.Default.c4w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Last Name", Settings.Default.c5w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Type", Settings.Default.c6w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Invis", Settings.Default.c7w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Run Speed", Settings.Default.c8w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("SpawnID", Settings.Default.c9w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("X", Settings.Default.c11w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Y", Settings.Default.c12w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
+        //    SpawnList.ColumnsAdd("Distance", Settings.Default.c14w, HorizontalAlignment.Left);
+        //    //            SpawnList.ColumnsAdd("Guild", Settings.Default.c14w, HorizontalAlignment.Left); //17
 
-            // Add the Columns to the Spawn Timer Window
-            SpawnTimerList.ColumnsAdd("Spawn Name", Settings.Default.c1w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("Remain", Settings.Default.c10w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("Interval", Settings.Default.c10w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("Zone", Settings.Default.c10w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("X", Settings.Default.c12w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("Y", Settings.Default.c11w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("Count", Settings.Default.c9w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("Kill Time", Settings.Default.c10w, HorizontalAlignment.Left);
-            SpawnTimerList.ColumnsAdd("Next Spawn", Settings.Default.c10w, HorizontalAlignment.Left);
+        //    // Add the Columns to the Spawn Timer Window
+        //    SpawnTimerList.ColumnsAdd("Spawn Name", Settings.Default.c1w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("Remain", Settings.Default.c10w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("Interval", Settings.Default.c10w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("Zone", Settings.Default.c10w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("X", Settings.Default.c12w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("Y", Settings.Default.c11w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("Count", Settings.Default.c9w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("Kill Time", Settings.Default.c10w, HorizontalAlignment.Left);
+        //    SpawnTimerList.ColumnsAdd("Next Spawn", Settings.Default.c10w, HorizontalAlignment.Left);
 
-            // Add Columns to Ground Items window
-            GroundItemList.ColumnsAdd("Description", Settings.Default.c1w, HorizontalAlignment.Left);
-            GroundItemList.ColumnsAdd("Name", Settings.Default.c1w, HorizontalAlignment.Left);
-            GroundItemList.ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
-            GroundItemList.ColumnsAdd("X", Settings.Default.c12w, HorizontalAlignment.Left);
-            GroundItemList.ColumnsAdd("Y", Settings.Default.c11w, HorizontalAlignment.Left);
-            GroundItemList.ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
-        }
+        //    // Add Columns to Ground Items window
+        //    GroundItemList.ColumnsAdd("Description", Settings.Default.c1w, HorizontalAlignment.Left);
+        //    GroundItemList.ColumnsAdd("Name", Settings.Default.c1w, HorizontalAlignment.Left);
+        //    GroundItemList.ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
+        //    GroundItemList.ColumnsAdd("X", Settings.Default.c12w, HorizontalAlignment.Left);
+        //    GroundItemList.ColumnsAdd("Y", Settings.Default.c11w, HorizontalAlignment.Left);
+        //    GroundItemList.ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
+        //}
 
         public void StopListening()
-
         {
             // Stop the Timer
-
             timPackets.Stop();
             timDelayAlerts.Stop();
             DisablePlayAlerts();
@@ -852,13 +846,13 @@ namespace myseq
                 // We dont currently have a setting file, so set depth filter to off
                 ToggleDepth();
             }
+        }
 
-            void ToggleDepth()
+        private void ToggleDepth()
+        {
+            if (Settings.Default.DepthFilter)
             {
-                if (Settings.Default.DepthFilter)
-                {
-                    ToggleDepthFilter();
-                }
+                ToggleDepthFilter();
             }
         }
 
@@ -1001,49 +995,48 @@ namespace myseq
 
         private void MnuOpenMap_Click(object sender, EventArgs e)
         {
-            openFileDialog.InitialDirectory = Settings.Default.MapDir;
+            formMethod.MnuOpenMap(this);
+            //openFileDialog.InitialDirectory = Settings.Default.MapDir;
 
-            openFileDialog.Filter = "Map Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            //openFileDialog.Filter = "Map Files (*.txt)|*.txt|All Files (*.*)|*.*";
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            //if (openFileDialog.ShowDialog() == DialogResult.OK)
 
-            {
-                mapnameWithLabels = "";
+            //{
+            //    mapnameWithLabels = "";
 
-                var filename = openFileDialog.FileName;
+            //    var filename = openFileDialog.FileName;
 
-                map.Loadmap(filename);
+            //    map.Loadmap(filename);
 
-                var lastSlashIndex = filename.LastIndexOf("\\");
+            //    var lastSlashIndex = filename.LastIndexOf("\\");
 
-                if (lastSlashIndex > 0)
-                {
-                    filename = filename.Substring(lastSlashIndex + 1);
-                }
+            //    if (lastSlashIndex > 0)
+            //    {
+            //        filename = filename.Substring(lastSlashIndex + 1);
+            //    }
 
-                filename = filename.Substring(0, filename.Length - 4);
+            //    filename = filename.Substring(0, filename.Length - 4);
 
-                if (filename.EndsWith("_1"))
-                {
-                    filename = filename.Substring(0, filename.Length - 2);
-                }
+            //    if (filename.EndsWith("_1"))
+            //    {
+            //        filename = filename.Substring(0, filename.Length - 2);
+            //    }
 
-                toolStripShortName.Text = filename.ToUpper();
+            //    toolStripShortName.Text = filename.ToUpper();
 
-                mapPane.TabText = filename.ToLower();
+            //    mapPane.TabText = filename.ToLower();
 
-                curZone = filename.ToUpper();
-            }
+            //    curZone = filename.ToUpper();
+            //}
         }
 
         private void MnuSaveMobs_Click(object sender, EventArgs e)
-
         {
             eq.SaveMobs();
         }
 
         private void MnuSavePrefs_Click(object sender, EventArgs e)
-
         {
             SavePrefs();
         }
@@ -1060,7 +1053,7 @@ namespace myseq
 
         private void MnuOptions_Click(object sender, EventArgs e)
         {
-            FrmOptions f3 = new FrmOptions();
+            OptionsForm f3 = new OptionsForm();
             if (Settings.Default.OptionsWindowsLocation.X != 0 && Settings.Default.OptionsWindowsLocation.Y != 0)
             {
                 f3.StartPosition = FormStartPosition.CenterParent;
@@ -1168,7 +1161,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error writing depth filter setting to ini file: ", ex); }
         }
 
-        private void ToggleDepthFilter()
+        public void ToggleDepthFilter()
         {
             mnuDepthFilter.Checked = !mnuDepthFilter.Checked;
             mnuDepthFilter2.Checked = mnuDepthFilter.Checked;
@@ -1279,49 +1272,55 @@ namespace myseq
         }
 
         private void SetFollowOption(FollowOption NewFollowOption)
-
         {
             Settings.Default.FollowOption = NewFollowOption;
 
-            if (NewFollowOption == FollowOption.None)
-            {
-                toolStripCoPStatus.Text = "NoF";
-                mnuFollowNone.Image = Resources.BlackX;
-                mnuFollowNone2.Image = Resources.BlackX;
-            }
-            else
-            {
-                mnuFollowNone.Image = null;
-                mnuFollowNone2.Image = null;
-            }
-            if (NewFollowOption == FollowOption.Player)
-            {
-                toolStripCoPStatus.Text = "CoP";
-                mapPane.offsetx.Value = 0;
-                mapPane.offsety.Value = 0;
+            Dictionary<string, Action> FollowOpts = new Dictionary<string, Action>()
+                {
+                    {"None", FollowNone },
+                    {"Player", FollowPlayer },
+                    {"Target", FollowTarget }
+                };
+            FollowOpts[NewFollowOption.ToString()]();
+        }
 
-                mnuFollowPlayer.Image = Resources.BlackX;
-                mnuFollowPlayer2.Image = Resources.BlackX;
-            }
-            else
-            {
-                mnuFollowPlayer.Image = null;
-                mnuFollowPlayer2.Image = null;
-            }
-            if (NewFollowOption == FollowOption.Target)
-            {
-                toolStripCoPStatus.Text = "CoT";
-                mapPane.offsetx.Value = 0;
-                mapPane.offsety.Value = 0;
+        private void FollowTarget()
+        {
+            toolStripCoPStatus.Text = "CoT";
+            mapPane.offsetx.Value = 0;
+            mapPane.offsety.Value = 0;
 
-                mnuFollowTarget.Image = Resources.BlackX;
-                mnuFollowTarget2.Image = Resources.BlackX;
-            }
-            else
-            {
-                mnuFollowTarget.Image = null;
-                mnuFollowTarget2.Image = null;
-            }
+            mnuFollowTarget.Image = Resources.BlackX;
+            mnuFollowTarget2.Image = Resources.BlackX;
+            mnuFollowPlayer.Image = null;
+            mnuFollowPlayer2.Image = null;
+            mnuFollowNone.Image = null;
+            mnuFollowNone2.Image = null;
+        }
+
+        private void FollowPlayer()
+        {
+            toolStripCoPStatus.Text = "CoP";
+            mapPane.offsetx.Value = 0;
+            mapPane.offsety.Value = 0;
+
+            mnuFollowTarget.Image = null;
+            mnuFollowTarget2.Image = null;
+            mnuFollowPlayer.Image = Resources.BlackX;
+            mnuFollowPlayer2.Image = Resources.BlackX;
+            mnuFollowNone.Image = null;
+            mnuFollowNone2.Image = null;
+        }
+
+        private void FollowNone()
+        {
+            toolStripCoPStatus.Text = "NoF";
+            mnuFollowTarget.Image = null;
+            mnuFollowTarget2.Image = null;
+            mnuFollowPlayer.Image = null;
+            mnuFollowPlayer2.Image = null;
+            mnuFollowNone.Image = Resources.BlackX;
+            mnuFollowNone2.Image = Resources.BlackX;
         }
 
         private void MnuFollowNone_Click(object sender, EventArgs e) => SetFollowOption(FollowOption.None);
@@ -1502,7 +1501,6 @@ namespace myseq
         private void MnuGlobalAlerts_Click(object sender, EventArgs e) => filters.EditAlertFile("global");
 
         private void MnuShowNPCs_Click(object sender, EventArgs e)
-
         {
             mnuShowNPCs.Checked = !mnuShowNPCs.Checked;
 
@@ -1896,10 +1894,10 @@ namespace myseq
                 {
                     mapBox.mapName += mapnameWithLabels.Substring(lastSlashIndex + 1);
                 }
-                else
-                {
-                    return;
-                }
+                //else
+                //{
+                //    return;
+                //}
             }
             else
             {
@@ -2056,7 +2054,7 @@ namespace myseq
             Settings.Default.SoDCon = true;
             Settings.Default.SoFCon = false;
             Settings.Default.DefaultCon = false;
-            GetConColors.FillConColors(this, eq.gamerInfo, eq.ConColors);
+            GetConColors.FillConColors(this, eq.gamerInfo);// eq.ConColors
             eq.UpdateMobListColors();
         }
 
@@ -2068,7 +2066,7 @@ namespace myseq
             Settings.Default.SoDCon = false;
             Settings.Default.SoFCon = false;
             Settings.Default.DefaultCon = true;
-            GetConColors.FillConColors(this, eq.gamerInfo, eq.ConColors);
+            GetConColors.FillConColors(this, eq.gamerInfo); //, eq.ConColors);
             eq.UpdateMobListColors();
         }
 
@@ -2080,7 +2078,7 @@ namespace myseq
             Settings.Default.SoDCon = false;
             Settings.Default.SoFCon = true;
             Settings.Default.DefaultCon = false;
-            GetConColors.FillConColors(this, eq.gamerInfo, eq.ConColors);
+            GetConColors.FillConColors(this, eq.gamerInfo);//, eq.ConColors
             eq.UpdateMobListColors();
         }
 
@@ -2575,8 +2573,7 @@ namespace myseq
 
                 if (isNum && Num >= mapPane.scale.Minimum && Num <= mapPane.scale.Maximum)
                 {
-                    mapPane.scale.Value = Num;
-                    validnum = true;
+                    validnum = mapPane.MapPaneScale(Num);
                 }
             }
 
@@ -2918,51 +2915,51 @@ namespace myseq
             comm.CharRefresh();
         }
 
-        private void ToolStripLevel_TextUpdate(object sender, EventArgs e) => ToolStripLevelCheck(toolStripLevel.Text.Trim());
+        private void ToolStripLevel_TextUpdate(object sender, EventArgs e) => formMethod.ToolStripLevelCheck(toolStripLevel.Text.Trim(), this);
 
-        private void ToolStripLevelCheck(string Str)
-        {
-            var validnum = true;
-            if (!string.IsNullOrEmpty(Str))
-            {
-                var isNum = int.TryParse(Str, out var Num);
+        //private void ToolStripLevelCheck(string Str)
+        //{
+        //    var validnum = true;
+        //    if (!string.IsNullOrEmpty(Str))
+        //    {
+        //        var isNum = int.TryParse(Str, out var Num);
 
-                if (isNum && (Num < 1 || Num > 115))
-                {
-                    validnum = false;
-                }
-                else if (Str != "Auto" && !isNum)
-                {
-                    validnum = false;
-                }
-                else if (Str == "Auto")
-                {
-                    validnum = true;
-                    Settings.Default.LevelOverride = -1;
-                    toolStripLevel.Text = "Auto";
-                }
-                else
-                {
-                    toolStripLevel.Text = Num.ToString();
-                    Settings.Default.LevelOverride = Num;
-                }
-            }
+        //        if (isNum && (Num < 1 || Num > 115))
+        //        {
+        //            validnum = false;
+        //        }
+        //        else if (Str != "Auto" && !isNum)
+        //        {
+        //            validnum = false;
+        //        }
+        //        else if (Str == "Auto")
+        //        {
+        //            validnum = true;
+        //            Settings.Default.LevelOverride = -1;
+        //            toolStripLevel.Text = "Auto";
+        //        }
+        //        else
+        //        {
+        //            toolStripLevel.Text = Num.ToString();
+        //            Settings.Default.LevelOverride = Num;
+        //        }
+        //    }
 
-            if (!validnum)
-            {
-                MessageBox.Show("Enter a number between 1-115 or Auto");
-            }
-        }
+        //    if (!validnum)
+        //    {
+        //        MessageBox.Show("Enter a number between 1-115 or Auto");
+        //    }
+        //}
 
-        private void ToolStripLevel_Leave(object sender, EventArgs e) => ToolStripLevelCheck(toolStripLevel.Text.Trim());
+        private void ToolStripLevel_Leave(object sender, EventArgs e) => formMethod.ToolStripLevelCheck(toolStripLevel.Text.Trim(), this);
 
-        private void ToolStripLevel_DropDownClosed(object sender, EventArgs e) => ToolStripLevelCheck(toolStripLevel.SelectedItem.ToString());
+        private void ToolStripLevel_DropDownClosed(object sender, EventArgs e) => formMethod.ToolStripLevelCheck(toolStripLevel.SelectedItem.ToString(), this);
 
         private void ToolStripLevel_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                ToolStripLevelCheck(toolStripLevel.Text.Trim());
+                formMethod.ToolStripLevelCheck(toolStripLevel.Text.Trim(), this);
                 e.Handled = true;
             }
         }
@@ -2974,8 +2971,15 @@ namespace myseq
         private void ThinSpawnlist_Click(object sender, EventArgs e)
         {
             Settings.Default.ThinSpawnList = !Settings.Default.ThinSpawnList;
-            thinSpawnlistToolStripMenuItem.Checked = Settings.Default.ThinSpawnList;
+            thinSpawnlistmnuItem.Checked = Settings.Default.ThinSpawnList;
             // Need to build more on this to actually make a thin spawnlist
+        }
+
+        private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HelpForm help = new HelpForm();
+            help.StartPosition = FormStartPosition.CenterParent;
+            help.ShowDialog();
         }
     }
 }

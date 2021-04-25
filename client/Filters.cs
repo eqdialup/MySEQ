@@ -67,7 +67,7 @@ namespace myseq
 
             var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
 
-            fileop.makeFilterexist(filterFile);
+            fileop.MakeFilterExist(filterFile);
 
             ReadAlertLines(zoneName, filterFile);
         }
@@ -324,7 +324,7 @@ namespace myseq
 
                 var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
 
-                fileop.makeFilterexist(filterFile);
+                fileop.MakeFilterExist(filterFile);
 
                 Process.Start("notepad.exe", filterFile);
             }

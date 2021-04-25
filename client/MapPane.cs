@@ -9,7 +9,7 @@ namespace myseq
     public class MapPane : DockContent, IMarkLookup
     {
         public MapCon mapCon;
-        private MainForm f1 = null; // Caution: may be null
+        private MainForm f1; // Caution: may be null
 
         #region Designer components
         public NumericUpDown offsetx;
@@ -40,7 +40,7 @@ namespace myseq
 
         private Label lblLookup;
 
-        private readonly System.ComponentModel.Container components = null;
+        private readonly System.ComponentModel.Container components;
         # endregion Designer components
 
         public MapPane()
@@ -509,7 +509,6 @@ namespace myseq
         private void Offsetx_ValueChanged(object sender, EventArgs e)
         {
             mapCon.m_panOffsetX = -(int)offsetx.Value;
-
             mapCon.ReAdjust();
             mapCon.Invalidate();
         }
@@ -578,6 +577,12 @@ namespace myseq
             }
         }
 
+        public bool MapPaneScale(decimal Num)
+        {
+            scale.Value = Num;
+            return true;
+        }
+
         #region KeyPress
         public void MapCon_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -606,13 +611,11 @@ namespace myseq
             offsety.Value += 50;
 
             offsetx.Value -= 50;
-
         }
 
         private void TwoKey()
         {
             offsety.Value += 50;
-
         }
 
         private void ThreeKey()
@@ -620,13 +623,11 @@ namespace myseq
             offsety.Value += 50;
 
             offsetx.Value += 50;
-
         }
 
         private void SixKey()
         {
             offsetx.Value += 50;
-
         }
 
         private void NineKey()
@@ -634,13 +635,11 @@ namespace myseq
             offsety.Value -= 50;
 
             offsetx.Value += 50;
-
         }
 
         private void EightKey()
         {
             offsety.Value -= 50;
-
         }
 
         private void SevenKey()
@@ -648,7 +647,6 @@ namespace myseq
             offsetx.Value -= 50;
 
             offsety.Value -= 50;
-
         }
 
         private void FourKey()

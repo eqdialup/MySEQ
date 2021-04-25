@@ -96,15 +96,12 @@ namespace myseq
         }
 
         public void ClearSavedTimers()
-
         {
             ResetAllTimers();
 
-            var timerpath = Settings.Default.TimerDir;
+            var timerfile = FileOps.CombineSpawnTim(mapName);
 
-            var timerfile = Path.Combine(timerpath, $"spawns-{mapName}.txt");
-
-            if (!Directory.Exists(timerpath))
+            if (!Directory.Exists(Settings.Default.TimerDir))
             {
                 return;
             }
@@ -293,13 +290,9 @@ namespace myseq
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawnTimer(): ", ex); }
 
-            if (MustSave)
+            if (MustSave && DateTime.Now.Subtract(LastSaveTime).TotalSeconds > 10)
             {
-                TimeSpan interval = DateTime.Now.Subtract(LastSaveTime);
-                if (interval.TotalSeconds > 10)
-                {
-                    SaveTimers();
-                }
+                SaveTimers();
             }
         }
 
@@ -309,8 +302,6 @@ namespace myseq
             {
                 return;
             }
-
-            Directory.CreateDirectory(Settings.Default.LogDir);
 
             FileStream fs = new FileStream(Path.Combine(Settings.Default.LogDir, "SpawnTimer.txt"), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
             using (StreamWriter outLog = new StreamWriter(fs))
@@ -347,7 +338,7 @@ namespace myseq
         {
             if (!string.IsNullOrEmpty(mapName) && Settings.Default.saveSpawnTimers && !Voidmaps)
             {
-                var timerfile = Path.Combine(Settings.Default.TimerDir, $"spawns-{mapName}.txt");
+                var timerfile = FileOps.CombineSpawnTim(mapName);
 
                 if (File.Exists(timerfile))
                 {
@@ -439,11 +430,9 @@ namespace myseq
 
         private void SaveTimers()
         {
-            var timerfile = Path.Combine(Settings.Default.TimerDir, $"spawns-{mapName}.txt");
+            var timerfile = FileOps.CombineSpawnTim(mapName);
             if (!Settings.Default.saveSpawnTimers || mapName.Length < 3)
             {
-                MustSave = false;
-                LastSaveTime = DateTime.Now;
                 return;
             }
             if (Voidmaps)
@@ -457,12 +446,7 @@ namespace myseq
                 MustSave = false;
                 LastSaveTime = DateTime.Now;
 
-                if (mobsTimer2.Count == 0)
-
-                {
-                    LogLib.WriteLine("No spawns to write.", LogLevel.Debug);
-                }
-                else
+                if (mobsTimer2.Count != 0)
                 {
                     var count = 0;
 
@@ -476,18 +460,16 @@ namespace myseq
 
                     if (count > 0)
                     {
-                        Directory.CreateDirectory(Settings.Default.TimerDir);
-
-                        StreamWriter sw = new StreamWriter(File.Open(timerfile, FileMode.Create));
-
-                        foreach (Spawntimer st in mobsTimer2.Values)
+                        using (StreamWriter sw = new StreamWriter(File.Open(timerfile, FileMode.Create)))
                         {
-                            if (st.SpawnTimer > 10 && (string.Compare(st.zone, mapName, true) == 0))
+                            foreach (Spawntimer st in mobsTimer2.Values)
                             {
-                                sw.WriteLine(st.GetAsString());
+                                if (st.SpawnTimer > 10 && (string.Compare(st.zone, mapName, true) == 0))
+                                {
+                                    sw.WriteLine(st.GetAsString());
+                                }
                             }
                         }
-                        sw.Close();
                     }
                 }
             }

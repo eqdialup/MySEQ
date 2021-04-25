@@ -1,12 +1,11 @@
+using myseq.Properties;
+using Structures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using myseq.Properties;
-using Structures;
 
 namespace myseq
 {
@@ -16,7 +15,7 @@ namespace myseq
     {
         private static readonly Spawninfo sPAWNINFO = new Spawninfo();
 
-        private readonly ConColors GetConColors = new ConColors();
+        private readonly SpawnColors GetConColors = new SpawnColors();
         private readonly FileOps fileop = new FileOps();
 
         // player details
@@ -79,7 +78,7 @@ namespace myseq
         public string[] Classes { get; private set; }
         public string[] Races { get; private set; }
         public string GConBaseName { get; set; } = "";
-        public SolidBrush[] ConColors { get; set; } = new SolidBrush[500];
+        //        public SolidBrush[] ConColors { get; set; } = new SolidBrush[500];
 
         private const int ditchGone = 2;
 
@@ -178,163 +177,108 @@ namespace myseq
 
         public Spawninfo FindMobNoPet(float x, float y, float delta)
         {
-            try
+            foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                foreach (Spawninfo sp in mobsHashTable.Values)
+                if (Xor(sp.filtered, Xor(sp.hidden, Xor(sp.isFamiliar, Xor(sp.isPet, sp.isMerc)))))
                 {
-                    var dely = sp.Y < y + delta && sp.Y > y - delta;
-                    var delx = sp.X < x + delta && sp.X > x - delta;
-                    if (!sp.filtered && HiddenFamPet(sp) && delx && dely)
-                    {
-                        return sp;
-                    }
+                    return null;
                 }
-
-                return null;
+                if (CheckXY(sp, x, y, delta))
+                {
+                    return sp;
+                }
             }
-            catch (Exception ex)
-            {
-                LogLib.WriteLine("Error in FindMobNoPet(): ", ex);
-
-                return null;
-            }
+            return null;
         }
 
         public Spawninfo FindMobNoPetNoPlayerNoCorpse(float x, float y, float delta)
         {
-            try
+            foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                foreach (Spawninfo sp in mobsHashTable.Values)
+                if (Xor(sp.hidden, Xor(sp.isFamiliar, Xor(sp.isPet, Xor(sp.isMerc, Xor(sp.IsPlayer, sp.isCorpse))))))
                 {
-                    var dely = sp.Y < y + delta && sp.Y > y - delta;
-                    var delx = sp.X < x + delta && sp.X > x - delta;
-
-                    if (HiddenFamPet(sp) && !sp.m_isPlayer && !sp.isCorpse && delx && dely)
-                    {
-                        return sp;
-                    }
+                    return null;
                 }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                LogLib.WriteLine("Error in FindMobNoPetNoPlayerNoCorpse(): ", ex);
 
-                return null;
+                if (CheckXY(sp, x, y, delta))
+                {
+                    return sp;
+                }
             }
+            return null;
+        }
+        private bool CheckXY(Spawninfo sp, float x, float y, float delta)
+        {
+            var dely = sp.Y < y + delta && sp.Y > y - delta;
+            var delx = sp.X < x + delta && sp.X > x - delta;
+            return delx && dely;
         }
 
         public Spawninfo FindMobNoPetNoPlayer(float x, float y, float delta)
         {
-            try
+            foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                foreach (Spawninfo sp in mobsHashTable.Values)
+                if (Xor(sp.hidden, Xor(sp.isFamiliar, Xor(sp.isPet, Xor(sp.isMerc, sp.isCorpse)))))
                 {
-                    if (HiddenFamPet(sp) && !sp.isCorpse && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
-                    {
-                        return sp;
-                    }
+                    return null;
                 }
 
-                return null;
+                if (CheckXY(sp, x, y, delta))
+                {
+                    return sp;
+                }
             }
-            catch (Exception ex)
-            {
-                LogLib.WriteLine("Error in FindMobNoPetNoPlayer(): ", ex);
-
-                return null;
-            }
+            return null;
         }
-
-        private static bool HiddenFamPet(Spawninfo sp) => !sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isMerc;
-
+        private bool Xor(bool a, bool b) => a ^ b;
         public Spawninfo FindMob(float x, float y, float delta)
         {
-            try
+            foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                foreach (Spawninfo sp in mobsHashTable.Values)
+                if (!sp.hidden && !sp.filtered && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
                 {
-                    if (!sp.hidden && !sp.filtered && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
-                    {
-                        return sp;
-                    }
+                    return sp;
                 }
-
-                return null;
             }
-            catch (Exception ex)
-            {
-                LogLib.WriteLine("Error in FindMob(): ", ex);
-
-                return null;
-            }
+            return null;
         }
 
         public Spawninfo FindMobTimer(string spawnLoc)
         {
-            try
+            foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                foreach (Spawninfo sp in mobsHashTable.Values)
+                if ((sp.SpawnLoc == spawnLoc) && (sp.Type == 1))
                 {
-                    if ((sp.SpawnLoc == spawnLoc) && (sp.Type == 1))
-                    {
-                        return sp;
-                    }
+                    return sp;
                 }
-
-                return null;
             }
-            catch (Exception ex)
-            {
-                LogLib.WriteLine("Error in FindMobTimer(): ", ex);
-
-                return null;
-            }
+            return null;
         }
 
         public Spawntimer FindListViewTimer(ListViewItem listItem)
         {
-            try
+            // This returns mobsTimer2
+            foreach (Spawntimer st in mobsTimers.GetRespawned().Values)
             {
-                // This returns mobsTimer2
-                foreach (Spawntimer st in mobsTimers.GetRespawned().Values)
+                if (st.itmSpawnTimerList == listItem)
                 {
-                    if (st.itmSpawnTimerList == listItem)
-                    {
-                        return st;
-                    }
+                    return st;
                 }
-                return null;
             }
-            catch (Exception ex)
-            {
-                LogLib.WriteLine("Error in SPAWNTIMER FindTimer(): ", ex);
-
-                return null;
-            }
+            return null;
         }
 
         public Spawntimer FindTimer(float x, float y, float delta)
         {
-            try
+            // This returns mobsTimer2
+            foreach (Spawntimer st in mobsTimers.GetRespawned().Values)
             {
-                // This returns mobsTimer2
-                foreach (Spawntimer st in mobsTimers.GetRespawned().Values)
+                if (st.X < x + delta && st.X > x - delta && st.Y < y + delta && st.Y > y - delta)
                 {
-                    if (st.X < x + delta && st.X > x - delta && st.Y < y + delta && st.Y > y - delta)
-                    {
-                        return st;
-                    }
+                    return st;
                 }
-
-                return null;
             }
-            catch (Exception ex)
-            {
-                LogLib.WriteLine("Error in SPAWNTIMER FindTimer(): ", ex);
-
-                return null;
-            }
+            return null;
         }
 
         public GroundItem FindGroundItem(float x, float y, float delta)
@@ -579,7 +523,7 @@ namespace myseq
             {
                 SpawnList.listView.BeginUpdate();
 
-                RenoveDeadEntries(SpawnList, deletedItems, delListItems);
+                RemoveDeadEntries(SpawnList, deletedItems, delListItems);
 
                 SpawnList.listView.EndUpdate();
                 delListItems.Clear();
@@ -588,7 +532,7 @@ namespace myseq
             }
         }
 
-        private void RenoveDeadEntries(ListViewPanel SpawnList, ArrayList deletedItems, ArrayList delListItems)
+        private void RemoveDeadEntries(ListViewPanel SpawnList, ArrayList deletedItems, ArrayList delListItems)
         {
             foreach (Spawninfo sp in deletedItems)
             {
@@ -693,8 +637,6 @@ namespace myseq
 
         public void ProcessSpawns(Spawninfo si, MainForm f1, bool update_hidden)
         {
-            Tainted_Egg(si);
-
             try
             {
                 var listReAdd = false;
@@ -743,7 +685,7 @@ namespace myseq
                         {
                             NameChngOrDead(si, mob);
                         }
-
+                        Tainted_Egg(si);
                         if (mob.Class != si.Class)
                         {
                             mob.Class = si.Class;
@@ -1130,7 +1072,7 @@ namespace myseq
 
         private void SetListColors(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
         {
-            mob.listitem.ForeColor = ConColors[si.Level].Color;
+            mob.listitem.ForeColor = GetConColors.ConColors[si.Level].Color;
 
             if (mob.listitem.ForeColor == Color.Maroon)
             {
@@ -1155,7 +1097,7 @@ namespace myseq
         {
             if (mob.isCorpse)
             {
-                if (mob.m_isPlayer)
+                if (mob.IsPlayer)
                 {
                     // My Corpse
 
@@ -1175,7 +1117,7 @@ namespace myseq
                     si.hidden = !Settings.Default.ShowCorpses;
                 }
             }
-            else if (mob.m_isPlayer)
+            else if (mob.IsPlayer)
             {
                 si.hidden = !Settings.Default.ShowPlayers;
             }
@@ -1326,7 +1268,7 @@ namespace myseq
             }
             else
             {
-                item1.ForeColor = ConColors[si.Level].Color;
+                item1.ForeColor = GetConColors.ConColors[si.Level].Color;
 
                 if (item1.ForeColor == Color.Maroon)
                 {
@@ -1417,7 +1359,7 @@ namespace myseq
                         }
                         else
                         {
-                            si.listitem.ForeColor = ConColors[si.Level].Color;
+                            si.listitem.ForeColor = GetConColors.ConColors[si.Level].Color;
 
                             if (si.listitem.ForeColor == Color.Maroon)
                             {
@@ -1667,7 +1609,7 @@ namespace myseq
                         Settings.Default.LevelOverride = gconLevel;
                     }
                     gamerInfo.Level = si.Level;
-                    GetConColors.FillConColors(f1, gamerInfo, ConColors);
+                    GetConColors.FillConColors(f1, gamerInfo);//, ConColors
 
                     // update mob list con colors
 
@@ -1676,7 +1618,7 @@ namespace myseq
                 if (gLastconLevel != gconLevel)
                 {
                     gLastconLevel = gconLevel;
-                    GetConColors.FillConColors(f1, gamerInfo, ConColors);
+                    GetConColors.FillConColors(f1, gamerInfo);//, ConColors
                     UpdateMobListColors();
                 }
             }
@@ -1825,12 +1767,10 @@ namespace myseq
         private Color GetInverseColor(Color foreColor) => Color.FromArgb((int)(192 - (foreColor.R * 0.75)), (int)(192 - (foreColor.G * 0.75)), (int)(192 - (foreColor.B * 0.75)));
         #endregion ColorOperations
 
-// Interface methods //
+        // Interface methods //
         public void AssignAlertStatus(Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo) { }
         public void PlayAudioMatch(Spawninfo si, string matchmobname) { }
         public void LoadSpawnInfo() { }
         public void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname) { }
-
-
     }
 }

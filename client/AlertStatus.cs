@@ -15,7 +15,6 @@ namespace myseq
 
     public class AlertStatus : IAlertStatus
     {
-
         private bool AffixStars = true;
 
         private string AlertPrefix = "";

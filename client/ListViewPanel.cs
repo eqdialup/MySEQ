@@ -89,7 +89,7 @@ namespace myseq
 
             InitializeComponent();
 
-            //this.DoubleBuffered = true;
+            this.DoubleBuffered = true;
 
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);

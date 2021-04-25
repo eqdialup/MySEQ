@@ -7,7 +7,7 @@ namespace Structures
 
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public partial class Spawninfo
+    public class Spawninfo
     {
         public Spawninfo()
         {

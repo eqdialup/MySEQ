@@ -345,24 +345,7 @@ namespace myseq
             if (textSMTPToEmail.Text.Length > 0)
             {
                 var presplit = textSMTPToEmail.Text;
-                var postsplit = "";
-                const string delim = ",;<>[] ";
-                var delimarray = delim.ToCharArray();
-                foreach (var s in presplit.Split(delimarray))
-                {
-                    if (re.IsMatch(s.Trim()))
-                    {
-                        if (postsplit.Length > 0)
-                        {
-                            addr.Append(s);
-                            postsplit = addr.ToString();
-                        }
-                        else
-                        {
-                            postsplit = s.Trim();
-                        }
-                    }
-                }
+                var postsplit = PostSplitString(addr, re, presplit);
                 if (postsplit.Length > 0)
                 {
                     SmtpSettings.Instance.ToEmail = postsplit;
@@ -383,24 +366,7 @@ namespace myseq
             if (textSMTPCCEmail.Text.Length > 0)
             {
                 var presplit = textSMTPCCEmail.Text;
-                var postsplit = "";
-                const string delim = ",;<>[] ";
-                var delimarray = delim.ToCharArray();
-                foreach (var s in presplit.Split(delimarray))
-                {
-                    if (re.IsMatch(s.Trim()))
-                    {
-                        if (postsplit.Length > 0)
-                        {
-                            addr.Append(s);
-                            postsplit = addr.ToString();
-                        }
-                        else
-                        {
-                            postsplit = s.Trim();
-                        }
-                    }
-                }
+                var postsplit = PostSplitString(addr, re, presplit);
                 if (postsplit.Length > 0)
                 {
                     SmtpSettings.Instance.CCEmail = postsplit;
@@ -428,6 +394,30 @@ namespace myseq
             }
 
             textSMTPAddress.Text = SmtpSettings.Instance.SmtpServer;
+        }
+
+        private static string PostSplitString(StringBuilder addr, Regex re, string presplit)
+        {
+            var postsplit = "";
+            const string delim = ",;<>[] ";
+            var delimarray = delim.ToCharArray();
+            foreach (var s in presplit.Split(delimarray))
+            {
+                if (re.IsMatch(s.Trim()))
+                {
+                    if (postsplit.Length > 0)
+                    {
+                        addr.Append(s);
+                        postsplit = addr.ToString();
+                    }
+                    else
+                    {
+                        postsplit = s.Trim();
+                    }
+                }
+            }
+
+            return postsplit;
         }
     }
 }

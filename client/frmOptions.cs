@@ -1,11 +1,6 @@
 using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Media;
-using System.Windows.Forms;
-using myseq.Properties;
-using Structures;
 
 namespace myseq
 
@@ -1930,8 +1925,8 @@ namespace myseq
             // 
             // tabOptions
             // 
-            this.tabOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.tabOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabOptions.Controls.Add(this.tabGeneral);
             this.tabOptions.Controls.Add(this.tabMap);

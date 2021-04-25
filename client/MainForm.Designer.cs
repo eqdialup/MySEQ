@@ -33,21 +33,6 @@ namespace myseq
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            //WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            //WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            //WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            //WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            //WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            //WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            //WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            //WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            //WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            //WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            //WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            //WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            //WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            //WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            //WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.mnuMainMenu = new System.Windows.Forms.MenuStrip();
             this.mnuFileMain = new System.Windows.Forms.ToolStripMenuItem();
@@ -110,7 +95,7 @@ namespace myseq
             this.mnuShowSpawnList = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowSpawnListTimer = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowGroundItemList = new System.Windows.Forms.ToolStripMenuItem();
-            this.thinSpawnlistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.thinSpawnlistmnuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuShowListGridLines = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowListSearchBox = new System.Windows.Forms.ToolStripMenuItem();
@@ -295,6 +280,7 @@ namespace myseq
             this.toolStripCheckLookup4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup4 = new System.Windows.Forms.ToolStripButton();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMainMenu.SuspendLayout();
             this.mnuContext.SuspendLayout();
             this.mnuContextAddFilter.SuspendLayout();
@@ -768,7 +754,7 @@ namespace myseq
             this.mnuShowSpawnList,
             this.mnuShowSpawnListTimer,
             this.mnuShowGroundItemList,
-            this.thinSpawnlistToolStripMenuItem,
+            this.thinSpawnlistmnuItem,
             this.toolStripSeparator7,
             this.mnuShowListGridLines,
             this.mnuShowListSearchBox,
@@ -852,12 +838,12 @@ namespace myseq
             // 
             // thinSpawnlistToolStripMenuItem
             // 
-            this.thinSpawnlistToolStripMenuItem.Checked = global::myseq.Properties.Settings.Default.ThinSpawnList;
-            this.thinSpawnlistToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.thinSpawnlistToolStripMenuItem.Name = "thinSpawnlistToolStripMenuItem";
-            this.thinSpawnlistToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.thinSpawnlistToolStripMenuItem.Text = "Show thin Lists";
-            this.thinSpawnlistToolStripMenuItem.Click += new System.EventHandler(this.ThinSpawnlist_Click);
+            this.thinSpawnlistmnuItem.Checked = global::myseq.Properties.Settings.Default.ThinSpawnList;
+            this.thinSpawnlistmnuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.thinSpawnlistmnuItem.Name = "thinSpawnlistToolStripMenuItem";
+            this.thinSpawnlistmnuItem.Size = new System.Drawing.Size(198, 22);
+            this.thinSpawnlistmnuItem.Text = "Show thin Lists";
+            this.thinSpawnlistmnuItem.Click += new System.EventHandler(this.ThinSpawnlist_Click);
             // 
             // toolStripSeparator7
             // 
@@ -1406,7 +1392,8 @@ namespace myseq
             // mnuHelpMain
             // 
             this.mnuHelpMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuAbout});
+            this.mnuAbout,
+            this.helpToolStripMenuItem});
             this.mnuHelpMain.Name = "mnuHelpMain";
             this.mnuHelpMain.Size = new System.Drawing.Size(44, 20);
             this.mnuHelpMain.Text = "&Help";
@@ -1414,7 +1401,7 @@ namespace myseq
             // mnuAbout
             // 
             this.mnuAbout.Name = "mnuAbout";
-            this.mnuAbout.Size = new System.Drawing.Size(107, 22);
+            this.mnuAbout.Size = new System.Drawing.Size(180, 22);
             this.mnuAbout.Text = "About";
             this.mnuAbout.Click += new System.EventHandler(this.MnuAbout_Click);
             // 
@@ -2467,58 +2454,18 @@ namespace myseq
             this.dockPanel.ActiveAutoHideContent = null;
             this.dockPanel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dockPanel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
             this.dockPanel.Location = new System.Drawing.Point(0, 49);
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.Size = new System.Drawing.Size(1309, 458);
-            //dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
-            //dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
-            //autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
-            //tabGradient1.EndColor = System.Drawing.SystemColors.Control;
-            //tabGradient1.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            //tabGradient1.StartColor = System.Drawing.SystemColors.ControlLightLight;
-            //tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            //autoHideStripSkin1.TabGradient = tabGradient1;
-            //autoHideStripSkin1.TextFont = new System.Drawing.Font("Tahoma", 8.25F);
-            //dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
-            //tabGradient2.EndColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            //tabGradient2.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            //tabGradient2.StartColor = System.Drawing.SystemColors.ControlLight;
-            //tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
-            //dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
-            //dockPanelGradient2.EndColor = System.Drawing.SystemColors.Control;
-            //dockPanelGradient2.StartColor = System.Drawing.SystemColors.Control;
-            //dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
-            //tabGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            //tabGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            //tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
-            //dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
-            //dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            //dockPaneStripSkin1.TextFont = new System.Drawing.Font("Tahoma", 8.25F);
-            //tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            //tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            //tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            //tabGradient4.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
-            //dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
-            //tabGradient5.EndColor = System.Drawing.SystemColors.Control;
-            //tabGradient5.StartColor = System.Drawing.SystemColors.Control;
-            //tabGradient5.TextColor = System.Drawing.SystemColors.ControlText;
-            //dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
-            //dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            //dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            //dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            //tabGradient6.EndColor = System.Drawing.SystemColors.ActiveBorder;
-            //tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            //tabGradient6.StartColor = System.Drawing.SystemColors.ActiveBorder;
-            //tabGradient6.TextColor = System.Drawing.SystemColors.ControlText;
-            //dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
-            //tabGradient7.EndColor = System.Drawing.Color.Transparent;
-            //tabGradient7.StartColor = System.Drawing.Color.Transparent;
-            //tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            //dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
-            //dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
-            //dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
-            //this.dockPanel.Skin = dockPanelSkin1;
             this.dockPanel.TabIndex = 2;
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -2662,7 +2609,7 @@ namespace myseq
         private ToolStripMenuItem mnuShowLayer3;
         private ToolStripMenuItem mnuShowPVP;
         private ToolStripMenuItem mnuShowPVPLevel;
-        private ToolStripMenuItem mnuCollectMobTrails;
+        public ToolStripMenuItem mnuCollectMobTrails;
         private ToolStripMenuItem mnuShowMobTrails;
         private ToolStripMenuItem mnuConColors;
         private ToolStripMenuItem mnuConDefault;
@@ -2761,7 +2708,7 @@ namespace myseq
 
 
 
-        private DockPanel dockPanel;
+        public DockPanel dockPanel;
         private ToolStripButton toolStripResetDepthFilter;
         private ToolStripMenuItem mnuServerSelection;
         private ToolStripMenuItem mnuIPAddress1;
@@ -2831,15 +2778,16 @@ namespace myseq
         private ToolStripMenuItem mnuViewDepthFilterBar;
         private ToolStripMenuItem addMapTextToolStripMenuItem;
 
-        private readonly DeserializeDockContent m_deserializeDockContent;
+        public readonly DeserializeDockContent m_deserializeDockContent;
         private ToolStripMenuItem mnuShowListSearchBox;
         private ToolStripMenuItem mnuSmallTargetInfo;
         private ToolStripMenuItem mnuSmallTargetInfo2;
         private ToolStripSeparator toolStripSeparator19;
-        private ToolStripMenuItem thinSpawnlistToolStripMenuItem;
+        private ToolStripMenuItem thinSpawnlistmnuItem;
         private ToolStripMenuItem mnuAutoConnect;
         public ToolStripComboBox toolStripLevel;
 
         private ToolStripMenuItem toolStripBasecon;
+        private ToolStripMenuItem helpToolStripMenuItem;
     }
 }
