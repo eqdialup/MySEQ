@@ -69,10 +69,10 @@ namespace myseq
 
             fileop.MakeFilterExist(filterFile);
 
-            ReadAlertLines(zoneName, filterFile);
+            await ReadAlertLines(zoneName, filterFile);
         }
 
-        private void ReadAlertLines(string zoneName, string filterFile)
+        private async Task ReadAlertLines(string zoneName, string filterFile)
         {
             var type = 0;
             foreach (var line in File.ReadAllLines(filterFile))

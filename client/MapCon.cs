@@ -419,7 +419,7 @@ namespace myseq
 
                     var sd = MouseDistance(mousex, mousey);
 
-                    if (Settings.Default.ColorRangeCircle && (sd > lowerRadius) && (sd < upperRadius))
+                    if (Settings.Default.AlertInsideRangeCircle && (sd > lowerRadius) && (sd < upperRadius))
                     {
                         // changing range cirlce size
 
@@ -887,6 +887,17 @@ namespace myseq
             bkgBuffer.Graphics.DrawLine(pen, startpos1, endpos1);
             bkgBuffer.Graphics.DrawLine(pen, startpos2, endpos2);
         }
+
+        private void DrawBigX(Pen pen, PointF drawPoint, float offset)
+            {
+            PointF startpos1 = new PointF(drawPoint.X - offset, drawPoint.Y - offset);
+            PointF endpos1 = new PointF(drawPoint.X + offset, drawPoint.Y + offset);
+            PointF startpos2 = new PointF(drawPoint.X - offset, drawPoint.Y + offset);
+            PointF endpos2 = new PointF(drawPoint.X + offset, drawPoint.Y - offset);
+
+            bkgBuffer.Graphics.DrawLine(pen, startpos1, endpos1);
+            bkgBuffer.Graphics.DrawLine(pen, startpos2, endpos2);
+            }
         private void DrawLine(Pen pen, float x1, float y1, float x2, float y2)
         {
             try
@@ -1591,7 +1602,7 @@ namespace myseq
                 var ShowRings = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.None;
 
                 var DrawDirection = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None;
-                var colorRangeCircle = Settings.Default.ColorRangeCircle;
+                var colorRangeCircle = Settings.Default.AlertInsideRangeCircle;
                 if ((eq.selectedID == 99999) && (eq.SpawnX == -1))
                 {
                     lblMobInfo.Text = MobInfo(null, true, true);
@@ -2427,7 +2438,7 @@ namespace myseq
 
         private void MakeRangeCircle(float gamerx, float gamery, float rCircleRadius)
         {
-            if (Settings.Default.ColorRangeCircle)
+            if (Settings.Default.AlertInsideRangeCircle)
             {
                 HatchStyle hs = (HatchStyle)Enum.Parse(typeof(HatchStyle), Settings.Default.HatchIndex, true);
 
@@ -2596,7 +2607,7 @@ namespace myseq
                         Pen yellowPen = new Pen(new SolidBrush(Color.Yellow));
                         gi.Filtered = false;
                         PointF giPoint = new PointF(x, y);
-                        DrawCross(yellowPen, giPoint, PlusSzOZ);
+                        DrawBigX(yellowPen, giPoint, PlusSzOZ);
                         //                        DrawLine(yellowPen, x - PlusSzOZ, y - PlusSzOZ, x + PlusSzOZ, y + PlusSzOZ);
 
                         //                        DrawLine(yellowPen, x - PlusSzOZ, y + PlusSzOZ, x + PlusSzOZ, y - PlusSzOZ);
@@ -2900,7 +2911,7 @@ namespace myseq
                 if (MouseDistance(mousex, mousey) < RangeCircleRadius)
                 {
                     // if double click in range circle, turn it on/off
-                    Settings.Default.ColorRangeCircle = !Settings.Default.ColorRangeCircle;
+                    Settings.Default.AlertInsideRangeCircle = !Settings.Default.AlertInsideRangeCircle;
                 }
             }
         }

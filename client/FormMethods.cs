@@ -162,7 +162,7 @@ namespace myseq
 
             options.picPlayerBorder.BackColor = Settings.Default.PCBorderColor;
 
-            options.chkColorRangeCircle.Checked = Settings.Default.ColorRangeCircle;
+            options.chkColorRangeCircle.Checked = Settings.Default.AlertInsideRangeCircle;
 
             options.cmbAlertSound.SelectedItem = Settings.Default.AlertSound;
 
@@ -379,5 +379,6 @@ namespace myseq
                 f1.curZone = filename.ToUpper();
             }
         }
+
     }
 }

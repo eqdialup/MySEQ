@@ -21,7 +21,6 @@ namespace myseq
         private DateTime LastSaveTime = DateTime.Now;
 
         public void SetComponents(EQMap map)
-
         {
             // Reset the Mob Timers for the New Zone
             map.EnterMap += new EQMap.EnterMapHandler(EnterMap);

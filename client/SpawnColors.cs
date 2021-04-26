@@ -17,15 +17,13 @@ namespace Structures
 
         public SolidBrush[] ConColors = new SolidBrush[500];
 
-        public void FillConColors(Spawninfo GamerInfo)//, SolidBrush[] conColors
+        public void FillConColors(Spawninfo GamerInfo)
         {
             int level = GamerInfo.Level;
-//            f1.toolStripLevel.Text = "Auto";
 
             if (Settings.Default.LevelOverride != -1)
             {
                 level = Settings.Default.LevelOverride;
-//                f1.toolStripLevel.Text = level.ToString();
             }
 
             GreenRange = -1 * level;

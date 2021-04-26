@@ -78,7 +78,6 @@ namespace myseq
         public string[] Classes { get; private set; }
         public string[] Races { get; private set; }
         public string GConBaseName { get; set; } = "";
-        //        public SolidBrush[] ConColors { get; set; } = new SolidBrush[500];
 
         private const int ditchGone = 2;
 
@@ -293,19 +292,6 @@ namespace myseq
 
             return null;
         }
-
-        //public GroundItem FindGroundItemNoFilter(float x, float y, float delta)
-        //{
-        //    foreach (GroundItem gi in itemcollection)
-        //    {
-        //        if (gi.X < x + delta && gi.X > x - delta && gi.Y < y + delta && gi.Y > y - delta)
-        //        {
-        //            return gi;
-        //        }
-        //    }
-
-        //    return null;
-        //}
 
         public Spawninfo GetSelectedMob() => (Spawninfo)mobsHashTable[selectedID];
 
@@ -1193,8 +1179,6 @@ namespace myseq
             {
                 NewSpawns.Add(item1);
             }
-
-
         }
 
         private void SetWieldedNames(Spawninfo si)

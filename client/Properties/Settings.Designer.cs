@@ -686,12 +686,12 @@ namespace myseq.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ColorRangeCircle {
+        public bool AlertInsideRangeCircle {
             get {
-                return ((bool)(this["ColorRangeCircle"]));
+                return ((bool)(this["AlertInsideRangeCircle"]));
             }
             set {
-                this["ColorRangeCircle"] = value;
+                this["AlertInsideRangeCircle"] = value;
             }
         }
         

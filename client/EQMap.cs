@@ -13,19 +13,9 @@ namespace myseq
     public class EQMap
     {
         private MapCon mapCon;
-        public MobTrails trails = new MobTrails();
-
-        private ListViewPanel SpawnList;
-
-        private ListViewPanel SpawnTimerList;
-
-        private ListViewPanel GroundItemList;
-
-        private bool initialized;
-
-        private MapPane mapPane;
-
         public EQData eq;
+
+        public MobTrails trails = new MobTrails();
 
         private static readonly List<MapLine> mapLines = new List<MapLine>();
         private static readonly List<MapText> mapTexts = new List<MapText>();
@@ -70,79 +60,27 @@ namespace myseq
             EnterMap?.Invoke(this);
         }
 
-        public void SetComponents(MapCon mapCon, ListViewPanel SpawnList, ListViewPanel SpawnTimerList, ListViewPanel GroundItemList, EQData eq)
-
+        public void SetComponents(MapCon mapCon, EQData eq)
         {
             this.mapCon = mapCon;
-
-            this.SpawnList = SpawnList;
-
-            this.SpawnTimerList = SpawnTimerList;
-
-            this.GroundItemList = GroundItemList;
-
             this.eq = eq;
-
-            initialized = true;
         }
 
-        public void ClearMapStructures()
+        public void AddMapText(MapText work)
+        {
+            Texts.Add(work);
+        }
+
+        public void DeleteMapText(MapText work)
+        {
+            Texts.Remove(work);
+        }
+
+        internal void ClearMapStructures()
         {
             Lines.Clear();
             Texts.Clear();
             eq.CalcExtents(Lines);
-        }
-        public void ClearMap()
-        {
-            if (initialized)
-            {
-                eq.Clear();
-                trails.Clear();
-                SpawnList.listView.Items.Clear();
-                SpawnTimerList.listView.Items.Clear();
-                GroundItemList.listView.Items.Clear();
-
-                SpawnList.listView.BeginUpdate();
-                SpawnTimerList.listView.BeginUpdate();
-                GroundItemList.listView.BeginUpdate();
-
-                if (eq.mobsTimers.mobsTimer2.Count > 0)
-                {
-                    foreach (Spawntimer st in eq.mobsTimers.mobsTimer2.Values)
-                    {
-                        st.itmSpawnTimerList = null;
-                    }
-                }
-
-                SpawnList.listView.EndUpdate();
-                SpawnTimerList.listView.EndUpdate();
-                GroundItemList.listView.EndUpdate();
-
-                eq.mobsTimers.ResetTimers();
-            }
-        }
-        public bool LoadLoYMap(string filename, bool resetmap)
-        {
-            if (resetmap)
-            {
-                eq.mobsTimers.ResetTimers();
-                OnExitMap();
-                ClearMap();
-                ClearMapStructures();
-            }
-
-            var rc = LoadLoYMapInternal(filename);
-
-            if (rc)
-            {
-                OptimizeMap();
-
-                eq.CalculateMapLinePens(Lines, Texts); // pre-calculate all pen colors used for map drawing.
-
-                OnEnterMap();
-            }
-
-            return rc;
         }
 
         public bool Loadmap(string filename)
@@ -174,7 +112,31 @@ namespace myseq
             }
         }
 
-        public bool LoadLoYMapInternal(string filename) //ingame EQ format
+        private bool LoadLoYMap(string filename, bool resetmap)
+        {
+            if (resetmap)
+            {
+                eq.mobsTimers.ResetTimers();
+                OnExitMap();
+                trails.Clear();
+                ClearMapStructures();
+            }
+
+            var rc = LoadLoYMapInternal(filename);
+
+            if (rc)
+            {
+                OptimizeMap();
+
+                eq.CalculateMapLinePens(Lines, Texts); // pre-calculate all pen colors used for map drawing.
+
+                OnEnterMap();
+            }
+
+            return rc;
+        }
+
+        internal bool LoadLoYMapInternal(string filename) //ingame EQ format
         {
             var numtexts = 0;
             var numlines = 0;
@@ -205,22 +167,12 @@ namespace myseq
 
             if (numtexts > 0 || Lines.Count > 0)
             {
-                eq.shortname = Path.GetFileNameWithoutExtension(filename);
-                if (eq.shortname.IndexOf("_") > 0)
-                {
-                    eq.shortname = eq.shortname.Substring(0, eq.shortname.Length - 2);
-                }
-
-                eq.longname = eq.shortname;
-
-                eq.CalcExtents(Lines);
-
                 return true;
             }
             return false;
         }
 
-        private void ParseLP(string line, ref int numtexts, ref int numlines)
+        internal void ParseLP(string line, ref int numtexts, ref int numlines)
         {
             if (line.StartsWith("L"))
             {
@@ -236,37 +188,17 @@ namespace myseq
             }
         }
 
-        public void AddMapText(MapText work)
-        {
-            Texts.Add(work);
-        }
-
-        public void DeleteMapText(MapText work)
-        {
-            Texts.Remove(work);
-        }
-
-        public void LoadDummyMap(string mapname)
+        public void LoadDummyMap()
         {
             OnExitMap();
-
-            ClearMap();
-
+            trails.Clear();
             ClearMapStructures();
-
-            eq.shortname = mapname;
-
-            if (mapPane != null)
-            {
-                mapPane.scale.Value = 100M;
-            }
-
             OnEnterMap();
         }
 
         #region Optimize Map
 
-        public void OptimizeMap()
+        internal void OptimizeMap()
         {
             if (Lines != null)
             {
@@ -280,7 +212,7 @@ namespace myseq
             }
         }
 
-        private void FindvoidLines(List<MapLine> linesToRemove, MapLine lastline)
+        internal void FindvoidLines(List<MapLine> linesToRemove, MapLine lastline)
         {
             float prod;
             foreach (MapLine line in Lines)
@@ -400,9 +332,9 @@ namespace myseq
             }
         }
 
-        private static bool PointsAreEqual(ref MapPoint thispoint, ref MapPoint lastpoint, Pen thisColor, Pen lastColor) => lastpoint.x == thispoint.x && lastpoint.y == thispoint.y && lastpoint.z == thispoint.z && thisColor.Color == lastColor.Color;
+        internal static bool PointsAreEqual(ref MapPoint thispoint, ref MapPoint lastpoint, Pen thisColor, Pen lastColor) => lastpoint.x == thispoint.x && lastpoint.y == thispoint.y && lastpoint.z == thispoint.z && thisColor.Color == lastColor.Color;
 
-        private static MapPoint GetMapPoint(MapLine thisline, int p)
+        internal static MapPoint GetMapPoint(MapLine thisline, int p)
         {
             MapPoint tmp = (MapPoint)thisline.aPoints[p];
             return new MapPoint
@@ -413,7 +345,7 @@ namespace myseq
             };
         }
 
-        private void NormalizeMaxMinZ()
+        internal void NormalizeMaxMinZ()
         {
             foreach (MapLine line in Lines)
             {
@@ -433,7 +365,7 @@ namespace myseq
             }
         }
 
-        private void RemoveLines(List<MapLine> linesToRemove)
+        internal void RemoveLines(List<MapLine> linesToRemove)
         {
             foreach (MapLine lineToRemove in linesToRemove)
             {
@@ -441,7 +373,7 @@ namespace myseq
             }
         }
 
-        private void OptimizeText()
+        internal void OptimizeText()
         {
             var index = 0;
             foreach (MapText tex1 in Texts)
@@ -459,7 +391,7 @@ namespace myseq
             }
         }
 
-        private float CalcDotProduct(MapPoint lastprev, MapPoint thispoint, MapPoint thisnext)
+        internal float CalcDotProduct(MapPoint lastprev, MapPoint thispoint, MapPoint thisnext)
         {
             float x1 = lastprev.x;
             float y1 = lastprev.y;
