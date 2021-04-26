@@ -4,6 +4,7 @@ using myseq.Properties;
 
 namespace Structures
 {
+
     public class SpawnColors
     {
         public int GreenRange { get; set; } = -4;
@@ -14,17 +15,17 @@ namespace Structures
 
         public int YellowRange { get; set; } = 3;
 
-        public SolidBrush[] ConColors { get; set; } = new SolidBrush[500];
+        public SolidBrush[] ConColors = new SolidBrush[500];
 
-        public void FillConColors(MainForm f1, Spawninfo GamerInfo)//, SolidBrush[] conColors
+        public void FillConColors(Spawninfo GamerInfo)//, SolidBrush[] conColors
         {
             int level = GamerInfo.Level;
-            f1.toolStripLevel.Text = "Auto";
+//            f1.toolStripLevel.Text = "Auto";
 
             if (Settings.Default.LevelOverride != -1)
             {
                 level = Settings.Default.LevelOverride;
-                f1.toolStripLevel.Text = level.ToString();
+//                f1.toolStripLevel.Text = level.ToString();
             }
 
             GreenRange = -1 * level;

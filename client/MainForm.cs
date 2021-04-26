@@ -38,7 +38,7 @@ namespace myseq
         private readonly EQCommunications comm;
         public readonly EQMap map;
 
-        private readonly SpawnColors GetConColors = new SpawnColors();
+        private readonly SpawnColors spawnColors = new SpawnColors();
 
         public DrawOptions DrawOpts = DrawOptions.DrawNormal;
 
@@ -53,7 +53,7 @@ namespace myseq
         private bool bFilter2;
         private bool bFilter3;
         private bool bFilter4;
-        private FormMethods formMethod = new FormMethods();
+        private readonly FormMethods formMethod = new FormMethods();
 
         public MainForm()
         {
@@ -82,7 +82,7 @@ namespace myseq
             mapPane.CloseButton = false;
             mapPane.TabText = "map_pane";
 
-            mapCon.SetComponents(this, mapPane, eq, map, GetConColors);
+            mapCon.SetComponents(this, mapPane, eq, map);
             mark.SetComponents(eq);
             mapPane.SetComponents(this);
 
@@ -2054,7 +2054,7 @@ namespace myseq
             Settings.Default.SoDCon = true;
             Settings.Default.SoFCon = false;
             Settings.Default.DefaultCon = false;
-            GetConColors.FillConColors(this, eq.gamerInfo);// eq.ConColors
+            spawnColors.FillConColors(eq.gamerInfo);// eq.ConColors
             eq.UpdateMobListColors();
         }
 
@@ -2066,7 +2066,7 @@ namespace myseq
             Settings.Default.SoDCon = false;
             Settings.Default.SoFCon = false;
             Settings.Default.DefaultCon = true;
-            GetConColors.FillConColors(this, eq.gamerInfo); //, eq.ConColors);
+            spawnColors.FillConColors(eq.gamerInfo); //, eq.ConColors);
             eq.UpdateMobListColors();
         }
 
@@ -2078,7 +2078,7 @@ namespace myseq
             Settings.Default.SoDCon = false;
             Settings.Default.SoFCon = true;
             Settings.Default.DefaultCon = false;
-            GetConColors.FillConColors(this, eq.gamerInfo);//, eq.ConColors
+            spawnColors.FillConColors(eq.gamerInfo);//, eq.ConColors
             eq.UpdateMobListColors();
         }
 
@@ -2977,9 +2977,11 @@ namespace myseq
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HelpForm help = new HelpForm();
-            help.StartPosition = FormStartPosition.CenterParent;
-            help.ShowDialog();
+            using (HelpForm help = new HelpForm())
+            {
+                help.StartPosition = FormStartPosition.CenterParent;
+                help.ShowDialog();
+            }
         }
     }
 }

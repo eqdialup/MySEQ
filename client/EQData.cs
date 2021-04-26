@@ -15,7 +15,7 @@ namespace myseq
     {
         private static readonly Spawninfo sPAWNINFO = new Spawninfo();
 
-        private readonly SpawnColors GetConColors = new SpawnColors();
+        public readonly SpawnColors spawnColor = new SpawnColors();
         private readonly FileOps fileop = new FileOps();
 
         // player details
@@ -824,6 +824,11 @@ namespace myseq
             mobsTimers.Spawn(si);
 
             IsSpawnInFilterLists(si, f1);
+            try
+            {
+                mobsHashTable.Add(si.SpawnID, si);
+            }
+            catch (Exception ex) { LogLib.WriteLine($"Error adding {si.Name} to mobs hashtable: ", ex); }
         }
 
         private static void Tainted_Egg(Spawninfo si)
@@ -1072,7 +1077,7 @@ namespace myseq
 
         private void SetListColors(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
         {
-            mob.listitem.ForeColor = GetConColors.ConColors[si.Level].Color;
+            mob.listitem.ForeColor = spawnColor.ConColors[si.Level].Color;
 
             if (mob.listitem.ForeColor == Color.Maroon)
             {
@@ -1184,15 +1189,12 @@ namespace myseq
 
             ListViewItem item1 = AddDetailsToList(si, f1.SpawnList, mobnameWithInfo);
             PlayAudioMatch(si, mobnameWithInfo);
-
-            try { mobsHashTable.Add(si.SpawnID, si); }
-            catch (Exception ex) { LogLib.WriteLine($"Error adding {si.Name} to mobs hashtable: ", ex); }
-
-            // Add it to the spawn list if it's not supposed to be hidden
             if (!si.hidden)
             {
                 NewSpawns.Add(item1);
             }
+
+
         }
 
         private void SetWieldedNames(Spawninfo si)
@@ -1258,6 +1260,18 @@ namespace myseq
 
             item1.SubItems.Add(RegexHelper.FixMobName(si.Name));
 
+            SetSpawnListColors(si, SpawnList, item1);
+
+            si.gone = 0;
+
+            si.refresh = rnd.Next(0, 10);
+
+            si.listitem = item1;
+            return item1;
+        }
+
+        private void SetSpawnListColors(Spawninfo si, ListViewPanel SpawnList, ListViewItem item1)
+        {
             if (si.Type == 2 || si.Type == 3 || si.isLDONObject)
             {
                 item1.ForeColor = Color.Gray;
@@ -1268,7 +1282,7 @@ namespace myseq
             }
             else
             {
-                item1.ForeColor = GetConColors.ConColors[si.Level].Color;
+                item1.ForeColor = spawnColor.ConColors[si.Level].Color;
 
                 if (item1.ForeColor == Color.Maroon)
                 {
@@ -1277,25 +1291,23 @@ namespace myseq
 
                 // Change the colors to be more visible on white if the background is white
 
-                if (SpawnList.listView.BackColor == Color.White)
+                ImproveVisibiltyInList(SpawnList, item1);
+            }
+        }
+
+        private static void ImproveVisibiltyInList(ListViewPanel SpawnList, ListViewItem item1)
+        {
+            if (SpawnList.listView.BackColor == Color.White)
+            {
+                if (item1.ForeColor == Color.White)
                 {
-                    if (item1.ForeColor == Color.White)
-                    {
-                        item1.ForeColor = Color.Black;
-                    }
-                    else if (item1.ForeColor == Color.Yellow)
-                    {
-                        item1.ForeColor = Color.Goldenrod;
-                    }
+                    item1.ForeColor = Color.Black;
+                }
+                else if (item1.ForeColor == Color.Yellow)
+                {
+                    item1.ForeColor = Color.Goldenrod;
                 }
             }
-
-            si.gone = 0;
-
-            si.refresh = rnd.Next(0, 10);
-
-            si.listitem = item1;
-            return item1;
         }
 
         private void NameChngOrDead(Spawninfo si, Spawninfo mob)
@@ -1359,7 +1371,7 @@ namespace myseq
                         }
                         else
                         {
-                            si.listitem.ForeColor = GetConColors.ConColors[si.Level].Color;
+                            si.listitem.ForeColor = spawnColor.ConColors[si.Level].Color;
 
                             if (si.listitem.ForeColor == Color.Maroon)
                             {
@@ -1609,7 +1621,7 @@ namespace myseq
                         Settings.Default.LevelOverride = gconLevel;
                     }
                     gamerInfo.Level = si.Level;
-                    GetConColors.FillConColors(f1, gamerInfo);//, ConColors
+                    spawnColor.FillConColors(gamerInfo);//, ConColors
 
                     // update mob list con colors
 
@@ -1618,7 +1630,7 @@ namespace myseq
                 if (gLastconLevel != gconLevel)
                 {
                     gLastconLevel = gconLevel;
-                    GetConColors.FillConColors(f1, gamerInfo);//, ConColors
+                    spawnColor.FillConColors(gamerInfo);//, ConColors
                     UpdateMobListColors();
                 }
             }

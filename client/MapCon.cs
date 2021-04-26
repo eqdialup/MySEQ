@@ -115,7 +115,6 @@ namespace myseq
         private PointF selectedPoint = new PointF(-1, -1);// [42!] Mark an arbitrary spot on the map
         // Don't set this directly, but use SetSelectedPoint/ClearSelectedPoint
 
-
         private string curTarget = "";
 
         private BufferedGraphicsContext gfxManager;
@@ -171,12 +170,12 @@ namespace myseq
             gfxManager = BufferedGraphicsManager.Current;
         }
 
-        public void SetComponents(MainForm f1, MapPane mapPane, EQData eq, EQMap map, SpawnColors con)
+        public void SetComponents(MainForm f1, MapPane mapPane, EQData eq, EQMap map)
         {
             this.f1 = f1;
             this.mapPane = mapPane;
             this.eq = eq;
-            this.con = con;
+            con = eq.spawnColor;
             this.map = map;
             map.EnterMap += new EQMap.EnterMapHandler(MapChanged);
             Invalidate();
@@ -337,7 +336,6 @@ namespace myseq
             m_dragging = false;
             m_rangechange = false;
             m_dragStartX = m_dragStartY = 0;
-            //panOffsetx = panOffset.Y = 0;
             m_panOffsetX = m_panOffsetY = 0;
             ClearSelectedPoint();
 
@@ -918,8 +916,6 @@ namespace myseq
 
         private void DrawEllipse(Pen pen, float x1, float y1, float width, float height)
         {
-            //if (x1 != x1 || y1 != y1 || width != width || height != height) return;
-
             try
             {
                 bkgBuffer.Graphics.DrawEllipse(pen, x1, y1, width, height);
@@ -1617,8 +1613,6 @@ namespace myseq
                     }
                     else if (colorRangeCircle && Settings.Default.RangeCircle > 0)
                     {
-                        // do checks for proximity alert
-
                         ProxAlert(pX, pY, pZ, sp);
                     }
                     else
@@ -1630,40 +1624,32 @@ namespace myseq
 
                     if (sp.SpawnID != eq.gamerInfo.SpawnID && sp.flags == 0 && sp.Name.Length > 0)
                     {
-                        // Draw Spawn if not Hidden
-
-                        if (!sp.hidden)
+                        if (curTarget == sp.Name)
                         {
-                            // Draw Spawn if the Spawn is within the Players Depth Filter
-                            // Highlight Current Target
-                            if (curTarget == sp.Name)
-                            {
-                                FillRectangle(WhiteBrush, x - PlusSzOZ - 1, y - PlusSzOZ - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
-                            }
-
-                            // Draw Invisible Mob - these are EQ trigger events
-                            if (sp.isEventController)
-                            {
-                                DrawSpecialMobs(pZ, sp, x, y, Color.Purple);
-                            }
-                            else if (sp.isLDONObject)
-                            {
-                                DrawSpecialMobs(pZ, sp, x, y, Color.Gray);
-                            }
-                            else if (sp.Type == 0)
-                            {
-                                // Draw Other Players
-
-                                DrawOtherPlayers(DrawOpts, pZ, sp, x, y);
-                            }
-                            else if (sp.Type == 1 || sp.Type == 4)
-                            {
-                                DrawNPCs(pZ, NPCDepthFilter, DrawDirection, sp, x, y);
-                            }
-                            DrawRings(x, y, sp);
-                            DrawFlashes(pZ, x, y, sp);
-                            MarkSpecial(pZ, x, y, ShowRings, sp);
+                            FillRectangle(WhiteBrush, x - PlusSzOZ - 1, y - PlusSzOZ - 1, SpawnPlusSize + 2, SpawnPlusSize + 2);
                         }
+
+                        if (sp.isEventController)
+                        {
+                            DrawSpecialMobs(pZ, sp, x, y, Color.Purple);
+                        }
+                        else if (sp.isLDONObject)
+                        {
+                            DrawSpecialMobs(pZ, sp, x, y, Color.Gray);
+                        }
+                        else if (sp.Type == 0)
+                        {
+                            // Draw Other Players
+
+                            DrawOtherPlayers(DrawOpts, pZ, sp, x, y);
+                        }
+                        else if (sp.Type == 1 || sp.Type == 4)
+                        {
+                            DrawNPCs(pZ, NPCDepthFilter, DrawDirection, sp, x, y);
+                        }
+                        DrawRings(x, y, sp);
+                        DrawFlashes(pZ, x, y, sp);
+                        MarkSpecial(pZ, x, y, ShowRings, sp);
                     }
                 }
 
@@ -1696,7 +1682,7 @@ namespace myseq
                 }
 
                 // Draw NPCs
-                if ((sp.isPet && !showPVP) || sp.isFamiliar || sp.isMount)
+                if ((sp.isPet && !Settings.Default.ShowPVP) || sp.isFamiliar || sp.isMount)
                 {
                     FillEllipse(GrayBrush, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
                 }
@@ -1722,7 +1708,7 @@ namespace myseq
                     {
                         if (flash)
                         {
-                            DrawEllipse(purplePen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
+                            DrawEllipse(new Pen(new SolidBrush(Color.White)), x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
                         }
                     }
                     else
@@ -1751,7 +1737,7 @@ namespace myseq
 
                     // Draw Other Players
 
-                    if (showPVP)
+                    if (Settings.Default.ShowPVP)
                     {
                         if ((Math.Abs(eq.gamerInfo.Level - sp.Level) <= Settings.Default.PVPLevels) || (Settings.Default.PVPLevels == -1))
                         {
@@ -1799,7 +1785,7 @@ namespace myseq
 
                     if (flash)
                     {
-                        DrawRectangle(purplePen, x - PlusSzOZ - 0.5f, y - PlusSzOZ - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
+                        DrawRectangle(new Pen(new SolidBrush(Color.White)), x - PlusSzOZ - 0.5f, y - PlusSzOZ - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
                     }
                 }
                 else
@@ -1890,11 +1876,8 @@ namespace myseq
                         {
                             if (!NPCCorpseDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos)))
                             {
-
                                 Pen cyanPen = new Pen(new SolidBrush(Color.Cyan));
                                 DrawCross(cyanPen, corpsePoint, drawOffset);
-                                //                                DrawLine(new Pen(new SolidBrush(Color.Cyan)), x - drawOffset, y, x + drawOffset, y);
-                                //                                DrawLine(new Pen(new SolidBrush(Color.Cyan)), x, y - drawOffset, x, y + drawOffset);
 
                                 if (Settings.Default.ShowNPCCorpseNames && (sp.Name.Length > 0))
                                 {
@@ -1994,7 +1977,6 @@ namespace myseq
                             {
                                 sp.proxAlert = true;
                                 FormMethods.SwitchOnSoundSettings();
-                                //                                PlayAlertSound();
                             }
                         }
                     }
@@ -2026,56 +2008,26 @@ namespace myseq
             }
         }
 
-        //public void PlayAlertSound()
-        //{
-        //    if (Settings.Default.AlertSound == "Asterisk")
-        //    {
-        //        SystemSounds.Asterisk.Play();
-        //    }
-        //    else if (Settings.Default.AlertSound == "Beep")
-        //    {
-        //        SystemSounds.Beep.Play();
-        //    }
-        //    else if (Settings.Default.AlertSound == "Exclamation")
-        //    {
-        //        SystemSounds.Exclamation.Play();
-        //    }
-        //    else if (Settings.Default.AlertSound == "Hand")
-        //    {
-        //        SystemSounds.Hand.Play();
-        //    }
-        //    else if (Settings.Default.AlertSound == "Question")
-        //    {
-        //        SystemSounds.Question.Play();
-        //    }
-        //}
-
         private void MarkSpecial(float pZ, float x, float y, bool ShowRings, Spawninfo sp)
         {
             if (ShowRings && (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos))))
             {
                 Pen WhitePen = new Pen(new SolidBrush(Color.White));
-                // Draw Ring around Bankers
 
-                if (sp.Class == 40)
+                if (sp.Class == 40)// Draw Ring around Bankers
                 {
                     DrawEllipse(WhitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
                     DrawEllipse(new Pen(new SolidBrush(Color.Green)), x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
                 }
-
-                // Draw Ring around Guild Master
-
-                if (sp.Class > 19 && sp.Class < 35)
+                if (sp.Class > 19 && sp.Class < 35)                // Draw Ring around Guild Master
                 {
                     DrawEllipse(WhitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
                     DrawEllipse(new Pen(new SolidBrush(Color.Red)), x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
                 }
 
-                // Draw Ring around Shopkeepers
-
-                if (sp.Class == 41)
+                if (sp.Class == 41)                // Draw Ring around Shopkeepers
                 {
                     DrawEllipse(WhitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
@@ -2094,32 +2046,34 @@ namespace myseq
                 var below = sp.Z > pZ - filterneg;
 
                 // Draw Ring around Hunted Mobs
-                var notdepthfiltered = !NPCDepthFilter || (below && above);
 
-                if ((sp.isHunt || sp.proxAlert) && notdepthfiltered)
+                if (!NPCDepthFilter || (below && above))
                 {
-                    DrawEllipse(new Pen(new SolidBrush(Color.LimeGreen), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
-                }
+                    if (sp.isHunt || sp.proxAlert)
+                    {
+                        DrawEllipse(new Pen(new SolidBrush(Color.LimeGreen), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                    }
 
-                // Draw Ring around Caution Mobs
+                    // Draw Ring around Caution Mobs
 
-                if (sp.isCaution && notdepthfiltered)
-                {
-                    DrawEllipse(new Pen(new SolidBrush(Color.Yellow), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
-                }
+                    if (sp.isCaution)
+                    {
+                        DrawEllipse(new Pen(new SolidBrush(Color.Yellow), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                    }
 
-                // Draw Ring around Danger Mobs
+                    // Draw Ring around Danger Mobs
 
-                if (sp.isDanger && notdepthfiltered)
-                {
-                    DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
-                }
+                    if (sp.isDanger)
+                    {
+                        DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                    }
 
-                // Draw Ring around Rare Mobs
+                    // Draw Ring around Rare Mobs
 
-                if (sp.isAlert && notdepthfiltered)
-                {
-                    DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                    if (sp.isAlert)
+                    {
+                        DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                    }
                 }
             }
         }
@@ -2473,11 +2427,15 @@ namespace myseq
 
         private void MakeRangeCircle(float gamerx, float gamery, float rCircleRadius)
         {
-            HatchStyle hs = (HatchStyle)Enum.Parse(typeof(HatchStyle), Settings.Default.HatchIndex, true);
+            if (Settings.Default.ColorRangeCircle)
+            {
+                HatchStyle hs = (HatchStyle)Enum.Parse(typeof(HatchStyle), Settings.Default.HatchIndex, true);
 
-            HatchBrush hatchBrush = new HatchBrush(hs, Settings.Default.RangeCircleColor, Color.Transparent);
+                HatchBrush hatchBrush = new HatchBrush(hs, Settings.Default.RangeCircleColor, Color.Transparent);
 
-            FillEllipse(hatchBrush, gamerx - rCircleRadius, gamery - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
+                FillEllipse(hatchBrush, gamerx - rCircleRadius, gamery - rCircleRadius, rCircleRadius * 2, rCircleRadius * 2);
+            }
+
         }
 
         #endregion DrawGamer
@@ -2548,8 +2506,6 @@ namespace myseq
                 catch (Exception ex) { LogLib.WriteLine("Error in DrawSpawnTimers(): ", ex); }
             }
         }
-
-
 
         private static bool CheckDepthFilter(float minZ, float maxZ, Spawntimer st, bool canDraw)
         {
@@ -2861,8 +2817,6 @@ namespace myseq
 
             ReAdjust();
         }
-
-        private float AdjustFactorByRatio() => 1 / m_ratio;
 
         private void GetTextSize(MapText t)
         {

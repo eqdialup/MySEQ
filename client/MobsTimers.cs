@@ -109,10 +109,7 @@ namespace myseq
             FileOps.DeleteFile(timerfile);
         }
 
-
-
         // Add a new spawn, or do a re-spawn
-
         public void Spawn(Spawninfo si)
         {
             try
