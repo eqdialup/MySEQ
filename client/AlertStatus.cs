@@ -5,27 +5,15 @@ using Structures;
 
 namespace myseq
 {
-    public interface IAlertStatus
-    {
-        void AssignAlertStatus(Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo);
-        void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname);
-        void LoadSpawnInfo();
-        void PlayAudioMatch(Spawninfo si, string matchmobname);
-    }
-
-    public class AlertStatus : IAlertStatus
+    public class AlertStatus
     {
         private bool AffixStars = true;
-
-        private string AlertPrefix = "";
-
-        private string CautionPrefix = "";
-
         private bool CorpseAlerts = true;
 
-        private string DangerPrefix = "";
-
         private string HuntPrefix = "";
+        private string AlertPrefix = "";
+        private string DangerPrefix = "";
+        private string CautionPrefix = "";
 
         private bool MatchFullTextA;
 
@@ -36,7 +24,6 @@ namespace myseq
         private bool MatchFullTextH;
 
         private bool PrefixStars = true;
-        private readonly Filters filters = new Filters();
 
         private static void AudioMatch(string mobname, string TalkDescr, bool TalkOnMatch, bool PlayOnMatch, bool BeepOnMatch, string AudioFile)
         {
@@ -69,7 +56,7 @@ namespace myseq
 
                 if (MatchFullText)
                 {
-                    if (string.Compare(mobname, str, true) == 0)
+                    if (string.Compare("name:"+mobname, str, true) == 0)
                     {
                         matched = true;
                     }
@@ -104,7 +91,7 @@ namespace myseq
             return mname;
         }
 
-        public void AssignAlertStatus(Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo)
+        public void AssignAlertStatus(Filters filters, Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo)
         {
             if ((!si.isCorpse || CorpseAlerts) && !alert)
             {
@@ -160,45 +147,45 @@ namespace myseq
             // [hunt]
             if (FindMatches(filters.Hunt, itemname, MatchFullTextH))
             {
-                gi.isHunt = true;
+                gi.IsHunt = true;
             }
 
             if (FindMatches(filters.GlobalHunt, itemname, MatchFullTextH))
             {
-                gi.isHunt = true;
+                gi.IsHunt = true;
             }
 
             // [caution]
             if (FindMatches(filters.Caution, itemname, MatchFullTextC))
             {
-                gi.isCaution = true;
+                gi.IsCaution = true;
             }
 
             if (FindMatches(filters.GlobalCaution, itemname, MatchFullTextC))
             {
-                gi.isCaution = true;
+                gi.IsCaution = true;
             }
 
             // [danger]
             if (FindMatches(filters.Danger, itemname, MatchFullTextD))
             {
-                gi.isDanger = true;
+                gi.IsDanger = true;
             }
 
             if (FindMatches(filters.GlobalDanger, itemname, MatchFullTextD))
             {
-                gi.isDanger = true;
+                gi.IsDanger = true;
             }
 
             // [rare]
             if (FindMatches(filters.Alert, itemname, MatchFullTextA))
             {
-                gi.isAlert = true;
+                gi.IsAlert = true;
             }
 
             if (FindMatches(filters.GlobalAlert, itemname, MatchFullTextA))
             {
-                gi.isAlert = true;
+                gi.IsAlert = true;
             }
         }
 

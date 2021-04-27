@@ -11,12 +11,13 @@ namespace myseq
 {
     // This is the "model" part - no UI related things in here, only hard EQ data.
 
-    public class EQData : IAlertStatus
+    public class EQData
     {
         private static readonly Spawninfo sPAWNINFO = new Spawninfo();
 
         public readonly SpawnColors spawnColor = new SpawnColors();
         private readonly FileOps fileop = new FileOps();
+        public AlertStatus alertOps = new AlertStatus();
 
         // player details
         public Spawninfo gamerInfo = sPAWNINFO;
@@ -128,9 +129,9 @@ namespace myseq
             {
                 if (Settings.Default.AutoSelectSpawnList)
                 {
-                    gi.listitem.EnsureVisible();
+                    gi.Listitem.EnsureVisible();
 
-                    gi.listitem.Selected = true;
+                    gi.Listitem.Selected = true;
                 }
 
                 selectedID = 99999;
@@ -453,13 +454,13 @@ namespace myseq
 
             foreach (GroundItem sp in itemcollection)
             {
-                if (sp.gone >= ditchGone)
+                if (sp.Gone >= ditchGone)
                 {
                     deletedItems.Add(sp);
                 }
                 else
                 {
-                    sp.gone++;
+                    sp.Gone++;
                 }
             }
 
@@ -473,9 +474,9 @@ namespace myseq
 
                 foreach (GroundItem gi in deletedItems)
                 {
-                    GroundItemList.listView.Items.Remove(gi.listitem);
+                    GroundItemList.listView.Items.Remove(gi.Listitem);
 
-                    gi.listitem = null;
+                    gi.Listitem = null;
 
                     itemcollection.Remove(gi);
                 }
@@ -545,17 +546,17 @@ namespace myseq
                     if (gi.Name == si.Name && gi.X == si.X && gi.Y == si.Y && gi.Z == si.Z)
                     {
                         found = true;
-                        gi.gone = 0;
+                        gi.Gone = 0;
                         break;
                     }
                 }
 
                 if (!found)
                 {
-                    GroundItem gi = new GroundItem(si, this);
+                    GroundItem gi = new GroundItem(si);
+                    gi.Desc = GetItemDescription(gi.Name);
 
-                    var itemname = gi.Desc.ToLower();
-                    CheckGrounditemForAlerts(filters, gi, itemname);
+                    alertOps.CheckGrounditemForAlerts(filters, gi, gi.Desc.ToLower());
                     ListViewItem item1 = new ListViewItem(gi.Desc);
 
                     item1.SubItems.Add(si.Name);
@@ -570,7 +571,7 @@ namespace myseq
 
                     item1.SubItems.Add(si.Z.ToString("#.000"));
 
-                    gi.listitem = item1;
+                    gi.Listitem = item1;
 
                     itemcollection.Add(gi);
 
@@ -579,6 +580,20 @@ namespace myseq
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItems(): ", ex); }
+        }
+
+        public string GetItemDescription(string ActorDef)
+        {//sample:  IT0_ACTORDEF
+            var lookupid = int.Parse(ActorDef.Remove(0, 2).Split('_')[0]);
+
+            foreach (var item in GroundSpawn)
+            {
+                if (item.ID.Equals(lookupid))
+                {
+                    return item.Name;
+                }
+            }
+            return ActorDef;
         }
 
         public void ProcessTarget(Spawninfo si)
@@ -735,8 +750,6 @@ namespace myseq
                     if ((mob.X != si.X) || (mob.Y != si.Y) || (mob.Z != si.Z))
                     {
                         // this should be the selected id
-                        // ensure that map is big enough to show all spawns.
-                        CheckBigMap(si, f1.mapPane);
                         PopulateListview(si, f1, mob);
                     }
 
@@ -782,7 +795,7 @@ namespace myseq
         private void SpawnNotFound(Spawninfo si, MainForm f1)
         {
             // ensure that map is big enough to show all spawns.
-            CheckBigMap(si, f1.mapPane);
+            //CheckBigMap(si, f1.mapPane);
 
             // Set mob type info
             if (si.Type == 0)
@@ -1166,15 +1179,15 @@ namespace myseq
             SetWieldedNames(si);
 
             // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
-            if (!(si.isLDONObject || si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
+            if (!(si.isLDONObject || si.IsPlayer|| si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
             {
-                AssignAlertStatus(si, matchmobname, ref alert, ref mobnameWithInfo);
+                alertOps.AssignAlertStatus(f1.filters, si, matchmobname, ref alert, ref mobnameWithInfo);
 
-                PrettyNames.LookupBoxMatch(si, f1);
+                FormMethods.LookupBoxMatch(si, f1);
             }
 
             ListViewItem item1 = AddDetailsToList(si, f1.SpawnList, mobnameWithInfo);
-            PlayAudioMatch(si, mobnameWithInfo);
+            alertOps.PlayAudioMatch(si, mobnameWithInfo);
             if (!si.hidden)
             {
                 NewSpawns.Add(item1);
@@ -1762,11 +1775,5 @@ namespace myseq
 
         private Color GetInverseColor(Color foreColor) => Color.FromArgb((int)(192 - (foreColor.R * 0.75)), (int)(192 - (foreColor.G * 0.75)), (int)(192 - (foreColor.B * 0.75)));
         #endregion ColorOperations
-
-        // Interface methods //
-        public void AssignAlertStatus(Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo) { }
-        public void PlayAudioMatch(Spawninfo si, string matchmobname) { }
-        public void LoadSpawnInfo() { }
-        public void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname) { }
     }
 }

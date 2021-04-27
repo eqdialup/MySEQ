@@ -32,7 +32,7 @@ namespace myseq
         public MapCon mapCon;
 
         public MapPane mapPane = new MapPane();
-        private readonly Filters filters = new Filters();
+        public readonly Filters filters = new Filters();
         private readonly EQData eq;
 
         private readonly EQCommunications comm;
@@ -251,7 +251,7 @@ namespace myseq
 
             mapCon.Focus();
             //sets some variables | Loads race, class, gi files.
-            eq.LoadSpawnInfo();
+            eq.alertOps.LoadSpawnInfo();
             eq.InitLookups();
 
             mapPane.cmdCommand.Text = "Stop";

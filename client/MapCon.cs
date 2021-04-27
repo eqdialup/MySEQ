@@ -488,7 +488,7 @@ namespace myseq
                 GroundItem gi = eq.FindGroundItem(mousex, mousey, delta);
                 if (gi?.Name.Length > 0)
                 {
-                    f1.alertAddmobname = gi.GetItemDescription(gi.Name, eq);
+                    f1.alertAddmobname = eq.GetItemDescription(gi.Name);
                     f1.alertX = gi.X;
                     f1.alertY = gi.Y;
                     f1.alertZ = gi.Z;
@@ -2654,24 +2654,24 @@ namespace myseq
             // Draw Yellow Ring around Caution Ground Items
             if (!GroundItemDepthFilter || ((gi.Z > pZ - filterneg) && (gi.Z < pZ + filterpos)))
             {
-                if (gi.isCaution)
+                if (gi.IsCaution)
                 {
                     DrawEllipse(new Pen(new SolidBrush(Color.Yellow), 2), x1, y1, width, height);
                 }
                 // Draw Red Ring around Danger Ground Items
-                if (gi.isDanger)
+                if (gi.IsDanger)
                 {
                     DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x1, y1, width, height);
                 }
 
                 // Draw White Ring around Rare Ground Items
-                if (gi.isAlert)
+                if (gi.IsAlert)
                 {
                     DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x1, y1, width, height);
                 }
 
                 // Draw Cyan Ring around Hunt Ground Items
-                if (gi.isHunt)
+                if (gi.IsHunt)
                 {
                     DrawEllipse(new Pen(new SolidBrush(Color.Green), 2), x1, y1, width, height);
                 }

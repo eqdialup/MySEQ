@@ -1,5 +1,5 @@
 using System.Windows.Forms;
-using myseq;
+
 
 namespace Structures
 {
@@ -13,44 +13,30 @@ namespace Structures
 
         public float Z { get; set; }
 
-        public bool isHunt { get; set; }
+        public bool IsHunt { get; set; }
 
-        public bool isCaution { get; set; }
+        public bool IsCaution { get; set; }
 
-        public bool isDanger { get; set; }
+        public bool IsDanger { get; set; }
 
-        public bool isAlert { get; set; }
+        public bool IsAlert { get; set; }
 
         public string Name { get; set; }
 
         public string Desc { get; set; }
 
-        public ListViewItem listitem { get; set; }
+        public ListViewItem Listitem { get; set; }
 
-        public int gone { get; set; }
+        public int Gone { get; set; }
 
         public bool Filtered { get; set; }
 
-        public GroundItem(Spawninfo si, EQData eq)
+        public GroundItem(Spawninfo si)
         {
             X = si.X;
             Y = si.Y;
             Z = si.Z;
             Name = si.Name;
-            Desc = GetItemDescription(si.Name, eq);
-        }
-        public string GetItemDescription(string ActorDef, EQData eq)
-        {//sample:  IT0_ACTORDEF
-            var lookupid = int.Parse(ActorDef.Remove(0, 2).Split('_')[0]);
-
-            foreach (var item in eq.GroundSpawn)
-            {
-                if (item.ID.Equals(lookupid))
-                {
-                    return item.Name;
-                }
-            }
-            return ActorDef;
         }
     }
 

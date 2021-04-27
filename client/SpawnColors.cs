@@ -1,10 +1,8 @@
 ﻿using System.Drawing;
-using myseq;
 using myseq.Properties;
 
 namespace Structures
 {
-
     public class SpawnColors
     {
         public int GreenRange { get; set; } = -4;
@@ -15,7 +13,7 @@ namespace Structures
 
         public int YellowRange { get; set; } = 3;
 
-        public SolidBrush[] ConColors = new SolidBrush[500];
+        public SolidBrush[] ConColors = new SolidBrush[200];
 
         public void FillConColors(Spawninfo GamerInfo)
         {
@@ -74,7 +72,7 @@ namespace Structures
             ConColors[c++] = new SolidBrush(Color.Red);
 
             // Set the remaining levels to dark red
-            for (; c < 500; c++)
+            for (; c < 200; c++)
             {
                 ConColors[c] = new SolidBrush(Color.Maroon);
             }
@@ -122,111 +120,6 @@ namespace Structures
         {
             GreyRange = -(int)(level / 2.94);
             GreenRange = -(int)(level / 3.80);
-            //if (level < 16) // verified
-            //{
-            //    GreyRange = -5;
-            //    GreenRange = -5;
-            //}
-            //else if (level < 19) // verified
-            //{
-            //    GreyRange = -6;
-            //    GreenRange = -5;
-            //}
-            //else if (level < 21) // verified
-            //{
-            //    GreyRange = -7;
-            //    GreenRange = -5;
-            //}
-            //else if (level < 22) // verified
-            //{
-            //    GreyRange = -7;
-            //    GreenRange = -6;
-            //}
-            //else if (level < 25) // verified
-            //{
-            //    GreyRange = -8;
-            //    GreenRange = -6;
-            //}
-            //else if (level < 28) // verified
-            //{
-            //    GreyRange = -9;
-            //    GreenRange = -7;
-            //}
-            //else if (level < 29) // verified
-            //{
-            //    GreyRange = -10;
-            //    GreenRange = -7;
-            //}
-            //else if (level < 31) // verified
-            //{
-            //    GreyRange = -10;
-            //    GreenRange = -8;
-            //}
-            //else if (level < 33) // verified
-            //{
-            //    GreyRange = -11;
-            //    GreenRange = -8;
-            //}
-            //else if (level < 34) // verified
-            //{
-            //    GreyRange = -11;
-            //    GreenRange = -9;
-            //}
-            //else if (level < 37) // verified
-            //{
-            //    GreyRange = -12;
-            //    GreenRange = -9;
-            //}
-            //else if (level < 40) // verified
-            //{
-            //    GreyRange = -13;
-            //    GreenRange = -10;
-            //}
-            //else if (level < 41) // Verified
-            //{
-            //    GreyRange = -14;
-            //    GreenRange = -10;
-            //}
-            //else if (level < 43) // Verified
-            //{
-            //    GreyRange = -14;
-            //    GreenRange = -11;
-            //}
-            //else if (level < 45)  // Verified
-            //{
-            //    GreyRange = -15;
-            //    GreenRange = -11;
-            //}
-            //else if (level < 46)  // Verified
-            //{
-            //    GreyRange = -15;
-            //    GreenRange = -12;
-            //}
-            //else if (level < 49)  // Verified
-            //{
-            //    GreyRange = -16;
-            //    GreenRange = -12;
-            //}
-            //else if (level < 51) // Verified at 50
-            //{
-            //    GreyRange = -17;
-            //    GreenRange = -13;
-            //}
-            //else if (level < 53)
-            //{
-            //    GreyRange = -18;
-            //    GreenRange = -14;
-            //}
-            //else if (level < 57)
-            //{
-            //    GreyRange = -20;
-            //    GreenRange = -15;
-            //}
-            //else
-            //{
-            //    GreyRange = -21;
-            //    GreenRange = -16;
-            //}
         }
 
         private void SoFCon(int level)
@@ -241,102 +134,6 @@ namespace Structures
                 GreyRange = -(int)(level / 2.99);
                 GreenRange = -(int)(level / 4.06);
             }
-            //else if (level < 10)
-            //{
-            //    GreyRange = -4;
-
-            //    GreenRange = -3;
-            //}
-            //else if (level < 13)
-            //{
-            //    GreyRange = -5;
-
-            //    GreenRange = -3;
-            //}
-            //else if (level < 17)
-            //{
-            //    GreyRange = -6;
-
-            //    GreenRange = -4;
-            //}
-            //else if (level < 21)
-            //{
-            //    GreyRange = -7;
-
-            //    GreenRange = -5;
-            //}
-            //else if (level < 25)
-            //{
-            //    GreyRange = -8;
-
-            //    GreenRange = -6;
-            //}
-            //else if (level < 29)
-            //{
-            //    GreyRange = -9;
-
-            //    GreenRange = -7;
-            //}
-            //else if (level < 31)
-            //{
-            //    GreyRange = -10;
-
-            //    GreenRange = -8;
-            //}
-            //else if (level < 33)
-            //{
-            //    GreyRange = -11;
-
-            //    GreenRange = -8;
-            //}
-            //else if (level < 37)
-            //{
-            //    GreyRange = -12;
-
-            //    GreenRange = -9;
-            //}
-            //else if (level < 41)
-            //{
-            //    GreyRange = -13;
-
-            //    GreenRange = -10;
-            //}
-            //else if (level < 45)
-            //{
-            //    GreyRange = -15;
-
-            //    GreenRange = -11;
-            //}
-            //else if (level < 49)
-            //{
-            //    GreyRange = -16;
-
-            //    GreenRange = -12;
-            //}
-            //else if (level < 53)
-            //{
-            //    GreyRange = -17;
-
-            //    GreenRange = -13;
-            //}
-            //else if (level < 55)
-            //{
-            //    GreyRange = -18;
-
-            //    GreenRange = -14;
-            //}
-            //else if (level < 57)
-            //{
-            //    GreyRange = -19;
-
-            //    GreenRange = -14;
-            //}
-            //else
-            //{
-            //    GreyRange = -20;
-
-            //    GreenRange = -15;
-            //}
         }
 
         private void SoDCon(int level)
@@ -354,96 +151,6 @@ namespace Structures
                 GreenRange = -(int)(level / 2.94);
                 CyanRange = -(int)(level / 3.97);
             }
-            //else if (level < 13)
-            //{
-            //    GreenRange = -5;
-
-            //    CyanRange = -3;
-            //}
-            //else if (level < 17)
-            //{
-            //    GreenRange = -6;
-
-            //    CyanRange = -4;
-            //}
-            //else if (level < 21)
-            //{
-            //    GreenRange = -7;
-
-            //    CyanRange = -5;
-            //}
-            //else if (level < 25)
-            //{
-            //    GreenRange = -8;
-
-            //    CyanRange = -6;
-            //}
-            //else if (level < 29)
-            //{
-            //    GreenRange = -9;
-
-            //    CyanRange = -7;
-            //}
-            //else if (level < 31)
-            //{
-            //    GreenRange = -10;
-
-            //    CyanRange = -8;
-            //}
-            //else if (level < 33)
-            //{
-            //    GreenRange = -11;
-
-            //    CyanRange = -8;
-            //}
-            //else if (level < 37)
-            //{
-            //    GreenRange = -12;
-
-            //    CyanRange = -9;
-            //}
-            //else if (level < 41)
-            //{
-            //    GreenRange = -13;
-
-            //    CyanRange = -10;
-            //}
-            //else if (level < 45)
-            //{
-            //    GreenRange = -15;
-
-            //    CyanRange = -11;
-            //}
-            //else if (level < 49)
-            //{
-            //    GreenRange = -16;
-
-            //    CyanRange = -12;
-            //}
-            //else if (level < 53)
-            //{
-            //    GreenRange = -17;
-
-            //    CyanRange = -13;
-            //}
-            //else if (level < 55)
-            //{
-            //    GreenRange = -18;
-
-            //    CyanRange = -14;
-            //}
-            //else if (level < 57)
-            //{
-            //    GreenRange = -19;
-
-            //    CyanRange = -14;
-            //}
-            //else
-            //{
-            //    GreenRange = -20;
-
-            //    CyanRange = -15;
-            //}
         }
     }
 }

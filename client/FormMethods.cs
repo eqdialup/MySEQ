@@ -380,5 +380,25 @@ namespace myseq
             }
         }
 
+        public static void LookupBoxMatch(Spawninfo si, MainForm f1)
+        {
+            si.isLookup = false;
+            BoxMatch(f1.toolStripLookupBox, si);
+            BoxMatch(f1.toolStripLookupBox1, si);
+            BoxMatch(f1.toolStripLookupBox2, si);
+            BoxMatch(f1.toolStripLookupBox3, si);
+            BoxMatch(f1.toolStripLookupBox4, si);
+        }
+
+        private static void BoxMatch(ToolStripTextBox boxtext, Spawninfo si)
+        {
+            if (boxtext.Text.Length > 1
+                && boxtext.Text != "Mob Search"
+                && RegexHelper.GetRegex(boxtext.Text).Match(si.Name).Success)
+            {
+                si.isLookup = true;
+            }
+        }
+
     }
 }

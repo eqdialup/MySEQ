@@ -6,9 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using myseq.Properties;
-using Structures;
 
-namespace myseq
+namespace Structures
 {
     public class Filters
     {
@@ -45,7 +44,7 @@ namespace myseq
             // only add to list, if not in list already
             try
             {
-                foreach (string item in list)
+                foreach (var item in list)
                 {
                     if (string.Compare(item, additem, true) == 0)
                     {
@@ -61,7 +60,7 @@ namespace myseq
             }
         }
 
-        public async Task ReadNewAlertFile(string zoneName)
+        public void ReadNewAlertFile(string zoneName)
         {
             zoneName = zoneName.ToLower();
 
@@ -69,10 +68,10 @@ namespace myseq
 
             fileop.MakeFilterExist(filterFile);
 
-            await ReadAlertLines(zoneName, filterFile);
+            ReadAlertLines(zoneName, filterFile);
         }
 
-        private async Task ReadAlertLines(string zoneName, string filterFile)
+        private void ReadAlertLines(string zoneName, string filterFile)
         {
             var type = 0;
             foreach (var line in File.ReadAllLines(filterFile))
@@ -114,7 +113,7 @@ namespace myseq
                             continue;
                         }
 
-                        var inputstring = line;
+                        var inputstring = line.Trim();
                         // Remove extra stuff
 
                         inputstring = FormatStrings(inp, inputstring);
@@ -230,8 +229,7 @@ namespace myseq
                     AddNameFromList(lines, Hunt);
                 }
 
-                lines.Add("    </section>");
-                lines.Add("    <section name=\"Caution\">");
+                lines.Add("    </section>\n    <section name=\"Caution\">");
 
                 if (zoneName == "global")
                 {
@@ -241,9 +239,7 @@ namespace myseq
                 {
                     AddNameFromList(lines, Caution);
                 }
-
-                lines.Add("    </section>");
-                lines.Add("    <section name=\"Danger\">");
+                lines.Add("    </section>\n     <section name=\"Danger\">");
 
                 if (zoneName == "global")
                 {
@@ -254,8 +250,7 @@ namespace myseq
                     AddNameFromList(lines, Danger);
                 }
 
-                lines.Add("    </section>");
-                lines.Add("    <section name=\"Alert\">");  // Rares
+                lines.Add("    </section>\n    <section name=\"Alert\">");  // Rares
 
                 if (zoneName == "global")
                 {
@@ -280,7 +275,6 @@ namespace myseq
                 }
                 lines.Add("</seqfilters>");
 
-                // Only want one alert file.  Get rid of old format files.
                 File.WriteAllLines(filterFile, lines);
                 PurgeFilters(zoneName);
             }
@@ -292,9 +286,9 @@ namespace myseq
 
         private void AddNameFromList(List<string> lines, List<string> alertlist)
         {
-            foreach (string str in alertlist)
+            foreach (var str in alertlist)
             {
-                lines.Add($"        Name:{str}");
+                lines.Add(str);
             }
         }
 
@@ -311,8 +305,8 @@ namespace myseq
         {
             if (!string.IsNullOrEmpty(zoneName))
             {
-                await ReadNewAlertFile(zoneName);
-                await ReadNewAlertFile("global");
+                ReadNewAlertFile(zoneName);
+                ReadNewAlertFile("global");
             }
         }
 
