@@ -889,7 +889,7 @@ namespace myseq
         }
 
         private void DrawBigX(Pen pen, PointF drawPoint, float offset)
-            {
+        {
             PointF startpos1 = new PointF(drawPoint.X - offset, drawPoint.Y - offset);
             PointF endpos1 = new PointF(drawPoint.X + offset, drawPoint.Y + offset);
             PointF startpos2 = new PointF(drawPoint.X - offset, drawPoint.Y + offset);
@@ -897,7 +897,7 @@ namespace myseq
 
             bkgBuffer.Graphics.DrawLine(pen, startpos1, endpos1);
             bkgBuffer.Graphics.DrawLine(pen, startpos2, endpos2);
-            }
+        }
         private void DrawLine(Pen pen, float x1, float y1, float x2, float y2)
         {
             try
@@ -1578,7 +1578,6 @@ namespace myseq
                 DrawLine(new Pen(new SolidBrush(Color.White))
                 {
                     DashStyle = DashStyle.Dash,
-
                     DashPattern = new float[] { 8, 4 }
                 }, playerx, playery, CalcScreenCoordX(selectedPoint.X), CalcScreenCoordY(selectedPoint.Y));
             }
@@ -1586,11 +1585,10 @@ namespace myseq
 
         #region DrawSpawns
 
-        private readonly bool NPCDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterNPCs;
-        private readonly bool FilterPlayers = Settings.Default.DepthFilter && Settings.Default.FilterPlayers;
-        private readonly bool showPVP = Settings.Default.ShowPVP;
-        private readonly bool ShowNames = Settings.Default.ShowNPCNames;
-        private readonly bool ShowLevel = Settings.Default.ShowNPCLevels;
+        private bool NPCDepthFilter = Settings.Default.DepthFilter && Settings.Default.FilterNPCs;
+        private bool FilterPlayers = Settings.Default.DepthFilter && Settings.Default.FilterPlayers;
+        private bool ShowNames = Settings.Default.ShowNPCNames;
+        private bool ShowLevel = Settings.Default.ShowNPCLevels;
         private void DrawSpawns(DrawOptions DrawOpts, float pX, float pY, float pZ, float playerx, float playery)
         {
             if ((DrawOpts & DrawOptions.Spawns) != DrawOptions.None)
@@ -1633,7 +1631,11 @@ namespace myseq
 
                     // Draw All Other Spawns
 
-                    if (sp.SpawnID != eq.gamerInfo.SpawnID && sp.flags == 0 && sp.Name.Length > 0)
+                    if (sp.SpawnID == eq.gamerInfo.SpawnID)
+                    {
+                        return;
+                    }
+                    else if (sp.flags == 0 && sp.Name.Length > 0)
                     {
                         if (curTarget == sp.Name)
                         {
@@ -1656,21 +1658,20 @@ namespace myseq
                         }
                         else if (sp.Type == 1 || sp.Type == 4)
                         {
-                            DrawNPCs(pZ, NPCDepthFilter, DrawDirection, sp, x, y);
+                            DrawNPCs(pZ, DrawDirection, sp, x, y);
                         }
                         DrawRings(x, y, sp);
                         DrawFlashes(pZ, x, y, sp);
                         MarkSpecial(pZ, x, y, ShowRings, sp);
                     }
                 }
-
-                lookup_set = false;
             }
+            lookup_set = false;
         }
 
-        private void DrawNPCs(float pZ, bool NPCDepthFilter, bool DrawDirection, Spawninfo sp, float x, float y)
+        private void DrawNPCs(float pZ, bool DrawDirection, Spawninfo sp, float x, float y)
         {
-            if (!NPCDepthFilter || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos)))
+            if ((!Settings.Default.DepthFilter && Settings.Default.FilterNPCs) || ((sp.Z > pZ - filterneg) && (sp.Z < pZ + filterpos)))
             {
                 SolidBrush GrayBrush = new SolidBrush(Color.Gray);
                 Pen purplePen = new Pen(new SolidBrush(Color.Purple));

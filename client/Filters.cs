@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using myseq.Properties;
 
 namespace Structures
@@ -301,7 +300,7 @@ namespace Structures
             FileOps.DeleteFile(filterFile);
         }
 
-        public async Task LoadAlerts(string zoneName)
+        public void LoadAlerts(string zoneName)
         {
             if (!string.IsNullOrEmpty(zoneName))
             {

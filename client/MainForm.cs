@@ -251,7 +251,7 @@ namespace myseq
 
             mapCon.Focus();
             //sets some variables | Loads race, class, gi files.
-            eq.alertOps.LoadSpawnInfo();
+            eq.LoadSpawnInfo();
             eq.InitLookups();
 
             mapPane.cmdCommand.Text = "Stop";
@@ -703,7 +703,7 @@ namespace myseq
                 }
 
                 eq.longname = mapname;
-                System.Threading.Tasks.Task.Run(() => filters.LoadAlerts(mapname));
+                filters.LoadAlerts(mapname);
                 SetTitle();
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessMap(): ", ex); }
@@ -841,7 +841,6 @@ namespace myseq
         #endregion ProccessMap
 
         private void SetGridInterval()
-
         {
             mnuGridInterval100.Checked = false;
             mnuGridInterval250.Checked = false;
@@ -2049,10 +2048,8 @@ namespace myseq
         }
 
         private void MnuFilterNPCs_Click(object sender, EventArgs e)
-
         {
             Settings.Default.FilterNPCs = !Settings.Default.FilterNPCs;
-
             mnuFilterNPCs.Checked = Settings.Default.FilterNPCs;
             mnuFilterNPCs2.Checked = Settings.Default.FilterNPCs;
         }

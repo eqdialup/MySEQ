@@ -1,242 +1,222 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using myseq.Properties;
-using Structures;
+﻿//using System.Collections.Generic;
+//using System.Threading;
+//using myseq.Properties;
+//using Structures;
 
-namespace myseq
-{
-    public class AlertStatus
-    {
-        private bool AffixStars = true;
-        private bool CorpseAlerts = true;
+//namespace myseq
+//{
+//    public class AlertStatus
+//    {
+//        private bool AffixStars = true;
+//        private bool CorpseAlerts = true;
 
-        private string HuntPrefix = "";
-        private string AlertPrefix = "";
-        private string DangerPrefix = "";
-        private string CautionPrefix = "";
+//        private string HuntPrefix = "";
+//        private string AlertPrefix = "";
+//        private string DangerPrefix = "";
+//        private string CautionPrefix = "";
 
-        private bool MatchFullTextA;
+//        private bool FullTxtA;
 
-        private bool MatchFullTextC;
+//        private bool FullTxtC;
 
-        private bool MatchFullTextD;
+//        private bool FullTxtD;
 
-        private bool MatchFullTextH;
+//        private bool FullTxtH;
 
-        private bool PrefixStars = true;
+//        private bool Prefix = true;
 
-        private static void AudioMatch(string mobname, string TalkDescr, bool TalkOnMatch, bool PlayOnMatch, bool BeepOnMatch, string AudioFile)
-        {
-            if (TalkOnMatch)
-            {
-                ThreadStart threadDelegate = new ThreadStart(new Talker
-                {
-                    SpeakingText = $"{TalkDescr}, {RegexHelper.SearchName(mobname)}, is up."
-                }.SpeakText);
+//        private static void AudioMatch(string mobname, string TalkDescr, bool TalkOnMatch, bool PlayOnMatch, bool BeepOnMatch, string AudioFile)
+//        {
+//            if (TalkOnMatch)
+//            {
+//                ThreadStart threadDelegate = new ThreadStart(new Talker
+//                {
+//                    SpeakingText = $"{TalkDescr}, {RegexHelper.SearchName(mobname)}, is up."
+//                }.SpeakText);
 
-                new Thread(threadDelegate).Start();
-            }
-            else if (PlayOnMatch)
-            {
-                SAudio.Play(AudioFile.Replace("\\", "\\\\"));
-            }
-            else if (BeepOnMatch)
-            {
-                SafeNativeMethods.Beep(300, 100);
-            }
-        }
+//                new Thread(threadDelegate).Start();
+//            }
+//            else if (PlayOnMatch)
+//            {
+//                SAudio.Play(AudioFile.Replace("\\", "\\\\"));
+//            }
+//            else if (BeepOnMatch)
+//            {
+//                SafeNativeMethods.Beep(300, 100);
+//            }
+//        }
 
-        private bool FindMatches(List<string> filterlist, string mobname, bool MatchFullText)
-        {
-            foreach (string str in filterlist)
-            {
-                var matched = false;
+//        private bool FindMatches(List<string> filterlist, string mobname, bool MatchFullText)
+//        {
+//            foreach (string str in filterlist)
+//            {
+//                var matched = false;
 
-                // if "match full text" is ON...
+//                // if "match full text" is ON...
 
-                if (MatchFullText)
-                {
-                    if (string.Compare("name:"+mobname, str, true) == 0)
-                    {
-                        matched = true;
-                    }
-                }
-                else if (RegexHelper.IsSubstring(mobname, str))
-                {
-                    matched = true;
-                }
-                // if item has been matched...
+//                if (MatchFullText)
+//                {
+//                    if (string.Compare("name:"+mobname, str, true) == 0)
+//                    {
+//                        matched = true;
+//                    }
+//                }
+//                else if (RegexHelper.IsSubstring(mobname, str))
+//                {
+//                    matched = true;
+//                }
+//                // if item has been matched...
 
-                if (matched)
-                {
-                    return true;
-                }
-            }
+//                if (matched)
+//                {
+//                    return true;
+//                }
+//            }
 
-            return false;
-        }
+//            return false;
+//        }
 
-        private string PrefixAffixLabel(string mname, string prefix)
-        {
-            if (PrefixStars)
-            {
-                mname = $"{prefix} {mname}";
-            }
+//        private string PrefixAffixLabel(string mname, string prefix)
+//        {
+//            if (Prefix)
+//            {
+//                mname = $"{prefix} {mname}";
+//            }
 
-            if (AffixStars)
-            {
-                mname += $" {prefix}";
-            }
+//            if (AffixStars)
+//            {
+//                mname += $" {prefix}";
+//            }
 
-            return mname;
-        }
+//            return mname;
+//        }
 
-        public void AssignAlertStatus(Filters filters, Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo)
-        {
-            if ((!si.isCorpse || CorpseAlerts) && !alert)
-            {
-                if (FindMatches(filters.Hunt, matchmobname, MatchFullTextH) || FindMatches(filters.GlobalHunt, matchmobname, MatchFullTextH))
-                {
-                    alert = true;
-                    si.isHunt = true;
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-                }
+//        public void AssignAlertStatus(Filters filters, Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo)
+//        {
+//            if ((!si.isCorpse || CorpseAlerts) && !alert)
+//            {
+//                if (FindMatches(filters.Hunt, matchmobname, FullTxtH) || FindMatches(filters.GlobalHunt, matchmobname, FullTxtH))
+//                {
+//                    alert = true;
+//                    si.isHunt = true;
+//                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
+//                }
 
-                // [caution]
-                if (FindMatches(filters.Caution, matchmobname, MatchFullTextC) || FindMatches(filters.GlobalCaution, matchmobname, MatchFullTextC))
-                {
-                    alert = true;
-                    si.isCaution = true;
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
-                }
+//                // [caution]
+//                if (FindMatches(filters.Caution, matchmobname, FullTxtC) || FindMatches(filters.GlobalCaution, matchmobname, FullTxtC))
+//                {
+//                    alert = true;
+//                    si.isCaution = true;
+//                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
+//                }
 
-                // [danger]
-                if (((!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, MatchFullTextD)) || FindMatches(filters.GlobalDanger, matchmobname, MatchFullTextD))
-                {
-                    alert = true;
-                    si.isDanger = true;
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
-                }
+//                // [danger]
+//                if (((!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, FullTxtD)) || FindMatches(filters.GlobalDanger, matchmobname, FullTxtD))
+//                {
+//                    alert = true;
+//                    si.isDanger = true;
+//                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
+//                }
 
-                // [rare]
-                if (FindMatches(filters.Alert, matchmobname, MatchFullTextA) || FindMatches(filters.GlobalAlert, matchmobname, MatchFullTextA))
-                {
-                    alert = true;
-                    si.isAlert = true;
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
-                }
-                // [Email]
-                //if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, true))
-                //{
-                //    // Flag on map as an alert mob
-                //    si.isAlert = true;
-                //}
+//                // [rare]
+//                if (FindMatches(filters.Alert, matchmobname, FullTxtA) || FindMatches(filters.GlobalAlert, matchmobname, FullTxtA))
+//                {
+//                    alert = true;
+//                    si.isAlert = true;
+//                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
+//                }
+//                // [Email]
+//                //if (filters.EmailAlert.Count > 0 && !si.isCorpse && FindMatches(filters.EmailAlert, matchmobname, true))
+//                //{
+//                //    // Flag on map as an alert mob
+//                //    si.isAlert = true;
+//                //}
 
-                // [Wielded Items]
-                // Acts like a hunt mob.
-                if (FindMatches(filters.WieldedItems, si.PrimaryName, MatchFullTextH) || FindMatches(filters.WieldedItems, si.OffhandName, MatchFullTextH))
-                {
-                    si.isHunt = true;
-                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
-                }
-            }
-        }
+//                // [Wielded Items]
+//                // Acts like a hunt mob.
+//                if (FindMatches(filters.WieldedItems, si.PrimaryName, FullTxtH) || FindMatches(filters.WieldedItems, si.OffhandName, FullTxtH))
+//                {
+//                    si.isHunt = true;
+//                    mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
+//                }
+//            }
+//        }
 
-        public void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname)
-        {
-            // [hunt]
-            if (FindMatches(filters.Hunt, itemname, MatchFullTextH))
-            {
-                gi.IsHunt = true;
-            }
+//        public void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname)
+//        {
+//            // [hunt]
+//            if (FindMatches(filters.Hunt, itemname, FullTxtH) || FindMatches(filters.GlobalHunt, itemname, FullTxtH))
+//            {
+//                gi.IsHunt = true;
+//            }
 
-            if (FindMatches(filters.GlobalHunt, itemname, MatchFullTextH))
-            {
-                gi.IsHunt = true;
-            }
+//            // [caution]
+//            if (FindMatches(filters.Caution, itemname, FullTxtC) || FindMatches(filters.GlobalCaution, itemname, FullTxtC))
+//            {
+//                gi.IsCaution = true;
+//            }
 
-            // [caution]
-            if (FindMatches(filters.Caution, itemname, MatchFullTextC))
-            {
-                gi.IsCaution = true;
-            }
+//            // [danger]
+//            if (FindMatches(filters.Danger, itemname, FullTxtD) || FindMatches(filters.GlobalDanger, itemname, FullTxtD))
+//            {
+//                gi.IsDanger = true;
+//            }
 
-            if (FindMatches(filters.GlobalCaution, itemname, MatchFullTextC))
-            {
-                gi.IsCaution = true;
-            }
+//            // [rare]
+//            if (FindMatches(filters.Alert, itemname, FullTxtA) || FindMatches(filters.GlobalAlert, itemname, FullTxtA))
+//            {
+//                gi.IsAlert = true;
+//            }
+//        }
 
-            // [danger]
-            if (FindMatches(filters.Danger, itemname, MatchFullTextD))
-            {
-                gi.IsDanger = true;
-            }
+//        public void LoadSpawnInfo()
+//        {
+//            // Used to improve packet processing speed
 
-            if (FindMatches(filters.GlobalDanger, itemname, MatchFullTextD))
-            {
-                gi.IsDanger = true;
-            }
+//            Prefix = Settings.Default.PrefixStars;
 
-            // [rare]
-            if (FindMatches(filters.Alert, itemname, MatchFullTextA))
-            {
-                gi.IsAlert = true;
-            }
+//            AffixStars = Settings.Default.AffixStars;
 
-            if (FindMatches(filters.GlobalAlert, itemname, MatchFullTextA))
-            {
-                gi.IsAlert = true;
-            }
-        }
+//            CorpseAlerts = Settings.Default.CorpseAlerts;
 
-        public void LoadSpawnInfo()
-        {
-            // Used to improve packet processing speed
+//            FullTxtH = Settings.Default.MatchFullTextH;
 
-            PrefixStars = Settings.Default.PrefixStars;
+//            FullTxtC = Settings.Default.MatchFullTextC;
 
-            AffixStars = Settings.Default.AffixStars;
+//            FullTxtD = Settings.Default.MatchFullTextD;
 
-            CorpseAlerts = Settings.Default.CorpseAlerts;
+//            FullTxtA = Settings.Default.MatchFullTextA;
 
-            MatchFullTextH = Settings.Default.MatchFullTextH;
+//            HuntPrefix = Settings.Default.HuntPrefix;
 
-            MatchFullTextC = Settings.Default.MatchFullTextC;
+//            CautionPrefix = Settings.Default.CautionPrefix;
 
-            MatchFullTextD = Settings.Default.MatchFullTextD;
+//            DangerPrefix = Settings.Default.DangerPrefix;
 
-            MatchFullTextA = Settings.Default.MatchFullTextA;
+//            AlertPrefix = Settings.Default.AlertPrefix;
+//        }
 
-            HuntPrefix = Settings.Default.HuntPrefix;
-
-            CautionPrefix = Settings.Default.CautionPrefix;
-
-            DangerPrefix = Settings.Default.DangerPrefix;
-
-            AlertPrefix = Settings.Default.AlertPrefix;
-        }
-
-        public void PlayAudioMatch(Spawninfo si, string matchmobname)
-        {
-            if (Settings.Default.playAlerts)
-            {
-                if (si.isHunt && !Settings.Default.NoneOnHunt)
-                {
-                    AudioMatch(matchmobname, "Hunt Mob", Settings.Default.TalkOnHunt, Settings.Default.PlayOnHunt, Settings.Default.BeepOnHunt, Settings.Default.HuntAudioFile);
-                }
-                if (si.isCaution && !Settings.Default.NoneOnCaution)
-                {
-                    AudioMatch(matchmobname, "Caution Mob", Settings.Default.TalkOnCaution, Settings.Default.PlayOnCaution, Settings.Default.BeepOnCaution, Settings.Default.CautionAudioFile);
-                }
-                if (si.isDanger && !Settings.Default.NoneOnDanger)
-                {
-                    AudioMatch(matchmobname, "Danger Mob", Settings.Default.TalkOnDanger, Settings.Default.PlayOnDanger, Settings.Default.BeepOnDanger, Settings.Default.DangerAudioFile);
-                }
-                if (si.isAlert && !Settings.Default.NoneOnAlert)
-                {
-                    AudioMatch(matchmobname, "Rare Mob", Settings.Default.TalkOnAlert, Settings.Default.PlayOnAlert, Settings.Default.BeepOnAlert, Settings.Default.AlertAudioFile);
-                }
-            }
-        }
-    }
-}
+//        public void PlayAudioMatch(Spawninfo si, string matchmobname)
+//        {
+//            if (Settings.Default.playAlerts)
+//            {
+//                if (si.isHunt && !Settings.Default.NoneOnHunt)
+//                {
+//                    AudioMatch(matchmobname, "Hunt Mob", Settings.Default.TalkOnHunt, Settings.Default.PlayOnHunt, Settings.Default.BeepOnHunt, Settings.Default.HuntAudioFile);
+//                }
+//                if (si.isCaution && !Settings.Default.NoneOnCaution)
+//                {
+//                    AudioMatch(matchmobname, "Caution Mob", Settings.Default.TalkOnCaution, Settings.Default.PlayOnCaution, Settings.Default.BeepOnCaution, Settings.Default.CautionAudioFile);
+//                }
+//                if (si.isDanger && !Settings.Default.NoneOnDanger)
+//                {
+//                    AudioMatch(matchmobname, "Danger Mob", Settings.Default.TalkOnDanger, Settings.Default.PlayOnDanger, Settings.Default.BeepOnDanger, Settings.Default.DangerAudioFile);
+//                }
+//                if (si.isAlert && !Settings.Default.NoneOnAlert)
+//                {
+//                    AudioMatch(matchmobname, "Rare Mob", Settings.Default.TalkOnAlert, Settings.Default.PlayOnAlert, Settings.Default.BeepOnAlert, Settings.Default.AlertAudioFile);
+//                }
+//            }
+//        }
+//    }
+//}
