@@ -18,7 +18,7 @@ namespace myseq
 
         public readonly SpawnColors spawnColor = new SpawnColors();
         private readonly FileOps fileop = new FileOps();
-//        public AlertStatus alertOps = new AlertStatus();
+        //        public AlertStatus alertOps = new AlertStatus();
 
         // player details
         public Spawninfo gamerInfo = sPAWNINFO;
@@ -45,7 +45,7 @@ namespace myseq
         private readonly List<GroundItem> itemcollection = new List<GroundItem>();          // Hold the items that are on the ground
 
         private readonly Hashtable mobsHashTable = new Hashtable();             // Holds the details of the mobs in the current zone.
-
+        private List<Spawninfo> MobList = new List<Spawninfo>();
         public MobsTimers mobsTimers { get; } = new MobsTimers();               // Manages the timers
 
         public int selectedID = 99999;
@@ -57,8 +57,6 @@ namespace myseq
         private int EQSelectedID = 0;
 
         public DateTime gametime = new DateTime();
-
-        private readonly Random rnd = new Random();
 
         // Mobs / UI Lists
 
@@ -180,7 +178,7 @@ namespace myseq
         {
             foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                if (Xor(sp.filtered, Xor(sp.hidden, Xor(sp.isFamiliar, Xor(sp.isPet, sp.isMerc)))))
+                if (Xor(sp.hidden, Xor(sp.isFamiliar, Xor(sp.isPet, sp.isMerc))))
                 {
                     return null;
                 }
@@ -236,7 +234,9 @@ namespace myseq
         {
             foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                if (!sp.hidden && !sp.filtered && sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
+                if (sp.hidden)
+                { return null; }
+                if (sp.X < x + delta && sp.X > x - delta && sp.Y < y + delta && sp.Y > y - delta)
                 {
                     return sp;
                 }
@@ -286,12 +286,15 @@ namespace myseq
         {
             foreach (GroundItem gi in itemcollection)
             {
-                if (!gi.Filtered && gi.X < x + delta && gi.X > x - delta && gi.Y < y + delta && gi.Y > y - delta)
+                if (gi.Filtered)
+                {
+                    return null;
+                }
+                if (gi.X < x + delta && gi.X > x - delta && gi.Y < y + delta && gi.Y > y - delta)
                 {
                     return gi;
                 }
             }
-
             return null;
         }
 
@@ -468,7 +471,7 @@ namespace myseq
             // Remove any that have been marked for deletion
             if (deletedItems.Count > 0)
             {
-                if (Zoning || deletedItems.Count > 5)
+                if (Zoning || deletedItems.Count > 2)
                 {
                     GroundItemList.listView.BeginUpdate();
                 }
@@ -482,7 +485,7 @@ namespace myseq
                     itemcollection.Remove(gi);
                 }
 
-                if (Zoning || deletedItems.Count > 5)
+                if (Zoning || deletedItems.Count > 2)
                 {
                     GroundItemList.listView.EndUpdate();
                 }
@@ -507,7 +510,7 @@ namespace myseq
                 }
             }
 
-            if (deletedItems.Count > 5 || delListItems.Count > 5)
+            if (deletedItems.Count > 5 || delListItems.Count > 2)
             {
                 SpawnList.listView.BeginUpdate();
 
@@ -537,7 +540,7 @@ namespace myseq
             }
         }
 
-        public void ProcessGroundItems(Spawninfo si, Filters filters)
+        public void ProcessGroundItems(Spawninfo si)
         {
             try
             {
@@ -557,7 +560,7 @@ namespace myseq
                     GroundItem gi = new GroundItem(si);
                     gi.Desc = GetItemDescription(gi.Name);
 
-                    CheckGrounditemForAlerts(filters, gi, gi.Desc.ToLower());
+                    CheckGrounditemForAlerts(gi, gi.Desc.ToLower());
                     ListViewItem item1 = new ListViewItem(gi.Desc);
 
                     item1.SubItems.Add(si.Name);
@@ -660,11 +663,11 @@ namespace myseq
 
                     if (update_hidden)
                     {
-                        mob.refresh = 100;
+                        mob.refresh = 12;
                     }
 
                     // some of these should not change often, so only check every 10 times through
-                    if (mob.refresh > 10)
+                    if (mob.refresh >= 10)
                     {   // Update mob types
                         if (mob.Type != si.Type)
                         {
@@ -712,7 +715,7 @@ namespace myseq
                             mob.listitem.SubItems[5].Text = GetRace(si.Race);
                         }
 
-                        if (mob.OwnerID != si.OwnerID)
+                        if (mob.OwnerID != 0)
                         {
                             mob.OwnerID = si.OwnerID;
                             MobHasOwner(mob);
@@ -1164,7 +1167,7 @@ namespace myseq
             mob.hidden = si.hidden;
         }
 
-        private void IsSpawnInFilterLists(Spawninfo si, MainForm f1)//, bool alert)
+        private void IsSpawnInFilterLists(Spawninfo si, MainForm f1)
         {
             var mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
 
@@ -1178,11 +1181,10 @@ namespace myseq
             var mobnameWithInfo = mobname;
 
             SetWieldedNames(si);
-
             // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
             if (!(si.isLDONObject || si.IsPlayer || si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
             {
-                AssignAlertStatus(f1.filters, si, matchmobname, ref alert, ref mobnameWithInfo);
+                AssignAlertStatus(si, matchmobname, ref alert, ref mobnameWithInfo);
 
                 FormMethods.LookupBoxMatch(si, f1);
             }
@@ -1212,23 +1214,8 @@ namespace myseq
 
             item1.SubItems.Add(GetClass(si.Class));
 
-            if (si.Primary > 0)
-            {
-                item1.SubItems.Add(ItemNumToString(si.Primary));
-            }
-            else
-            {
-                item1.SubItems.Add("");
-            }
-
-            if (si.Offhand > 0)
-            {
-                item1.SubItems.Add(ItemNumToString(si.Offhand));
-            }
-            else
-            {
-                item1.SubItems.Add("");
-            }
+            item1.SubItems.Add(si.PrimaryName);
+            item1.SubItems.Add(si.OffhandName);
 
             item1.SubItems.Add(GetRace(si.Race));
 
@@ -1262,7 +1249,7 @@ namespace myseq
 
             si.gone = 0;
 
-            si.refresh = rnd.Next(0, 10);
+            si.refresh = new Random().Next(0, 10);
 
             si.listitem = item1;
             return item1;
@@ -1409,9 +1396,9 @@ namespace myseq
 
         public void SaveMobs()
         {
-            DateTime dt = DateTime.Now;
+            var dt = DateTime.Now;
 
-            var filename = $"{shortname} - {dt.Month}-{dt.Day}-{dt.Year} {dt.Hour}.txt";
+            var filename = $"{shortname} - {dt.Month}-{dt.Day}-{dt.Year}-{dt.Hour}.txt";
 
             StreamWriter sw = new StreamWriter(filename, false);
 
@@ -1619,7 +1606,7 @@ namespace myseq
                         Settings.Default.LevelOverride = gconLevel;
                     }
                     gamerInfo.Level = si.Level;
-                    spawnColor.FillConColors(gamerInfo);//, ConColors
+                    spawnColor.FillConColors(gamerInfo);
 
                     // update mob list con colors
 
@@ -1628,7 +1615,7 @@ namespace myseq
                 if (gLastconLevel != gconLevel)
                 {
                     gLastconLevel = gconLevel;
-                    spawnColor.FillConColors(gamerInfo);//, ConColors
+                    spawnColor.FillConColors(gamerInfo);
                     UpdateMobListColors();
                 }
             }
@@ -1687,13 +1674,9 @@ namespace myseq
         private string CautionPrefix = "";
 
         private bool FullTxtA;
-
         private bool FullTxtC;
-
         private bool FullTxtD;
-
         private bool FullTxtH;
-
         private bool Prefix = true;
 
         private static void AudioMatch(string mobname, string TalkDescr, bool TalkOnMatch, bool PlayOnMatch, bool BeepOnMatch, string AudioFile)
@@ -1762,11 +1745,11 @@ namespace myseq
             return mname;
         }
 
-        public void AssignAlertStatus(Filters filters, Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo)
+        public void AssignAlertStatus(Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo)
         {
             if ((!si.isCorpse || CorpseAlerts) && !alert)
             {
-                if (FindMatches(filters.Hunt, matchmobname, FullTxtH) || FindMatches(filters.GlobalHunt, matchmobname, FullTxtH))
+                if (FindMatches(Filters.Hunt, matchmobname, FullTxtH) || FindMatches(Filters.GlobalHunt, matchmobname, FullTxtH))
                 {
                     alert = true;
                     si.isHunt = true;
@@ -1774,7 +1757,7 @@ namespace myseq
                 }
 
                 // [caution]
-                if (FindMatches(filters.Caution, matchmobname, FullTxtC) || FindMatches(filters.GlobalCaution, matchmobname, FullTxtC))
+                if (FindMatches(Filters.Caution, matchmobname, FullTxtC) || FindMatches(Filters.GlobalCaution, matchmobname, FullTxtC))
                 {
                     alert = true;
                     si.isCaution = true;
@@ -1782,7 +1765,7 @@ namespace myseq
                 }
 
                 // [danger]
-                if (((!si.isCorpse || CorpseAlerts) && FindMatches(filters.Danger, matchmobname, FullTxtD)) || FindMatches(filters.GlobalDanger, matchmobname, FullTxtD))
+                if (((!si.isCorpse || CorpseAlerts) && FindMatches(Filters.Danger, matchmobname, FullTxtD)) || FindMatches(Filters.GlobalDanger, matchmobname, FullTxtD))
                 {
                     alert = true;
                     si.isDanger = true;
@@ -1790,7 +1773,7 @@ namespace myseq
                 }
 
                 // [rare]
-                if (FindMatches(filters.Alert, matchmobname, FullTxtA) || FindMatches(filters.GlobalAlert, matchmobname, FullTxtA))
+                if (FindMatches(Filters.Alert, matchmobname, FullTxtA) || FindMatches(Filters.GlobalAlert, matchmobname, FullTxtA))
                 {
                     alert = true;
                     si.isAlert = true;
@@ -1805,7 +1788,7 @@ namespace myseq
 
                 // [Wielded Items]
                 // Acts like a hunt mob.
-                if (FindMatches(filters.WieldedItems, si.PrimaryName, FullTxtH) || FindMatches(filters.WieldedItems, si.OffhandName, FullTxtH))
+                if (FindMatches(Filters.WieldedItems, si.PrimaryName, FullTxtH) || FindMatches(Filters.WieldedItems, si.OffhandName, FullTxtH))
                 {
                     si.isHunt = true;
                     mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
@@ -1813,28 +1796,28 @@ namespace myseq
             }
         }
 
-        public void CheckGrounditemForAlerts(Filters filters, GroundItem gi, string itemname)
+        public void CheckGrounditemForAlerts(GroundItem gi, string itemname)
         {
             // [hunt]
-            if (FindMatches(filters.Hunt, itemname, FullTxtH) || FindMatches(filters.GlobalHunt, itemname, FullTxtH))
+            if (FindMatches(Filters.Hunt, itemname, FullTxtH) || FindMatches(Filters.GlobalHunt, itemname, FullTxtH))
             {
                 gi.IsHunt = true;
             }
 
             // [caution]
-            if (FindMatches(filters.Caution, itemname, FullTxtC) || FindMatches(filters.GlobalCaution, itemname, FullTxtC))
+            if (FindMatches(Filters.Caution, itemname, FullTxtC) || FindMatches(Filters.GlobalCaution, itemname, FullTxtC))
             {
                 gi.IsCaution = true;
             }
 
             // [danger]
-            if (FindMatches(filters.Danger, itemname, FullTxtD) || FindMatches(filters.GlobalDanger, itemname, FullTxtD))
+            if (FindMatches(Filters.Danger, itemname, FullTxtD) || FindMatches(Filters.GlobalDanger, itemname, FullTxtD))
             {
                 gi.IsDanger = true;
             }
 
             // [rare]
-            if (FindMatches(filters.Alert, itemname, FullTxtA) || FindMatches(filters.GlobalAlert, itemname, FullTxtA))
+            if (FindMatches(Filters.Alert, itemname, FullTxtA) || FindMatches(Filters.GlobalAlert, itemname, FullTxtA))
             {
                 gi.IsAlert = true;
             }

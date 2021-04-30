@@ -64,7 +64,7 @@ namespace myseq
 
             eq = new EQData();
             map = new EQMap();
-            comm = new EQCommunications(eq, this, filters);
+            comm = new EQCommunications(eq, this);
 
             InitializeComponent();
 
@@ -2186,7 +2186,7 @@ namespace myseq
         {
             if (DialogBox("Add to Zone Hunt Filters", "Add name to Hunt list:", alertAddmobname))
             {
-                AddToFilter(filters.Hunt, alertAddmobname);
+                AddToFilter(Filters.Hunt, alertAddmobname);
             }
         }
 
@@ -2194,7 +2194,7 @@ namespace myseq
         {
             if (DialogBox("Add to Zone Caution Filters", "Add name to Caution list:", alertAddmobname))
             {
-                AddToFilter(filters.Caution, alertAddmobname);
+                AddToFilter(Filters.Caution, alertAddmobname);
             }
         }
 
@@ -2202,7 +2202,7 @@ namespace myseq
         {
             if (DialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", alertAddmobname))
             {
-                AddToFilter(filters.Danger, alertAddmobname);
+                AddToFilter(Filters.Danger, alertAddmobname);
             }
         }
 
@@ -2210,7 +2210,7 @@ namespace myseq
         {
             if (DialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", alertAddmobname))
             {
-                AddToFilter(filters.Alert, alertAddmobname);
+                AddToFilter(Filters.Alert, alertAddmobname);
             }
         }
 

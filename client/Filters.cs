@@ -12,17 +12,17 @@ namespace Structures
     {
         private readonly FileOps fileop = new FileOps();
 
-        public List<string> Hunt { get; set; } = new List<string>();
-        public List<string> Caution { get; set; } = new List<string>();
-        public List<string> GlobalCaution { get; set; } = new List<string>();
-        public List<string> Danger { get; set; } = new List<string>();
-        public List<string> GlobalHunt { get; set; } = new List<string>();
-        public List<string> Alert { get; set; } = new List<string>();
-        public List<string> GlobalDanger { get; set; } = new List<string>();
-        public List<string> EmailAlert { get; set; } = new List<string>();
-        public List<string> WieldedItems { get; set; } = new List<string>();
+        public static List<string> Hunt { get; set; } = new List<string>();
+        public static List<string> Caution { get; set; } = new List<string>();
+        public static List<string> GlobalCaution { get; set; } = new List<string>();
+        public static List<string> Danger { get; set; } = new List<string>();
+        public static List<string> GlobalHunt { get; set; } = new List<string>();
+        public static List<string> Alert { get; set; } = new List<string>();
+        public static List<string> GlobalDanger { get; set; } = new List<string>();
+        public static List<string> EmailAlert { get; set; } = new List<string>();
+        public static List<string> WieldedItems { get; set; } = new List<string>();
 
-        public List<string> GlobalAlert { get; set; } = new List<string>();
+        public static List<string> GlobalAlert { get; set; } = new List<string>();
 
         public void ClearLists()
         {

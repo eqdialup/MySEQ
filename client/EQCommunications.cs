@@ -21,8 +21,6 @@ namespace Structures
         private CSocketClient pSocketClient;
 
         // Processing stuff-
-        private readonly Filters filters;
-
         public ProcessInfo CurrentProcess = new ProcessInfo(0, "");
         private int processcount;
         public List<ProcessInfo> colProcesses = new List<ProcessInfo>();
@@ -49,11 +47,10 @@ namespace Structures
             update_hidden = true;
         }
 
-        public EQCommunications(EQData eq, MainForm f1, Filters filters)
+        public EQCommunications(EQData eq, MainForm f1)
         {
             this.eq = eq;
             this.f1 = f1;
-            this.filters = filters;
         }
 
         public void StopListening()
@@ -294,7 +291,7 @@ namespace Structures
 
                 case PacketType.GroundItem:
 
-                    eq.ProcessGroundItems(si, filters);
+                    eq.ProcessGroundItems(si);
 
                     break;
 

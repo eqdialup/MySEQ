@@ -119,7 +119,6 @@ namespace myseq
         }
 
         public void SetComponents(EQData eq, MapCon mapCon, Filters filters, MainForm f1)
-
         {
             this.eq = eq;
 
@@ -143,7 +142,6 @@ namespace myseq
         #region Component Designer generated code
 
         private void InitializeComponent()
-
         {
             components = new Container();
             ComponentResourceManager resources = new ComponentResourceManager(typeof(ListViewPanel));
@@ -722,7 +720,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Global Alert Filters", "Add name to Hunt list:", mobname))
             {
-                AddFilter(filters.GlobalHunt, "global");
+                AddFilter(Filters.GlobalHunt, "global");
             }
         }
 
@@ -740,7 +738,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Global Alert Filters", "Add name to Caution list:", mobname))
             {
-                AddFilter(filters.GlobalCaution, "global");
+                AddFilter(Filters.GlobalCaution, "global");
             }
         }
 
@@ -749,7 +747,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Global Alert Filters", "Add name to Danger list:", mobname))
             {
-                AddFilter(filters.GlobalDanger, "global");
+                AddFilter(Filters.GlobalDanger, "global");
             }
         }
 
@@ -758,7 +756,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Global Alert Filters", "Add name to Rare list:", mobname))
             {
-                AddFilter(filters.GlobalAlert, "global");
+                AddFilter(Filters.GlobalAlert, "global");
             }
         }
 
@@ -767,7 +765,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", mobname))
             {
-                AddFilter(filters.Hunt, f1.curZone);
+                AddFilter(Filters.Hunt, f1.curZone);
             }
         }
 
@@ -776,7 +774,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", mobname))
             {
-                AddFilter(filters.Caution, f1.curZone);
+                AddFilter(Filters.Caution, f1.curZone);
             }
         }
 
@@ -785,7 +783,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", mobname))
             {
-                AddFilter(filters.Danger, f1.curZone);
+                AddFilter(Filters.Danger, f1.curZone);
             }
         }
 
@@ -794,7 +792,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", mobname))
             {
-                AddFilter(filters.Alert, f1.curZone);
+                AddFilter(Filters.Alert, f1.curZone);
             }
         }
 
