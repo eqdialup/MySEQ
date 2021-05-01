@@ -200,7 +200,7 @@ namespace myseq
 
         private void StartListening()
         {
-            comm.colProcesses?.Clear();
+            comm.ProcessClear();
 
             if (eq.gamerInfo != null)
             {
@@ -302,7 +302,7 @@ namespace myseq
 
             if (Settings.Default.ShowZoneName)
             {
-                Text += $" - {eq.longname}";
+                Text += $" - {eq.Longname}";
             }
 
             if (Settings.Default.ShowCharName)
@@ -413,10 +413,10 @@ namespace myseq
             toolStripZNeg.Enabled = Settings.Default.DepthFilter;
             toolStripZNegDown.Enabled = Settings.Default.DepthFilter;
             toolStripZPosDown.Enabled = Settings.Default.DepthFilter;
-            toolStripZOffsetLabel.Enabled = Settings.Default.DepthFilter;
+//            toolStripZOffsetLabel.Enabled = Settings.Default.DepthFilter;
             toolStripZPosUp.Enabled = Settings.Default.DepthFilter;
             toolStripZPos.Enabled = Settings.Default.DepthFilter;
-            toolStripZPosLabel.Enabled = Settings.Default.DepthFilter;
+//            toolStripZPosLabel.Enabled = Settings.Default.DepthFilter;
             toolStripResetDepthFilter.Enabled = Settings.Default.DepthFilter;
 
             if (Settings.Default.DepthFilter)
@@ -599,51 +599,51 @@ namespace myseq
         {
             var EqualProcessID = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
 
-            if (comm.colProcesses.Count == 1)
+            if (comm.ColProcesses.Count == 1)
             {
                 ShowCharInList(si, mnuChar1, mnuChar2, "Char 2", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 2)
+            if (comm.ColProcesses.Count == 2)
             {
                 ShowCharInList(si, mnuChar2, mnuChar3, "Char 3", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 3)
+            if (comm.ColProcesses.Count == 3)
             {
                 ShowCharInList(si, mnuChar3, mnuChar4, "Char 4", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 4)
+            if (comm.ColProcesses.Count == 4)
             {
                 ShowCharInList(si, mnuChar4, mnuChar5, "Char 5", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 5)
+            if (comm.ColProcesses.Count == 5)
             {
                 ShowCharInList(si, mnuChar5, mnuChar6, "Char 6", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 6)
+            if (comm.ColProcesses.Count == 6)
             {
                 ShowCharInList(si, mnuChar6, mnuChar7, "Char 7", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 7)
+            if (comm.ColProcesses.Count == 7)
             {
                 ShowCharInList(si, mnuChar7, mnuChar8, "Char 8", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 8)
+            if (comm.ColProcesses.Count == 8)
             {
                 ShowCharInList(si, mnuChar8, mnuChar9, "Char 9", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 9)
+            if (comm.ColProcesses.Count == 9)
             {
                 ShowCharInList(si, mnuChar9, mnuChar10, "Char 10", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 10)
+            if (comm.ColProcesses.Count == 10)
             {
                 ShowCharInList(si, mnuChar10, mnuChar11, "Char 11", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 11)
+            if (comm.ColProcesses.Count == 11)
             {
                 ShowCharInList(si, mnuChar11, mnuChar12, "Char 12", EqualProcessID);
             }
-            if (comm.colProcesses.Count == 12)
+            if (comm.ColProcesses.Count == 12)
             {
                 mnuChar12.Text = si.Name;
                 mnuChar12.Visible = true;
@@ -702,7 +702,7 @@ namespace myseq
                     map.LoadDummyMap();
                 }
 
-                eq.longname = mapname;
+                eq.Longname = mapname;
                 filters.LoadAlerts(mapname);
                 SetTitle();
             }
@@ -902,7 +902,7 @@ namespace myseq
             {
                 // Set the default context menu, since we don't have a proper name to work with
                 ContextMenuStrip = mnuContext;
-                addMapTextToolStripMenuItem.Enabled = eq.longname.Length > 0 && eq.gamerInfo?.Name.Length > 0;
+                addMapTextToolStripMenuItem.Enabled = eq.Longname.Length > 0 && eq.gamerInfo?.Name.Length > 0;
                 mnuShowMenuBar.Visible = !Settings.Default.ShowMenuBar;
             }
         }
@@ -911,7 +911,7 @@ namespace myseq
         {
             formMethod.MnuOpenMap(this);
             eq.shortname = curZone;
-            eq.longname = eq.shortname;
+            eq.Longname = eq.shortname;
 
             eq.CalcExtents(map.Lines);
         }
@@ -1085,10 +1085,10 @@ namespace myseq
             toolStripZNeg.Enabled = Settings.Default.DepthFilter;
             toolStripZNegDown.Enabled = Settings.Default.DepthFilter;
             toolStripZPosDown.Enabled = Settings.Default.DepthFilter;
-            toolStripZOffsetLabel.Enabled = Settings.Default.DepthFilter;
+//            toolStripZOffsetLabel.Enabled = Settings.Default.DepthFilter;
             toolStripZPosUp.Enabled = Settings.Default.DepthFilter;
             toolStripZPos.Enabled = Settings.Default.DepthFilter;
-            toolStripZPosLabel.Enabled = Settings.Default.DepthFilter;
+//            toolStripZPosLabel.Enabled = Settings.Default.DepthFilter;
             toolStripResetDepthFilter.Enabled = Settings.Default.DepthFilter;
 
             toolStripDepthFilterButton.Image = Settings.Default.DepthFilter ? Resources.ExpandSpaceHS : Resources.ShrinkSpaceHS;
@@ -1530,7 +1530,7 @@ namespace myseq
             {
                 mapCon.lblMobInfo.Font = fontDialog1.Font;
 
-                mapCon.lblGameClock.Font = new Font(fontDialog1.Font.FontFamily.Name, fontDialog1.Font.Size, FontStyle.Bold);
+                mapCon.lblGameClock.Font = new Font(fontDialog1.Font.Name, fontDialog1.Font.Size, FontStyle.Bold);
 
                 Settings.Default.TargetInfoFont = fontDialog1.Font;
             }
@@ -1625,7 +1625,7 @@ namespace myseq
 
         private void MnuCharRefresh_Click(object sender, EventArgs e)
         {
-            comm.colProcesses.Clear();
+            comm.ProcessClear();
             VisChar();
         }
 
@@ -1739,19 +1739,15 @@ namespace myseq
         }
 
         private void MnuMapLabelsFont_Click(object sender, EventArgs e)
-
         {
-            fontDialog1.Font = mapCon.drawFont;
+            fontDialog1.Font = mapCon.GetdrawFont();
 
             fontDialog1.ShowApply = true;
 
             if (fontDialog1.ShowDialog() != DialogResult.Cancel)
 
             {
-                mapCon.drawFont = fontDialog1.Font;
-
-                mapCon.drawFont1 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 0.9f, Settings.Default.MapLabel.Style);
-                mapCon.drawFont3 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 1.1f, Settings.Default.MapLabel.Style);
+                mapCon.SetDrawFont(fontDialog1.Font);
             }
         }
 
@@ -2473,10 +2469,10 @@ namespace myseq
             {
                 Str = Str.Replace("%", "");
                 var isNum = decimal.TryParse(Str, out var Num);
-                if (Num < mapPane.scale.Minimum)
-                { Num = mapPane.scale.Minimum; }
+                if (Num < MapPane.scale.Minimum)
+                { Num = MapPane.scale.Minimum; }
 
-                if (isNum && Num >= mapPane.scale.Minimum && Num <= mapPane.scale.Maximum)
+                if (isNum && Num >= MapPane.scale.Minimum && Num <= MapPane.scale.Maximum)
                 {
                     validnum = mapPane.MapPaneScale(Num);
                 }
@@ -2484,8 +2480,8 @@ namespace myseq
 
             if (!validnum)
             {
-                toolStripScale.Text = $"{mapPane.scale.Value / 100:0%}";
-                MessageBox.Show($"Enter a number between {mapPane.scale.Minimum} and {mapPane.scale.Maximum}", "Invalid Value Entered.");
+                toolStripScale.Text = $"{MapPane.scale.Value / 100:0%}";
+                MessageBox.Show($"Enter a number between {MapPane.scale.Minimum} and {MapPane.scale.Maximum}", "Invalid Value Entered.");
             }
         }
 
@@ -2505,7 +2501,7 @@ namespace myseq
         private void AddMapTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // add map text, to where the player is currently located
-            if (eq.longname.Length > 0 && eq.gamerInfo?.Name.Length > 0)
+            if (eq.Longname.Length > 0 && eq.gamerInfo?.Name.Length > 0)
             {
                 alertX = eq.gamerInfo.X;
                 alertY = eq.gamerInfo.Y;

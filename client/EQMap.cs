@@ -41,11 +41,7 @@ namespace myseq
             {
                 // reset spawn information window
 
-                mapCon.lblMobInfo.Text = "Spawn Information Window";
-
-                mapCon.lblMobInfo.BackColor = Color.White;
-
-                mapCon.lblMobInfo.Visible = true;
+                mapCon.ResetInfoWindow();
 
                 eq.selectedID = 99999;
 
@@ -54,6 +50,7 @@ namespace myseq
                 eq.SpawnY = -1.0f;
             }
         }
+
 
         protected void OnEnterMap()
         {
@@ -165,11 +162,7 @@ namespace myseq
             LogLib.WriteLine($"{curLine} lines processed.", LogLevel.Debug);
             LogLib.WriteLine($"Loaded {Lines.Count} lines", LogLevel.Debug);
 
-            if (numtexts > 0 || Lines.Count > 0)
-            {
-                return true;
-            }
-            return false;
+            return numtexts > 0 || Lines.Count > 0;
         }
 
         internal void ParseLP(string line, ref int numtexts, ref int numlines)
@@ -220,16 +213,16 @@ namespace myseq
                 MapLine thisline = line;
                 if (thisline != null && lastline != null)
                 {
-                    var thiscount = thisline.aPoints.Count;
-                    var lastcount = lastline.aPoints.Count;
+                    var thiscount = thisline.APoints.Count;
+                    var lastcount = lastline.APoints.Count;
 
-                    MapPoint thispoint = (MapPoint)thisline.aPoints[0];
-                    MapPoint thisnext = (MapPoint)thisline.aPoints[1];
-                    MapPoint lastpoint = (MapPoint)lastline.aPoints[lastcount - 1];
-                    MapPoint lastprev = (MapPoint)lastline.aPoints[lastcount - 2];
+                    MapPoint thispoint = (MapPoint)thisline.APoints[0];
+                    MapPoint thisnext = (MapPoint)thisline.APoints[1];
+                    MapPoint lastpoint = (MapPoint)lastline.APoints[lastcount - 1];
+                    MapPoint lastprev = (MapPoint)lastline.APoints[lastcount - 2];
 
-                    Pen thisColor = thisline.color;
-                    Pen lastColor = lastline.color;
+                    Pen thisColor = thisline.LineColor;
+                    Pen lastColor = lastline.LineColor;
 
                     int droppoint;
                     if (PointsAreEqual(ref thispoint, ref lastpoint, thisColor, lastColor))
@@ -252,26 +245,26 @@ namespace myseq
 
                         // Second Line Starts at End of First Line
 
-                        lastline.linePoints = new PointF[thiscount + lastcount - 1 - droppoint];
+                        lastline.LinePoints = new PointF[thiscount + lastcount - 1 - droppoint];
 
                         for (var p = 0; p < (lastcount - droppoint); p++)
                         {
-                            MapPoint tmp = (MapPoint)lastline.aPoints[p];
+                            MapPoint tmp = (MapPoint)lastline.APoints[p];
 
-                            lastline.linePoints[p] = new PointF(tmp.x, tmp.y);
+                            lastline.LinePoints[p] = new PointF(tmp.X, tmp.Y);
                         }
 
                         if (droppoint == 1)
                         {
-                            lastline.aPoints.RemoveAt(lastcount - 1);
+                            lastline.APoints.RemoveAt(lastcount - 1);
                         }
 
                         for (var p = 1; p < thiscount; p++)
                         {
                             MapPoint temp = GetMapPoint(thisline, p);
-                            lastline.linePoints[p + lastcount - 1 - droppoint] = new PointF(temp.x, temp.y);
+                            lastline.LinePoints[p + lastcount - 1 - droppoint] = new PointF(temp.X, temp.Y);
 
-                            lastline.aPoints.Add(temp);
+                            lastline.APoints.Add(temp);
                         }
                         linesToRemove.Add(thisline);
                         thisline = lastline;
@@ -280,14 +273,14 @@ namespace myseq
                     {
                         droppoint = 0;
 
-                        thispoint = (MapPoint)thisline.aPoints[thiscount - 1];
+                        thispoint = (MapPoint)thisline.APoints[thiscount - 1];
 
-                        MapPoint thisprev = (MapPoint)thisline.aPoints[thiscount - 2];
-                        lastpoint = (MapPoint)lastline.aPoints[0];
+                        MapPoint thisprev = (MapPoint)thisline.APoints[thiscount - 2];
+                        lastpoint = (MapPoint)lastline.APoints[0];
 
-                        MapPoint lastnext = (MapPoint)lastline.aPoints[1];
+                        MapPoint lastnext = (MapPoint)lastline.APoints[1];
 
-                        if (lastpoint.x == thispoint.x && lastpoint.y == thispoint.y && lastpoint.z == thispoint.z && thisColor.Color == lastColor.Color)
+                        if (lastpoint.X == thispoint.X && lastpoint.Y == thispoint.Y && lastpoint.Z == thispoint.Z && thisColor.Color == lastColor.Color)
                         {
                             prod = CalcDotProduct(thisprev, thispoint, lastnext);
 
@@ -298,27 +291,27 @@ namespace myseq
 
                             // Second Line Starts at End of First Line
 
-                            lastline.linePoints = new PointF[thiscount + lastcount - 1 - droppoint];
+                            lastline.LinePoints = new PointF[thiscount + lastcount - 1 - droppoint];
 
                             if (droppoint == 1)
                             {
-                                lastline.aPoints.RemoveAt(0);
+                                lastline.APoints.RemoveAt(0);
                             }
 
                             for (var p = 0; p < (thiscount - 1); p++)
                             {
                                 MapPoint temp = GetMapPoint(thisline, p);
 
-                                lastline.aPoints.Insert(p, temp);
+                                lastline.APoints.Insert(p, temp);
                             }
 
-                            thiscount = lastline.aPoints.Count;
+                            thiscount = lastline.APoints.Count;
 
                             for (var p = 0; p < thiscount; p++)
                             {
-                                MapPoint tmp = (MapPoint)lastline.aPoints[p];
+                                MapPoint tmp = (MapPoint)lastline.APoints[p];
 
-                                lastline.linePoints[p] = new PointF(tmp.x, tmp.y);
+                                lastline.LinePoints[p] = new PointF(tmp.X, tmp.Y);
                             }
 
                             linesToRemove.Add(thisline);
@@ -332,16 +325,16 @@ namespace myseq
             }
         }
 
-        internal static bool PointsAreEqual(ref MapPoint thispoint, ref MapPoint lastpoint, Pen thisColor, Pen lastColor) => lastpoint.x == thispoint.x && lastpoint.y == thispoint.y && lastpoint.z == thispoint.z && thisColor.Color == lastColor.Color;
+        internal static bool PointsAreEqual(ref MapPoint thispoint, ref MapPoint lastpoint, Pen thisColor, Pen lastColor) => lastpoint.X == thispoint.X && lastpoint.Y == thispoint.Y && lastpoint.Z == thispoint.Z && thisColor.Color == lastColor.Color;
 
         internal static MapPoint GetMapPoint(MapLine thisline, int p)
         {
-            MapPoint tmp = (MapPoint)thisline.aPoints[p];
+            MapPoint tmp = (MapPoint)thisline.APoints[p];
             return new MapPoint
             {
-                x = tmp.x,
-                y = tmp.y,
-                z = tmp.z
+                X = tmp.X,
+                Y = tmp.Y,
+                Z = tmp.Z
             };
         }
 
@@ -349,17 +342,17 @@ namespace myseq
         {
             foreach (MapLine line in Lines)
             {
-                line.maxZ = line.minZ = line.Point(0).z;
-                for (var j = 1; j < line.aPoints.Count; j++)
+                line.MaxZ = line.MinZ = line.Point(0).Z;
+                for (var j = 1; j < line.APoints.Count; j++)
                 {
-                    if (line.minZ > line.Point(j).z)
+                    if (line.MinZ > line.Point(j).Z)
                     {
-                        line.minZ = line.Point(j).z;
+                        line.MinZ = line.Point(j).Z;
                     }
 
-                    if (line.maxZ < line.Point(j).z)
+                    if (line.MaxZ < line.Point(j).Z)
                     {
-                        line.maxZ = line.Point(j).z;
+                        line.MaxZ = line.Point(j).Z;
                     }
                 }
             }
@@ -393,15 +386,15 @@ namespace myseq
 
         internal float CalcDotProduct(MapPoint lastprev, MapPoint thispoint, MapPoint thisnext)
         {
-            float x1 = lastprev.x;
-            float y1 = lastprev.y;
-            float z1 = lastprev.z;
-            float x2 = thispoint.x;
-            float y2 = thispoint.y;
-            float z2 = thispoint.z;
-            float x3 = thisnext.x;
-            float y3 = thisnext.y;
-            float z3 = thisnext.z;
+            float x1 = lastprev.X;
+            float y1 = lastprev.Y;
+            float z1 = lastprev.Z;
+            float x2 = thispoint.X;
+            float y2 = thispoint.Y;
+            float z2 = thispoint.Z;
+            float x3 = thisnext.X;
+            float y3 = thisnext.Y;
+            float z3 = thisnext.Z;
 
             if ((x1 == x2 && y1 == y2 && z1 == z2) || (x2 == x3 && y2 == y3 && z2 == z3))
             {

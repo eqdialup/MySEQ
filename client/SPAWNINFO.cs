@@ -9,8 +9,102 @@ namespace Structures
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class Spawninfo
     {
-        public Spawninfo()
+        public string Name {get; set; } = "";
+        public string Lastname {get; set; } = "";
+         public int SpawnID {get; set; }
+
+        public int OwnerID {get; set; }
+
+        public float X {get; set; }
+
+        public float Y {get; set; }
+
+        public float Z {get; set; }
+
+        public byte Class {get; set; }
+
+        public byte Level {get; set; }
+        public int Race {get; set; }
+
+        public byte Type {get; set; }
+
+        public float Heading {get; set; }
+
+        public float SpeedRun {get; set; }
+
+        public int Primary {get; set; }
+        public int Offhand {get; set; }
+        public string PrimaryName {get; set; }
+        public string OffhandName {get; set; }
+
+        public int Guild {get; set; }
+
+        public byte Hide {get; set; }
+
+        public int gone {get; set; }
+
+        public int refresh {get; set; }
+
+        public PacketType flags {get; set; }
+
+        public bool isHunt {get; set; }
+
+        public bool isCaution {get; set; }
+
+        public bool isDanger {get; set; }
+
+        public bool isAlert {get; set; }
+
+        public bool isPet {get; set; }
+
+        public bool isMerc {get; set; }
+
+        public bool isCorpse {get; set; }
+
+        public bool isMount {get; set; }
+
+        public bool isFamiliar {get; set; }
+
+        public bool isLDONObject {get; private set; }
+
+        public bool isEventController {get; set; }
+
+        public bool isLookup {get; set; }
+
+        public string lookupNumber {get; set; } = "";
+
+        public bool hidden {get; set; }
+
+        public bool filtered {get; set; }
+
+        public ListViewItem listitem {get; set; }
+
+        public bool m_isPlayer {get; set; }
+
+        public bool m_isMyCorpse {get; set; }
+
+        public bool delFromList {get; set; }
+
+        public bool proxAlert {get; set; }
+
+        public bool alertMob {get; set; }
+
+        public string SpawnLoc {get; set; } = "";
+
+        public string ZoneSpawnLoc {get; set; } = "";
+
+        public bool IsPlayer => m_isPlayer;
+
+        public bool IsMyCorpse => m_isMyCorpse;
+
+        public bool IsSpawnLDON(Spawninfo si)
         {
+            if (si.Class == 62)
+            {
+                si.isLDONObject = true;
+                return true;
+            }
+            return false;
         }
 
         private string BytesToString(byte[] b, int start, int maxlen)
@@ -63,96 +157,5 @@ namespace Structures
 
         public float SpawnDistance(Spawninfo si, Spawninfo gamerInfo)
         => (float)Math.Sqrt(((si.X - gamerInfo.X) * (si.X - gamerInfo.X)) + ((si.Y - gamerInfo.Y) * (si.Y - gamerInfo.Y)) + ((si.Z - gamerInfo.Z) * (si.Z - gamerInfo.Z)));
-
-        public string Name = "";
-
-        public float Y;
-
-        public float X;
-
-        public float Z;
-
-        public float Heading;
-
-        public float SpeedRun;
-
-        public int SpawnID;
-
-        public int OwnerID;
-
-        public byte Type;
-
-        public byte Class;
-
-        public int Race;
-
-        public int Primary;
-
-        public int Offhand;
-
-        public string PrimaryName;
-        public string OffhandName;
-
-        //        public int Guild;
-
-        public byte Level;
-
-        public byte Hide;
-
-        public string Lastname = "";
-
-        public int gone;
-
-        public int refresh;
-
-        public PacketType flags;
-
-        public bool isHunt;
-
-        public bool isCaution;
-
-        public bool isDanger;
-
-        public bool isAlert;
-
-        public bool isPet;
-
-        public bool isMerc;
-
-        public bool isCorpse;
-
-        public bool isMount;
-
-        public bool isFamiliar;
-
-        public bool isLDONObject;
-
-        public bool isEventController;
-
-        public bool isLookup;
-
-        public string lookupNumber = "";
-
-        public bool hidden;
-
-        public bool filtered;
-
-        public ListViewItem listitem;
-
-        public bool m_isPlayer;
-
-        public bool m_isMyCorpse;
-
-        public bool delFromList;
-
-        public bool proxAlert;
-
-        public bool alertMob;
-
-        public string SpawnLoc = "";
-
-        public string ZoneSpawnLoc = "";
-
-        public bool IsPlayer => m_isPlayer;
     }
 }

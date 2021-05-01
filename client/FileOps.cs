@@ -8,8 +8,12 @@ namespace Structures
 {
     public class FileOps
     {
+
+        public string shortname { get; set; } = "";
+       
         public static string CombineCfgDir(string file) => Path.Combine(Settings.Default.CfgDir, file);
-        public static string CombineSpawnTim(string mapName) => Path.Combine(Settings.Default.TimerDir, $"spawns-{mapName}.txt");
+        public static string CombineTimer(string mapName) => Path.Combine(Settings.Default.TimerDir, $"spawns-{mapName}.txt");
+        public static string CombineFilter(string filename ) => Path.Combine(Settings.Default.FilterDir, filename);
 
         public static void DeleteFile(string timerfile)
         {
@@ -45,13 +49,13 @@ namespace Structures
             return arList.ToArray();
         }
 
-        public void ReadItemList(string file, ref List<ListItem> ground)
+        public ListItem ReadItemList(string file)// ref List<ListItem> ground)
         {
             var filePath = CombineCfgDir(file);
             if (!File.Exists(filePath))
             {
                 LogLib.WriteLine("GroundItems.ini file not found", LogLevel.Warning);
-                return;
+                return default;
             }
 
             foreach (var line in File.ReadAllLines(filePath).ToList())
@@ -61,15 +65,15 @@ namespace Structures
                 {
                     var entries = line.Split('=');
                     var tmp = entries[0].Split('_');
-                    ListItem newGround = new ListItem
+                    return new ListItem
                     {
-                        ID = int.Parse(tmp[0].Remove(0, 2)),/* NumFormat),*/ //0
-                        ActorDef = entries[0], //IT0_ACTORDEF
-                        Name = entries[1] //NAME
+                        ID = int.Parse(tmp[0].Remove(0, 2)),
+                        ActorDef = entries[0],
+                        Name = entries[1]
                     };
-                    ground.Add(newGround);
                 }
             }
+            return default;
         }
 
         private void CreateAlertFile(string fileName)
@@ -137,5 +141,6 @@ namespace Structures
                 Directory.CreateDirectory(Settings.Default.TimerDir);
             }
         }
+        public bool Xor(bool a, bool b) => a ^ b;
     }
 }

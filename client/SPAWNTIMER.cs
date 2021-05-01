@@ -472,43 +472,43 @@ namespace myseq
             }
         }
 
-        public string ZoneSpawnLoc;
+        public string ZoneSpawnLoc {get; set; }
 
-        public string SpawnLoc;            // x,y = primary key, set on first spawn
+        public string SpawnLoc {get; set; }            // x,y = primary key, set on first spawn
 
-        public string zone;
+        public string zone {get; set; }
 
-        public bool sticky;
+        public bool sticky {get; set; }
 
-        public float Y;
+        public float Y {get; set; }
 
-        public float X;
+        public float X {get; set; }
 
-        public float Z;
+        public float Z {get; set; }
 
-        public bool filtered;
+        public bool filtered {get; set; }
 
-        public int SpawnCount = 0;          // Updated on true re-spawn
+        public int SpawnCount {get; set; } = 0;          // Updated on true re-spawn
 
-        public int SpawnTimeRemaining = 0;
+        public int SpawnTimeRemaining {get; set; } = 0;
 
-        public int SpawnTimer = 0;          // Updated on true re-spawn
+        public int SpawnTimer {get; set; } = 0;          // Updated on true re-spawn
 
-        public string SpawnTimeStr;    // Update on spawn (last spawn time)
+        public string SpawnTimeStr {get; set; }    // Update on spawn (last spawn time)
 
-        public DateTime SpawnTimeDT = DateTime.MinValue;
+        public DateTime SpawnTimeDT {get; set; } = DateTime.MinValue;
 
-        public string KillTimeStr = "";     // Updated on each kill, erased on spawn
+        public string KillTimeStr {get; set; } = "";     // Updated on each kill, erased on spawn
 
-        public DateTime KillTimeDT = DateTime.MinValue;
+        public DateTime KillTimeDT {get; set; } = DateTime.MinValue;
 
-        public string NextSpawnStr = "";    // Updated on each kill, erased on spawn
+        public string NextSpawnStr {get; set; } = "";    // Updated on each kill, erased on spawn
 
-        public DateTime NextSpawnDT = DateTime.MinValue;
+        public DateTime NextSpawnDT {get; set; } = DateTime.MinValue;
 
-        public string LastSpawnName = "";   // Updated on each spawn
+        public string LastSpawnName {get; set; } = "";   // Updated on each spawn
 
-        public ListViewItem itmSpawnTimerList;
+        public ListViewItem itmSpawnTimerList {get; set; }
 
         private bool listNeedsUpdate;
 

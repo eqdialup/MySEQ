@@ -33,15 +33,29 @@ namespace myseq
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+            System.Windows.Forms.ToolStripMenuItem mnuViewMain;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
+            System.Windows.Forms.ToolStripLabel toolStripZPosLabel;
+            System.Windows.Forms.ToolStripLabel toolStripZOffsetLabel;
+            System.Windows.Forms.ToolStripLabel toolStripLabel1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.mnuMainMenu = new System.Windows.Forms.MenuStrip();
             this.mnuFileMain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSavePrefs = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuOpenMap = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSaveMobs = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuConnect = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAutoConnect = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuServerSelection = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,7 +79,6 @@ namespace myseq
             this.mnuChar12 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem13 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuCharRefresh = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditMain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuChangeColor = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,30 +90,24 @@ namespace myseq
             this.mnuSpawnListFont = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTargetInfoFont = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMapLabelsFont = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuReloadAlerts = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuEditGlobalAlerts = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditZoneAlerts = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuRefreshSpawnList = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuClearSavedTimers = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSaveSpawnLog = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuViewMain = new System.Windows.Forms.ToolStripMenuItem();
             this.toolbarsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewMenuBar = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewStatusBar = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewDepthFilterBar = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuShowSpawnList = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowSpawnListTimer = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowGroundItemList = new System.Windows.Forms.ToolStripMenuItem();
             this.thinSpawnlistmnuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuShowListGridLines = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowListSearchBox = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowGridLines = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuShowCorpses = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowPCCorpses = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowMyCorpse = new System.Windows.Forms.ToolStripMenuItem();
@@ -127,7 +134,6 @@ namespace myseq
             this.mnuFilterSpawnPoints = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuForceDistinct = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuForceDistinctText = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuLabelShow = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowNPCLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowNPCNames = new System.Windows.Forms.ToolStripMenuItem();
@@ -156,17 +162,15 @@ namespace myseq
             this.mnuShowTargetInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSmallTargetInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAutoSelectEQTarget = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFollowNone = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFollowPlayer = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFollowTarget = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuKeepCentered = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAutoExpand = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuMapReset = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpMain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuDepthFilter2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -252,18 +256,15 @@ namespace myseq
             this.toolStripZoomOut = new System.Windows.Forms.ToolStripButton();
             this.toolStripScale = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripDepthFilterButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripZPosLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStripZPos = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripZPosDown = new System.Windows.Forms.ToolStripButton();
             this.toolStripZPosUp = new System.Windows.Forms.ToolStripButton();
-            this.toolStripZOffsetLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStripZNeg = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripZNegUp = new System.Windows.Forms.ToolStripButton();
             this.toolStripZNegDown = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetDepthFilter = new System.Windows.Forms.ToolStripButton();
             this.toolStripOptions = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLookupBox = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripCheckLookup = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup = new System.Windows.Forms.ToolStripButton();
@@ -280,7 +281,22 @@ namespace myseq
             this.toolStripCheckLookup4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup4 = new System.Windows.Forms.ToolStripButton();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            mnuViewMain = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripZPosLabel = new System.Windows.Forms.ToolStripLabel();
+            toolStripZOffsetLabel = new System.Windows.Forms.ToolStripLabel();
+            toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.mnuMainMenu.SuspendLayout();
             this.mnuContext.SuspendLayout();
             this.mnuContextAddFilter.SuspendLayout();
@@ -290,13 +306,28 @@ namespace myseq
             this.toolBarStrip.SuspendLayout();
             this.SuspendLayout();
             // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            // 
             // mnuMainMenu
             // 
             this.mnuMainMenu.BackColor = System.Drawing.SystemColors.ControlLight;
             this.mnuMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileMain,
             this.mnuEditMain,
-            this.mnuViewMain,
+            mnuViewMain,
             this.mnuMapSettingsMain,
             this.mnuHelpMain});
             this.mnuMainMenu.Location = new System.Drawing.Point(0, 0);
@@ -310,15 +341,15 @@ namespace myseq
             this.mnuFileMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuOptions,
             this.mnuSavePrefs,
-            this.toolStripSeparator2,
+            toolStripSeparator2,
             this.mnuOpenMap,
             this.mnuSaveMobs,
-            this.toolStripSeparator1,
+            toolStripSeparator1,
             this.mnuConnect,
             this.mnuAutoConnect,
             this.mnuServerSelection,
             this.mnuCharSelect,
-            this.toolStripSeparator3,
+            toolStripSeparator3,
             this.mnuExit});
             this.mnuFileMain.Name = "mnuFileMain";
             this.mnuFileMain.Size = new System.Drawing.Size(37, 20);
@@ -330,27 +361,22 @@ namespace myseq
             this.mnuOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuOptions.Name = "mnuOptions";
             this.mnuOptions.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.mnuOptions.Size = new System.Drawing.Size(177, 22);
+            this.mnuOptions.Size = new System.Drawing.Size(180, 22);
             this.mnuOptions.Text = "&Options";
             this.mnuOptions.Click += new System.EventHandler(this.MnuOptions_Click);
             // 
             // mnuSavePrefs
             // 
             this.mnuSavePrefs.Name = "mnuSavePrefs";
-            this.mnuSavePrefs.Size = new System.Drawing.Size(177, 22);
+            this.mnuSavePrefs.Size = new System.Drawing.Size(180, 22);
             this.mnuSavePrefs.Text = "Save &Prefs";
             this.mnuSavePrefs.Click += new System.EventHandler(this.MnuSavePrefs_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(174, 6);
             // 
             // mnuOpenMap
             // 
             this.mnuOpenMap.Name = "mnuOpenMap";
             this.mnuOpenMap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.mnuOpenMap.Size = new System.Drawing.Size(177, 22);
+            this.mnuOpenMap.Size = new System.Drawing.Size(180, 22);
             this.mnuOpenMap.Text = "&Open Map";
             this.mnuOpenMap.Click += new System.EventHandler(this.MnuOpenMap_Click);
             // 
@@ -358,27 +384,22 @@ namespace myseq
             // 
             this.mnuSaveMobs.Name = "mnuSaveMobs";
             this.mnuSaveMobs.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuSaveMobs.Size = new System.Drawing.Size(177, 22);
+            this.mnuSaveMobs.Size = new System.Drawing.Size(180, 22);
             this.mnuSaveMobs.Text = "&Save Mobs";
             this.mnuSaveMobs.Click += new System.EventHandler(this.MnuSaveMobs_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(174, 6);
             // 
             // mnuConnect
             // 
             this.mnuConnect.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuConnect.Name = "mnuConnect";
-            this.mnuConnect.Size = new System.Drawing.Size(177, 22);
+            this.mnuConnect.Size = new System.Drawing.Size(180, 22);
             this.mnuConnect.Text = "&Connect";
             this.mnuConnect.Click += new System.EventHandler(this.CmdCommand_Click);
             // 
             // mnuAutoConnect
             // 
             this.mnuAutoConnect.Name = "mnuAutoConnect";
-            this.mnuAutoConnect.Size = new System.Drawing.Size(177, 22);
+            this.mnuAutoConnect.Size = new System.Drawing.Size(180, 22);
             this.mnuAutoConnect.Text = "Connect on Startup";
             this.mnuAutoConnect.Click += new System.EventHandler(this.MnuAutoConnect_Click);
             // 
@@ -391,7 +412,7 @@ namespace myseq
             this.mnuIPAddress4,
             this.mnuIPAddress5});
             this.mnuServerSelection.Name = "mnuServerSelection";
-            this.mnuServerSelection.Size = new System.Drawing.Size(177, 22);
+            this.mnuServerSelection.Size = new System.Drawing.Size(180, 22);
             this.mnuServerSelection.Text = "&Server Selection";
             // 
             // mnuIPAddress1
@@ -448,7 +469,7 @@ namespace myseq
             this.mnuCharRefresh});
             this.mnuCharSelect.Name = "mnuCharSelect";
             this.mnuCharSelect.Overflow = System.Windows.Forms.ToolStripItemOverflow.Always;
-            this.mnuCharSelect.Size = new System.Drawing.Size(177, 22);
+            this.mnuCharSelect.Size = new System.Drawing.Size(180, 22);
             this.mnuCharSelect.Text = "&Character Selection";
             // 
             // mnuChar1
@@ -577,7 +598,7 @@ namespace myseq
             // 
             this.menuItem13.Name = "menuItem13";
             this.menuItem13.Size = new System.Drawing.Size(185, 6);
-            this.menuItem13.Visible = false;
+            this.menuItem13.Visible = true;
             // 
             // mnuCharRefresh
             // 
@@ -587,16 +608,11 @@ namespace myseq
             this.mnuCharRefresh.Visible = false;
             this.mnuCharRefresh.Click += new System.EventHandler(this.MnuCharRefresh_Click);
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(174, 6);
-            // 
             // mnuExit
             // 
             this.mnuExit.Name = "mnuExit";
             this.mnuExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.mnuExit.Size = new System.Drawing.Size(177, 22);
+            this.mnuExit.Size = new System.Drawing.Size(180, 22);
             this.mnuExit.Text = "E&xit";
             this.mnuExit.Click += new System.EventHandler(this.MnuExit_Click);
             // 
@@ -605,12 +621,12 @@ namespace myseq
             this.mnuEditMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuChangeColor,
             this.mnuChangeFont,
-            this.toolStripSeparator18,
+            toolStripSeparator18,
             this.mnuReloadAlerts,
             this.toolStripSeparator4,
             this.mnuEditGlobalAlerts,
             this.mnuEditZoneAlerts,
-            this.toolStripSeparator5,
+            toolStripSeparator5,
             this.mnuRefreshSpawnList,
             this.mnuClearSavedTimers,
             this.mnuSaveSpawnLog});
@@ -626,7 +642,7 @@ namespace myseq
             this.mnuListColor,
             this.mnuBackgroungColor});
             this.mnuChangeColor.Name = "mnuChangeColor";
-            this.mnuChangeColor.Size = new System.Drawing.Size(173, 22);
+            this.mnuChangeColor.Size = new System.Drawing.Size(180, 22);
             this.mnuChangeColor.Text = "C&hange Color";
             // 
             // mnuGridColor
@@ -664,7 +680,7 @@ namespace myseq
             this.mnuTargetInfoFont,
             this.mnuMapLabelsFont});
             this.mnuChangeFont.Name = "mnuChangeFont";
-            this.mnuChangeFont.Size = new System.Drawing.Size(173, 22);
+            this.mnuChangeFont.Size = new System.Drawing.Size(180, 22);
             this.mnuChangeFont.Text = "Change &Font";
             // 
             // mnuSpawnListFont
@@ -690,76 +706,76 @@ namespace myseq
             // 
             // toolStripSeparator18
             // 
-            this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(170, 6);
+            toolStripSeparator18.Name = "toolStripSeparator18";
+            toolStripSeparator18.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuReloadAlerts
             // 
             this.mnuReloadAlerts.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.mnuReloadAlerts.Name = "mnuReloadAlerts";
-            this.mnuReloadAlerts.Size = new System.Drawing.Size(173, 22);
+            this.mnuReloadAlerts.Size = new System.Drawing.Size(180, 22);
             this.mnuReloadAlerts.Text = "&Reload Alerts";
             this.mnuReloadAlerts.Click += new System.EventHandler(this.MnuReloadAlerts_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuEditGlobalAlerts
             // 
             this.mnuEditGlobalAlerts.Name = "mnuEditGlobalAlerts";
-            this.mnuEditGlobalAlerts.Size = new System.Drawing.Size(173, 22);
+            this.mnuEditGlobalAlerts.Size = new System.Drawing.Size(180, 22);
             this.mnuEditGlobalAlerts.Text = "Edit &Global Alerts";
             this.mnuEditGlobalAlerts.Click += new System.EventHandler(this.MnuGlobalAlerts_Click);
             // 
             // mnuEditZoneAlerts
             // 
             this.mnuEditZoneAlerts.Name = "mnuEditZoneAlerts";
-            this.mnuEditZoneAlerts.Size = new System.Drawing.Size(173, 22);
+            this.mnuEditZoneAlerts.Size = new System.Drawing.Size(180, 22);
             this.mnuEditZoneAlerts.Text = "Edit &Zone Alerts";
             this.mnuEditZoneAlerts.Click += new System.EventHandler(this.MnuAddEditAlerts_Click);
             // 
             // toolStripSeparator5
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(170, 6);
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuRefreshSpawnList
             // 
             this.mnuRefreshSpawnList.Name = "mnuRefreshSpawnList";
-            this.mnuRefreshSpawnList.Size = new System.Drawing.Size(173, 22);
+            this.mnuRefreshSpawnList.Size = new System.Drawing.Size(180, 22);
             this.mnuRefreshSpawnList.Text = "&Refresh Spawn List";
             this.mnuRefreshSpawnList.Click += new System.EventHandler(this.MnuRefreshSpawnList_Click);
             // 
             // mnuClearSavedTimers
             // 
             this.mnuClearSavedTimers.Name = "mnuClearSavedTimers";
-            this.mnuClearSavedTimers.Size = new System.Drawing.Size(173, 22);
+            this.mnuClearSavedTimers.Size = new System.Drawing.Size(180, 22);
             this.mnuClearSavedTimers.Text = "Clear Saved &Timers";
             this.mnuClearSavedTimers.Click += new System.EventHandler(this.MnuClearSavedTimers_Click);
             // 
             // mnuSaveSpawnLog
             // 
             this.mnuSaveSpawnLog.Name = "mnuSaveSpawnLog";
-            this.mnuSaveSpawnLog.Size = new System.Drawing.Size(173, 22);
+            this.mnuSaveSpawnLog.Size = new System.Drawing.Size(180, 22);
             this.mnuSaveSpawnLog.Text = "Save Spawn Log";
             this.mnuSaveSpawnLog.Click += new System.EventHandler(this.MnuSaveSpawnLog_Click);
             // 
             // mnuViewMain
             // 
-            this.mnuViewMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            mnuViewMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolbarsToolStripMenuItem,
-            this.toolStripSeparator9,
+            toolStripSeparator9,
             this.mnuShowSpawnList,
             this.mnuShowSpawnListTimer,
             this.mnuShowGroundItemList,
             this.thinSpawnlistmnuItem,
-            this.toolStripSeparator7,
+            toolStripSeparator7,
             this.mnuShowListGridLines,
             this.mnuShowListSearchBox,
             this.mnuShowGridLines,
-            this.toolStripSeparator8,
+            toolStripSeparator8,
             this.mnuShowCorpses,
             this.mnuShowPCCorpses,
             this.mnuShowMyCorpse,
@@ -772,9 +788,9 @@ namespace myseq
             this.mnuShowLookupText,
             this.mnuShowLookupNumber,
             this.mnuAlwaysOnTop});
-            this.mnuViewMain.Name = "mnuViewMain";
-            this.mnuViewMain.Size = new System.Drawing.Size(44, 20);
-            this.mnuViewMain.Text = "&View";
+            mnuViewMain.Name = "mnuViewMain";
+            mnuViewMain.Size = new System.Drawing.Size(44, 20);
+            mnuViewMain.Text = "&View";
             // 
             // toolbarsToolStripMenuItem
             // 
@@ -812,8 +828,8 @@ namespace myseq
             // 
             // toolStripSeparator9
             // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(195, 6);
+            toolStripSeparator9.Name = "toolStripSeparator9";
+            toolStripSeparator9.Size = new System.Drawing.Size(195, 6);
             // 
             // mnuShowSpawnList
             // 
@@ -836,19 +852,19 @@ namespace myseq
             this.mnuShowGroundItemList.Text = "Ground &Item List";
             this.mnuShowGroundItemList.Click += new System.EventHandler(this.MnuShowGroundItemList_Click);
             // 
-            // thinSpawnlistToolStripMenuItem
+            // thinSpawnlistmnuItem
             // 
             this.thinSpawnlistmnuItem.Checked = global::myseq.Properties.Settings.Default.ThinSpawnList;
             this.thinSpawnlistmnuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.thinSpawnlistmnuItem.Name = "thinSpawnlistToolStripMenuItem";
+            this.thinSpawnlistmnuItem.Name = "thinSpawnlistmnuItem";
             this.thinSpawnlistmnuItem.Size = new System.Drawing.Size(198, 22);
             this.thinSpawnlistmnuItem.Text = "Show thin Lists";
             this.thinSpawnlistmnuItem.Click += new System.EventHandler(this.ThinSpawnlist_Click);
             // 
             // toolStripSeparator7
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(195, 6);
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new System.Drawing.Size(195, 6);
             // 
             // mnuShowListGridLines
             // 
@@ -874,8 +890,8 @@ namespace myseq
             // 
             // toolStripSeparator8
             // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(195, 6);
+            toolStripSeparator8.Name = "toolStripSeparator8";
+            toolStripSeparator8.Size = new System.Drawing.Size(195, 6);
             // 
             // mnuShowCorpses
             // 
@@ -969,7 +985,7 @@ namespace myseq
             this.menuItem3,
             this.mnuForceDistinct,
             this.mnuForceDistinctText,
-            this.toolStripSeparator12,
+            toolStripSeparator12,
             this.mnuLabelShow,
             this.mnuCollectMobTrails,
             this.mnuShowMobTrails,
@@ -978,14 +994,14 @@ namespace myseq
             this.mnuShowTargetInfo,
             this.mnuSmallTargetInfo,
             this.mnuAutoSelectEQTarget,
-            this.toolStripSeparator10,
+            toolStripSeparator10,
             this.mnuFollowNone,
             this.mnuFollowPlayer,
             this.mnuFollowTarget,
-            this.toolStripSeparator11,
+            toolStripSeparator11,
             this.mnuKeepCentered,
             this.mnuAutoExpand,
-            this.toolStripSeparator13,
+            toolStripSeparator13,
             this.mnuMapReset});
             this.mnuMapSettingsMain.Name = "mnuMapSettingsMain";
             this.mnuMapSettingsMain.Size = new System.Drawing.Size(43, 20);
@@ -1096,8 +1112,8 @@ namespace myseq
             // 
             // toolStripSeparator12
             // 
-            this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(192, 6);
+            toolStripSeparator12.Name = "toolStripSeparator12";
+            toolStripSeparator12.Size = new System.Drawing.Size(192, 6);
             // 
             // mnuLabelShow
             // 
@@ -1328,8 +1344,8 @@ namespace myseq
             // 
             // toolStripSeparator10
             // 
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(192, 6);
+            toolStripSeparator10.Name = "toolStripSeparator10";
+            toolStripSeparator10.Size = new System.Drawing.Size(192, 6);
             // 
             // mnuFollowNone
             // 
@@ -1360,8 +1376,8 @@ namespace myseq
             // 
             // toolStripSeparator11
             // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(192, 6);
+            toolStripSeparator11.Name = "toolStripSeparator11";
+            toolStripSeparator11.Size = new System.Drawing.Size(192, 6);
             // 
             // mnuKeepCentered
             // 
@@ -1379,8 +1395,8 @@ namespace myseq
             // 
             // toolStripSeparator13
             // 
-            this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(192, 6);
+            toolStripSeparator13.Name = "toolStripSeparator13";
+            toolStripSeparator13.Size = new System.Drawing.Size(192, 6);
             // 
             // mnuMapReset
             // 
@@ -1404,6 +1420,13 @@ namespace myseq
             this.mnuAbout.Size = new System.Drawing.Size(180, 22);
             this.mnuAbout.Text = "About";
             this.mnuAbout.Click += new System.EventHandler(this.MnuAbout_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // mnuContext
             // 
@@ -1995,18 +2018,18 @@ namespace myseq
             this.toolStripZoomOut,
             this.toolStripScale,
             this.toolStripDepthFilterButton,
-            this.toolStripZPosLabel,
+            toolStripZPosLabel,
             this.toolStripZPos,
             this.toolStripZPosDown,
             this.toolStripZPosUp,
-            this.toolStripZOffsetLabel,
+            toolStripZOffsetLabel,
             this.toolStripZNeg,
             this.toolStripZNegUp,
             this.toolStripZNegDown,
             this.toolStripResetDepthFilter,
             this.toolStripOptions,
             this.toolStripSeparator19,
-            this.toolStripLabel1,
+            toolStripLabel1,
             this.toolStripLookupBox,
             this.toolStripCheckLookup,
             this.toolStripResetLookup,
@@ -2152,10 +2175,10 @@ namespace myseq
             // 
             // toolStripZPosLabel
             // 
-            this.toolStripZPosLabel.Name = "toolStripZPosLabel";
-            this.toolStripZPosLabel.Size = new System.Drawing.Size(38, 22);
-            this.toolStripZPosLabel.Text = "Z-Pos";
-            this.toolStripZPosLabel.ToolTipText = "The range above the player that is not depth filtered.";
+            toolStripZPosLabel.Name = "toolStripZPosLabel";
+            toolStripZPosLabel.Size = new System.Drawing.Size(38, 22);
+            toolStripZPosLabel.Text = "Z-Pos";
+            toolStripZPosLabel.ToolTipText = "The range above the player that is not depth filtered.";
             // 
             // toolStripZPos
             // 
@@ -2196,10 +2219,10 @@ namespace myseq
             // 
             // toolStripZOffsetLabel
             // 
-            this.toolStripZOffsetLabel.Name = "toolStripZOffsetLabel";
-            this.toolStripZOffsetLabel.Size = new System.Drawing.Size(41, 22);
-            this.toolStripZOffsetLabel.Text = "Z-Neg";
-            this.toolStripZOffsetLabel.ToolTipText = "The range below the player that is not depth filtered.";
+            toolStripZOffsetLabel.Name = "toolStripZOffsetLabel";
+            toolStripZOffsetLabel.Size = new System.Drawing.Size(41, 22);
+            toolStripZOffsetLabel.Text = "Z-Neg";
+            toolStripZOffsetLabel.ToolTipText = "The range below the player that is not depth filtered.";
             // 
             // toolStripZNeg
             // 
@@ -2269,10 +2292,10 @@ namespace myseq
             // 
             // toolStripLabel1
             // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(30, 22);
-            this.toolStripLabel1.Text = "Find";
-            this.toolStripLabel1.ToolTipText = "Find and temporarily mark mobs on map.";
+            toolStripLabel1.Name = "toolStripLabel1";
+            toolStripLabel1.Size = new System.Drawing.Size(30, 22);
+            toolStripLabel1.Text = "Find";
+            toolStripLabel1.ToolTipText = "Find and temporarily mark mobs on map.";
             // 
             // toolStripLookupBox
             // 
@@ -2460,13 +2483,6 @@ namespace myseq
             this.dockPanel.Size = new System.Drawing.Size(1309, 458);
             this.dockPanel.TabIndex = 2;
             // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.helpToolStripMenuItem.Text = "Help";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2555,27 +2571,21 @@ namespace myseq
 
         private ToolStripMenuItem mnuFileMain;
         private ToolStripMenuItem mnuConnect;
-        private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem mnuOpenMap;
         private ToolStripMenuItem mnuSaveMobs;
-        private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem mnuSavePrefs;
-        private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem mnuExit;
         private ToolStripMenuItem mnuEditMain;
         private ToolStripMenuItem mnuReloadAlerts;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem mnuEditGlobalAlerts;
         private ToolStripMenuItem mnuEditZoneAlerts;
-        private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem mnuRefreshSpawnList;
         private ToolStripMenuItem mnuClearSavedTimers;
         private ToolStripMenuItem mnuSaveSpawnLog;
-        private ToolStripMenuItem mnuViewMain;
         private ToolStripMenuItem mnuShowSpawnList;
         private ToolStripMenuItem mnuShowSpawnListTimer;
         private ToolStripMenuItem mnuShowGroundItemList;
-        private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem mnuShowListGridLines;
         private ToolStripMenuItem mnuShowGridLines;
         private ToolStripMenuItem mnuMapSettingsMain;
@@ -2622,7 +2632,6 @@ namespace myseq
         private ToolStripMenuItem mnuGridInterval1000;
         private ToolStripMenuItem mnuShowTargetInfo;
         private ToolStripMenuItem mnuAutoSelectEQTarget;
-        private ToolStripSeparator toolStripSeparator10;
         private ToolStripMenuItem mnuFollowNone;
         private ToolStripMenuItem mnuFollowPlayer;
         private ToolStripMenuItem mnuFollowTarget;
@@ -2631,10 +2640,6 @@ namespace myseq
         private ToolStripMenuItem mnuMapReset;
         private ToolStripMenuItem mnuHelpMain;
         private ToolStripMenuItem mnuAbout;
-
-        private ToolStripSeparator toolStripSeparator11;
-        private ToolStripSeparator toolStripSeparator12;
-        private ToolStripSeparator toolStripSeparator13;
         public ToolStripStatusLabel toolStripMouseLocation;
         public ToolStripStatusLabel toolStripDistance;
         public ToolStripStatusLabel toolStripSpring;
@@ -2649,9 +2654,7 @@ namespace myseq
         private ToolStripButton toolStripZoomOut;
         private ToolStripSeparator toolStripSeparator14;
         public ToolStripComboBox toolStripScale;
-        private ToolStripLabel toolStripZPosLabel;
         public ToolStripTextBox toolStripZPos;
-        private ToolStripLabel toolStripZOffsetLabel;
         public ToolStripTextBox toolStripZNeg;
         private ToolStripButton toolStripZPosUp;
         private ToolStripSeparator menuItem11;
@@ -2739,7 +2742,6 @@ namespace myseq
         private ToolStripMenuItem mnuSpawnListFont;
         private ToolStripMenuItem mnuTargetInfoFont;
         private ToolStripMenuItem mnuMapLabelsFont;
-        private ToolStripSeparator toolStripSeparator18;
         private ToolStripSeparator menuItem13;
         private ToolStripMenuItem mnuShowNPCs;
         private ToolStripMenuItem mnuShowCorpses;
@@ -2753,9 +2755,6 @@ namespace myseq
         private ToolStripMenuItem mnuShowLookupText;
         private ToolStripMenuItem mnuShowLookupNumber;
         private ToolStripMenuItem mnuAlwaysOnTop;
-        private ToolStripSeparator toolStripSeparator8;
-        private ToolStripSeparator toolStripSeparator9;
-        private ToolStripLabel toolStripLabel1;
         public ToolStripTextBox toolStripLookupBox;
         public ToolStripTextBox toolStripLookupBox1;
         public ToolStripTextBox toolStripLookupBox2;

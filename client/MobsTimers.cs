@@ -8,7 +8,6 @@ using Structures;
 namespace myseq
 {
     public class MobsTimers
-
     {
         private readonly Hashtable mobsTimer = new Hashtable();    // All spawns
 
@@ -98,7 +97,7 @@ namespace myseq
         {
             ResetAllTimers();
 
-            var timerfile = FileOps.CombineSpawnTim(mapName);
+            var timerfile = FileOps.CombineTimer(mapName);
 
             if (!Directory.Exists(Settings.Default.TimerDir))
             {
@@ -334,7 +333,7 @@ namespace myseq
         {
             if (!string.IsNullOrEmpty(mapName) && Settings.Default.saveSpawnTimers && !Voidmaps)
             {
-                var timerfile = FileOps.CombineSpawnTim(mapName);
+                var timerfile = FileOps.CombineTimer(mapName);
 
                 if (File.Exists(timerfile))
                 {
@@ -426,7 +425,7 @@ namespace myseq
 
         private void SaveTimers()
         {
-            var timerfile = FileOps.CombineSpawnTim(mapName);
+            var timerfile = FileOps.CombineTimer(mapName);
             if (!Settings.Default.saveSpawnTimers || mapName.Length < 3)
             {
                 return;

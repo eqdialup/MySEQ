@@ -4,25 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using myseq.Properties;
 
 namespace Structures
 {
-    public class Filters
+    public class Filters : FileOps
     {
-        private readonly FileOps fileop = new FileOps();
-
         public static List<string> Hunt { get; set; } = new List<string>();
+        public static List<string> GlobalHunt { get; set; } = new List<string>();
         public static List<string> Caution { get; set; } = new List<string>();
         public static List<string> GlobalCaution { get; set; } = new List<string>();
         public static List<string> Danger { get; set; } = new List<string>();
-        public static List<string> GlobalHunt { get; set; } = new List<string>();
-        public static List<string> Alert { get; set; } = new List<string>();
         public static List<string> GlobalDanger { get; set; } = new List<string>();
+        public static List<string> Alert { get; set; } = new List<string>();
+        public static List<string> GlobalAlert { get; set; } = new List<string>();
         public static List<string> EmailAlert { get; set; } = new List<string>();
         public static List<string> WieldedItems { get; set; } = new List<string>();
-
-        public static List<string> GlobalAlert { get; set; } = new List<string>();
 
         public void ClearLists()
         {
@@ -63,9 +59,9 @@ namespace Structures
         {
             zoneName = zoneName.ToLower();
 
-            var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
+            var filterFile = CombineFilter($"{zoneName}.xml");
 
-            fileop.MakeFilterExist(filterFile);
+            MakeFilterExist(filterFile);
 
             ReadAlertLines(zoneName, filterFile);
         }
@@ -153,49 +149,55 @@ namespace Structures
         {
             if (zoneName == "global")
             {
-                if (type == 1)
-                {
-                    AddToAlerts(GlobalHunt, inputstring);
-                }
-                else if (type == 2)
-                {
-                    AddToAlerts(GlobalCaution, inputstring);
-                }
-                else if (type == 3)
-                {
-                    AddToAlerts(GlobalDanger, inputstring);
-                }
-                else if (type == 4)
-                {
-                    AddToAlerts(GlobalAlert, inputstring);
-                }
+                AddGlobalFilter(type, inputstring);
             }
             else
             {
-                if (type == 1)
-                {
+                AddZoneFilter(type, inputstring);
+            }
+        }
+
+        private void AddGlobalFilter(int type, string inputstring)
+        {
+            switch (type)
+            {
+                case 1:
+                    AddToAlerts(GlobalHunt, inputstring);
+                    break;
+                case 2:
+                    AddToAlerts(GlobalCaution, inputstring);
+                    break;
+                case 3:
+                    AddToAlerts(GlobalDanger, inputstring);
+                    break;
+                case 4:
+                    AddToAlerts(GlobalAlert, inputstring);
+                    break;
+            }
+        }
+
+        private void AddZoneFilter(int type, string inputstring)
+        {
+            switch (type)
+            {
+                case 1:
                     AddToAlerts(Hunt, inputstring);
-                }
-                else if (type == 2)
-                {
+                    break;
+                case 2:
                     AddToAlerts(Caution, inputstring);
-                }
-                else if (type == 3)
-                {
+                    break;
+                case 3:
                     AddToAlerts(Danger, inputstring);
-                }
-                else if (type == 4)
-                {
+                    break;
+                case 4:
                     AddToAlerts(Alert, inputstring);
-                }
-                else if (type == 5)
-                {
+                    break;
+                case 5:
                     AddToAlerts(EmailAlert, inputstring);
-                }
-                else if (type == 6)
-                {
+                    break;
+                case 6:
                     AddToAlerts(WieldedItems, inputstring);
-                }
+                    break;
             }
         }
 
@@ -206,81 +208,76 @@ namespace Structures
             {
                 zoneName = zoneName.ToLower();
 
-                var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
+                var filterFile = CombineFilter($"{zoneName}.xml");
 
-                FileOps.DeleteFile(filterFile);
+                DeleteFile(filterFile);
                 // create the filter file - truncate if exists - going to write all the filters
 
-                List<string> lines = new List<string>
-                {
-                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-                    "<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">",
-                    "<seqfilters>",
-                    "    <section name=\"Hunt\">"
-                };
-
                 if (zoneName == "global")
                 {
-                    AddNameFromList(lines, GlobalHunt);
+                    WriteGlobalFile(filterFile);
                 }
                 else
                 {
-                    AddNameFromList(lines, Hunt);
+                    WriteZoneFile(filterFile);
                 }
-
-                lines.Add("    </section>\n    <section name=\"Caution\">");
-
-                if (zoneName == "global")
-                {
-                    AddNameFromList(lines, GlobalCaution);
-                }
-                else
-                {
-                    AddNameFromList(lines, Caution);
-                }
-                lines.Add("    </section>\n     <section name=\"Danger\">");
-
-                if (zoneName == "global")
-                {
-                    AddNameFromList(lines, GlobalDanger);
-                }
-                else
-                {
-                    AddNameFromList(lines, Danger);
-                }
-
-                lines.Add("    </section>\n    <section name=\"Alert\">");  // Rares
-
-                if (zoneName == "global")
-                {
-                    AddNameFromList(lines, GlobalAlert);
-                }
-                else
-                {
-                    AddNameFromList(lines, Alert);
-                }
-                lines.Add("    </section>");
-
-                if (zoneName != "global")
-                {
-                    lines.Add("    <section name=\"Email\">");  // Email Alerts - zone only
-                    AddNameFromList(lines, EmailAlert);
-                    lines.Add("    <section name=\"Primary\">");  // Item In Primary Hand Alerts - zone only
-                    AddNameFromList(lines, WieldedItems);
-                    lines.Add("    </section>");
-                    lines.Add("    <section name=\"Offhand\">");  // Item In Offhand Hand Alerts - zone only
-                    AddNameFromList(lines, WieldedItems);
-                    lines.Add("    </section>");
-                }
-                lines.Add("</seqfilters>");
-
-                File.WriteAllLines(filterFile, lines);
                 PurgeFilters(zoneName);
             }
             catch (Exception ex)
             {
                 LogLib.WriteLine($"Error opening writing filter file for {zoneName}: ", ex);
             }
+        }
+
+        private void WriteZoneFile(string filterFile)
+        {
+            List<string> lines = ListHeader();
+            AddNameFromList(lines, Hunt);
+            lines.Add("    </section>\n    <section name=\"Caution\">");
+            AddNameFromList(lines, Caution);
+            lines.Add("    </section>\n     <section name=\"Danger\">");
+            AddNameFromList(lines, Danger);
+            lines.Add("    </section>\n    <section name=\"Alert\">");  // Rares
+            AddNameFromList(lines, Alert);
+            lines.Add("    </section>");
+            lines.Add("    <section name=\"Email\">");  // Email Alerts - zone only
+            AddNameFromList(lines, EmailAlert);
+            lines.Add("    <section name=\"Primary\">");  // Item In Primary Hand Alerts - zone only
+            AddNameFromList(lines, WieldedItems);
+            lines.Add("    </section>");
+            lines.Add("    <section name=\"Offhand\">");  // Item In Offhand Hand Alerts - zone only
+            AddNameFromList(lines, WieldedItems);
+            ListFooter(lines);
+
+            File.WriteAllLines(filterFile, lines);
+        }
+
+        private void WriteGlobalFile(string filterFile)
+        {
+            List<string> lines = ListHeader();
+            AddNameFromList(lines, GlobalHunt);
+            lines.Add("    </section>\n    <section name=\"Caution\">");
+            AddNameFromList(lines, GlobalCaution);
+            lines.Add("    </section>\n     <section name=\"Danger\">");
+            AddNameFromList(lines, GlobalDanger);
+            lines.Add("    </section>\n    <section name=\"Alert\">");
+            AddNameFromList(lines, GlobalAlert);
+            ListFooter(lines);
+
+            File.WriteAllLines(filterFile, lines);
+        }
+
+        private static List<string> ListHeader() => new List<string>
+                {
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+                    "<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">",
+                    "<seqfilters>",
+                    "    <section name=\"Hunt\">"
+                };
+        private static void ListFooter(List<string> lines)
+        {
+            lines.Add("    </section>");
+            lines.Add("</seqfilters>");
         }
 
         private void AddNameFromList(List<string> lines, List<string> alertlist)
@@ -293,11 +290,8 @@ namespace Structures
 
         private static void PurgeFilters(string zoneName)
         {
-            var filterFile = Path.Combine(Settings.Default.FilterDir, $"custom_{zoneName}.conf");
-            FileOps.DeleteFile(filterFile);
-
-            filterFile = Path.Combine(Settings.Default.FilterDir, $"filters_{zoneName}.conf");
-            FileOps.DeleteFile(filterFile);
+            DeleteFile(CombineFilter($"custom_{zoneName}.conf"));
+            DeleteFile(CombineFilter($"filters_{zoneName}.conf"));
         }
 
         public void LoadAlerts(string zoneName)
@@ -315,9 +309,9 @@ namespace Structures
             {
                 zoneName = zoneName.ToLower();
 
-                var filterFile = Path.Combine(Settings.Default.FilterDir, $"{zoneName}.xml");
+                var filterFile = CombineFilter($"{zoneName}.xml");
 
-                fileop.MakeFilterExist(filterFile);
+                MakeFilterExist(filterFile);
 
                 Process.Start("notepad.exe", filterFile);
             }

@@ -30,7 +30,6 @@ namespace myseq
 
         public void MarkLookups(string name, ref bool filterMob)
         {
-            //name = GetName(name);
             GetCheckNameLength(name, filterMob, ref search0, ref filter0, "1:");
             GetCheckNameLength(name, filterMob, ref search1, ref filter1, "2");
             GetCheckNameLength(name, filterMob, ref search2, ref filter2, "3");

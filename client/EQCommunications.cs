@@ -9,7 +9,6 @@ namespace Structures
 
 {
     public class EQCommunications
-
     {
         private const string ServConErr = "Server Connection Error";
 
@@ -21,9 +20,9 @@ namespace Structures
         private CSocketClient pSocketClient;
 
         // Processing stuff-
-        public ProcessInfo CurrentProcess = new ProcessInfo(0, "");
+        public ProcessInfo CurrentProcess {get; private set; } = new ProcessInfo(0, "");
         private int processcount;
-        public List<ProcessInfo> colProcesses = new List<ProcessInfo>();
+        public List<ProcessInfo> ColProcesses { get; } = new List<ProcessInfo>();
 
         private bool update_hidden;
 
@@ -191,9 +190,9 @@ namespace Structures
 
         public void SwitchCharacter(int CharacterIndex)
         {
-            if (colProcesses.Count >= CharacterIndex)
+            if (ColProcesses.Count >= CharacterIndex)
             {
-                ProcessInfo PI = colProcesses[CharacterIndex - 1];
+                ProcessInfo PI = ColProcesses[CharacterIndex - 1];
                 if (PI?.ProcessID > 0)
                 {
                     NewProcessID = PI.ProcessID;
@@ -368,12 +367,12 @@ namespace Structures
             {
                 processcount++;
 
-                while (colProcesses.Count > 0 && colProcesses.Count >= processcount)
+                while (ColProcesses.Count > 0 && ColProcesses.Count >= processcount)
                 {
-                    colProcesses.Remove(colProcesses[colProcesses.Count - 1]);
+                    ColProcesses.Remove(ColProcesses[ColProcesses.Count - 1]);
                 }
 
-                colProcesses.Add(PI);
+                ColProcesses.Add(PI);
 
                 f1.ShowCharsInList(si, PI);
             }
@@ -436,5 +435,6 @@ namespace Structures
         }
 
         private void CheckMobs() => eq.CheckMobs(f1.SpawnList, f1.GroundItemList);
+        internal void ProcessClear() => ColProcesses.Clear();
     }
 }

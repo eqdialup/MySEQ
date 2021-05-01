@@ -19,7 +19,7 @@ namespace Structures
 
         private string smtpPassword = "";
 
-        private String prefsDir = "";
+        private string prefsDir = "";
 
         public string SmtpServer { get; set; } = "";
 

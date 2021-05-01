@@ -10,43 +10,43 @@ namespace myseq
 {
     public struct MapPoint
     {
-        public int x;
+        public int X { get; set; }
 
-        public int y;
+        public int Y { get; set; }
 
-        public int z;
+        public int Z { get; set; }
     }
 
     public struct MobTrailPoint
     {
-        public int x;
-        public int y;
+        public int X { get; set; }
+        public int Y { get; set; }
         public MobTrailPoint(Spawninfo sp)
         {
-            x = (int)sp.X;
-            y = (int)sp.Y;
+            X = (int)sp.X;
+            Y = (int)sp.Y;
         }
     }
 
     public class MapText
     {
-        public string label = "";
+        public string label {get; set; } = "";
 
-        public int offset;
+        public int offset {get; set; }
 
-        public SolidBrush color;
+        public SolidBrush color {get; set; }
 
-        public SolidBrush draw_color;
+        public SolidBrush draw_color {get; set; }
 
-        public Pen draw_pen;
+        public Pen draw_pen {get; set; }
 
-        public int x;
+        public int x {get; set;}
 
-        public int y;
+        public int y {get; set;}
 
-        public int z;
+        public int z {get; set;}
 
-        public int size = 2;
+        public int size {get; set;} = 2;
 
         public MapText(string line)
         {
@@ -78,54 +78,54 @@ namespace myseq
 
     public class MapLine
     {
-        public int maxZ;
+        public int MaxZ {get; set; }
 
-        public int minZ;
+        public int MinZ {get; set; }
 
-        public string name = "";
+        //public string name {get; set; } = "";
 
-        public Pen color;
+        public Pen LineColor {get; set; }
 
-        public Pen draw_color;
+        public Pen Draw_color {get; set; }
 
-        public Pen fade_color;
+        public Pen Fade_color {get; set; }
 
-        public ArrayList aPoints;
+        public ArrayList APoints {get; set; }
 
-        public PointF[] linePoints;
+        public PointF[] LinePoints {get; set; }
 
         public MapLine(string line)
         {
             IFormatProvider NumFormat = new CultureInfo("en-US");
             MapPoint point1 = new MapPoint();
             MapPoint point2 = new MapPoint();
-            aPoints = new ArrayList();
+            APoints = new ArrayList();
 
             var parsedLine = line.Remove(0, 1).Split(",".ToCharArray());
 
             if (parsedLine.Length == 9)
             {
-                point1.x = -(int)float.Parse(parsedLine[0], NumFormat);
-                point1.y = -(int)float.Parse(parsedLine[1], NumFormat);
-                point1.z = (int)float.Parse(parsedLine[2], NumFormat);
+                point1.X = -(int)float.Parse(parsedLine[0], NumFormat);
+                point1.Y = -(int)float.Parse(parsedLine[1], NumFormat);
+                point1.Z = (int)float.Parse(parsedLine[2], NumFormat);
 
-                point2.x = -(int)float.Parse(parsedLine[3], NumFormat);
-                point2.y = -(int)float.Parse(parsedLine[4], NumFormat);
-                point2.z = -(int)float.Parse(parsedLine[5], NumFormat);
+                point2.X = -(int)float.Parse(parsedLine[3], NumFormat);
+                point2.Y = -(int)float.Parse(parsedLine[4], NumFormat);
+                point2.Z = -(int)float.Parse(parsedLine[5], NumFormat);
 
                 var R = int.Parse(parsedLine[6].PadRight(4).Substring(0, 3));
                 var G = int.Parse(parsedLine[7].PadRight(4).Substring(0, 3));
                 var B = int.Parse(parsedLine[8].PadRight(4).Substring(0, 3));
-                color = new Pen(new SolidBrush(Color.FromArgb(R, G, B)));
+                LineColor = new Pen(new SolidBrush(Color.FromArgb(R, G, B)));
 
-                aPoints.Add(point1);
-                aPoints.Add(point2);
+                APoints.Add(point1);
+                APoints.Add(point2);
 
-                linePoints = new PointF[2];
+                LinePoints = new PointF[2];
 
-                linePoints[0] = new PointF(point1.x, point1.y);
+                LinePoints[0] = new PointF(point1.X, point1.Y);
 
-                linePoints[1] = new PointF(point2.x, point2.y);
+                LinePoints[1] = new PointF(point2.X, point2.Y);
             }
             else
             {
@@ -135,7 +135,7 @@ namespace myseq
 
         public MapPoint Point(int index)
         {
-            return (MapPoint)aPoints[index];
+            return (MapPoint)APoints[index];
         }
     }
 }

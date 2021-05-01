@@ -13,7 +13,7 @@ namespace Structures
 
         public int YellowRange { get; set; } = 3;
 
-        public SolidBrush[] ConColors = new SolidBrush[200];
+        public static readonly SolidBrush[] ConColors = new SolidBrush[200];
 
         public void FillConColors(Spawninfo GamerInfo)
         {

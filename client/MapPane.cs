@@ -8,23 +8,23 @@ namespace myseq
 {
     public class MapPane : DockContent, IMarkLookup
     {
-        public MapCon mapCon;
+        public MapCon mapCon {get; set; }
         private MainForm f1; // Caution: may be null
 
         #region Designer components
-        public NumericUpDown offsetx;
+        public NumericUpDown offsetx {get; set; }
 
-        public NumericUpDown offsety;
+        public NumericUpDown offsety {get; set; }
 
-        public NumericUpDown scale;
+        public static NumericUpDown scale {get; set; }
 
-        public NumericUpDown filterzneg;
+        public NumericUpDown filterzneg {get; set; }
 
-        public NumericUpDown filterzpos;
+        public NumericUpDown filterzpos {get; set; }
 
-        public Button cmdCommand;
+        public Button cmdCommand {get; set; }
 
-        public TextBox txtLookup;
+        private TextBox txtLookup;
 
         private Button cmdLookup;
 
@@ -508,14 +508,14 @@ namespace myseq
 
         private void Offsetx_ValueChanged(object sender, EventArgs e)
         {
-            mapCon.m_panOffsetX = -(int)offsetx.Value;
+            mapCon.PanOffsetX = -(int)offsetx.Value;
             mapCon.ReAdjust();
             mapCon.Invalidate();
         }
 
         private void Offsety_ValueChanged(object sender, EventArgs e)
         {
-            mapCon.m_panOffsetY = -(int)offsety.Value;
+            mapCon.PanOffsetY = -(int)offsety.Value;
 
             mapCon.ReAdjust();
             mapCon.Invalidate();
@@ -537,7 +537,7 @@ namespace myseq
 
         private void Filterzpos_ValueChanged(object sender, EventArgs e)
         {
-            mapCon.filterpos = (int)filterzpos.Value;
+            mapCon.SetFilterPos((int)filterzpos.Value);
             if (f1 != null)
             {
                 f1.toolStripZPos.Text = $"{filterzpos.Value:0.0}";
@@ -546,7 +546,7 @@ namespace myseq
 
         private void Filterzneg_ValueChanged(object sender, EventArgs e)
         {
-            mapCon.filterneg = (int)filterzneg.Value;
+            mapCon.SetFilterNeg((int)filterzneg.Value);
 
             if (f1 != null)
             {
