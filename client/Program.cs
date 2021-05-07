@@ -1,6 +1,6 @@
-﻿using Structures;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Structures;
 
 namespace myseq
 {
@@ -11,12 +11,14 @@ namespace myseq
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
-            try { Application.Run(new FrmMain()); }
-            catch (NullReferenceException e)
+            try
             {
-                string s = $"Uncaught exception in Main(): {e.Message}";
+                Application.Run(new MainForm());
+            }
+            catch (Exception e)
+            {
+                var s = $"Uncaught exception in Main(): {e.Message} \n - STACKTRACE {e.StackTrace}";
                 LogLib.WriteLine(s);
-                MessageBox.Show(s);
                 Application.Exit();
             }
         }

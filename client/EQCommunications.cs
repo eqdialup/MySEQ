@@ -1,39 +1,28 @@
 // Class Files
 
-using myseq;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using myseq;
 
 namespace Structures
 
 {
-    [Flags]
-    public enum RequestType
-    {
-        None = 0,
-        //Bit Flags determining what data to send to the client
-        ZONE = 0x00000001,
-        PLAYER = 0x00000002,
-        TARGET = 0x00000004,
-        MOBS = 0x00000008,
-        GROUND_ITEMS = 0x00000010,
-        GET_PROCESSINFO = 0x00000020,
-        SET_PROCESSINFO = 0x00000040,
-        WORLD = 0x00000080
-    }
-
     public class EQCommunications
-
     {
         private const string ServConErr = "Server Connection Error";
 
         // Variables to store any incomplete packets till the next chunk arrives.
-
         private int incompleteCount = 0;
 
         private bool RequestPending;
 
         private CSocketClient pSocketClient;
+
+        // Processing stuff-
+        public ProcessInfo CurrentProcess {get; private set; } = new ProcessInfo(0, "");
+        private int processcount;
+        public List<ProcessInfo> ColProcesses { get; } = new List<ProcessInfo>();
 
         private bool update_hidden;
 
@@ -42,13 +31,13 @@ namespace Structures
 
         private int numPackets; // Total Packets expected
 
-        private int numProcessed; // No. of Packets already processed        
+        private int numProcessed; // No. of Packets already processed
 
         private readonly byte[] incompletebuffer = new byte[2048];
 
         private readonly EQData eq;
 
-        private readonly FrmMain f1; // TODO: get rid of this
+        private readonly MainForm f1;
 
         public int NewProcessID { get; set; }
 
@@ -57,26 +46,19 @@ namespace Structures
             update_hidden = true;
         }
 
-        public EQCommunications(EQData eq, FrmMain f1)
-
+        public EQCommunications(EQData eq, MainForm f1)
         {
             this.eq = eq;
-
             this.f1 = f1;
         }
 
         public void StopListening()
-
         {
             try
-
             {
                 RequestPending = false;
-
                 numPackets = numProcessed = 0;
-
                 pSocketClient?.Disconnect();
-
                 pSocketClient = null;
             }
             catch (Exception pException) { LogLib.WriteLine($"Error: StopListening: {pException.Message}"); }
@@ -136,19 +118,17 @@ namespace Structures
         /// <param name="pSocket"> The SocketClient object the message came from </param>
         private void CloseHandler(CSocketClient pSocket)
         {
-                if (f1 == null)
-                    StopListening();
-                else
-                    f1.StopListening();
+            if (f1 == null)
+            {
+                StopListening();
+            }
+            else
+            {
+                f1.StopListening();
+            }
         }
 
         //********************************************************************
-
-        private void SendData(byte[] data)
-        {
-            pSocketClient.Send(data);
-        }
-
         public void Tick()
         {
             int Request;
@@ -163,7 +143,7 @@ namespace Structures
                         {
                             // We have a request to change the process
 
-                            Request = (int)RequestType.SET_PROCESSINFO;
+                            Request = (int)RequestTypes.SET_PROCESSINFO;
                             SendData(BitConverter.GetBytes(Request));
                             send_process = true;
                         }
@@ -178,17 +158,17 @@ namespace Structures
                     else
                     {
                         RequestPending = true;
-                        Request = (int)(RequestType.ZONE
-                                        | RequestType.PLAYER
-                                        | RequestType.TARGET
-                                        | RequestType.MOBS
-                                        | RequestType.GROUND_ITEMS
-                                        | RequestType.WORLD);
+                        Request = (int)(RequestTypes.ZONE
+                                        | RequestTypes.PLAYER
+                                        | RequestTypes.TARGET
+                                        | RequestTypes.MOBS
+                                        | RequestTypes.GROUND_ITEMS
+                                        | RequestTypes.WORLD);
 
                         if (mbGetProcessInfo && NewProcessID == 0)
                         {
                             mbGetProcessInfo = false;
-                            Request |= (int)RequestType.GET_PROCESSINFO;
+                            Request |= (int)RequestTypes.GET_PROCESSINFO;
                         }
 
                         SendData(BitConverter.GetBytes(Request));
@@ -198,16 +178,26 @@ namespace Structures
             catch (Exception ex) { LogLib.WriteLine("Error: timPackets_Tick: ", ex); }
         }
 
+        private void SendData(byte[] data) => pSocketClient.Send(data);
+
         public void CharRefresh()
         {
             if (pSocketClient != null)
+            {
                 mbGetProcessInfo = true;
+            }
         }
 
-        public void SwitchCharacter(ProcessInfo PI)
+        public void SwitchCharacter(int CharacterIndex)
         {
-            if (PI?.ProcessID > 0)
-                NewProcessID = PI.ProcessID;
+            if (ColProcesses.Count >= CharacterIndex)
+            {
+                ProcessInfo PI = ColProcesses[CharacterIndex - 1];
+                if (PI?.ProcessID > 0)
+                {
+                    NewProcessID = PI.ProcessID;
+                }
+            }
         }
 
         public bool CanSwitchChars() => NewProcessID == 0 && !mbGetProcessInfo;
@@ -232,7 +222,7 @@ namespace Structures
                     for (; offset + SIZE_OF_PACKET <= bytes; offset += SIZE_OF_PACKET)
 
                     {
-                        SPAWNINFO si = new SPAWNINFO();
+                        Spawninfo si = new Spawninfo();
 
                         if (offset < 0)
                         {
@@ -256,16 +246,91 @@ namespace Structures
                         }
 
                         numProcessed++;
-                        f1.ProcessPacket(si, update_hidden);
+                        ProcessPacket(si);
                     }
 
-                    f1.ProcessSpawnList();
-                    f1.ProcessGroundItemList();
+                    eq.ProcessSpawnList(f1.SpawnList);
+                    eq.ProcessGroundItemList(f1.GroundItemList);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: ", ex); }
 
             ProcessedPackets(packet, bytes, offset);
+        }
+
+        private void ProcessPacket(Spawninfo si)
+        {
+            // SPAWN  // si.flags == 0
+
+            // Target // si.flags == 1
+
+            //  MAP   // si.flags == 4
+
+            // GROUND // si.flags == 5
+
+            //ProcInfo// si.flags == 6
+
+            //World//    si.flags == 8
+
+            // PLAYER // si.flags == 253
+
+            switch (si.flags)
+            {
+                case PacketType.Zone:
+
+                    f1.ProcessMap(si);
+
+                    break;
+
+                case PacketType.Player:
+
+                    eq.ProcessGamer(si, f1);
+
+                    break;
+
+                case PacketType.GroundItem:
+
+                    eq.ProcessGroundItems(si);
+
+                    break;
+
+                case PacketType.Target:
+
+                    eq.ProcessTarget(si);
+
+                    break;
+
+                case PacketType.World:
+
+                    eq.ProcessWorld(si);
+
+                    break;
+
+                case PacketType.Spawn:
+
+                    eq.ProcessSpawns(si, f1, update_hidden);
+
+                    break;
+
+                case PacketType.GetProcessInfo:
+
+                    ProcessProcessInfo(si);
+                    break;
+
+                default:
+
+                    LogLib.WriteLine("Unknown Packet Type: " + si.flags.ToString(), LogLevel.Warning);
+
+                    break;
+            }
+        }
+
+        private void PacketCopy(byte[] packet, int SIZE_OF_PACKET)
+        {
+            if (incompleteCount > 0 && packet.Length > 0)
+            {
+                Array.Copy(packet, 0, incompletebuffer, incompleteCount, SIZE_OF_PACKET - incompleteCount);
+            }
         }
 
         private int CheckStart(byte[] packet)
@@ -277,7 +342,7 @@ namespace Structures
 
                 numPackets = BitConverter.ToInt32(packet, 0);
                 offset = 4;
-                f1.StartNewPackets();
+                StartNewPackets();
             }
             else
             {
@@ -288,6 +353,32 @@ namespace Structures
 
             return offset;
         }
+
+        private void ProcessProcessInfo(Spawninfo si)
+        {
+            ProcessInfo PI = new ProcessInfo(si.SpawnID, si.Name);
+
+            if (si.SpawnID == 0)
+            {
+                PI.SCharName = "";
+                CurrentProcess = PI;
+            }
+            else
+            {
+                processcount++;
+
+                while (ColProcesses.Count > 0 && ColProcesses.Count >= processcount)
+                {
+                    ColProcesses.Remove(ColProcesses[ColProcesses.Count - 1]);
+                }
+
+                ColProcesses.Add(PI);
+
+                f1.ShowCharsInList(si, PI);
+            }
+        }
+
+        private void StartNewPackets() => processcount = 0;
 
         private void ProcessedPackets(byte[] packet, int bytes, int offset)
         {
@@ -304,7 +395,7 @@ namespace Structures
                 // Finished proceessing the request
                 FinalizeProcess();
 
-                f1.CheckMobs();
+                CheckMobs();
                 f1.mapCon.Invalidate();
             }
         }
@@ -312,8 +403,8 @@ namespace Structures
         private void FinalizeProcess()
         {
             RequestPending = false;
-            if (update_hidden)
-                update_hidden = false;
+            update_hidden = false;
+
             numPackets = numProcessed = 0;
 
             incompleteCount = 0;
@@ -343,10 +434,7 @@ namespace Structures
             }
         }
 
-        private void PacketCopy(byte[] packet, int SIZE_OF_PACKET)
-        {
-            if (incompleteCount > 0 && packet.Length > 0)
-                Array.Copy(packet, 0, incompletebuffer, incompleteCount, SIZE_OF_PACKET - incompleteCount);
-        }
+        private void CheckMobs() => eq.CheckMobs(f1.SpawnList, f1.GroundItemList);
+        internal void ProcessClear() => ColProcesses.Clear();
     }
 }

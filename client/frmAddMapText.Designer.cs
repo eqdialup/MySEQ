@@ -1,5 +1,4 @@
 ﻿using myseq.Properties;
-using System.ComponentModel;
 
 namespace myseq
 {
@@ -55,8 +54,6 @@ namespace myseq
             this.radioBtnSmall.Location = new System.Drawing.Point(10, 16);
             this.radioBtnSmall.Name = "radioBtnSmall";
             this.radioBtnSmall.Size = new System.Drawing.Size(50, 17);
-            this.radioBtnSmall.TabIndex = 1;
-            this.radioBtnSmall.TabStop = true;
             this.radioBtnSmall.Text = "Small";
             this.radioBtnSmall.UseVisualStyleBackColor = true;
             // 
@@ -67,8 +64,6 @@ namespace myseq
             this.radioBtnMedium.Location = new System.Drawing.Point(10, 33);
             this.radioBtnMedium.Name = "radioBtnMedium";
             this.radioBtnMedium.Size = new System.Drawing.Size(62, 17);
-            this.radioBtnMedium.TabIndex = 0;
-            this.radioBtnMedium.TabStop = true;
             this.radioBtnMedium.Text = "Medium";
             this.radioBtnMedium.UseVisualStyleBackColor = true;
             // 
@@ -78,8 +73,6 @@ namespace myseq
             this.radioBtnLarge.Location = new System.Drawing.Point(10, 50);
             this.radioBtnLarge.Name = "radioBtnLarge";
             this.radioBtnLarge.Size = new System.Drawing.Size(52, 17);
-            this.radioBtnLarge.TabIndex = 2;
-            this.radioBtnLarge.TabStop = true;
             this.radioBtnLarge.Text = "Large";
             this.radioBtnLarge.UseVisualStyleBackColor = true;
             // 
@@ -88,21 +81,18 @@ namespace myseq
             this.FontSizeGroupBox.Controls.Add(this.radioBtnLarge);
             this.FontSizeGroupBox.Controls.Add(this.radioBtnMedium);
             this.FontSizeGroupBox.Controls.Add(this.radioBtnSmall);
-            this.FontSizeGroupBox.Location = new System.Drawing.Point(134, 0);
+            this.FontSizeGroupBox.Location = new System.Drawing.Point(126, 0);
             this.FontSizeGroupBox.Name = "FontSizeGroupBox";
-            this.FontSizeGroupBox.Size = new System.Drawing.Size(78, 77);
-            this.FontSizeGroupBox.TabIndex = 3;
-            this.FontSizeGroupBox.TabStop = false;
+            this.FontSizeGroupBox.Size = new System.Drawing.Size(86, 77);
             this.FontSizeGroupBox.Text = "Font Size";
             // 
             // MapTextToAdd
             // 
             this.MapTextToAdd.BackColor = System.Drawing.Color.LightGray;
-            this.MapTextToAdd.ForeColor = Settings.Default.SelectedAddMapText;
+            this.MapTextToAdd.ForeColor = global::myseq.Properties.Settings.Default.SelectedAddMapText;
             this.MapTextToAdd.Location = new System.Drawing.Point(19, 21);
             this.MapTextToAdd.Name = "MapTextToAdd";
             this.MapTextToAdd.Size = new System.Drawing.Size(205, 20);
-            this.MapTextToAdd.TabIndex = 4;
             // 
             // BtnAddTxtOk
             // 
@@ -110,7 +100,6 @@ namespace myseq
             this.BtnAddTxtOk.Location = new System.Drawing.Point(32, 154);
             this.BtnAddTxtOk.Name = "BtnAddTxtOk";
             this.BtnAddTxtOk.Size = new System.Drawing.Size(82, 22);
-            this.BtnAddTxtOk.TabIndex = 5;
             this.BtnAddTxtOk.Text = "Ok";
             this.BtnAddTxtOk.UseVisualStyleBackColor = true;
             this.BtnAddTxtOk.Click += new System.EventHandler(this.BtnAddTxtOk_Click);
@@ -120,7 +109,6 @@ namespace myseq
             this.BtnAddTxtCancel.Location = new System.Drawing.Point(143, 154);
             this.BtnAddTxtCancel.Name = "BtnAddTxtCancel";
             this.BtnAddTxtCancel.Size = new System.Drawing.Size(81, 22);
-            this.BtnAddTxtCancel.TabIndex = 6;
             this.BtnAddTxtCancel.Text = "Cancel";
             this.BtnAddTxtCancel.UseVisualStyleBackColor = true;
             this.BtnAddTxtCancel.Click += new System.EventHandler(this.BtnAddTxtCancel_Click);
@@ -131,7 +119,6 @@ namespace myseq
             this.lblMapTextToAdd.Location = new System.Drawing.Point(16, 4);
             this.lblMapTextToAdd.Name = "lblMapTextToAdd";
             this.lblMapTextToAdd.Size = new System.Drawing.Size(81, 13);
-            this.lblMapTextToAdd.TabIndex = 7;
             this.lblMapTextToAdd.Text = "Map Text Label";
             // 
             // ColorGroupBox
@@ -143,8 +130,6 @@ namespace myseq
             this.ColorGroupBox.Location = new System.Drawing.Point(12, 47);
             this.ColorGroupBox.Name = "ColorGroupBox";
             this.ColorGroupBox.Size = new System.Drawing.Size(212, 101);
-            this.ColorGroupBox.TabIndex = 17;
-            this.ColorGroupBox.TabStop = false;
             this.ColorGroupBox.Text = "Color";
             // 
             // label1
@@ -153,7 +138,6 @@ namespace myseq
             this.label1.Location = new System.Drawing.Point(17, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(110, 13);
-            this.label1.TabIndex = 20;
             this.label1.Text = "Current selected color";
             // 
             // pictureBox1
@@ -162,15 +146,12 @@ namespace myseq
             this.pictureBox1.Location = new System.Drawing.Point(20, 33);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(100, 15);
-            this.pictureBox1.TabIndex = 19;
-            this.pictureBox1.TabStop = false;
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(20, 54);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(102, 23);
-            this.button1.TabIndex = 18;
             this.button1.Text = "Pick Text Color";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.Button1_Click);
@@ -197,6 +178,7 @@ namespace myseq
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
         #endregion
 

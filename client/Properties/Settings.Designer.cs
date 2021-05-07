@@ -686,12 +686,12 @@ namespace myseq.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ColorRangeCircle {
+        public bool AlertInsideRangeCircle {
             get {
-                return ((bool)(this["ColorRangeCircle"]));
+                return ((bool)(this["AlertInsideRangeCircle"]));
             }
             set {
-                this["ColorRangeCircle"] = value;
+                this["AlertInsideRangeCircle"] = value;
             }
         }
         
@@ -1562,9 +1562,9 @@ namespace myseq.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Player")]
-        public global::myseq.FollowOption FollowOption {
+        public global::Structures.FollowOption FollowOption {
             get {
-                return ((global::myseq.FollowOption)(this["FollowOption"]));
+                return ((global::Structures.FollowOption)(this["FollowOption"]));
             }
             set {
                 this["FollowOption"] = value;
@@ -1868,6 +1868,30 @@ namespace myseq.Properties {
             }
             set {
                 this["EmailAlerts"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ThinSpawnList {
+            get {
+                return ((bool)(this["ThinSpawnList"]));
+            }
+            set {
+                this["ThinSpawnList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool playAlerts {
+            get {
+                return ((bool)(this["playAlerts"]));
+            }
+            set {
+                this["playAlerts"] = value;
             }
         }
     }

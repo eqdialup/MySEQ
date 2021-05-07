@@ -1,13 +1,6 @@
-using myseq.Properties;
-using Structures;
-
 using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.IO;
 using System.Media;
-using System.Windows.Forms;
 
 namespace myseq
 
@@ -17,29 +10,31 @@ namespace myseq
     /// </summary>
     public class FrmOptions : Form
     {
+        #region Design Components
+
         private ColorDialog colorOptionPicker;
 
         private Button cmdCommand;
 
         private TabPage tabColors;
 
-        public PictureBox picPlayerBorder;
+        private PictureBox picPlayerBorder;
 
         private Button butPlayerBorder;
 
-        public PictureBox picListBackgroundColor;
+        private PictureBox picListBackgroundColor;
 
         private Button cmdListBackgroundColor;
 
-        public PictureBox picRangeCircleColor;
+        private PictureBox picRangeCircleColor;
 
         private Button cmdRangeCircleColor;
 
-        public PictureBox picGridColor;
+        private PictureBox picGridColor;
 
         private Button cmdGridColor;
 
-        public PictureBox picMapBackgroundColor;
+        private PictureBox picMapBackgroundColor;
 
         private Button cmdMapBackgroundColor;
 
@@ -292,10 +287,7 @@ namespace myseq
             //
             InitializeComponent();
 
-            foreach (string styleName in Enum.GetNames(typeof(HatchStyle)))
-            {
-                cmbHatch.Items.Add(styleName);
-            }
+            StyleEnums();
 
             cmbHatch.SelectedText = Settings.Default.HatchIndex;
 
@@ -438,6 +430,14 @@ namespace myseq
             SetFgDrawOptions(Settings.Default.DrawOptions);
         }
 
+        private void StyleEnums()
+        {
+            foreach (var styleName in Enum.GetNames(typeof(HatchStyle)))
+            {
+                cmbHatch.Items.Add(styleName);
+            }
+        }
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -451,6 +451,8 @@ namespace myseq
             base.Dispose(disposing);
         }
 
+        #endregion Design Components
+
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -460,1552 +462,1556 @@ namespace myseq
         private void InitializeComponent()
 
         {
-            ComponentResourceManager resources = new ComponentResourceManager(typeof(FrmOptions));
-            cmdCommand = new Button();
-            colorOptionPicker = new ColorDialog();
-            tabColors = new TabPage();
-            picGridLabelColor = new PictureBox();
-            cmdGridLabelColor = new Button();
-            picPlayerBorder = new PictureBox();
-            butPlayerBorder = new Button();
-            picListBackgroundColor = new PictureBox();
-            cmdListBackgroundColor = new Button();
-            picRangeCircleColor = new PictureBox();
-            cmdRangeCircleColor = new Button();
-            picGridColor = new PictureBox();
-            cmdGridColor = new Button();
-            picMapBackgroundColor = new PictureBox();
-            cmdMapBackgroundColor = new Button();
-            tabFolders = new TabPage();
-            cmdSpawnTimers = new Button();
-            txtTimerDir = new TextBox();
-            txtLogDir = new TextBox();
-            txtFilterDir = new TextBox();
-            txtCfgDir = new TextBox();
-            txtMapDir = new TextBox();
-            lblSpawnTimers = new Label();
-            cmdLogDir = new Button();
-            lblLogDir = new Label();
-            cmdFilterDirBrowse = new Button();
-            lblFilterDir = new Label();
-            cmdCfgDirBrowse = new Button();
-            lblCfgDir = new Label();
-            cmdMapDirBrowse = new Button();
-            lblMapDir = new Label();
-            tabAlerts = new TabPage();
-            grpDanger = new GroupBox();
-            optDangerPlay = new RadioButton();
-            optDangerSpeak = new RadioButton();
-            optDangerBeep = new RadioButton();
-            optDangerNone = new RadioButton();
-            txtDangerAudioFile = new TextBox();
-            txtDangerPrefix = new TextBox();
-            lblDangerPrefix = new Label();
-            chkDangerMatchFull = new CheckBox();
-            grpAlert = new GroupBox();
-            optAlertPlay = new RadioButton();
-            optAlertSpeak = new RadioButton();
-            optAlertBeep = new RadioButton();
-            optAlertNone = new RadioButton();
-            txtAlertAudioFile = new TextBox();
-            txtAlertPrefix = new TextBox();
-            lblAlertPrefix = new Label();
-            chkAlertMatchFull = new CheckBox();
-            grpCaution = new GroupBox();
-            optCautionPlay = new RadioButton();
-            optCautionSpeak = new RadioButton();
-            optCautionBeep = new RadioButton();
-            optCautionNone = new RadioButton();
-            txtCautionAudioFile = new TextBox();
-            txtCautionPrefix = new TextBox();
-            lblCautionPrefix = new Label();
-            chkCautionMatchFull = new CheckBox();
-            grpHunt = new GroupBox();
-            optHuntPlay = new RadioButton();
-            optHuntSpeak = new RadioButton();
-            optHuntBeep = new RadioButton();
-            optHuntNone = new RadioButton();
-            txtHuntAudioFile = new TextBox();
-            txtHuntPrefix = new TextBox();
-            lblHuntPrefix = new Label();
-            chkHuntMatchFull = new CheckBox();
-            chkAffixAlerts = new CheckBox();
-            chkPrefixAlerts = new CheckBox();
-            chkCorpsesAlerts = new CheckBox();
-            tabMap = new TabPage();
-            FadedLines = new NumericUpDown();
-            lblFadedLines = new Label();
-            lblPVPLevels = new Label();
-            pvpLevels = new NumericUpDown();
-            groupBox1 = new GroupBox();
-            cmbAlertSound = new ComboBox();
-            cmbHatch = new ComboBox();
-            label4 = new Label();
-            label2 = new Label();
-            chkColorRangeCircle = new CheckBox();
-            spnRangeCircle = new NumericUpDown();
-            numMinAlertLevel = new NumericUpDown();
-            label1 = new Label();
-            groupBox2 = new GroupBox();
-            chkMap = new CheckBox();
-            chkPlayer = new CheckBox();
-            chkSpawns = new CheckBox();
-            chkAddjust = new CheckBox();
-            chkGround = new CheckBox();
-            chkTrails = new CheckBox();
-            chkHighlight = new CheckBox();
-            chkGrid = new CheckBox();
-            chkTimers = new CheckBox();
-            chkText = new CheckBox();
-            chkDirection = new CheckBox();
-            chkLineToPoint = new CheckBox();
-            lblSpawnSize = new Label();
-            chkSelectSpawnList = new CheckBox();
-            spnSpawnSize = new NumericUpDown();
-            chkShowTargetInfo = new CheckBox();
-            chkDrawFoV = new CheckBox();
-            tabGeneral = new TabPage();
-            chkShowCharName = new CheckBox();
-            txtSearchString = new TextBox();
-            lblSearch = new Label();
-            spnLogLevel = new NumericUpDown();
-            lblLogLevel = new Label();
-            chkShowZoneName = new CheckBox();
-            spnOverrideLevel = new NumericUpDown();
-            spnUpdateDelay = new NumericUpDown();
-            txtWindowName = new TextBox();
-            lblWindowName = new Label();
-            lblOverridelevel = new Label();
-            gbServer = new GroupBox();
-            txtIPAddress5 = new TextBox();
-            lblIPAddress5 = new Label();
-            txtIPAddress4 = new TextBox();
-            lblIPAddress4 = new Label();
-            txtIPAddress3 = new TextBox();
-            lblIPAddress3 = new Label();
-            txtIPAddress2 = new TextBox();
-            lblIPAddress2 = new Label();
-            txtPortNo = new TextBox();
-            txtIPAddress1 = new TextBox();
-            lblIPAddress1 = new Label();
-            lbltxtPortNo = new Label();
-            lblUpdateDelay = new Label();
-            chkSaveOnExit = new CheckBox();
-            tabOptions = new TabControl();
-            tabPage1 = new TabPage();
-            cmdCancel = new Button();
-            tabColors.SuspendLayout();
-            ((ISupportInitialize)(picGridLabelColor)).BeginInit();
-            ((ISupportInitialize)(picPlayerBorder)).BeginInit();
-            ((ISupportInitialize)(picListBackgroundColor)).BeginInit();
-            ((ISupportInitialize)(picRangeCircleColor)).BeginInit();
-            ((ISupportInitialize)(picGridColor)).BeginInit();
-            ((ISupportInitialize)(picMapBackgroundColor)).BeginInit();
-            tabFolders.SuspendLayout();
-            tabAlerts.SuspendLayout();
-            grpDanger.SuspendLayout();
-            grpAlert.SuspendLayout();
-            grpCaution.SuspendLayout();
-            grpHunt.SuspendLayout();
-            tabMap.SuspendLayout();
-            ((ISupportInitialize)(FadedLines)).BeginInit();
-            ((ISupportInitialize)(pvpLevels)).BeginInit();
-            groupBox1.SuspendLayout();
-            ((ISupportInitialize)(spnRangeCircle)).BeginInit();
-            ((ISupportInitialize)(numMinAlertLevel)).BeginInit();
-            groupBox2.SuspendLayout();
-            ((ISupportInitialize)(spnSpawnSize)).BeginInit();
-            tabGeneral.SuspendLayout();
-            ((ISupportInitialize)(spnLogLevel)).BeginInit();
-            ((ISupportInitialize)(spnOverrideLevel)).BeginInit();
-            ((ISupportInitialize)(spnUpdateDelay)).BeginInit();
-            gbServer.SuspendLayout();
-            tabOptions.SuspendLayout();
-            SuspendLayout();
-            //
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmOptions));
+            this.cmdCommand = new System.Windows.Forms.Button();
+            this.colorOptionPicker = new System.Windows.Forms.ColorDialog();
+            this.tabColors = new System.Windows.Forms.TabPage();
+            this.picGridLabelColor = new System.Windows.Forms.PictureBox();
+            this.cmdGridLabelColor = new System.Windows.Forms.Button();
+            this.picPlayerBorder = new System.Windows.Forms.PictureBox();
+            this.butPlayerBorder = new System.Windows.Forms.Button();
+            this.picListBackgroundColor = new System.Windows.Forms.PictureBox();
+            this.cmdListBackgroundColor = new System.Windows.Forms.Button();
+            this.picRangeCircleColor = new System.Windows.Forms.PictureBox();
+            this.cmdRangeCircleColor = new System.Windows.Forms.Button();
+            this.picGridColor = new System.Windows.Forms.PictureBox();
+            this.cmdGridColor = new System.Windows.Forms.Button();
+            this.picMapBackgroundColor = new System.Windows.Forms.PictureBox();
+            this.cmdMapBackgroundColor = new System.Windows.Forms.Button();
+            this.tabFolders = new System.Windows.Forms.TabPage();
+            this.cmdSpawnTimers = new System.Windows.Forms.Button();
+            this.txtTimerDir = new System.Windows.Forms.TextBox();
+            this.txtLogDir = new System.Windows.Forms.TextBox();
+            this.txtFilterDir = new System.Windows.Forms.TextBox();
+            this.txtCfgDir = new System.Windows.Forms.TextBox();
+            this.txtMapDir = new System.Windows.Forms.TextBox();
+            this.lblSpawnTimers = new System.Windows.Forms.Label();
+            this.cmdLogDir = new System.Windows.Forms.Button();
+            this.lblLogDir = new System.Windows.Forms.Label();
+            this.cmdFilterDirBrowse = new System.Windows.Forms.Button();
+            this.lblFilterDir = new System.Windows.Forms.Label();
+            this.cmdCfgDirBrowse = new System.Windows.Forms.Button();
+            this.lblCfgDir = new System.Windows.Forms.Label();
+            this.cmdMapDirBrowse = new System.Windows.Forms.Button();
+            this.lblMapDir = new System.Windows.Forms.Label();
+            this.tabAlerts = new System.Windows.Forms.TabPage();
+            this.grpDanger = new System.Windows.Forms.GroupBox();
+            this.optDangerPlay = new System.Windows.Forms.RadioButton();
+            this.optDangerSpeak = new System.Windows.Forms.RadioButton();
+            this.optDangerBeep = new System.Windows.Forms.RadioButton();
+            this.optDangerNone = new System.Windows.Forms.RadioButton();
+            this.txtDangerAudioFile = new System.Windows.Forms.TextBox();
+            this.txtDangerPrefix = new System.Windows.Forms.TextBox();
+            this.lblDangerPrefix = new System.Windows.Forms.Label();
+            this.chkDangerMatchFull = new System.Windows.Forms.CheckBox();
+            this.grpAlert = new System.Windows.Forms.GroupBox();
+            this.optAlertPlay = new System.Windows.Forms.RadioButton();
+            this.optAlertSpeak = new System.Windows.Forms.RadioButton();
+            this.optAlertBeep = new System.Windows.Forms.RadioButton();
+            this.optAlertNone = new System.Windows.Forms.RadioButton();
+            this.txtAlertAudioFile = new System.Windows.Forms.TextBox();
+            this.txtAlertPrefix = new System.Windows.Forms.TextBox();
+            this.lblAlertPrefix = new System.Windows.Forms.Label();
+            this.chkAlertMatchFull = new System.Windows.Forms.CheckBox();
+            this.grpCaution = new System.Windows.Forms.GroupBox();
+            this.optCautionPlay = new System.Windows.Forms.RadioButton();
+            this.optCautionSpeak = new System.Windows.Forms.RadioButton();
+            this.optCautionBeep = new System.Windows.Forms.RadioButton();
+            this.optCautionNone = new System.Windows.Forms.RadioButton();
+            this.txtCautionAudioFile = new System.Windows.Forms.TextBox();
+            this.txtCautionPrefix = new System.Windows.Forms.TextBox();
+            this.lblCautionPrefix = new System.Windows.Forms.Label();
+            this.chkCautionMatchFull = new System.Windows.Forms.CheckBox();
+            this.grpHunt = new System.Windows.Forms.GroupBox();
+            this.optHuntPlay = new System.Windows.Forms.RadioButton();
+            this.optHuntSpeak = new System.Windows.Forms.RadioButton();
+            this.optHuntBeep = new System.Windows.Forms.RadioButton();
+            this.optHuntNone = new System.Windows.Forms.RadioButton();
+            this.txtHuntAudioFile = new System.Windows.Forms.TextBox();
+            this.txtHuntPrefix = new System.Windows.Forms.TextBox();
+            this.lblHuntPrefix = new System.Windows.Forms.Label();
+            this.chkHuntMatchFull = new System.Windows.Forms.CheckBox();
+            this.chkAffixAlerts = new System.Windows.Forms.CheckBox();
+            this.chkPrefixAlerts = new System.Windows.Forms.CheckBox();
+            this.chkCorpsesAlerts = new System.Windows.Forms.CheckBox();
+            this.tabMap = new System.Windows.Forms.TabPage();
+            this.FadedLines = new System.Windows.Forms.NumericUpDown();
+            this.lblFadedLines = new System.Windows.Forms.Label();
+            this.lblPVPLevels = new System.Windows.Forms.Label();
+            this.pvpLevels = new System.Windows.Forms.NumericUpDown();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cmbAlertSound = new System.Windows.Forms.ComboBox();
+            this.cmbHatch = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.chkColorRangeCircle = new System.Windows.Forms.CheckBox();
+            this.spnRangeCircle = new System.Windows.Forms.NumericUpDown();
+            this.numMinAlertLevel = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkMap = new System.Windows.Forms.CheckBox();
+            this.chkPlayer = new System.Windows.Forms.CheckBox();
+            this.chkSpawns = new System.Windows.Forms.CheckBox();
+            this.chkAddjust = new System.Windows.Forms.CheckBox();
+            this.chkGround = new System.Windows.Forms.CheckBox();
+            this.chkTrails = new System.Windows.Forms.CheckBox();
+            this.chkHighlight = new System.Windows.Forms.CheckBox();
+            this.chkGrid = new System.Windows.Forms.CheckBox();
+            this.chkTimers = new System.Windows.Forms.CheckBox();
+            this.chkText = new System.Windows.Forms.CheckBox();
+            this.chkDirection = new System.Windows.Forms.CheckBox();
+            this.chkLineToPoint = new System.Windows.Forms.CheckBox();
+            this.lblSpawnSize = new System.Windows.Forms.Label();
+            this.chkSelectSpawnList = new System.Windows.Forms.CheckBox();
+            this.spnSpawnSize = new System.Windows.Forms.NumericUpDown();
+            this.chkShowTargetInfo = new System.Windows.Forms.CheckBox();
+            this.chkDrawFoV = new System.Windows.Forms.CheckBox();
+            this.tabGeneral = new System.Windows.Forms.TabPage();
+            this.chkShowCharName = new System.Windows.Forms.CheckBox();
+            this.txtSearchString = new System.Windows.Forms.TextBox();
+            this.lblSearch = new System.Windows.Forms.Label();
+            this.spnLogLevel = new System.Windows.Forms.NumericUpDown();
+            this.lblLogLevel = new System.Windows.Forms.Label();
+            this.chkShowZoneName = new System.Windows.Forms.CheckBox();
+            this.spnOverrideLevel = new System.Windows.Forms.NumericUpDown();
+            this.spnUpdateDelay = new System.Windows.Forms.NumericUpDown();
+            this.txtWindowName = new System.Windows.Forms.TextBox();
+            this.lblWindowName = new System.Windows.Forms.Label();
+            this.lblOverridelevel = new System.Windows.Forms.Label();
+            this.gbServer = new System.Windows.Forms.GroupBox();
+            this.txtIPAddress5 = new System.Windows.Forms.TextBox();
+            this.lblIPAddress5 = new System.Windows.Forms.Label();
+            this.txtIPAddress4 = new System.Windows.Forms.TextBox();
+            this.lblIPAddress4 = new System.Windows.Forms.Label();
+            this.txtIPAddress3 = new System.Windows.Forms.TextBox();
+            this.lblIPAddress3 = new System.Windows.Forms.Label();
+            this.txtIPAddress2 = new System.Windows.Forms.TextBox();
+            this.lblIPAddress2 = new System.Windows.Forms.Label();
+            this.txtPortNo = new System.Windows.Forms.TextBox();
+            this.txtIPAddress1 = new System.Windows.Forms.TextBox();
+            this.lblIPAddress1 = new System.Windows.Forms.Label();
+            this.lbltxtPortNo = new System.Windows.Forms.Label();
+            this.lblUpdateDelay = new System.Windows.Forms.Label();
+            this.chkSaveOnExit = new System.Windows.Forms.CheckBox();
+            this.tabOptions = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cmdCancel = new System.Windows.Forms.Button();
+            this.tabColors.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picGridLabelColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picPlayerBorder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picListBackgroundColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picRangeCircleColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picGridColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMapBackgroundColor)).BeginInit();
+            this.tabFolders.SuspendLayout();
+            this.tabAlerts.SuspendLayout();
+            this.grpDanger.SuspendLayout();
+            this.grpAlert.SuspendLayout();
+            this.grpCaution.SuspendLayout();
+            this.grpHunt.SuspendLayout();
+            this.tabMap.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FadedLines)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pvpLevels)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spnRangeCircle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMinAlertLevel)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spnSpawnSize)).BeginInit();
+            this.tabGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spnLogLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spnOverrideLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spnUpdateDelay)).BeginInit();
+            this.gbServer.SuspendLayout();
+            this.tabOptions.SuspendLayout();
+            this.SuspendLayout();
+            // 
             // cmdCommand
-            //
-            cmdCommand.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
-            cmdCommand.DialogResult = System.Windows.Forms.DialogResult.OK;
-            cmdCommand.Location = new Point(83, 410);
-            cmdCommand.Name = "cmdCommand";
-            cmdCommand.Size = new Size(85, 23);
-            cmdCommand.TabIndex = 0;
-            cmdCommand.Text = "&Save";
-            cmdCommand.Click += new EventHandler(CmdCommand_Click);
-            //
+            // 
+            this.cmdCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCommand.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.cmdCommand.Location = new System.Drawing.Point(83, 410);
+            this.cmdCommand.Name = "cmdCommand";
+            this.cmdCommand.Size = new System.Drawing.Size(85, 23);
+            this.cmdCommand.TabIndex = 0;
+            this.cmdCommand.Text = "&Save";
+            this.cmdCommand.Click += new System.EventHandler(this.CmdCommand_Click);
+            // 
             // tabColors
-            //
-            tabColors.Controls.Add(picGridLabelColor);
-            tabColors.Controls.Add(cmdGridLabelColor);
-            tabColors.Controls.Add(picPlayerBorder);
-            tabColors.Controls.Add(butPlayerBorder);
-            tabColors.Controls.Add(picListBackgroundColor);
-            tabColors.Controls.Add(cmdListBackgroundColor);
-            tabColors.Controls.Add(picRangeCircleColor);
-            tabColors.Controls.Add(cmdRangeCircleColor);
-            tabColors.Controls.Add(picGridColor);
-            tabColors.Controls.Add(cmdGridColor);
-            tabColors.Controls.Add(picMapBackgroundColor);
-            tabColors.Controls.Add(cmdMapBackgroundColor);
-            tabColors.Location = new Point(4, 22);
-            tabColors.Name = "tabColors";
-            tabColors.Size = new Size(266, 375);
-            tabColors.TabIndex = 3;
-            tabColors.Text = "Colors";
-            //
+            // 
+            this.tabColors.Controls.Add(this.picGridLabelColor);
+            this.tabColors.Controls.Add(this.cmdGridLabelColor);
+            this.tabColors.Controls.Add(this.picPlayerBorder);
+            this.tabColors.Controls.Add(this.butPlayerBorder);
+            this.tabColors.Controls.Add(this.picListBackgroundColor);
+            this.tabColors.Controls.Add(this.cmdListBackgroundColor);
+            this.tabColors.Controls.Add(this.picRangeCircleColor);
+            this.tabColors.Controls.Add(this.cmdRangeCircleColor);
+            this.tabColors.Controls.Add(this.picGridColor);
+            this.tabColors.Controls.Add(this.cmdGridColor);
+            this.tabColors.Controls.Add(this.picMapBackgroundColor);
+            this.tabColors.Controls.Add(this.cmdMapBackgroundColor);
+            this.tabColors.Location = new System.Drawing.Point(4, 22);
+            this.tabColors.Name = "tabColors";
+            this.tabColors.Size = new System.Drawing.Size(266, 375);
+            this.tabColors.TabIndex = 3;
+            this.tabColors.Text = "Colors";
+            // 
             // picGridLabelColor
-            //
-            picGridLabelColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            picGridLabelColor.Location = new Point(152, 164);
-            picGridLabelColor.Name = "picGridLabelColor";
-            picGridLabelColor.Size = new Size(104, 24);
-            picGridLabelColor.TabIndex = 13;
-            picGridLabelColor.TabStop = false;
-            picGridLabelColor.Click += new EventHandler(CmdGridLabelColor_Click);
-            //
+            // 
+            this.picGridLabelColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picGridLabelColor.Location = new System.Drawing.Point(152, 164);
+            this.picGridLabelColor.Name = "picGridLabelColor";
+            this.picGridLabelColor.Size = new System.Drawing.Size(104, 24);
+            this.picGridLabelColor.TabIndex = 13;
+            this.picGridLabelColor.TabStop = false;
+            this.picGridLabelColor.Click += new System.EventHandler(this.CmdGridLabelColor_Click);
+            // 
             // cmdGridLabelColor
-            //
-            cmdGridLabelColor.Location = new Point(8, 164);
-            cmdGridLabelColor.Name = "cmdGridLabelColor";
-            cmdGridLabelColor.Size = new Size(136, 24);
-            cmdGridLabelColor.TabIndex = 12;
-            cmdGridLabelColor.Text = "Grid Label Color";
-            cmdGridLabelColor.Click += new EventHandler(CmdGridLabelColor_Click);
-            //
+            // 
+            this.cmdGridLabelColor.Location = new System.Drawing.Point(8, 164);
+            this.cmdGridLabelColor.Name = "cmdGridLabelColor";
+            this.cmdGridLabelColor.Size = new System.Drawing.Size(136, 24);
+            this.cmdGridLabelColor.TabIndex = 12;
+            this.cmdGridLabelColor.Text = "Grid Label Color";
+            this.cmdGridLabelColor.Click += new System.EventHandler(this.CmdGridLabelColor_Click);
+            // 
             // picPlayerBorder
-            //
-            picPlayerBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            picPlayerBorder.Location = new Point(152, 134);
-            picPlayerBorder.Name = "picPlayerBorder";
-            picPlayerBorder.Size = new Size(104, 24);
-            picPlayerBorder.TabIndex = 11;
-            picPlayerBorder.TabStop = false;
-            picPlayerBorder.Click += new EventHandler(ButPlayerBorder_Click);
-            //
+            // 
+            this.picPlayerBorder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picPlayerBorder.Location = new System.Drawing.Point(152, 134);
+            this.picPlayerBorder.Name = "picPlayerBorder";
+            this.picPlayerBorder.Size = new System.Drawing.Size(104, 24);
+            this.picPlayerBorder.TabIndex = 11;
+            this.picPlayerBorder.TabStop = false;
+            this.picPlayerBorder.Click += new System.EventHandler(this.ButPlayerBorder_Click);
+            // 
             // butPlayerBorder
-            //
-            butPlayerBorder.Location = new Point(8, 134);
-            butPlayerBorder.Name = "butPlayerBorder";
-            butPlayerBorder.Size = new Size(136, 24);
-            butPlayerBorder.TabIndex = 10;
-            butPlayerBorder.Text = "PC Highlight Color";
-            butPlayerBorder.Click += new EventHandler(ButPlayerBorder_Click);
-            //
+            // 
+            this.butPlayerBorder.Location = new System.Drawing.Point(8, 134);
+            this.butPlayerBorder.Name = "butPlayerBorder";
+            this.butPlayerBorder.Size = new System.Drawing.Size(136, 24);
+            this.butPlayerBorder.TabIndex = 10;
+            this.butPlayerBorder.Text = "PC Highlight Color";
+            this.butPlayerBorder.Click += new System.EventHandler(this.ButPlayerBorder_Click);
+            // 
             // picListBackgroundColor
-            //
-            picListBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            picListBackgroundColor.Location = new Point(152, 104);
-            picListBackgroundColor.Name = "picListBackgroundColor";
-            picListBackgroundColor.Size = new Size(104, 24);
-            picListBackgroundColor.TabIndex = 7;
-            picListBackgroundColor.TabStop = false;
-            picListBackgroundColor.Click += new EventHandler(CmdListBackgroundColor_Click);
-            //
+            // 
+            this.picListBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picListBackgroundColor.Location = new System.Drawing.Point(152, 104);
+            this.picListBackgroundColor.Name = "picListBackgroundColor";
+            this.picListBackgroundColor.Size = new System.Drawing.Size(104, 24);
+            this.picListBackgroundColor.TabIndex = 7;
+            this.picListBackgroundColor.TabStop = false;
+            this.picListBackgroundColor.Click += new System.EventHandler(this.CmdListBackgroundColor_Click);
+            // 
             // cmdListBackgroundColor
-            //
-            cmdListBackgroundColor.Location = new Point(8, 104);
-            cmdListBackgroundColor.Name = "cmdListBackgroundColor";
-            cmdListBackgroundColor.Size = new Size(136, 24);
-            cmdListBackgroundColor.TabIndex = 6;
-            cmdListBackgroundColor.Text = "List Background";
-            cmdListBackgroundColor.Click += new EventHandler(CmdListBackgroundColor_Click);
-            //
+            // 
+            this.cmdListBackgroundColor.Location = new System.Drawing.Point(8, 104);
+            this.cmdListBackgroundColor.Name = "cmdListBackgroundColor";
+            this.cmdListBackgroundColor.Size = new System.Drawing.Size(136, 24);
+            this.cmdListBackgroundColor.TabIndex = 6;
+            this.cmdListBackgroundColor.Text = "List Background";
+            this.cmdListBackgroundColor.Click += new System.EventHandler(this.CmdListBackgroundColor_Click);
+            // 
             // picRangeCircleColor
-            //
-            picRangeCircleColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            picRangeCircleColor.Location = new Point(152, 72);
-            picRangeCircleColor.Name = "picRangeCircleColor";
-            picRangeCircleColor.Size = new Size(104, 24);
-            picRangeCircleColor.TabIndex = 5;
-            picRangeCircleColor.TabStop = false;
-            picRangeCircleColor.Click += new EventHandler(CmdRangeCircleColor_Click);
-            //
+            // 
+            this.picRangeCircleColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picRangeCircleColor.Location = new System.Drawing.Point(152, 72);
+            this.picRangeCircleColor.Name = "picRangeCircleColor";
+            this.picRangeCircleColor.Size = new System.Drawing.Size(104, 24);
+            this.picRangeCircleColor.TabIndex = 5;
+            this.picRangeCircleColor.TabStop = false;
+            this.picRangeCircleColor.Click += new System.EventHandler(this.CmdRangeCircleColor_Click);
+            // 
             // cmdRangeCircleColor
-            //
-            cmdRangeCircleColor.Location = new Point(8, 72);
-            cmdRangeCircleColor.Name = "cmdRangeCircleColor";
-            cmdRangeCircleColor.Size = new Size(136, 24);
-            cmdRangeCircleColor.TabIndex = 2;
-            cmdRangeCircleColor.Text = "Range Circle";
-            cmdRangeCircleColor.Click += new EventHandler(CmdRangeCircleColor_Click);
-            //
+            // 
+            this.cmdRangeCircleColor.Location = new System.Drawing.Point(8, 72);
+            this.cmdRangeCircleColor.Name = "cmdRangeCircleColor";
+            this.cmdRangeCircleColor.Size = new System.Drawing.Size(136, 24);
+            this.cmdRangeCircleColor.TabIndex = 2;
+            this.cmdRangeCircleColor.Text = "Range Circle";
+            this.cmdRangeCircleColor.Click += new System.EventHandler(this.CmdRangeCircleColor_Click);
+            // 
             // picGridColor
-            //
-            picGridColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            picGridColor.Location = new Point(152, 40);
-            picGridColor.Name = "picGridColor";
-            picGridColor.Size = new Size(104, 24);
-            picGridColor.TabIndex = 3;
-            picGridColor.TabStop = false;
-            picGridColor.Click += new EventHandler(CmdGridColor_Click);
-            //
+            // 
+            this.picGridColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picGridColor.Location = new System.Drawing.Point(152, 40);
+            this.picGridColor.Name = "picGridColor";
+            this.picGridColor.Size = new System.Drawing.Size(104, 24);
+            this.picGridColor.TabIndex = 3;
+            this.picGridColor.TabStop = false;
+            this.picGridColor.Click += new System.EventHandler(this.CmdGridColor_Click);
+            // 
             // cmdGridColor
-            //
-            cmdGridColor.Location = new Point(8, 40);
-            cmdGridColor.Name = "cmdGridColor";
-            cmdGridColor.Size = new Size(136, 24);
-            cmdGridColor.TabIndex = 1;
-            cmdGridColor.Text = "Grid";
-            cmdGridColor.Click += new EventHandler(CmdGridColor_Click);
-            //
+            // 
+            this.cmdGridColor.Location = new System.Drawing.Point(8, 40);
+            this.cmdGridColor.Name = "cmdGridColor";
+            this.cmdGridColor.Size = new System.Drawing.Size(136, 24);
+            this.cmdGridColor.TabIndex = 1;
+            this.cmdGridColor.Text = "Grid";
+            this.cmdGridColor.Click += new System.EventHandler(this.CmdGridColor_Click);
+            // 
             // picMapBackgroundColor
-            //
-            picMapBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            picMapBackgroundColor.Location = new Point(152, 8);
-            picMapBackgroundColor.Name = "picMapBackgroundColor";
-            picMapBackgroundColor.Size = new Size(104, 24);
-            picMapBackgroundColor.TabIndex = 1;
-            picMapBackgroundColor.TabStop = false;
-            picMapBackgroundColor.Click += new EventHandler(CmdMapBackgroundColor_Click);
-            //
+            // 
+            this.picMapBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picMapBackgroundColor.Location = new System.Drawing.Point(152, 8);
+            this.picMapBackgroundColor.Name = "picMapBackgroundColor";
+            this.picMapBackgroundColor.Size = new System.Drawing.Size(104, 24);
+            this.picMapBackgroundColor.TabIndex = 1;
+            this.picMapBackgroundColor.TabStop = false;
+            this.picMapBackgroundColor.Click += new System.EventHandler(this.CmdMapBackgroundColor_Click);
+            // 
             // cmdMapBackgroundColor
-            //
-            cmdMapBackgroundColor.Location = new Point(8, 8);
-            cmdMapBackgroundColor.Name = "cmdMapBackgroundColor";
-            cmdMapBackgroundColor.Size = new Size(136, 24);
-            cmdMapBackgroundColor.TabIndex = 0;
-            cmdMapBackgroundColor.Text = "Map Background";
-            cmdMapBackgroundColor.Click += new EventHandler(CmdMapBackgroundColor_Click);
-            //
+            // 
+            this.cmdMapBackgroundColor.Location = new System.Drawing.Point(8, 8);
+            this.cmdMapBackgroundColor.Name = "cmdMapBackgroundColor";
+            this.cmdMapBackgroundColor.Size = new System.Drawing.Size(136, 24);
+            this.cmdMapBackgroundColor.TabIndex = 0;
+            this.cmdMapBackgroundColor.Text = "Map Background";
+            this.cmdMapBackgroundColor.Click += new System.EventHandler(this.CmdMapBackgroundColor_Click);
+            // 
             // tabFolders
-            //
-            tabFolders.Controls.Add(cmdSpawnTimers);
-            tabFolders.Controls.Add(txtTimerDir);
-            tabFolders.Controls.Add(txtLogDir);
-            tabFolders.Controls.Add(txtFilterDir);
-            tabFolders.Controls.Add(txtCfgDir);
-            tabFolders.Controls.Add(txtMapDir);
-            tabFolders.Controls.Add(lblSpawnTimers);
-            tabFolders.Controls.Add(cmdLogDir);
-            tabFolders.Controls.Add(lblLogDir);
-            tabFolders.Controls.Add(cmdFilterDirBrowse);
-            tabFolders.Controls.Add(lblFilterDir);
-            tabFolders.Controls.Add(cmdCfgDirBrowse);
-            tabFolders.Controls.Add(lblCfgDir);
-            tabFolders.Controls.Add(cmdMapDirBrowse);
-            tabFolders.Controls.Add(lblMapDir);
-            tabFolders.Location = new Point(4, 22);
-            tabFolders.Name = "tabFolders";
-            tabFolders.Size = new Size(266, 375);
-            tabFolders.TabIndex = 4;
-            tabFolders.Text = "Folders";
-            //
+            // 
+            this.tabFolders.Controls.Add(this.cmdSpawnTimers);
+            this.tabFolders.Controls.Add(this.txtTimerDir);
+            this.tabFolders.Controls.Add(this.txtLogDir);
+            this.tabFolders.Controls.Add(this.txtFilterDir);
+            this.tabFolders.Controls.Add(this.txtCfgDir);
+            this.tabFolders.Controls.Add(this.txtMapDir);
+            this.tabFolders.Controls.Add(this.lblSpawnTimers);
+            this.tabFolders.Controls.Add(this.cmdLogDir);
+            this.tabFolders.Controls.Add(this.lblLogDir);
+            this.tabFolders.Controls.Add(this.cmdFilterDirBrowse);
+            this.tabFolders.Controls.Add(this.lblFilterDir);
+            this.tabFolders.Controls.Add(this.cmdCfgDirBrowse);
+            this.tabFolders.Controls.Add(this.lblCfgDir);
+            this.tabFolders.Controls.Add(this.cmdMapDirBrowse);
+            this.tabFolders.Controls.Add(this.lblMapDir);
+            this.tabFolders.Location = new System.Drawing.Point(4, 22);
+            this.tabFolders.Name = "tabFolders";
+            this.tabFolders.Size = new System.Drawing.Size(266, 375);
+            this.tabFolders.TabIndex = 4;
+            this.tabFolders.Text = "Folders";
+            // 
             // cmdSpawnTimers
-            //
-            cmdSpawnTimers.Location = new Point(232, 184);
-            cmdSpawnTimers.Name = "cmdSpawnTimers";
-            cmdSpawnTimers.Size = new Size(24, 23);
-            cmdSpawnTimers.TabIndex = 40;
-            cmdSpawnTimers.Text = "...";
-            cmdSpawnTimers.Click += new EventHandler(CmdSpawnTimers_Click);
-            //
+            // 
+            this.cmdSpawnTimers.Location = new System.Drawing.Point(232, 184);
+            this.cmdSpawnTimers.Name = "cmdSpawnTimers";
+            this.cmdSpawnTimers.Size = new System.Drawing.Size(24, 23);
+            this.cmdSpawnTimers.TabIndex = 40;
+            this.cmdSpawnTimers.Text = "...";
+            this.cmdSpawnTimers.Click += new System.EventHandler(this.CmdSpawnTimers_Click);
+            // 
             // txtTimerDir
-            //
-            txtTimerDir.BackColor = System.Drawing.Color.White;
-            txtTimerDir.Location = new Point(8, 184);
-            txtTimerDir.Name = "txtTimerDir";
-            txtTimerDir.Size = new Size(216, 20);
-            txtTimerDir.TabIndex = 39;
-            //
+            // 
+            this.txtTimerDir.BackColor = System.Drawing.Color.White;
+            this.txtTimerDir.Location = new System.Drawing.Point(8, 184);
+            this.txtTimerDir.Name = "txtTimerDir";
+            this.txtTimerDir.Size = new System.Drawing.Size(216, 20);
+            this.txtTimerDir.TabIndex = 39;
+            // 
             // txtLogDir
-            //
-            txtLogDir.BackColor = System.Drawing.Color.White;
-            txtLogDir.Location = new Point(8, 144);
-            txtLogDir.Name = "txtLogDir";
-            txtLogDir.Size = new Size(216, 20);
-            txtLogDir.TabIndex = 36;
-            //
+            // 
+            this.txtLogDir.BackColor = System.Drawing.Color.White;
+            this.txtLogDir.Location = new System.Drawing.Point(8, 144);
+            this.txtLogDir.Name = "txtLogDir";
+            this.txtLogDir.Size = new System.Drawing.Size(216, 20);
+            this.txtLogDir.TabIndex = 36;
+            // 
             // txtFilterDir
-            //
-            txtFilterDir.BackColor = System.Drawing.Color.White;
-            txtFilterDir.Location = new Point(8, 104);
-            txtFilterDir.Name = "txtFilterDir";
-            txtFilterDir.Size = new Size(216, 20);
-            txtFilterDir.TabIndex = 33;
-            //
+            // 
+            this.txtFilterDir.BackColor = System.Drawing.Color.White;
+            this.txtFilterDir.Location = new System.Drawing.Point(8, 104);
+            this.txtFilterDir.Name = "txtFilterDir";
+            this.txtFilterDir.Size = new System.Drawing.Size(216, 20);
+            this.txtFilterDir.TabIndex = 33;
+            // 
             // txtCfgDir
-            //
-            txtCfgDir.BackColor = System.Drawing.Color.White;
-            txtCfgDir.Location = new Point(8, 64);
-            txtCfgDir.Name = "txtCfgDir";
-            txtCfgDir.Size = new Size(216, 20);
-            txtCfgDir.TabIndex = 30;
-            //
+            // 
+            this.txtCfgDir.BackColor = System.Drawing.Color.White;
+            this.txtCfgDir.Location = new System.Drawing.Point(8, 64);
+            this.txtCfgDir.Name = "txtCfgDir";
+            this.txtCfgDir.Size = new System.Drawing.Size(216, 20);
+            this.txtCfgDir.TabIndex = 30;
+            // 
             // txtMapDir
-            //
-            txtMapDir.BackColor = System.Drawing.Color.White;
-            txtMapDir.Location = new Point(8, 24);
-            txtMapDir.Name = "txtMapDir";
-            txtMapDir.Size = new Size(216, 20);
-            txtMapDir.TabIndex = 27;
-            //
+            // 
+            this.txtMapDir.BackColor = System.Drawing.Color.White;
+            this.txtMapDir.Location = new System.Drawing.Point(8, 24);
+            this.txtMapDir.Name = "txtMapDir";
+            this.txtMapDir.Size = new System.Drawing.Size(216, 20);
+            this.txtMapDir.TabIndex = 27;
+            // 
             // lblSpawnTimers
-            //
-            lblSpawnTimers.Location = new Point(8, 168);
-            lblSpawnTimers.Name = "lblSpawnTimers";
-            lblSpawnTimers.Size = new Size(144, 16);
-            lblSpawnTimers.TabIndex = 38;
-            lblSpawnTimers.Text = "Spawn Timers";
-            //
+            // 
+            this.lblSpawnTimers.Location = new System.Drawing.Point(8, 168);
+            this.lblSpawnTimers.Name = "lblSpawnTimers";
+            this.lblSpawnTimers.Size = new System.Drawing.Size(144, 16);
+            this.lblSpawnTimers.TabIndex = 38;
+            this.lblSpawnTimers.Text = "Spawn Timers";
+            // 
             // cmdLogDir
-            //
-            cmdLogDir.Location = new Point(232, 144);
-            cmdLogDir.Name = "cmdLogDir";
-            cmdLogDir.Size = new Size(24, 23);
-            cmdLogDir.TabIndex = 37;
-            cmdLogDir.Text = "...";
-            cmdLogDir.Click += new EventHandler(CmdLogDir_Click);
-            //
+            // 
+            this.cmdLogDir.Location = new System.Drawing.Point(232, 144);
+            this.cmdLogDir.Name = "cmdLogDir";
+            this.cmdLogDir.Size = new System.Drawing.Size(24, 23);
+            this.cmdLogDir.TabIndex = 37;
+            this.cmdLogDir.Text = "...";
+            this.cmdLogDir.Click += new System.EventHandler(this.CmdLogDir_Click);
+            // 
             // lblLogDir
-            //
-            lblLogDir.Location = new Point(8, 128);
-            lblLogDir.Name = "lblLogDir";
-            lblLogDir.Size = new Size(144, 16);
-            lblLogDir.TabIndex = 35;
-            lblLogDir.Text = "Log Folder";
-            //
+            // 
+            this.lblLogDir.Location = new System.Drawing.Point(8, 128);
+            this.lblLogDir.Name = "lblLogDir";
+            this.lblLogDir.Size = new System.Drawing.Size(144, 16);
+            this.lblLogDir.TabIndex = 35;
+            this.lblLogDir.Text = "Log Folder";
+            // 
             // cmdFilterDirBrowse
-            //
-            cmdFilterDirBrowse.Location = new Point(232, 104);
-            cmdFilterDirBrowse.Name = "cmdFilterDirBrowse";
-            cmdFilterDirBrowse.Size = new Size(24, 23);
-            cmdFilterDirBrowse.TabIndex = 34;
-            cmdFilterDirBrowse.Text = "...";
-            cmdFilterDirBrowse.Click += new EventHandler(CmdFilterDirBrowse_Click);
-            //
+            // 
+            this.cmdFilterDirBrowse.Location = new System.Drawing.Point(232, 104);
+            this.cmdFilterDirBrowse.Name = "cmdFilterDirBrowse";
+            this.cmdFilterDirBrowse.Size = new System.Drawing.Size(24, 23);
+            this.cmdFilterDirBrowse.TabIndex = 34;
+            this.cmdFilterDirBrowse.Text = "...";
+            this.cmdFilterDirBrowse.Click += new System.EventHandler(this.CmdFilterDirBrowse_Click);
+            // 
             // lblFilterDir
-            //
-            lblFilterDir.Location = new Point(8, 88);
-            lblFilterDir.Name = "lblFilterDir";
-            lblFilterDir.Size = new Size(144, 16);
-            lblFilterDir.TabIndex = 32;
-            lblFilterDir.Text = "Filter Folder";
-            //
+            // 
+            this.lblFilterDir.Location = new System.Drawing.Point(8, 88);
+            this.lblFilterDir.Name = "lblFilterDir";
+            this.lblFilterDir.Size = new System.Drawing.Size(144, 16);
+            this.lblFilterDir.TabIndex = 32;
+            this.lblFilterDir.Text = "Filter Folder";
+            // 
             // cmdCfgDirBrowse
-            //
-            cmdCfgDirBrowse.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            cmdCfgDirBrowse.Location = new Point(232, 64);
-            cmdCfgDirBrowse.Name = "cmdCfgDirBrowse";
-            cmdCfgDirBrowse.Size = new Size(24, 23);
-            cmdCfgDirBrowse.TabIndex = 31;
-            cmdCfgDirBrowse.Text = "...";
-            cmdCfgDirBrowse.Click += new EventHandler(CmdCfgDirBrowse_Click);
-            //
+            // 
+            this.cmdCfgDirBrowse.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cmdCfgDirBrowse.Location = new System.Drawing.Point(232, 64);
+            this.cmdCfgDirBrowse.Name = "cmdCfgDirBrowse";
+            this.cmdCfgDirBrowse.Size = new System.Drawing.Size(24, 23);
+            this.cmdCfgDirBrowse.TabIndex = 31;
+            this.cmdCfgDirBrowse.Text = "...";
+            this.cmdCfgDirBrowse.Click += new System.EventHandler(this.CmdCfgDirBrowse_Click);
+            // 
             // lblCfgDir
-            //
-            lblCfgDir.Location = new Point(8, 48);
-            lblCfgDir.Name = "lblCfgDir";
-            lblCfgDir.Size = new Size(144, 16);
-            lblCfgDir.TabIndex = 29;
-            lblCfgDir.Text = "Config Folder";
-            //
+            // 
+            this.lblCfgDir.Location = new System.Drawing.Point(8, 48);
+            this.lblCfgDir.Name = "lblCfgDir";
+            this.lblCfgDir.Size = new System.Drawing.Size(144, 16);
+            this.lblCfgDir.TabIndex = 29;
+            this.lblCfgDir.Text = "Config Folder";
+            // 
             // cmdMapDirBrowse
-            //
-            cmdMapDirBrowse.Location = new Point(232, 24);
-            cmdMapDirBrowse.Name = "cmdMapDirBrowse";
-            cmdMapDirBrowse.Size = new Size(24, 23);
-            cmdMapDirBrowse.TabIndex = 28;
-            cmdMapDirBrowse.Text = "...";
-            cmdMapDirBrowse.Click += new EventHandler(CmdMapDirBrowse_Click);
-            //
+            // 
+            this.cmdMapDirBrowse.Location = new System.Drawing.Point(232, 24);
+            this.cmdMapDirBrowse.Name = "cmdMapDirBrowse";
+            this.cmdMapDirBrowse.Size = new System.Drawing.Size(24, 23);
+            this.cmdMapDirBrowse.TabIndex = 28;
+            this.cmdMapDirBrowse.Text = "...";
+            this.cmdMapDirBrowse.Click += new System.EventHandler(this.CmdMapDirBrowse_Click);
+            // 
             // lblMapDir
-            //
-            lblMapDir.Location = new Point(8, 8);
-            lblMapDir.Name = "lblMapDir";
-            lblMapDir.Size = new Size(144, 16);
-            lblMapDir.TabIndex = 26;
-            lblMapDir.Text = "Map Folder";
-            //
+            // 
+            this.lblMapDir.Location = new System.Drawing.Point(8, 8);
+            this.lblMapDir.Name = "lblMapDir";
+            this.lblMapDir.Size = new System.Drawing.Size(144, 16);
+            this.lblMapDir.TabIndex = 26;
+            this.lblMapDir.Text = "Map Folder";
+            // 
             // tabAlerts
-            //
-            tabAlerts.Controls.Add(grpDanger);
-            tabAlerts.Controls.Add(grpAlert);
-            tabAlerts.Controls.Add(grpCaution);
-            tabAlerts.Controls.Add(grpHunt);
-            tabAlerts.Controls.Add(chkAffixAlerts);
-            tabAlerts.Controls.Add(chkPrefixAlerts);
-            tabAlerts.Controls.Add(chkCorpsesAlerts);
-            tabAlerts.Location = new Point(4, 22);
-            tabAlerts.Name = "tabAlerts";
-            tabAlerts.Size = new Size(266, 375);
-            tabAlerts.TabIndex = 1;
-            tabAlerts.Text = "Filters";
-            //
+            // 
+            this.tabAlerts.Controls.Add(this.grpDanger);
+            this.tabAlerts.Controls.Add(this.grpAlert);
+            this.tabAlerts.Controls.Add(this.grpCaution);
+            this.tabAlerts.Controls.Add(this.grpHunt);
+            this.tabAlerts.Controls.Add(this.chkAffixAlerts);
+            this.tabAlerts.Controls.Add(this.chkPrefixAlerts);
+            this.tabAlerts.Controls.Add(this.chkCorpsesAlerts);
+            this.tabAlerts.Location = new System.Drawing.Point(4, 22);
+            this.tabAlerts.Name = "tabAlerts";
+            this.tabAlerts.Size = new System.Drawing.Size(266, 375);
+            this.tabAlerts.TabIndex = 1;
+            this.tabAlerts.Text = "Filters";
+            // 
             // grpDanger
-            //
-            grpDanger.Controls.Add(optDangerPlay);
-            grpDanger.Controls.Add(optDangerSpeak);
-            grpDanger.Controls.Add(optDangerBeep);
-            grpDanger.Controls.Add(optDangerNone);
-            grpDanger.Controls.Add(txtDangerAudioFile);
-            grpDanger.Controls.Add(txtDangerPrefix);
-            grpDanger.Controls.Add(lblDangerPrefix);
-            grpDanger.Controls.Add(chkDangerMatchFull);
-            grpDanger.Location = new Point(4, 209);
-            grpDanger.Name = "grpDanger";
-            grpDanger.Size = new Size(248, 78);
-            grpDanger.TabIndex = 23;
-            grpDanger.TabStop = false;
-            grpDanger.Text = "Danger";
-            //
+            // 
+            this.grpDanger.Controls.Add(this.optDangerPlay);
+            this.grpDanger.Controls.Add(this.optDangerSpeak);
+            this.grpDanger.Controls.Add(this.optDangerBeep);
+            this.grpDanger.Controls.Add(this.optDangerNone);
+            this.grpDanger.Controls.Add(this.txtDangerAudioFile);
+            this.grpDanger.Controls.Add(this.txtDangerPrefix);
+            this.grpDanger.Controls.Add(this.lblDangerPrefix);
+            this.grpDanger.Controls.Add(this.chkDangerMatchFull);
+            this.grpDanger.Location = new System.Drawing.Point(4, 209);
+            this.grpDanger.Name = "grpDanger";
+            this.grpDanger.Size = new System.Drawing.Size(248, 78);
+            this.grpDanger.TabIndex = 23;
+            this.grpDanger.TabStop = false;
+            this.grpDanger.Text = "Danger";
+            // 
             // optDangerPlay
-            //
-            optDangerPlay.Location = new Point(8, 55);
-            optDangerPlay.Name = "optDangerPlay";
-            optDangerPlay.Size = new Size(80, 16);
-            optDangerPlay.TabIndex = 18;
-            optDangerPlay.Text = "Play Wav";
-            //
+            // 
+            this.optDangerPlay.Location = new System.Drawing.Point(8, 55);
+            this.optDangerPlay.Name = "optDangerPlay";
+            this.optDangerPlay.Size = new System.Drawing.Size(80, 16);
+            this.optDangerPlay.TabIndex = 18;
+            this.optDangerPlay.Text = "Play Wav";
+            // 
             // optDangerSpeak
-            //
-            optDangerSpeak.Location = new Point(167, 35);
-            optDangerSpeak.Name = "optDangerSpeak";
-            optDangerSpeak.Size = new Size(72, 16);
-            optDangerSpeak.TabIndex = 17;
-            optDangerSpeak.Text = "Speak";
-            //
+            // 
+            this.optDangerSpeak.Location = new System.Drawing.Point(167, 35);
+            this.optDangerSpeak.Name = "optDangerSpeak";
+            this.optDangerSpeak.Size = new System.Drawing.Size(72, 16);
+            this.optDangerSpeak.TabIndex = 17;
+            this.optDangerSpeak.Text = "Speak";
+            // 
             // optDangerBeep
-            //
-            optDangerBeep.Location = new Point(88, 35);
-            optDangerBeep.Name = "optDangerBeep";
-            optDangerBeep.Size = new Size(72, 16);
-            optDangerBeep.TabIndex = 16;
-            optDangerBeep.Text = "Beep";
-            //
+            // 
+            this.optDangerBeep.Location = new System.Drawing.Point(88, 35);
+            this.optDangerBeep.Name = "optDangerBeep";
+            this.optDangerBeep.Size = new System.Drawing.Size(72, 16);
+            this.optDangerBeep.TabIndex = 16;
+            this.optDangerBeep.Text = "Beep";
+            // 
             // optDangerNone
-            //
-            optDangerNone.Checked = true;
-            optDangerNone.Location = new Point(8, 35);
-            optDangerNone.Name = "optDangerNone";
-            optDangerNone.Size = new Size(72, 16);
-            optDangerNone.TabIndex = 15;
-            optDangerNone.TabStop = true;
-            optDangerNone.Text = "None";
-            //
+            // 
+            this.optDangerNone.Checked = true;
+            this.optDangerNone.Location = new System.Drawing.Point(8, 35);
+            this.optDangerNone.Name = "optDangerNone";
+            this.optDangerNone.Size = new System.Drawing.Size(72, 16);
+            this.optDangerNone.TabIndex = 15;
+            this.optDangerNone.TabStop = true;
+            this.optDangerNone.Text = "None";
+            // 
             // txtDangerAudioFile
-            //
-            txtDangerAudioFile.Location = new Point(88, 55);
-            txtDangerAudioFile.Name = "txtDangerAudioFile";
-            txtDangerAudioFile.Size = new Size(152, 20);
-            txtDangerAudioFile.TabIndex = 19;
-            //
+            // 
+            this.txtDangerAudioFile.Location = new System.Drawing.Point(88, 55);
+            this.txtDangerAudioFile.Name = "txtDangerAudioFile";
+            this.txtDangerAudioFile.Size = new System.Drawing.Size(152, 20);
+            this.txtDangerAudioFile.TabIndex = 19;
+            // 
             // txtDangerPrefix
-            //
-            txtDangerPrefix.Location = new Point(88, 11);
-            txtDangerPrefix.MaxLength = 5;
-            txtDangerPrefix.Name = "txtDangerPrefix";
-            txtDangerPrefix.Size = new Size(32, 20);
-            txtDangerPrefix.TabIndex = 13;
-            txtDangerPrefix.Text = "[D]";
-            //
+            // 
+            this.txtDangerPrefix.Location = new System.Drawing.Point(88, 11);
+            this.txtDangerPrefix.MaxLength = 5;
+            this.txtDangerPrefix.Name = "txtDangerPrefix";
+            this.txtDangerPrefix.Size = new System.Drawing.Size(32, 20);
+            this.txtDangerPrefix.TabIndex = 13;
+            this.txtDangerPrefix.Text = "[D]";
+            // 
             // lblDangerPrefix
-            //
-            lblDangerPrefix.Location = new Point(8, 14);
-            lblDangerPrefix.Name = "lblDangerPrefix";
-            lblDangerPrefix.Size = new Size(79, 16);
-            lblDangerPrefix.TabIndex = 12;
-            lblDangerPrefix.Text = "Prefix/Suffix:";
-            //
+            // 
+            this.lblDangerPrefix.Location = new System.Drawing.Point(8, 14);
+            this.lblDangerPrefix.Name = "lblDangerPrefix";
+            this.lblDangerPrefix.Size = new System.Drawing.Size(79, 16);
+            this.lblDangerPrefix.TabIndex = 12;
+            this.lblDangerPrefix.Text = "Prefix/Suffix:";
+            // 
             // chkDangerMatchFull
-            //
-            chkDangerMatchFull.Location = new Point(136, 11);
-            chkDangerMatchFull.Name = "chkDangerMatchFull";
-            chkDangerMatchFull.Size = new Size(104, 24);
-            chkDangerMatchFull.TabIndex = 14;
-            chkDangerMatchFull.Text = "Match Full Text";
-            //
+            // 
+            this.chkDangerMatchFull.Location = new System.Drawing.Point(136, 11);
+            this.chkDangerMatchFull.Name = "chkDangerMatchFull";
+            this.chkDangerMatchFull.Size = new System.Drawing.Size(104, 24);
+            this.chkDangerMatchFull.TabIndex = 14;
+            this.chkDangerMatchFull.Text = "Match Full Text";
+            // 
             // grpAlert
-            //
-            grpAlert.Controls.Add(optAlertPlay);
-            grpAlert.Controls.Add(optAlertSpeak);
-            grpAlert.Controls.Add(optAlertBeep);
-            grpAlert.Controls.Add(optAlertNone);
-            grpAlert.Controls.Add(txtAlertAudioFile);
-            grpAlert.Controls.Add(txtAlertPrefix);
-            grpAlert.Controls.Add(lblAlertPrefix);
-            grpAlert.Controls.Add(chkAlertMatchFull);
-            grpAlert.Location = new Point(4, 293);
-            grpAlert.Name = "grpAlert";
-            grpAlert.Size = new Size(248, 78);
-            grpAlert.TabIndex = 20;
-            grpAlert.TabStop = false;
-            grpAlert.Text = "Rare";
-            //
+            // 
+            this.grpAlert.Controls.Add(this.optAlertPlay);
+            this.grpAlert.Controls.Add(this.optAlertSpeak);
+            this.grpAlert.Controls.Add(this.optAlertBeep);
+            this.grpAlert.Controls.Add(this.optAlertNone);
+            this.grpAlert.Controls.Add(this.txtAlertAudioFile);
+            this.grpAlert.Controls.Add(this.txtAlertPrefix);
+            this.grpAlert.Controls.Add(this.lblAlertPrefix);
+            this.grpAlert.Controls.Add(this.chkAlertMatchFull);
+            this.grpAlert.Location = new System.Drawing.Point(4, 293);
+            this.grpAlert.Name = "grpAlert";
+            this.grpAlert.Size = new System.Drawing.Size(248, 78);
+            this.grpAlert.TabIndex = 20;
+            this.grpAlert.TabStop = false;
+            this.grpAlert.Text = "Rare";
+            // 
             // optAlertPlay
-            //
-            optAlertPlay.Location = new Point(8, 55);
-            optAlertPlay.Name = "optAlertPlay";
-            optAlertPlay.Size = new Size(80, 16);
-            optAlertPlay.TabIndex = 27;
-            optAlertPlay.Text = "Play Wav";
-            //
+            // 
+            this.optAlertPlay.Location = new System.Drawing.Point(8, 55);
+            this.optAlertPlay.Name = "optAlertPlay";
+            this.optAlertPlay.Size = new System.Drawing.Size(80, 16);
+            this.optAlertPlay.TabIndex = 27;
+            this.optAlertPlay.Text = "Play Wav";
+            // 
             // optAlertSpeak
-            //
-            optAlertSpeak.Location = new Point(168, 35);
-            optAlertSpeak.Name = "optAlertSpeak";
-            optAlertSpeak.Size = new Size(72, 16);
-            optAlertSpeak.TabIndex = 26;
-            optAlertSpeak.Text = "Speak";
-            //
+            // 
+            this.optAlertSpeak.Location = new System.Drawing.Point(168, 35);
+            this.optAlertSpeak.Name = "optAlertSpeak";
+            this.optAlertSpeak.Size = new System.Drawing.Size(72, 16);
+            this.optAlertSpeak.TabIndex = 26;
+            this.optAlertSpeak.Text = "Speak";
+            // 
             // optAlertBeep
-            //
-            optAlertBeep.Location = new Point(88, 35);
-            optAlertBeep.Name = "optAlertBeep";
-            optAlertBeep.Size = new Size(72, 16);
-            optAlertBeep.TabIndex = 25;
-            optAlertBeep.Text = "Beep";
-            //
+            // 
+            this.optAlertBeep.Location = new System.Drawing.Point(88, 35);
+            this.optAlertBeep.Name = "optAlertBeep";
+            this.optAlertBeep.Size = new System.Drawing.Size(72, 16);
+            this.optAlertBeep.TabIndex = 25;
+            this.optAlertBeep.Text = "Beep";
+            // 
             // optAlertNone
-            //
-            optAlertNone.Checked = true;
-            optAlertNone.Location = new Point(8, 35);
-            optAlertNone.Name = "optAlertNone";
-            optAlertNone.Size = new Size(72, 16);
-            optAlertNone.TabIndex = 24;
-            optAlertNone.TabStop = true;
-            optAlertNone.Text = "None";
-            //
+            // 
+            this.optAlertNone.Checked = true;
+            this.optAlertNone.Location = new System.Drawing.Point(8, 35);
+            this.optAlertNone.Name = "optAlertNone";
+            this.optAlertNone.Size = new System.Drawing.Size(72, 16);
+            this.optAlertNone.TabIndex = 24;
+            this.optAlertNone.TabStop = true;
+            this.optAlertNone.Text = "None";
+            // 
             // txtAlertAudioFile
-            //
-            txtAlertAudioFile.Location = new Point(88, 55);
-            txtAlertAudioFile.Name = "txtAlertAudioFile";
-            txtAlertAudioFile.Size = new Size(152, 20);
-            txtAlertAudioFile.TabIndex = 28;
-            //
+            // 
+            this.txtAlertAudioFile.Location = new System.Drawing.Point(88, 55);
+            this.txtAlertAudioFile.Name = "txtAlertAudioFile";
+            this.txtAlertAudioFile.Size = new System.Drawing.Size(152, 20);
+            this.txtAlertAudioFile.TabIndex = 28;
+            // 
             // txtAlertPrefix
-            //
-            txtAlertPrefix.Location = new Point(88, 11);
-            txtAlertPrefix.MaxLength = 5;
-            txtAlertPrefix.Name = "txtAlertPrefix";
-            txtAlertPrefix.Size = new Size(32, 20);
-            txtAlertPrefix.TabIndex = 22;
-            txtAlertPrefix.Text = "[R]";
-            //
+            // 
+            this.txtAlertPrefix.Location = new System.Drawing.Point(88, 11);
+            this.txtAlertPrefix.MaxLength = 5;
+            this.txtAlertPrefix.Name = "txtAlertPrefix";
+            this.txtAlertPrefix.Size = new System.Drawing.Size(32, 20);
+            this.txtAlertPrefix.TabIndex = 22;
+            this.txtAlertPrefix.Text = "[R]";
+            // 
             // lblAlertPrefix
-            //
-            lblAlertPrefix.Location = new Point(8, 14);
-            lblAlertPrefix.Name = "lblAlertPrefix";
-            lblAlertPrefix.Size = new Size(79, 16);
-            lblAlertPrefix.TabIndex = 21;
-            lblAlertPrefix.Text = "Prefix/Suffix:";
-            //
+            // 
+            this.lblAlertPrefix.Location = new System.Drawing.Point(8, 14);
+            this.lblAlertPrefix.Name = "lblAlertPrefix";
+            this.lblAlertPrefix.Size = new System.Drawing.Size(79, 16);
+            this.lblAlertPrefix.TabIndex = 21;
+            this.lblAlertPrefix.Text = "Prefix/Suffix:";
+            // 
             // chkAlertMatchFull
-            //
-            chkAlertMatchFull.Location = new Point(136, 11);
-            chkAlertMatchFull.Name = "chkAlertMatchFull";
-            chkAlertMatchFull.Size = new Size(104, 24);
-            chkAlertMatchFull.TabIndex = 23;
-            chkAlertMatchFull.Text = "Match Full Text";
-            //
+            // 
+            this.chkAlertMatchFull.Location = new System.Drawing.Point(136, 11);
+            this.chkAlertMatchFull.Name = "chkAlertMatchFull";
+            this.chkAlertMatchFull.Size = new System.Drawing.Size(104, 24);
+            this.chkAlertMatchFull.TabIndex = 23;
+            this.chkAlertMatchFull.Text = "Match Full Text";
+            // 
             // grpCaution
-            //
-            grpCaution.Controls.Add(optCautionPlay);
-            grpCaution.Controls.Add(optCautionSpeak);
-            grpCaution.Controls.Add(optCautionBeep);
-            grpCaution.Controls.Add(optCautionNone);
-            grpCaution.Controls.Add(txtCautionAudioFile);
-            grpCaution.Controls.Add(txtCautionPrefix);
-            grpCaution.Controls.Add(lblCautionPrefix);
-            grpCaution.Controls.Add(chkCautionMatchFull);
-            grpCaution.Location = new Point(3, 125);
-            grpCaution.Name = "grpCaution";
-            grpCaution.Size = new Size(248, 78);
-            grpCaution.TabIndex = 11;
-            grpCaution.TabStop = false;
-            grpCaution.Text = "Caution";
-            //
+            // 
+            this.grpCaution.Controls.Add(this.optCautionPlay);
+            this.grpCaution.Controls.Add(this.optCautionSpeak);
+            this.grpCaution.Controls.Add(this.optCautionBeep);
+            this.grpCaution.Controls.Add(this.optCautionNone);
+            this.grpCaution.Controls.Add(this.txtCautionAudioFile);
+            this.grpCaution.Controls.Add(this.txtCautionPrefix);
+            this.grpCaution.Controls.Add(this.lblCautionPrefix);
+            this.grpCaution.Controls.Add(this.chkCautionMatchFull);
+            this.grpCaution.Location = new System.Drawing.Point(3, 125);
+            this.grpCaution.Name = "grpCaution";
+            this.grpCaution.Size = new System.Drawing.Size(248, 78);
+            this.grpCaution.TabIndex = 11;
+            this.grpCaution.TabStop = false;
+            this.grpCaution.Text = "Caution";
+            // 
             // optCautionPlay
-            //
-            optCautionPlay.Location = new Point(8, 55);
-            optCautionPlay.Name = "optCautionPlay";
-            optCautionPlay.Size = new Size(80, 16);
-            optCautionPlay.TabIndex = 18;
-            optCautionPlay.Text = "Play Wav";
-            //
+            // 
+            this.optCautionPlay.Location = new System.Drawing.Point(8, 55);
+            this.optCautionPlay.Name = "optCautionPlay";
+            this.optCautionPlay.Size = new System.Drawing.Size(80, 16);
+            this.optCautionPlay.TabIndex = 18;
+            this.optCautionPlay.Text = "Play Wav";
+            // 
             // optCautionSpeak
-            //
-            optCautionSpeak.Location = new Point(168, 38);
-            optCautionSpeak.Name = "optCautionSpeak";
-            optCautionSpeak.Size = new Size(72, 16);
-            optCautionSpeak.TabIndex = 17;
-            optCautionSpeak.Text = "Speak";
-            //
+            // 
+            this.optCautionSpeak.Location = new System.Drawing.Point(168, 38);
+            this.optCautionSpeak.Name = "optCautionSpeak";
+            this.optCautionSpeak.Size = new System.Drawing.Size(72, 16);
+            this.optCautionSpeak.TabIndex = 17;
+            this.optCautionSpeak.Text = "Speak";
+            // 
             // optCautionBeep
-            //
-            optCautionBeep.Location = new Point(88, 35);
-            optCautionBeep.Name = "optCautionBeep";
-            optCautionBeep.Size = new Size(72, 16);
-            optCautionBeep.TabIndex = 16;
-            optCautionBeep.Text = "Beep";
-            //
+            // 
+            this.optCautionBeep.Location = new System.Drawing.Point(88, 35);
+            this.optCautionBeep.Name = "optCautionBeep";
+            this.optCautionBeep.Size = new System.Drawing.Size(72, 16);
+            this.optCautionBeep.TabIndex = 16;
+            this.optCautionBeep.Text = "Beep";
+            // 
             // optCautionNone
-            //
-            optCautionNone.Checked = true;
-            optCautionNone.Location = new Point(8, 35);
-            optCautionNone.Name = "optCautionNone";
-            optCautionNone.Size = new Size(72, 16);
-            optCautionNone.TabIndex = 15;
-            optCautionNone.TabStop = true;
-            optCautionNone.Text = "None";
-            //
+            // 
+            this.optCautionNone.Checked = true;
+            this.optCautionNone.Location = new System.Drawing.Point(8, 35);
+            this.optCautionNone.Name = "optCautionNone";
+            this.optCautionNone.Size = new System.Drawing.Size(72, 16);
+            this.optCautionNone.TabIndex = 15;
+            this.optCautionNone.TabStop = true;
+            this.optCautionNone.Text = "None";
+            // 
             // txtCautionAudioFile
-            //
-            txtCautionAudioFile.Location = new Point(88, 55);
-            txtCautionAudioFile.Name = "txtCautionAudioFile";
-            txtCautionAudioFile.Size = new Size(152, 20);
-            txtCautionAudioFile.TabIndex = 19;
-            //
+            // 
+            this.txtCautionAudioFile.Location = new System.Drawing.Point(88, 55);
+            this.txtCautionAudioFile.Name = "txtCautionAudioFile";
+            this.txtCautionAudioFile.Size = new System.Drawing.Size(152, 20);
+            this.txtCautionAudioFile.TabIndex = 19;
+            // 
             // txtCautionPrefix
-            //
-            txtCautionPrefix.Location = new Point(88, 11);
-            txtCautionPrefix.MaxLength = 5;
-            txtCautionPrefix.Name = "txtCautionPrefix";
-            txtCautionPrefix.Size = new Size(32, 20);
-            txtCautionPrefix.TabIndex = 13;
-            txtCautionPrefix.Text = "[C]";
-            //
+            // 
+            this.txtCautionPrefix.Location = new System.Drawing.Point(88, 11);
+            this.txtCautionPrefix.MaxLength = 5;
+            this.txtCautionPrefix.Name = "txtCautionPrefix";
+            this.txtCautionPrefix.Size = new System.Drawing.Size(32, 20);
+            this.txtCautionPrefix.TabIndex = 13;
+            this.txtCautionPrefix.Text = "[C]";
+            // 
             // lblCautionPrefix
-            //
-            lblCautionPrefix.Location = new Point(8, 14);
-            lblCautionPrefix.Name = "lblCautionPrefix";
-            lblCautionPrefix.Size = new Size(80, 16);
-            lblCautionPrefix.TabIndex = 12;
-            lblCautionPrefix.Text = "Prefix/Suffix:";
-            //
+            // 
+            this.lblCautionPrefix.Location = new System.Drawing.Point(8, 14);
+            this.lblCautionPrefix.Name = "lblCautionPrefix";
+            this.lblCautionPrefix.Size = new System.Drawing.Size(80, 16);
+            this.lblCautionPrefix.TabIndex = 12;
+            this.lblCautionPrefix.Text = "Prefix/Suffix:";
+            // 
             // chkCautionMatchFull
-            //
-            chkCautionMatchFull.Location = new Point(136, 11);
-            chkCautionMatchFull.Name = "chkCautionMatchFull";
-            chkCautionMatchFull.Size = new Size(104, 24);
-            chkCautionMatchFull.TabIndex = 14;
-            chkCautionMatchFull.Text = "Match Full Text";
-            //
+            // 
+            this.chkCautionMatchFull.Location = new System.Drawing.Point(136, 11);
+            this.chkCautionMatchFull.Name = "chkCautionMatchFull";
+            this.chkCautionMatchFull.Size = new System.Drawing.Size(104, 24);
+            this.chkCautionMatchFull.TabIndex = 14;
+            this.chkCautionMatchFull.Text = "Match Full Text";
+            // 
             // grpHunt
-            //
-            grpHunt.Controls.Add(optHuntPlay);
-            grpHunt.Controls.Add(optHuntSpeak);
-            grpHunt.Controls.Add(optHuntBeep);
-            grpHunt.Controls.Add(optHuntNone);
-            grpHunt.Controls.Add(txtHuntAudioFile);
-            grpHunt.Controls.Add(txtHuntPrefix);
-            grpHunt.Controls.Add(lblHuntPrefix);
-            grpHunt.Controls.Add(chkHuntMatchFull);
-            grpHunt.Location = new Point(3, 41);
-            grpHunt.Name = "grpHunt";
-            grpHunt.Size = new Size(248, 78);
-            grpHunt.TabIndex = 2;
-            grpHunt.TabStop = false;
-            grpHunt.Text = "Hunt";
-            //
+            // 
+            this.grpHunt.Controls.Add(this.optHuntPlay);
+            this.grpHunt.Controls.Add(this.optHuntSpeak);
+            this.grpHunt.Controls.Add(this.optHuntBeep);
+            this.grpHunt.Controls.Add(this.optHuntNone);
+            this.grpHunt.Controls.Add(this.txtHuntAudioFile);
+            this.grpHunt.Controls.Add(this.txtHuntPrefix);
+            this.grpHunt.Controls.Add(this.lblHuntPrefix);
+            this.grpHunt.Controls.Add(this.chkHuntMatchFull);
+            this.grpHunt.Location = new System.Drawing.Point(3, 41);
+            this.grpHunt.Name = "grpHunt";
+            this.grpHunt.Size = new System.Drawing.Size(248, 78);
+            this.grpHunt.TabIndex = 2;
+            this.grpHunt.TabStop = false;
+            this.grpHunt.Text = "Hunt";
+            // 
             // optHuntPlay
-            //
-            optHuntPlay.Location = new Point(8, 55);
-            optHuntPlay.Name = "optHuntPlay";
-            optHuntPlay.Size = new Size(80, 16);
-            optHuntPlay.TabIndex = 9;
-            optHuntPlay.Text = "Play Wav";
-            //
+            // 
+            this.optHuntPlay.Location = new System.Drawing.Point(8, 55);
+            this.optHuntPlay.Name = "optHuntPlay";
+            this.optHuntPlay.Size = new System.Drawing.Size(80, 16);
+            this.optHuntPlay.TabIndex = 9;
+            this.optHuntPlay.Text = "Play Wav";
+            // 
             // optHuntSpeak
-            //
-            optHuntSpeak.Location = new Point(168, 35);
-            optHuntSpeak.Name = "optHuntSpeak";
-            optHuntSpeak.Size = new Size(72, 16);
-            optHuntSpeak.TabIndex = 8;
-            optHuntSpeak.Text = "Speak";
-            //
+            // 
+            this.optHuntSpeak.Location = new System.Drawing.Point(168, 35);
+            this.optHuntSpeak.Name = "optHuntSpeak";
+            this.optHuntSpeak.Size = new System.Drawing.Size(72, 16);
+            this.optHuntSpeak.TabIndex = 8;
+            this.optHuntSpeak.Text = "Speak";
+            // 
             // optHuntBeep
-            //
-            optHuntBeep.Location = new Point(88, 35);
-            optHuntBeep.Name = "optHuntBeep";
-            optHuntBeep.Size = new Size(72, 16);
-            optHuntBeep.TabIndex = 7;
-            optHuntBeep.Text = "Beep";
-            //
+            // 
+            this.optHuntBeep.Location = new System.Drawing.Point(88, 35);
+            this.optHuntBeep.Name = "optHuntBeep";
+            this.optHuntBeep.Size = new System.Drawing.Size(72, 16);
+            this.optHuntBeep.TabIndex = 7;
+            this.optHuntBeep.Text = "Beep";
+            // 
             // optHuntNone
-            //
-            optHuntNone.Checked = true;
-            optHuntNone.Location = new Point(8, 35);
-            optHuntNone.Name = "optHuntNone";
-            optHuntNone.Size = new Size(72, 16);
-            optHuntNone.TabIndex = 6;
-            optHuntNone.TabStop = true;
-            optHuntNone.Text = "None";
-            //
+            // 
+            this.optHuntNone.Checked = true;
+            this.optHuntNone.Location = new System.Drawing.Point(8, 35);
+            this.optHuntNone.Name = "optHuntNone";
+            this.optHuntNone.Size = new System.Drawing.Size(72, 16);
+            this.optHuntNone.TabIndex = 6;
+            this.optHuntNone.TabStop = true;
+            this.optHuntNone.Text = "None";
+            // 
             // txtHuntAudioFile
-            //
-            txtHuntAudioFile.Location = new Point(88, 55);
-            txtHuntAudioFile.Name = "txtHuntAudioFile";
-            txtHuntAudioFile.Size = new Size(152, 20);
-            txtHuntAudioFile.TabIndex = 10;
-            //
+            // 
+            this.txtHuntAudioFile.Location = new System.Drawing.Point(88, 55);
+            this.txtHuntAudioFile.Name = "txtHuntAudioFile";
+            this.txtHuntAudioFile.Size = new System.Drawing.Size(152, 20);
+            this.txtHuntAudioFile.TabIndex = 10;
+            // 
             // txtHuntPrefix
-            //
-            txtHuntPrefix.Location = new Point(88, 11);
-            txtHuntPrefix.MaxLength = 5;
-            txtHuntPrefix.Name = "txtHuntPrefix";
-            txtHuntPrefix.Size = new Size(32, 20);
-            txtHuntPrefix.TabIndex = 4;
-            txtHuntPrefix.Text = "[H]";
-            //
+            // 
+            this.txtHuntPrefix.Location = new System.Drawing.Point(88, 11);
+            this.txtHuntPrefix.MaxLength = 5;
+            this.txtHuntPrefix.Name = "txtHuntPrefix";
+            this.txtHuntPrefix.Size = new System.Drawing.Size(32, 20);
+            this.txtHuntPrefix.TabIndex = 4;
+            this.txtHuntPrefix.Text = "[H]";
+            // 
             // lblHuntPrefix
-            //
-            lblHuntPrefix.Location = new Point(8, 14);
-            lblHuntPrefix.Name = "lblHuntPrefix";
-            lblHuntPrefix.Size = new Size(80, 16);
-            lblHuntPrefix.TabIndex = 3;
-            lblHuntPrefix.Text = "Prefix/Suffix:";
-            //
+            // 
+            this.lblHuntPrefix.Location = new System.Drawing.Point(8, 14);
+            this.lblHuntPrefix.Name = "lblHuntPrefix";
+            this.lblHuntPrefix.Size = new System.Drawing.Size(80, 16);
+            this.lblHuntPrefix.TabIndex = 3;
+            this.lblHuntPrefix.Text = "Prefix/Suffix:";
+            // 
             // chkHuntMatchFull
-            //
-            chkHuntMatchFull.Location = new Point(136, 11);
-            chkHuntMatchFull.Name = "chkHuntMatchFull";
-            chkHuntMatchFull.Size = new Size(104, 24);
-            chkHuntMatchFull.TabIndex = 5;
-            chkHuntMatchFull.Text = "Match Full Text";
-            //
+            // 
+            this.chkHuntMatchFull.Location = new System.Drawing.Point(136, 11);
+            this.chkHuntMatchFull.Name = "chkHuntMatchFull";
+            this.chkHuntMatchFull.Size = new System.Drawing.Size(104, 24);
+            this.chkHuntMatchFull.TabIndex = 5;
+            this.chkHuntMatchFull.Text = "Match Full Text";
+            // 
             // chkAffixAlerts
-            //
-            chkAffixAlerts.Checked = true;
-            chkAffixAlerts.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkAffixAlerts.Location = new Point(4, 22);
-            chkAffixAlerts.Name = "chkAffixAlerts";
-            chkAffixAlerts.Size = new Size(112, 24);
-            chkAffixAlerts.TabIndex = 1;
-            chkAffixAlerts.Text = "Attach Suffix Text";
-            //
+            // 
+            this.chkAffixAlerts.Checked = true;
+            this.chkAffixAlerts.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAffixAlerts.Location = new System.Drawing.Point(4, 22);
+            this.chkAffixAlerts.Name = "chkAffixAlerts";
+            this.chkAffixAlerts.Size = new System.Drawing.Size(112, 24);
+            this.chkAffixAlerts.TabIndex = 1;
+            this.chkAffixAlerts.Text = "Attach Suffix Text";
+            // 
             // chkPrefixAlerts
-            //
-            chkPrefixAlerts.Checked = true;
-            chkPrefixAlerts.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkPrefixAlerts.Location = new Point(4, 3);
-            chkPrefixAlerts.Name = "chkPrefixAlerts";
-            chkPrefixAlerts.Size = new Size(120, 24);
-            chkPrefixAlerts.TabIndex = 0;
-            chkPrefixAlerts.Text = "Attach Prefix Text";
-            //
+            // 
+            this.chkPrefixAlerts.Checked = true;
+            this.chkPrefixAlerts.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkPrefixAlerts.Location = new System.Drawing.Point(4, 3);
+            this.chkPrefixAlerts.Name = "chkPrefixAlerts";
+            this.chkPrefixAlerts.Size = new System.Drawing.Size(120, 24);
+            this.chkPrefixAlerts.TabIndex = 0;
+            this.chkPrefixAlerts.Text = "Attach Prefix Text";
+            // 
             // chkCorpsesAlerts
-            //
-            chkCorpsesAlerts.Checked = true;
-            chkCorpsesAlerts.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkCorpsesAlerts.Location = new Point(152, 3);
-            chkCorpsesAlerts.Name = "chkCorpsesAlerts";
-            chkCorpsesAlerts.Size = new Size(100, 24);
-            chkCorpsesAlerts.TabIndex = 24;
-            chkCorpsesAlerts.Text = "Match Corpses";
-            //
+            // 
+            this.chkCorpsesAlerts.Checked = true;
+            this.chkCorpsesAlerts.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCorpsesAlerts.Location = new System.Drawing.Point(152, 3);
+            this.chkCorpsesAlerts.Name = "chkCorpsesAlerts";
+            this.chkCorpsesAlerts.Size = new System.Drawing.Size(100, 24);
+            this.chkCorpsesAlerts.TabIndex = 24;
+            this.chkCorpsesAlerts.Text = "Match Corpses";
+            // 
             // tabMap
-            //
-            tabMap.Controls.Add(FadedLines);
-            tabMap.Controls.Add(lblFadedLines);
-            tabMap.Controls.Add(lblPVPLevels);
-            tabMap.Controls.Add(pvpLevels);
-            tabMap.Controls.Add(groupBox1);
-            tabMap.Controls.Add(groupBox2);
-            tabMap.Controls.Add(lblSpawnSize);
-            tabMap.Controls.Add(chkSelectSpawnList);
-            tabMap.Controls.Add(spnSpawnSize);
-            tabMap.Controls.Add(chkShowTargetInfo);
-            tabMap.Controls.Add(chkDrawFoV);
-            tabMap.Location = new Point(4, 22);
-            tabMap.Name = "tabMap";
-            tabMap.Size = new Size(266, 375);
-            tabMap.TabIndex = 2;
-            tabMap.Text = "Map";
-            //
+            // 
+            this.tabMap.Controls.Add(this.FadedLines);
+            this.tabMap.Controls.Add(this.lblFadedLines);
+            this.tabMap.Controls.Add(this.lblPVPLevels);
+            this.tabMap.Controls.Add(this.pvpLevels);
+            this.tabMap.Controls.Add(this.groupBox1);
+            this.tabMap.Controls.Add(this.groupBox2);
+            this.tabMap.Controls.Add(this.lblSpawnSize);
+            this.tabMap.Controls.Add(this.chkSelectSpawnList);
+            this.tabMap.Controls.Add(this.spnSpawnSize);
+            this.tabMap.Controls.Add(this.chkShowTargetInfo);
+            this.tabMap.Controls.Add(this.chkDrawFoV);
+            this.tabMap.Location = new System.Drawing.Point(4, 22);
+            this.tabMap.Name = "tabMap";
+            this.tabMap.Size = new System.Drawing.Size(266, 375);
+            this.tabMap.TabIndex = 2;
+            this.tabMap.Text = "Map";
+            // 
             // FadedLines
-            //
-            FadedLines.Location = new Point(175, 99);
-            FadedLines.Name = "FadedLines";
-            FadedLines.Size = new Size(64, 20);
-            FadedLines.TabIndex = 61;
-            FadedLines.Value = new decimal(new int[] {
+            // 
+            this.FadedLines.Location = new System.Drawing.Point(175, 99);
+            this.FadedLines.Name = "FadedLines";
+            this.FadedLines.Size = new System.Drawing.Size(64, 20);
+            this.FadedLines.TabIndex = 61;
+            this.FadedLines.Value = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            //
+            // 
             // lblFadedLines
-            //
-            lblFadedLines.AutoSize = true;
-            lblFadedLines.Location = new Point(6, 99);
-            lblFadedLines.Name = "lblFadedLines";
-            lblFadedLines.Size = new Size(139, 13);
-            lblFadedLines.TabIndex = 60;
-            lblFadedLines.Text = "Dynamic Alpha Faded Lines";
-            //
+            // 
+            this.lblFadedLines.AutoSize = true;
+            this.lblFadedLines.Location = new System.Drawing.Point(6, 99);
+            this.lblFadedLines.Name = "lblFadedLines";
+            this.lblFadedLines.Size = new System.Drawing.Size(139, 13);
+            this.lblFadedLines.TabIndex = 60;
+            this.lblFadedLines.Text = "Dynamic Alpha Faded Lines";
+            // 
             // lblPVPLevels
-            //
-            lblPVPLevels.Location = new Point(6, 76);
-            lblPVPLevels.Name = "lblPVPLevels";
-            lblPVPLevels.Size = new Size(142, 16);
-            lblPVPLevels.TabIndex = 58;
-            lblPVPLevels.Text = "PVP Level Range:";
-            //
+            // 
+            this.lblPVPLevels.Location = new System.Drawing.Point(6, 76);
+            this.lblPVPLevels.Name = "lblPVPLevels";
+            this.lblPVPLevels.Size = new System.Drawing.Size(142, 16);
+            this.lblPVPLevels.TabIndex = 58;
+            this.lblPVPLevels.Text = "PVP Level Range:";
+            // 
             // pvpLevels
-            //
-            pvpLevels.Location = new Point(175, 74);
-            pvpLevels.Minimum = new decimal(new int[] {
+            // 
+            this.pvpLevels.Location = new System.Drawing.Point(175, 74);
+            this.pvpLevels.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             -2147483648});
-            pvpLevels.Name = "pvpLevels";
-            pvpLevels.Size = new Size(64, 20);
-            pvpLevels.TabIndex = 59;
-            pvpLevels.Value = new decimal(new int[] {
+            this.pvpLevels.Name = "pvpLevels";
+            this.pvpLevels.Size = new System.Drawing.Size(64, 20);
+            this.pvpLevels.TabIndex = 59;
+            this.pvpLevels.Value = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            pvpLevels.ValueChanged += new EventHandler(PvpLevels_ValueChanged);
-            //
+            this.pvpLevels.ValueChanged += new System.EventHandler(this.PvpLevels_ValueChanged);
+            // 
             // groupBox1
-            //
-            groupBox1.Controls.Add(cmbAlertSound);
-            groupBox1.Controls.Add(cmbHatch);
-            groupBox1.Controls.Add(label4);
-            groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(chkColorRangeCircle);
-            groupBox1.Controls.Add(spnRangeCircle);
-            groupBox1.Controls.Add(numMinAlertLevel);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Location = new Point(3, 119);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(258, 116);
-            groupBox1.TabIndex = 57;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Proximity Alert Settings";
-            //
+            // 
+            this.groupBox1.Controls.Add(this.cmbAlertSound);
+            this.groupBox1.Controls.Add(this.cmbHatch);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.chkColorRangeCircle);
+            this.groupBox1.Controls.Add(this.spnRangeCircle);
+            this.groupBox1.Controls.Add(this.numMinAlertLevel);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Location = new System.Drawing.Point(3, 119);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(258, 116);
+            this.groupBox1.TabIndex = 57;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Proximity Alert Settings";
+            // 
             // cmbAlertSound
-            //
-            cmbAlertSound.FormattingEnabled = true;
-            cmbAlertSound.Items.AddRange(new object[] {
+            // 
+            this.cmbAlertSound.FormattingEnabled = true;
+            this.cmbAlertSound.Items.AddRange(new object[] {
             "Asterisk",
             "Beep",
             "Exclamation",
             "Hand",
             "Question"});
-            cmbAlertSound.Location = new Point(104, 67);
-            cmbAlertSound.Name = "cmbAlertSound";
-            cmbAlertSound.Size = new Size(133, 21);
-            cmbAlertSound.TabIndex = 54;
-            cmbAlertSound.SelectionChangeCommitted += new EventHandler(CmbAlertSound_SelectionChangeCommitted);
-            //
+            this.cmbAlertSound.Location = new System.Drawing.Point(104, 67);
+            this.cmbAlertSound.Name = "cmbAlertSound";
+            this.cmbAlertSound.Size = new System.Drawing.Size(133, 21);
+            this.cmbAlertSound.TabIndex = 54;
+            this.cmbAlertSound.SelectionChangeCommitted += new System.EventHandler(this.CmbAlertSound_SelectionChangeCommitted);
+            // 
             // cmbHatch
-            //
-            cmbHatch.FormattingEnabled = true;
-            cmbHatch.Location = new Point(104, 42);
-            cmbHatch.Name = "cmbHatch";
-            cmbHatch.Size = new Size(133, 21);
-            cmbHatch.TabIndex = 53;
-            cmbHatch.Tag = "";
-            cmbHatch.SelectionChangeCommitted += new EventHandler(CmbHatch_SelectionChangeCommitted);
-            //
+            // 
+            this.cmbHatch.FormattingEnabled = true;
+            this.cmbHatch.Location = new System.Drawing.Point(104, 42);
+            this.cmbHatch.Name = "cmbHatch";
+            this.cmbHatch.Size = new System.Drawing.Size(133, 21);
+            this.cmbHatch.TabIndex = 53;
+            this.cmbHatch.Tag = "";
+            this.cmbHatch.SelectionChangeCommitted += new System.EventHandler(this.CmbHatch_SelectionChangeCommitted);
+            // 
             // label4
-            //
-            label4.Location = new Point(4, 70);
-            label4.Name = "label4";
-            label4.Size = new Size(103, 16);
-            label4.TabIndex = 58;
-            label4.Text = "Alert Sound";
-            //
+            // 
+            this.label4.Location = new System.Drawing.Point(4, 70);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(103, 16);
+            this.label4.TabIndex = 58;
+            this.label4.Text = "Alert Sound";
+            // 
             // label2
-            //
-            label2.Location = new Point(4, 45);
-            label2.Name = "label2";
-            label2.Size = new Size(103, 16);
-            label2.TabIndex = 57;
-            label2.Text = "Hatch Pattern";
-            //
+            // 
+            this.label2.Location = new System.Drawing.Point(4, 45);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(103, 16);
+            this.label2.TabIndex = 57;
+            this.label2.Text = "Hatch Pattern";
+            // 
             // chkColorRangeCircle
-            //
-            chkColorRangeCircle.Location = new Point(7, 20);
-            chkColorRangeCircle.Name = "chkColorRangeCircle";
-            chkColorRangeCircle.Size = new Size(108, 16);
-            chkColorRangeCircle.TabIndex = 5;
-            chkColorRangeCircle.Text = "Range Circle";
-            //
+            // 
+            this.chkColorRangeCircle.Location = new System.Drawing.Point(7, 20);
+            this.chkColorRangeCircle.Name = "chkColorRangeCircle";
+            this.chkColorRangeCircle.Size = new System.Drawing.Size(108, 16);
+            this.chkColorRangeCircle.TabIndex = 5;
+            this.chkColorRangeCircle.Text = "Range Circle";
+            // 
             // spnRangeCircle
-            //
-            spnRangeCircle.Location = new Point(173, 19);
-            spnRangeCircle.Maximum = new decimal(new int[] {
+            // 
+            this.spnRangeCircle.Location = new System.Drawing.Point(173, 19);
+            this.spnRangeCircle.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            spnRangeCircle.Name = "spnRangeCircle";
-            spnRangeCircle.Size = new Size(64, 20);
-            spnRangeCircle.TabIndex = 7;
-            spnRangeCircle.Value = new decimal(new int[] {
+            this.spnRangeCircle.Name = "spnRangeCircle";
+            this.spnRangeCircle.Size = new System.Drawing.Size(64, 20);
+            this.spnRangeCircle.TabIndex = 7;
+            this.spnRangeCircle.Value = new decimal(new int[] {
             150,
             0,
             0,
             0});
-            //
+            // 
             // numMinAlertLevel
-            //
-            numMinAlertLevel.Location = new Point(172, 91);
-            numMinAlertLevel.Maximum = new decimal(new int[] {
+            // 
+            this.numMinAlertLevel.Location = new System.Drawing.Point(172, 91);
+            this.numMinAlertLevel.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
-            numMinAlertLevel.Minimum = new decimal(new int[] {
+            this.numMinAlertLevel.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             -2147483648});
-            numMinAlertLevel.Name = "numMinAlertLevel";
-            numMinAlertLevel.Size = new Size(64, 20);
-            numMinAlertLevel.TabIndex = 55;
-            numMinAlertLevel.Value = new decimal(new int[] {
+            this.numMinAlertLevel.Name = "numMinAlertLevel";
+            this.numMinAlertLevel.Size = new System.Drawing.Size(64, 20);
+            this.numMinAlertLevel.TabIndex = 55;
+            this.numMinAlertLevel.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            //
+            // 
             // label1
-            //
-            label1.Location = new Point(4, 93);
-            label1.Name = "label1";
-            label1.Size = new Size(142, 16);
-            label1.TabIndex = 56;
-            label1.Text = "Minimum Alert Level";
-            //
+            // 
+            this.label1.Location = new System.Drawing.Point(4, 93);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(142, 16);
+            this.label1.TabIndex = 56;
+            this.label1.Text = "Minimum Alert Level";
+            // 
             // groupBox2
-            //
-            groupBox2.Controls.Add(chkMap);
-            groupBox2.Controls.Add(chkPlayer);
-            groupBox2.Controls.Add(chkSpawns);
-            groupBox2.Controls.Add(chkAddjust);
-            groupBox2.Controls.Add(chkGround);
-            groupBox2.Controls.Add(chkTrails);
-            groupBox2.Controls.Add(chkHighlight);
-            groupBox2.Controls.Add(chkGrid);
-            groupBox2.Controls.Add(chkTimers);
-            groupBox2.Controls.Add(chkText);
-            groupBox2.Controls.Add(chkDirection);
-            groupBox2.Controls.Add(chkLineToPoint);
-            groupBox2.Location = new Point(3, 241);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(258, 130);
-            groupBox2.TabIndex = 52;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Map Drawing Settings";
-            //
+            // 
+            this.groupBox2.Controls.Add(this.chkMap);
+            this.groupBox2.Controls.Add(this.chkPlayer);
+            this.groupBox2.Controls.Add(this.chkSpawns);
+            this.groupBox2.Controls.Add(this.chkAddjust);
+            this.groupBox2.Controls.Add(this.chkGround);
+            this.groupBox2.Controls.Add(this.chkTrails);
+            this.groupBox2.Controls.Add(this.chkHighlight);
+            this.groupBox2.Controls.Add(this.chkGrid);
+            this.groupBox2.Controls.Add(this.chkTimers);
+            this.groupBox2.Controls.Add(this.chkText);
+            this.groupBox2.Controls.Add(this.chkDirection);
+            this.groupBox2.Controls.Add(this.chkLineToPoint);
+            this.groupBox2.Location = new System.Drawing.Point(3, 241);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(258, 130);
+            this.groupBox2.TabIndex = 52;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Map Drawing Settings";
+            // 
             // chkMap
-            //
-            chkMap.Location = new Point(142, 53);
-            chkMap.Name = "chkMap";
-            chkMap.Size = new Size(94, 20);
-            chkMap.TabIndex = 30;
-            chkMap.Text = "Draw Map";
-            //
+            // 
+            this.chkMap.Location = new System.Drawing.Point(142, 53);
+            this.chkMap.Name = "chkMap";
+            this.chkMap.Size = new System.Drawing.Size(94, 20);
+            this.chkMap.TabIndex = 30;
+            this.chkMap.Text = "Draw Map";
+            // 
             // chkPlayer
-            //
-            chkPlayer.Location = new Point(142, 70);
-            chkPlayer.Name = "chkPlayer";
-            chkPlayer.Size = new Size(94, 20);
-            chkPlayer.TabIndex = 50;
-            chkPlayer.Text = "Draw Player";
-            //
+            // 
+            this.chkPlayer.Location = new System.Drawing.Point(142, 70);
+            this.chkPlayer.Name = "chkPlayer";
+            this.chkPlayer.Size = new System.Drawing.Size(94, 20);
+            this.chkPlayer.TabIndex = 50;
+            this.chkPlayer.Text = "Draw Player";
+            // 
             // chkSpawns
-            //
-            chkSpawns.Location = new Point(142, 36);
-            chkSpawns.Name = "chkSpawns";
-            chkSpawns.Size = new Size(94, 20);
-            chkSpawns.TabIndex = 43;
-            chkSpawns.Text = "Draw Spawns";
-            //
+            // 
+            this.chkSpawns.Location = new System.Drawing.Point(142, 36);
+            this.chkSpawns.Name = "chkSpawns";
+            this.chkSpawns.Size = new System.Drawing.Size(94, 20);
+            this.chkSpawns.TabIndex = 43;
+            this.chkSpawns.Text = "Draw Spawns";
+            // 
             // chkAddjust
-            //
-            chkAddjust.Location = new Point(6, 19);
-            chkAddjust.Name = "chkAddjust";
-            chkAddjust.Size = new Size(121, 20);
-            chkAddjust.TabIndex = 29;
-            chkAddjust.Text = "Readjust Map";
-            //
+            // 
+            this.chkAddjust.Location = new System.Drawing.Point(6, 19);
+            this.chkAddjust.Name = "chkAddjust";
+            this.chkAddjust.Size = new System.Drawing.Size(121, 20);
+            this.chkAddjust.TabIndex = 29;
+            this.chkAddjust.Text = "Readjust Map";
+            // 
             // chkGround
-            //
-            chkGround.Location = new Point(142, 104);
-            chkGround.Name = "chkGround";
-            chkGround.Size = new Size(111, 20);
-            chkGround.TabIndex = 51;
-            chkGround.Text = "Ground Spawns";
-            //
+            // 
+            this.chkGround.Location = new System.Drawing.Point(142, 104);
+            this.chkGround.Name = "chkGround";
+            this.chkGround.Size = new System.Drawing.Size(111, 20);
+            this.chkGround.TabIndex = 51;
+            this.chkGround.Text = "Ground Spawns";
+            // 
             // chkTrails
-            //
-            chkTrails.Location = new Point(6, 87);
-            chkTrails.Name = "chkTrails";
-            chkTrails.Size = new Size(130, 20);
-            chkTrails.TabIndex = 45;
-            chkTrails.Text = "Spawn Trails";
-            //
+            // 
+            this.chkTrails.Location = new System.Drawing.Point(6, 87);
+            this.chkTrails.Name = "chkTrails";
+            this.chkTrails.Size = new System.Drawing.Size(130, 20);
+            this.chkTrails.TabIndex = 45;
+            this.chkTrails.Text = "Spawn Trails";
+            // 
             // chkHighlight
-            //
-            chkHighlight.Location = new Point(6, 104);
-            chkHighlight.Name = "chkHighlight";
-            chkHighlight.Size = new Size(130, 20);
-            chkHighlight.TabIndex = 49;
-            chkHighlight.Text = "Highlight Merchants";
-            //
+            // 
+            this.chkHighlight.Location = new System.Drawing.Point(6, 104);
+            this.chkHighlight.Name = "chkHighlight";
+            this.chkHighlight.Size = new System.Drawing.Size(130, 20);
+            this.chkHighlight.TabIndex = 49;
+            this.chkHighlight.Text = "Highlight Merchants";
+            // 
             // chkGrid
-            //
-            chkGrid.Location = new Point(6, 36);
-            chkGrid.Name = "chkGrid";
-            chkGrid.Size = new Size(130, 20);
-            chkGrid.TabIndex = 37;
-            chkGrid.Text = "Show Gridlines";
-            //
+            // 
+            this.chkGrid.Location = new System.Drawing.Point(6, 36);
+            this.chkGrid.Name = "chkGrid";
+            this.chkGrid.Size = new System.Drawing.Size(130, 20);
+            this.chkGrid.TabIndex = 37;
+            this.chkGrid.Text = "Show Gridlines";
+            // 
             // chkTimers
-            //
-            chkTimers.Location = new Point(142, 19);
-            chkTimers.Name = "chkTimers";
-            chkTimers.Size = new Size(116, 20);
-            chkTimers.TabIndex = 47;
-            chkTimers.Text = "Spawn Timers";
-            //
+            // 
+            this.chkTimers.Location = new System.Drawing.Point(142, 19);
+            this.chkTimers.Name = "chkTimers";
+            this.chkTimers.Size = new System.Drawing.Size(116, 20);
+            this.chkTimers.TabIndex = 47;
+            this.chkTimers.Text = "Spawn Timers";
+            // 
             // chkText
-            //
-            chkText.Location = new Point(6, 70);
-            chkText.Name = "chkText";
-            chkText.Size = new Size(130, 20);
-            chkText.TabIndex = 41;
-            chkText.Text = "Show Zone Text";
-            //
+            // 
+            this.chkText.Location = new System.Drawing.Point(6, 70);
+            this.chkText.Name = "chkText";
+            this.chkText.Size = new System.Drawing.Size(130, 20);
+            this.chkText.TabIndex = 41;
+            this.chkText.Text = "Show Zone Text";
+            // 
             // chkDirection
-            //
-            chkDirection.Location = new Point(142, 87);
-            chkDirection.Name = "chkDirection";
-            chkDirection.Size = new Size(109, 20);
-            chkDirection.TabIndex = 46;
-            chkDirection.Text = "Heading Lines";
-            //
+            // 
+            this.chkDirection.Location = new System.Drawing.Point(142, 87);
+            this.chkDirection.Name = "chkDirection";
+            this.chkDirection.Size = new System.Drawing.Size(109, 20);
+            this.chkDirection.TabIndex = 46;
+            this.chkDirection.Text = "Heading Lines";
+            // 
             // chkLineToPoint
-            //
-            chkLineToPoint.Location = new Point(6, 53);
-            chkLineToPoint.Name = "chkLineToPoint";
-            chkLineToPoint.Size = new Size(130, 20);
-            chkLineToPoint.TabIndex = 42;
-            chkLineToPoint.Text = "Draw Line to Point";
-            //
+            // 
+            this.chkLineToPoint.Location = new System.Drawing.Point(6, 53);
+            this.chkLineToPoint.Name = "chkLineToPoint";
+            this.chkLineToPoint.Size = new System.Drawing.Size(130, 20);
+            this.chkLineToPoint.TabIndex = 42;
+            this.chkLineToPoint.Text = "Draw Line to Point";
+            // 
             // lblSpawnSize
-            //
-            lblSpawnSize.Location = new Point(6, 51);
-            lblSpawnSize.Name = "lblSpawnSize";
-            lblSpawnSize.Size = new Size(142, 16);
-            lblSpawnSize.TabIndex = 20;
-            lblSpawnSize.Text = "Spawn Draw Size:";
-            //
+            // 
+            this.lblSpawnSize.Location = new System.Drawing.Point(6, 51);
+            this.lblSpawnSize.Name = "lblSpawnSize";
+            this.lblSpawnSize.Size = new System.Drawing.Size(142, 16);
+            this.lblSpawnSize.TabIndex = 20;
+            this.lblSpawnSize.Text = "Spawn Draw Size:";
+            // 
             // chkSelectSpawnList
-            //
-            chkSelectSpawnList.Location = new Point(8, 32);
-            chkSelectSpawnList.Name = "chkSelectSpawnList";
-            chkSelectSpawnList.Size = new Size(248, 16);
-            chkSelectSpawnList.TabIndex = 4;
-            chkSelectSpawnList.Text = "Auto Select Spawn in the Spawn List";
-            //
+            // 
+            this.chkSelectSpawnList.Location = new System.Drawing.Point(8, 32);
+            this.chkSelectSpawnList.Name = "chkSelectSpawnList";
+            this.chkSelectSpawnList.Size = new System.Drawing.Size(248, 16);
+            this.chkSelectSpawnList.TabIndex = 4;
+            this.chkSelectSpawnList.Text = "Auto Select Spawn in the Spawn List";
+            // 
             // spnSpawnSize
-            //
-            spnSpawnSize.Location = new Point(175, 49);
-            spnSpawnSize.Maximum = new decimal(new int[] {
+            // 
+            this.spnSpawnSize.Location = new System.Drawing.Point(175, 49);
+            this.spnSpawnSize.Maximum = new decimal(new int[] {
             12,
             0,
             0,
             0});
-            spnSpawnSize.Minimum = new decimal(new int[] {
+            this.spnSpawnSize.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            spnSpawnSize.Name = "spnSpawnSize";
-            spnSpawnSize.Size = new Size(64, 20);
-            spnSpawnSize.TabIndex = 21;
-            spnSpawnSize.Value = new decimal(new int[] {
+            this.spnSpawnSize.Name = "spnSpawnSize";
+            this.spnSpawnSize.Size = new System.Drawing.Size(64, 20);
+            this.spnSpawnSize.TabIndex = 21;
+            this.spnSpawnSize.Value = new decimal(new int[] {
             3,
             0,
             0,
             0});
-            spnSpawnSize.ValueChanged += new EventHandler(SpnSpawnSize_ValueChanged);
-            //
+            this.spnSpawnSize.ValueChanged += new System.EventHandler(this.SpnSpawnSize_ValueChanged);
+            // 
             // chkShowTargetInfo
-            //
-            chkShowTargetInfo.Location = new Point(8, 12);
-            chkShowTargetInfo.Name = "chkShowTargetInfo";
-            chkShowTargetInfo.Size = new Size(248, 16);
-            chkShowTargetInfo.TabIndex = 3;
-            chkShowTargetInfo.Text = "Show Target Information Window";
-            //
+            // 
+            this.chkShowTargetInfo.Location = new System.Drawing.Point(8, 12);
+            this.chkShowTargetInfo.Name = "chkShowTargetInfo";
+            this.chkShowTargetInfo.Size = new System.Drawing.Size(248, 16);
+            this.chkShowTargetInfo.TabIndex = 3;
+            this.chkShowTargetInfo.Text = "Show Target Information Window";
+            // 
             // chkDrawFoV
-            //
-            chkDrawFoV.Location = new Point(8, -24);
-            chkDrawFoV.Name = "chkDrawFoV";
-            chkDrawFoV.Size = new Size(248, 16);
-            chkDrawFoV.TabIndex = 2;
-            chkDrawFoV.Text = "Draw Field of View (FoV)";
-            //
+            // 
+            this.chkDrawFoV.Location = new System.Drawing.Point(8, -24);
+            this.chkDrawFoV.Name = "chkDrawFoV";
+            this.chkDrawFoV.Size = new System.Drawing.Size(248, 16);
+            this.chkDrawFoV.TabIndex = 2;
+            this.chkDrawFoV.Text = "Draw Field of View (FoV)";
+            // 
             // tabGeneral
-            //
-            tabGeneral.Controls.Add(chkShowCharName);
-            tabGeneral.Controls.Add(txtSearchString);
-            tabGeneral.Controls.Add(lblSearch);
-            tabGeneral.Controls.Add(spnLogLevel);
-            tabGeneral.Controls.Add(lblLogLevel);
-            tabGeneral.Controls.Add(chkShowZoneName);
-            tabGeneral.Controls.Add(spnOverrideLevel);
-            tabGeneral.Controls.Add(spnUpdateDelay);
-            tabGeneral.Controls.Add(txtWindowName);
-            tabGeneral.Controls.Add(lblWindowName);
-            tabGeneral.Controls.Add(lblOverridelevel);
-            tabGeneral.Controls.Add(gbServer);
-            tabGeneral.Controls.Add(lblUpdateDelay);
-            tabGeneral.Controls.Add(chkSaveOnExit);
-            tabGeneral.Location = new Point(4, 22);
-            tabGeneral.Name = "tabGeneral";
-            tabGeneral.Size = new Size(266, 375);
-            tabGeneral.TabIndex = 0;
-            tabGeneral.Text = "General";
-            //
+            // 
+            this.tabGeneral.Controls.Add(this.chkShowCharName);
+            this.tabGeneral.Controls.Add(this.txtSearchString);
+            this.tabGeneral.Controls.Add(this.lblSearch);
+            this.tabGeneral.Controls.Add(this.spnLogLevel);
+            this.tabGeneral.Controls.Add(this.lblLogLevel);
+            this.tabGeneral.Controls.Add(this.chkShowZoneName);
+            this.tabGeneral.Controls.Add(this.spnOverrideLevel);
+            this.tabGeneral.Controls.Add(this.spnUpdateDelay);
+            this.tabGeneral.Controls.Add(this.txtWindowName);
+            this.tabGeneral.Controls.Add(this.lblWindowName);
+            this.tabGeneral.Controls.Add(this.lblOverridelevel);
+            this.tabGeneral.Controls.Add(this.gbServer);
+            this.tabGeneral.Controls.Add(this.lblUpdateDelay);
+            this.tabGeneral.Controls.Add(this.chkSaveOnExit);
+            this.tabGeneral.Location = new System.Drawing.Point(4, 22);
+            this.tabGeneral.Name = "tabGeneral";
+            this.tabGeneral.Size = new System.Drawing.Size(266, 375);
+            this.tabGeneral.TabIndex = 0;
+            this.tabGeneral.Text = "General";
+            // 
             // chkShowCharName
-            //
-            chkShowCharName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            chkShowCharName.Checked = true;
-            chkShowCharName.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkShowCharName.Location = new Point(134, 320);
-            chkShowCharName.Name = "chkShowCharName";
-            chkShowCharName.Size = new Size(114, 24);
-            chkShowCharName.TabIndex = 27;
-            chkShowCharName.Text = "Show Char Name";
-            //
+            // 
+            this.chkShowCharName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkShowCharName.Checked = true;
+            this.chkShowCharName.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowCharName.Location = new System.Drawing.Point(134, 320);
+            this.chkShowCharName.Name = "chkShowCharName";
+            this.chkShowCharName.Size = new System.Drawing.Size(114, 24);
+            this.chkShowCharName.TabIndex = 27;
+            this.chkShowCharName.Text = "Show Char Name";
+            this.chkShowCharName.CheckedChanged += new System.EventHandler(this.ChkShowCharName_CheckedChanged);
+            // 
             // txtSearchString
-            //
-            txtSearchString.Location = new Point(61, 344);
-            txtSearchString.Name = "txtSearchString";
-            txtSearchString.Size = new Size(195, 20);
-            txtSearchString.TabIndex = 26;
-            //
+            // 
+            this.txtSearchString.Location = new System.Drawing.Point(61, 344);
+            this.txtSearchString.Name = "txtSearchString";
+            this.txtSearchString.Size = new System.Drawing.Size(195, 20);
+            this.txtSearchString.TabIndex = 26;
+            // 
             // lblSearch
-            //
-            lblSearch.Location = new Point(8, 347);
-            lblSearch.Name = "lblSearch";
-            lblSearch.Size = new Size(47, 17);
-            lblSearch.TabIndex = 25;
-            lblSearch.Text = "Search:";
-            //
+            // 
+            this.lblSearch.Location = new System.Drawing.Point(8, 347);
+            this.lblSearch.Name = "lblSearch";
+            this.lblSearch.Size = new System.Drawing.Size(47, 17);
+            this.lblSearch.TabIndex = 25;
+            this.lblSearch.Text = "Search:";
+            // 
             // spnLogLevel
-            //
-            spnLogLevel.Location = new Point(192, 256);
-            spnLogLevel.Name = "spnLogLevel";
-            spnLogLevel.Size = new Size(64, 20);
-            spnLogLevel.TabIndex = 21;
-            //
+            // 
+            this.spnLogLevel.Location = new System.Drawing.Point(192, 256);
+            this.spnLogLevel.Name = "spnLogLevel";
+            this.spnLogLevel.Size = new System.Drawing.Size(64, 20);
+            this.spnLogLevel.TabIndex = 21;
+            // 
             // lblLogLevel
-            //
-            lblLogLevel.Location = new Point(8, 256);
-            lblLogLevel.Name = "lblLogLevel";
-            lblLogLevel.Size = new Size(136, 16);
-            lblLogLevel.TabIndex = 20;
-            lblLogLevel.Text = "Error Logging Level:";
-            //
+            // 
+            this.lblLogLevel.Location = new System.Drawing.Point(8, 256);
+            this.lblLogLevel.Name = "lblLogLevel";
+            this.lblLogLevel.Size = new System.Drawing.Size(136, 16);
+            this.lblLogLevel.TabIndex = 20;
+            this.lblLogLevel.Text = "Error Logging Level:";
+            // 
             // chkShowZoneName
-            //
-            chkShowZoneName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            chkShowZoneName.Checked = true;
-            chkShowZoneName.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkShowZoneName.Location = new Point(8, 320);
-            chkShowZoneName.Name = "chkShowZoneName";
-            chkShowZoneName.Size = new Size(114, 24);
-            chkShowZoneName.TabIndex = 24;
-            chkShowZoneName.Text = "Show Zone Name";
-            //
+            // 
+            this.chkShowZoneName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkShowZoneName.Checked = true;
+            this.chkShowZoneName.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowZoneName.Location = new System.Drawing.Point(8, 320);
+            this.chkShowZoneName.Name = "chkShowZoneName";
+            this.chkShowZoneName.Size = new System.Drawing.Size(114, 24);
+            this.chkShowZoneName.TabIndex = 24;
+            this.chkShowZoneName.Text = "Show Zone Name";
+            this.chkShowZoneName.CheckedChanged += new System.EventHandler(this.ChkShowZoneName_CheckedChanged);
+            // 
             // spnOverrideLevel
-            //
-            spnOverrideLevel.Location = new Point(192, 208);
-            spnOverrideLevel.Maximum = new decimal(new int[] {
+            // 
+            this.spnOverrideLevel.Location = new System.Drawing.Point(192, 208);
+            this.spnOverrideLevel.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
-            spnOverrideLevel.Minimum = new decimal(new int[] {
+            this.spnOverrideLevel.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             -2147483648});
-            spnOverrideLevel.Name = "spnOverrideLevel";
-            spnOverrideLevel.Size = new Size(64, 20);
-            spnOverrideLevel.TabIndex = 15;
-            spnOverrideLevel.Value = new decimal(new int[] {
+            this.spnOverrideLevel.Name = "spnOverrideLevel";
+            this.spnOverrideLevel.Size = new System.Drawing.Size(64, 20);
+            this.spnOverrideLevel.TabIndex = 15;
+            this.spnOverrideLevel.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            //
+            // 
             // spnUpdateDelay
-            //
-            spnUpdateDelay.Location = new Point(192, 232);
-            spnUpdateDelay.Maximum = new decimal(new int[] {
+            // 
+            this.spnUpdateDelay.Location = new System.Drawing.Point(192, 232);
+            this.spnUpdateDelay.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            spnUpdateDelay.Minimum = new decimal(new int[] {
+            this.spnUpdateDelay.Minimum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            spnUpdateDelay.Name = "spnUpdateDelay";
-            spnUpdateDelay.Size = new Size(64, 20);
-            spnUpdateDelay.TabIndex = 17;
-            spnUpdateDelay.Value = new decimal(new int[] {
+            this.spnUpdateDelay.Name = "spnUpdateDelay";
+            this.spnUpdateDelay.Size = new System.Drawing.Size(64, 20);
+            this.spnUpdateDelay.TabIndex = 17;
+            this.spnUpdateDelay.Value = new decimal(new int[] {
             250,
             0,
             0,
             0});
-            //
+            // 
             // txtWindowName
-            //
-            txtWindowName.Location = new Point(8, 296);
-            txtWindowName.Name = "txtWindowName";
-            txtWindowName.Size = new Size(248, 20);
-            txtWindowName.TabIndex = 23;
-            //
+            // 
+            this.txtWindowName.Location = new System.Drawing.Point(8, 296);
+            this.txtWindowName.Name = "txtWindowName";
+            this.txtWindowName.Size = new System.Drawing.Size(248, 20);
+            this.txtWindowName.TabIndex = 23;
+            // 
             // lblWindowName
-            //
-            lblWindowName.Location = new Point(8, 280);
-            lblWindowName.Name = "lblWindowName";
-            lblWindowName.Size = new Size(144, 16);
-            lblWindowName.TabIndex = 22;
-            lblWindowName.Text = "Window Title:";
-            //
+            // 
+            this.lblWindowName.Location = new System.Drawing.Point(8, 280);
+            this.lblWindowName.Name = "lblWindowName";
+            this.lblWindowName.Size = new System.Drawing.Size(144, 16);
+            this.lblWindowName.TabIndex = 22;
+            this.lblWindowName.Text = "Window Title:";
+            // 
             // lblOverridelevel
-            //
-            lblOverridelevel.Location = new Point(8, 208);
-            lblOverridelevel.Name = "lblOverridelevel";
-            lblOverridelevel.Size = new Size(136, 16);
-            lblOverridelevel.TabIndex = 14;
-            lblOverridelevel.Text = "Override Level:";
-            //
+            // 
+            this.lblOverridelevel.Location = new System.Drawing.Point(8, 208);
+            this.lblOverridelevel.Name = "lblOverridelevel";
+            this.lblOverridelevel.Size = new System.Drawing.Size(136, 16);
+            this.lblOverridelevel.TabIndex = 14;
+            this.lblOverridelevel.Text = "Override Level:";
+            // 
             // gbServer
-            //
-            gbServer.Controls.Add(txtIPAddress5);
-            gbServer.Controls.Add(lblIPAddress5);
-            gbServer.Controls.Add(txtIPAddress4);
-            gbServer.Controls.Add(lblIPAddress4);
-            gbServer.Controls.Add(txtIPAddress3);
-            gbServer.Controls.Add(lblIPAddress3);
-            gbServer.Controls.Add(txtIPAddress2);
-            gbServer.Controls.Add(lblIPAddress2);
-            gbServer.Controls.Add(txtPortNo);
-            gbServer.Controls.Add(txtIPAddress1);
-            gbServer.Controls.Add(lblIPAddress1);
-            gbServer.Controls.Add(lbltxtPortNo);
-            gbServer.Location = new Point(8, 8);
-            gbServer.Name = "gbServer";
-            gbServer.Size = new Size(248, 168);
-            gbServer.TabIndex = 0;
-            gbServer.TabStop = false;
-            gbServer.Text = "Server";
-            //
+            // 
+            this.gbServer.Controls.Add(this.txtIPAddress5);
+            this.gbServer.Controls.Add(this.lblIPAddress5);
+            this.gbServer.Controls.Add(this.txtIPAddress4);
+            this.gbServer.Controls.Add(this.lblIPAddress4);
+            this.gbServer.Controls.Add(this.txtIPAddress3);
+            this.gbServer.Controls.Add(this.lblIPAddress3);
+            this.gbServer.Controls.Add(this.txtIPAddress2);
+            this.gbServer.Controls.Add(this.lblIPAddress2);
+            this.gbServer.Controls.Add(this.txtPortNo);
+            this.gbServer.Controls.Add(this.txtIPAddress1);
+            this.gbServer.Controls.Add(this.lblIPAddress1);
+            this.gbServer.Controls.Add(this.lbltxtPortNo);
+            this.gbServer.Location = new System.Drawing.Point(8, 8);
+            this.gbServer.Name = "gbServer";
+            this.gbServer.Size = new System.Drawing.Size(248, 168);
+            this.gbServer.TabIndex = 0;
+            this.gbServer.TabStop = false;
+            this.gbServer.Text = "Server";
+            // 
             // txtIPAddress5
-            //
-            txtIPAddress5.Location = new Point(128, 112);
-            txtIPAddress5.Name = "txtIPAddress5";
-            txtIPAddress5.Size = new Size(112, 20);
-            txtIPAddress5.TabIndex = 10;
-            //
+            // 
+            this.txtIPAddress5.Location = new System.Drawing.Point(128, 112);
+            this.txtIPAddress5.Name = "txtIPAddress5";
+            this.txtIPAddress5.Size = new System.Drawing.Size(112, 20);
+            this.txtIPAddress5.TabIndex = 10;
+            // 
             // lblIPAddress5
-            //
-            lblIPAddress5.Location = new Point(8, 112);
-            lblIPAddress5.Name = "lblIPAddress5";
-            lblIPAddress5.Size = new Size(120, 16);
-            lblIPAddress5.TabIndex = 9;
-            lblIPAddress5.Text = "IP Address 5: (Ctrl + 5)";
-            //
+            // 
+            this.lblIPAddress5.Location = new System.Drawing.Point(8, 112);
+            this.lblIPAddress5.Name = "lblIPAddress5";
+            this.lblIPAddress5.Size = new System.Drawing.Size(120, 16);
+            this.lblIPAddress5.TabIndex = 9;
+            this.lblIPAddress5.Text = "IP Address 5: (Ctrl + 5)";
+            // 
             // txtIPAddress4
-            //
-            txtIPAddress4.Location = new Point(128, 88);
-            txtIPAddress4.Name = "txtIPAddress4";
-            txtIPAddress4.Size = new Size(112, 20);
-            txtIPAddress4.TabIndex = 8;
-            //
+            // 
+            this.txtIPAddress4.Location = new System.Drawing.Point(128, 88);
+            this.txtIPAddress4.Name = "txtIPAddress4";
+            this.txtIPAddress4.Size = new System.Drawing.Size(112, 20);
+            this.txtIPAddress4.TabIndex = 8;
+            // 
             // lblIPAddress4
-            //
-            lblIPAddress4.Location = new Point(8, 88);
-            lblIPAddress4.Name = "lblIPAddress4";
-            lblIPAddress4.Size = new Size(120, 16);
-            lblIPAddress4.TabIndex = 7;
-            lblIPAddress4.Text = "IP Address 4: (Ctrl + 4)";
-            //
+            // 
+            this.lblIPAddress4.Location = new System.Drawing.Point(8, 88);
+            this.lblIPAddress4.Name = "lblIPAddress4";
+            this.lblIPAddress4.Size = new System.Drawing.Size(120, 16);
+            this.lblIPAddress4.TabIndex = 7;
+            this.lblIPAddress4.Text = "IP Address 4: (Ctrl + 4)";
+            // 
             // txtIPAddress3
-            //
-            txtIPAddress3.Location = new Point(128, 64);
-            txtIPAddress3.Name = "txtIPAddress3";
-            txtIPAddress3.Size = new Size(112, 20);
-            txtIPAddress3.TabIndex = 6;
-            //
+            // 
+            this.txtIPAddress3.Location = new System.Drawing.Point(128, 64);
+            this.txtIPAddress3.Name = "txtIPAddress3";
+            this.txtIPAddress3.Size = new System.Drawing.Size(112, 20);
+            this.txtIPAddress3.TabIndex = 6;
+            // 
             // lblIPAddress3
-            //
-            lblIPAddress3.Location = new Point(8, 64);
-            lblIPAddress3.Name = "lblIPAddress3";
-            lblIPAddress3.Size = new Size(120, 16);
-            lblIPAddress3.TabIndex = 5;
-            lblIPAddress3.Text = "IP Address 3: (Ctrl + 3)";
-            //
+            // 
+            this.lblIPAddress3.Location = new System.Drawing.Point(8, 64);
+            this.lblIPAddress3.Name = "lblIPAddress3";
+            this.lblIPAddress3.Size = new System.Drawing.Size(120, 16);
+            this.lblIPAddress3.TabIndex = 5;
+            this.lblIPAddress3.Text = "IP Address 3: (Ctrl + 3)";
+            // 
             // txtIPAddress2
-            //
-            txtIPAddress2.Location = new Point(128, 40);
-            txtIPAddress2.Name = "txtIPAddress2";
-            txtIPAddress2.Size = new Size(112, 20);
-            txtIPAddress2.TabIndex = 4;
-            //
+            // 
+            this.txtIPAddress2.Location = new System.Drawing.Point(128, 40);
+            this.txtIPAddress2.Name = "txtIPAddress2";
+            this.txtIPAddress2.Size = new System.Drawing.Size(112, 20);
+            this.txtIPAddress2.TabIndex = 4;
+            // 
             // lblIPAddress2
-            //
-            lblIPAddress2.Location = new Point(8, 40);
-            lblIPAddress2.Name = "lblIPAddress2";
-            lblIPAddress2.Size = new Size(120, 16);
-            lblIPAddress2.TabIndex = 3;
-            lblIPAddress2.Text = "IP Address 2: (Ctrl + 2)";
-            //
+            // 
+            this.lblIPAddress2.Location = new System.Drawing.Point(8, 40);
+            this.lblIPAddress2.Name = "lblIPAddress2";
+            this.lblIPAddress2.Size = new System.Drawing.Size(120, 16);
+            this.lblIPAddress2.TabIndex = 3;
+            this.lblIPAddress2.Text = "IP Address 2: (Ctrl + 2)";
+            // 
             // txtPortNo
-            //
-            txtPortNo.Location = new Point(128, 136);
-            txtPortNo.Name = "txtPortNo";
-            txtPortNo.Size = new Size(112, 20);
-            txtPortNo.TabIndex = 12;
-            txtPortNo.Text = "5555";
-            //
+            // 
+            this.txtPortNo.Location = new System.Drawing.Point(128, 136);
+            this.txtPortNo.Name = "txtPortNo";
+            this.txtPortNo.Size = new System.Drawing.Size(112, 20);
+            this.txtPortNo.TabIndex = 12;
+            this.txtPortNo.Text = "5555";
+            // 
             // txtIPAddress1
-            //
-            txtIPAddress1.Location = new Point(128, 16);
-            txtIPAddress1.Name = "txtIPAddress1";
-            txtIPAddress1.Size = new Size(112, 20);
-            txtIPAddress1.TabIndex = 2;
-            txtIPAddress1.Text = "localhost";
-            //
+            // 
+            this.txtIPAddress1.Location = new System.Drawing.Point(128, 16);
+            this.txtIPAddress1.Name = "txtIPAddress1";
+            this.txtIPAddress1.Size = new System.Drawing.Size(112, 20);
+            this.txtIPAddress1.TabIndex = 2;
+            this.txtIPAddress1.Text = "localhost";
+            // 
             // lblIPAddress1
-            //
-            lblIPAddress1.Location = new Point(8, 16);
-            lblIPAddress1.Name = "lblIPAddress1";
-            lblIPAddress1.Size = new Size(120, 16);
-            lblIPAddress1.TabIndex = 1;
-            lblIPAddress1.Text = "IP Address 1: (Ctrl + 1)";
-            //
+            // 
+            this.lblIPAddress1.Location = new System.Drawing.Point(8, 16);
+            this.lblIPAddress1.Name = "lblIPAddress1";
+            this.lblIPAddress1.Size = new System.Drawing.Size(120, 16);
+            this.lblIPAddress1.TabIndex = 1;
+            this.lblIPAddress1.Text = "IP Address 1: (Ctrl + 1)";
+            // 
             // lbltxtPortNo
-            //
-            lbltxtPortNo.Location = new Point(8, 136);
-            lbltxtPortNo.Name = "lbltxtPortNo";
-            lbltxtPortNo.Size = new Size(120, 16);
-            lbltxtPortNo.TabIndex = 11;
-            lbltxtPortNo.Text = "Port:";
-            //
+            // 
+            this.lbltxtPortNo.Location = new System.Drawing.Point(8, 136);
+            this.lbltxtPortNo.Name = "lbltxtPortNo";
+            this.lbltxtPortNo.Size = new System.Drawing.Size(120, 16);
+            this.lbltxtPortNo.TabIndex = 11;
+            this.lbltxtPortNo.Text = "Port:";
+            // 
             // lblUpdateDelay
-            //
-            lblUpdateDelay.Location = new Point(8, 232);
-            lblUpdateDelay.Name = "lblUpdateDelay";
-            lblUpdateDelay.Size = new Size(136, 16);
-            lblUpdateDelay.TabIndex = 16;
-            lblUpdateDelay.Text = "Update Delay (mS):";
-            //
+            // 
+            this.lblUpdateDelay.Location = new System.Drawing.Point(8, 232);
+            this.lblUpdateDelay.Name = "lblUpdateDelay";
+            this.lblUpdateDelay.Size = new System.Drawing.Size(136, 16);
+            this.lblUpdateDelay.TabIndex = 16;
+            this.lblUpdateDelay.Text = "Update Delay (mS):";
+            // 
             // chkSaveOnExit
-            //
-            chkSaveOnExit.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            chkSaveOnExit.Checked = true;
-            chkSaveOnExit.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkSaveOnExit.Location = new Point(8, 176);
-            chkSaveOnExit.Name = "chkSaveOnExit";
-            chkSaveOnExit.Size = new Size(197, 24);
-            chkSaveOnExit.TabIndex = 13;
-            chkSaveOnExit.Text = "Save Preferences On Exit:";
-            //
+            // 
+            this.chkSaveOnExit.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkSaveOnExit.Checked = true;
+            this.chkSaveOnExit.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSaveOnExit.Location = new System.Drawing.Point(8, 176);
+            this.chkSaveOnExit.Name = "chkSaveOnExit";
+            this.chkSaveOnExit.Size = new System.Drawing.Size(197, 24);
+            this.chkSaveOnExit.TabIndex = 13;
+            this.chkSaveOnExit.Text = "Save Preferences On Exit:";
+            this.chkSaveOnExit.CheckedChanged += new System.EventHandler(this.ChkSaveOnExit_CheckedChanged);
+            // 
             // tabOptions
-            //
-            tabOptions.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom
-            | AnchorStyles.Left
-            | AnchorStyles.Right);
-            tabOptions.Controls.Add(tabGeneral);
-            tabOptions.Controls.Add(tabMap);
-            tabOptions.Controls.Add(tabAlerts);
-            tabOptions.Controls.Add(tabFolders);
-            tabOptions.Controls.Add(tabColors);
-            tabOptions.Controls.Add(tabPage1);
-            tabOptions.Location = new Point(0, 3);
-            tabOptions.Name = "tabOptions";
-            tabOptions.SelectedIndex = 0;
-            tabOptions.Size = new Size(274, 401);
-            tabOptions.TabIndex = 1;
-            //
+            // 
+            this.tabOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabOptions.Controls.Add(this.tabGeneral);
+            this.tabOptions.Controls.Add(this.tabMap);
+            this.tabOptions.Controls.Add(this.tabAlerts);
+            this.tabOptions.Controls.Add(this.tabFolders);
+            this.tabOptions.Controls.Add(this.tabColors);
+            this.tabOptions.Controls.Add(this.tabPage1);
+            this.tabOptions.Location = new System.Drawing.Point(0, 3);
+            this.tabOptions.Name = "tabOptions";
+            this.tabOptions.SelectedIndex = 0;
+            this.tabOptions.Size = new System.Drawing.Size(274, 401);
+            this.tabOptions.TabIndex = 1;
+            // 
             // tabPage1
-            //
-            tabPage1.Location = new Point(4, 22);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Size = new Size(264, 374);
-            tabPage1.TabIndex = 5;
-            //
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(266, 375);
+            this.tabPage1.TabIndex = 5;
+            // 
             // cmdCancel
-            //
-            cmdCancel.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
-            cmdCancel.DialogResult = DialogResult.Cancel;
-            cmdCancel.Location = new Point(176, 410);
-            cmdCancel.Name = "cmdCancel";
-            cmdCancel.Size = new Size(85, 23);
-            cmdCancel.TabIndex = 2;
-            cmdCancel.Text = "Cancel";
-            //
-            // frmOptions
-            //
-            AcceptButton = cmdCommand;
-            AutoScaleBaseSize = new Size(5, 13);
-            AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            CancelButton = cmdCommand;
-            ClientSize = new Size(273, 445);
-            Controls.Add(cmdCancel);
-            Controls.Add(tabOptions);
-            Controls.Add(cmdCommand);
-            Icon = ((Icon)(resources.GetObject("$this.Icon")));
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "frmOptions";
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "Options";
-            TopMost = true;
-            tabColors.ResumeLayout(false);
-            ((ISupportInitialize)(picGridLabelColor)).EndInit();
-            ((ISupportInitialize)(picPlayerBorder)).EndInit();
-            ((ISupportInitialize)(picListBackgroundColor)).EndInit();
-            ((ISupportInitialize)(picRangeCircleColor)).EndInit();
-            ((ISupportInitialize)(picGridColor)).EndInit();
-            ((ISupportInitialize)(picMapBackgroundColor)).EndInit();
-            tabFolders.ResumeLayout(false);
-            tabFolders.PerformLayout();
-            tabAlerts.ResumeLayout(false);
-            grpDanger.ResumeLayout(false);
-            grpDanger.PerformLayout();
-            grpAlert.ResumeLayout(false);
-            grpAlert.PerformLayout();
-            grpCaution.ResumeLayout(false);
-            grpCaution.PerformLayout();
-            grpHunt.ResumeLayout(false);
-            grpHunt.PerformLayout();
-            tabMap.ResumeLayout(false);
-            tabMap.PerformLayout();
-            ((ISupportInitialize)(FadedLines)).EndInit();
-            ((ISupportInitialize)(pvpLevels)).EndInit();
-            groupBox1.ResumeLayout(false);
-            ((ISupportInitialize)(spnRangeCircle)).EndInit();
-            ((ISupportInitialize)(numMinAlertLevel)).EndInit();
-            groupBox2.ResumeLayout(false);
-            ((ISupportInitialize)(spnSpawnSize)).EndInit();
-            tabGeneral.ResumeLayout(false);
-            tabGeneral.PerformLayout();
-            ((ISupportInitialize)(spnLogLevel)).EndInit();
-            ((ISupportInitialize)(spnOverrideLevel)).EndInit();
-            ((ISupportInitialize)(spnUpdateDelay)).EndInit();
-            gbServer.ResumeLayout(false);
-            gbServer.PerformLayout();
-            tabOptions.ResumeLayout(false);
-            ResumeLayout(false);
+            // 
+            this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cmdCancel.Location = new System.Drawing.Point(176, 410);
+            this.cmdCancel.Name = "cmdCancel";
+            this.cmdCancel.Size = new System.Drawing.Size(85, 23);
+            this.cmdCancel.TabIndex = 2;
+            this.cmdCancel.Text = "Cancel";
+            // 
+            // FrmOptions
+            // 
+            this.AcceptButton = this.cmdCommand;
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.CancelButton = this.cmdCommand;
+            this.ClientSize = new System.Drawing.Size(273, 445);
+            this.Controls.Add(this.cmdCancel);
+            this.Controls.Add(this.tabOptions);
+            this.Controls.Add(this.cmdCommand);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "FrmOptions";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Options";
+            this.TopMost = true;
+            this.tabColors.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picGridLabelColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picPlayerBorder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picListBackgroundColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picRangeCircleColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picGridColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMapBackgroundColor)).EndInit();
+            this.tabFolders.ResumeLayout(false);
+            this.tabFolders.PerformLayout();
+            this.tabAlerts.ResumeLayout(false);
+            this.grpDanger.ResumeLayout(false);
+            this.grpDanger.PerformLayout();
+            this.grpAlert.ResumeLayout(false);
+            this.grpAlert.PerformLayout();
+            this.grpCaution.ResumeLayout(false);
+            this.grpCaution.PerformLayout();
+            this.grpHunt.ResumeLayout(false);
+            this.grpHunt.PerformLayout();
+            this.tabMap.ResumeLayout(false);
+            this.tabMap.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FadedLines)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pvpLevels)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.spnRangeCircle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMinAlertLevel)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.spnSpawnSize)).EndInit();
+            this.tabGeneral.ResumeLayout(false);
+            this.tabGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spnLogLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spnOverrideLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spnUpdateDelay)).EndInit();
+            this.gbServer.ResumeLayout(false);
+            this.gbServer.PerformLayout();
+            this.tabOptions.ResumeLayout(false);
+            this.ResumeLayout(false);
+
         }
 
         #endregion Windows Form Designer generated code
@@ -2014,40 +2020,9 @@ namespace myseq
         {
             if (chkSaveOnExit.Checked)  // This checkbox actually DO something now.
             {
-                Settings.Default.Save();//SaveSettings();
+                Settings.Default.Save();
             }
-
-            if (!Directory.Exists(txtMapDir.Text) && DialogResult.Yes == DirBox("Map"))
-            {
-                Directory.CreateDirectory(txtMapDir.Text);
-            }
-
-            if (!Directory.Exists(txtFilterDir.Text) && DialogResult.Yes == DirBox("Filters"))
-            {
-                Directory.CreateDirectory(txtFilterDir.Text);
-            }
-
-            if (!Directory.Exists(txtCfgDir.Text) && DialogResult.Yes == DirBox("Config"))
-            {
-                Directory.CreateDirectory(txtCfgDir.Text);
-            }
-
-            if (!Directory.Exists(txtLogDir.Text) && DialogResult.Yes == DirBox("Log"))
-            {
-                Directory.CreateDirectory(txtLogDir.Text);
-            }
-
-            if (!Directory.Exists(txtTimerDir.Text) && DialogResult.Yes == DirBox("Spawn timer"))
-            {
-                Directory.CreateDirectory(txtTimerDir.Text);
-            }
-
             Hide();
-
-            DialogResult DirBox(string dir)
-            {
-                return MessageBox.Show($" {dir} directory doesn't exist.  Create it?", "Directory Not Found", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-            }
         }
 
         private void CmdMapBackgroundColor_Click(object sender, EventArgs e)
@@ -2089,7 +2064,6 @@ namespace myseq
         }
 
         private void CmdRangeCircleColor_Click(object sender, EventArgs e)
-
         {
             colorOptionPicker.Color = picRangeCircleColor.BackColor;
 
@@ -2103,100 +2077,47 @@ namespace myseq
         }
 
         private void CmdMapDirBrowse_Click(object sender, EventArgs e)
-
         {
-            fldrBrowser.Description = "Map Directory";
-
-            fldrBrowser.SelectedPath = Settings.Default.MapDir;
-
-            fldrBrowser.ShowDialog();
-
-            if (fldrBrowser.SelectedPath.Trim() != "")
-                txtMapDir.Text = fldrBrowser.SelectedPath;
+            FolderBrowser("Map Directory", Settings.Default.MapDir, out string text);
+            txtMapDir.Text = text;
+            Settings.Default.MapDir = txtMapDir.Text;
         }
 
         private void CmdCfgDirBrowse_Click(object sender, EventArgs e)
-
         {
-            fldrBrowser.Description = "Config Directory";
-
-            fldrBrowser.SelectedPath = Settings.Default.CfgDir;
-
-            fldrBrowser.ShowDialog();
-
-            if (fldrBrowser.SelectedPath.Trim() != "")
-                txtCfgDir.Text = fldrBrowser.SelectedPath;
+            FolderBrowser("Config Directory", Settings.Default.CfgDir, out string text);
+            txtCfgDir.Text = text;
+            Settings.Default.CfgDir = txtCfgDir.Text;
         }
 
         private void CmdFilterDirBrowse_Click(object sender, EventArgs e)
-
         {
-            fldrBrowser.Description = "Filter Directory";
-
-            fldrBrowser.SelectedPath = Settings.Default.FilterDir;
-
-            fldrBrowser.ShowDialog();
-
-            if (fldrBrowser.SelectedPath.Trim() != "")
-                txtFilterDir.Text = fldrBrowser.SelectedPath;
+            FolderBrowser("Filter Directory", Settings.Default.FilterDir, out string text);
+            txtFilterDir.Text = text;
+            Settings.Default.FilterDir = txtFilterDir.Text;
         }
 
         private void CmdLogDir_Click(object sender, EventArgs e)
 
         {
-            fldrBrowser.Description = "Log Directory";
+            FolderBrowser("Log Directory", Settings.Default.LogDir, out string text);
+            txtLogDir.Text = text;
+            Settings.Default.LogDir = txtLogDir.Text;
+        }
 
-            fldrBrowser.SelectedPath = Settings.Default.LogDir;
-
-            fldrBrowser.ShowDialog();
-
-            if (fldrBrowser.SelectedPath.Trim() != "")
-                txtLogDir.Text = fldrBrowser.SelectedPath;
+        private void FolderBrowser(string desc, string sPath, out string text)
+        {
+            text = sPath;
+            fldrBrowser.Description = desc;
+            fldrBrowser.SelectedPath = sPath;
+            _ = fldrBrowser.ShowDialog() == DialogResult.OK ? (text = fldrBrowser.SelectedPath) : null;
         }
 
         private void CmdSpawnTimers_Click(object sender, EventArgs e)
-
         {
-            fldrBrowser.Description = "Timers Directory";
-
-            fldrBrowser.SelectedPath = Settings.Default.TimerDir;
-
-            fldrBrowser.ShowDialog();
-
-            if (fldrBrowser.SelectedPath.Trim() != "")
-                txtTimerDir.Text = fldrBrowser.SelectedPath;
-        }
-
-        public DrawOptions GetDrawOptions()
-
-        {
-            DrawOptions DrawOpts = DrawOptions.None;
-
-            if (chkMap.Checked) DrawOpts |= DrawOptions.DrawMap;
-
-            if (chkAddjust.Checked) DrawOpts |= DrawOptions.Readjust;
-
-            if (chkPlayer.Checked) DrawOpts |= DrawOptions.Player;
-
-            if (chkLineToPoint.Checked) DrawOpts |= DrawOptions.SpotLine;
-
-            if (chkSpawns.Checked) DrawOpts |= DrawOptions.Spawns;
-
-            if (chkTrails.Checked) DrawOpts |= DrawOptions.SpawnTrails;
-
-            if (chkGround.Checked) DrawOpts |= DrawOptions.GroundItems;
-
-            if (chkTimers.Checked) DrawOpts |= DrawOptions.SpawnTimers;
-
-            if (chkDirection.Checked) DrawOpts |= DrawOptions.DirectionLines;
-
-            if (chkHighlight.Checked) DrawOpts |= DrawOptions.SpawnRings;
-
-            if (chkGrid.Checked) DrawOpts |= DrawOptions.GridLines;
-
-            if (chkText.Checked) DrawOpts |= DrawOptions.ZoneText;
-
-            return DrawOpts;
+            FolderBrowser("Timers log Directory", Settings.Default.TimerDir, out string text);
+            txtTimerDir.Text = text;
+            Settings.Default.TimerDir = txtTimerDir.Text;
         }
 
         public void SetFgDrawOptions(DrawOptions DrawOpts)
@@ -2240,7 +2161,6 @@ namespace myseq
         }
 
         private void CmbAlertSound_SelectionChangeCommitted(object sender, EventArgs e)
-
         {
             Settings.Default.AlertSound = cmbAlertSound.SelectedItem.ToString();
 
@@ -2298,5 +2218,11 @@ namespace myseq
         private void SpnSpawnSize_ValueChanged(object sender, EventArgs e) => Settings.Default.SpawnDrawSize = (int)spnSpawnSize.Value;
 
         private void PvpLevels_ValueChanged(object sender, EventArgs e) => Settings.Default.PVPLevels = (int)pvpLevels.Value;
+
+        private void ChkShowZoneName_CheckedChanged(object sender, EventArgs e) => Settings.Default.ShowZoneName = chkShowZoneName.Checked;
+
+        private void ChkShowCharName_CheckedChanged(object sender, EventArgs e) => Settings.Default.ShowCharName = chkShowZoneName.Checked;
+
+        private void ChkSaveOnExit_CheckedChanged(object sender, EventArgs e) => Settings.Default.SaveOnExit = chkSaveOnExit.Checked;
     }
 }
