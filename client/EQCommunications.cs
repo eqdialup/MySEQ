@@ -36,10 +36,11 @@ namespace Structures
         private readonly byte[] incompletebuffer = new byte[2048];
 
         private readonly EQData eq;
-
         private readonly MainForm f1;
 
         public int NewProcessID { get; set; }
+        public string curZone { get; set; }
+        public string mapnameWithLabels { get; set; }
 
         public void UpdateHidden()
         {
@@ -72,7 +73,6 @@ namespace Structures
                 pSocketClient?.Disconnect();
 
                 // Instantiate a CSocketClient object
-
                 pSocketClient = new CSocketClient(100000,
                     new CSocketClient.MESSAGE_HANDLER(MessageHandlerClient),
                     new CSocketClient.CLOSE_HANDLER(CloseHandler)
@@ -102,20 +102,10 @@ namespace Structures
         }
 
         //********************************************************************
-
-        /// <summary> Called when a message is extracted from the socket </summary>
-        /// <param name="pSocket"> The SocketClient object the message came from </param>
-        /// <param name="iNumberOfBytes"> The number of bytes in the RawBuffer inside the SocketClient </param>
         private void MessageHandlerClient(CSocketClient pSocket, int iNumberOfBytes)
         {
-            // Process the packet
             ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);
         }
-
-        //********************************************************************
-
-        /// <summary> Called when a socket connection is closed </summary>
-        /// <param name="pSocket"> The SocketClient object the message came from </param>
         private void CloseHandler(CSocketClient pSocket)
         {
             if (f1 == null)
@@ -129,6 +119,7 @@ namespace Structures
         }
 
         //********************************************************************
+
         public void Tick()
         {
             int Request;
@@ -211,7 +202,6 @@ namespace Structures
             try
             {
                 if (bytes > 0)
-
                 {
                     // we have received some bytes, check if this is the beginning of a new packet or a chunk of an existing one.
 
@@ -220,7 +210,6 @@ namespace Structures
                     eq.BeginProcessPacket(); //clears spawn&ground arrays
 
                     for (; offset + SIZE_OF_PACKET <= bytes; offset += SIZE_OF_PACKET)
-
                     {
                         Spawninfo si = new Spawninfo();
 
@@ -261,17 +250,11 @@ namespace Structures
         private void ProcessPacket(Spawninfo si)
         {
             // SPAWN  // si.flags == 0
-
             // Target // si.flags == 1
-
             //  MAP   // si.flags == 4
-
             // GROUND // si.flags == 5
-
             //ProcInfo// si.flags == 6
-
             //World//    si.flags == 8
-
             // PLAYER // si.flags == 253
 
             switch (si.flags)
@@ -308,7 +291,7 @@ namespace Structures
 
                 case PacketType.Spawn:
 
-                    eq.ProcessSpawns(si, f1, update_hidden);
+                    eq.ProcessSpawns(si, update_hidden);
 
                     break;
 
@@ -356,12 +339,12 @@ namespace Structures
 
         private void ProcessProcessInfo(Spawninfo si)
         {
-            ProcessInfo PI = new ProcessInfo(si.SpawnID, si.Name);
+            ProcessInfo ProcInfo = new ProcessInfo(si.SpawnID, si.Name);
 
             if (si.SpawnID == 0)
             {
-                PI.SCharName = "";
-                CurrentProcess = PI;
+                ProcInfo.SCharName = "";
+                CurrentProcess = ProcInfo;
             }
             else
             {
@@ -372,9 +355,9 @@ namespace Structures
                     ColProcesses.Remove(ColProcesses[ColProcesses.Count - 1]);
                 }
 
-                ColProcesses.Add(PI);
+                ColProcesses.Add(ProcInfo);
 
-                f1.ShowCharsInList(si, PI);
+                f1.ShowCharsInList(si, ProcInfo);
             }
         }
 
@@ -396,7 +379,7 @@ namespace Structures
                 FinalizeProcess();
 
                 CheckMobs();
-                f1.mapCon.Invalidate();
+                f1.MapConInvalidate();
             }
         }
 

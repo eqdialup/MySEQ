@@ -132,9 +132,7 @@
     <Compile Include="ListComparer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EQCommunications.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="EQCommunications.cs" />
     <Compile Include="EQData.cs">
       <SubType>Code</SubType>
     </Compile>

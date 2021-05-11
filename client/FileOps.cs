@@ -49,13 +49,13 @@ namespace Structures
             return arList.ToArray();
         }
 
-        public ListItem ReadItemList(string file)// ref List<ListItem> ground)
+        public void ReadItemList(string file, myseq.EQData eq)
         {
             var filePath = CombineCfgDir(file);
             if (!File.Exists(filePath))
             {
                 LogLib.WriteLine("GroundItems.ini file not found", LogLevel.Warning);
-                return default;
+                return;
             }
 
             foreach (var line in File.ReadAllLines(filePath).ToList())
@@ -65,15 +65,14 @@ namespace Structures
                 {
                     var entries = line.Split('=');
                     var tmp = entries[0].Split('_');
-                    return new ListItem
+                    eq.GroundSpawn.Add(new ListItem
                     {
                         ID = int.Parse(tmp[0].Remove(0, 2)),
                         ActorDef = entries[0],
                         Name = entries[1]
-                    };
+                    });
                 }
             }
-            return default;
         }
 
         private void CreateAlertFile(string fileName)

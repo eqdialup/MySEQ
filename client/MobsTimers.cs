@@ -56,12 +56,9 @@ namespace myseq
         // Remove all spawns
 
         public void EnterMap(EQMap map)
-
         {
             ResetTimers();
-
             mapName = map.eq.shortname;
-
             LoadTimers();
         }
 
@@ -263,9 +260,7 @@ namespace myseq
         }
 
         // Add new spawns to the list, or update changed spawns.
-
         // Also misused to save the spawn list occasionally
-
         public void UpdateList(ListViewPanel SpawnTimerList)
         {
             _ = DateTime.Now;
@@ -278,14 +273,14 @@ namespace myseq
 
                     if (itmSpawnTimerList != null)
                     {
-                        st.itmSpawnTimerList = itmSpawnTimerList;
+                        st.ItmSpawnTimerList = itmSpawnTimerList;
                         SpawnTimerList.listView.Items.Add(itmSpawnTimerList);
                     }
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawnTimer(): ", ex); }
 
-            if (MustSave && DateTime.Now.Subtract(LastSaveTime).TotalSeconds > 10)
+            if (MustSave && DateTime.Now.Subtract(LastSaveTime).TotalSeconds > 60)
             {
                 SaveTimers();
             }
@@ -405,19 +400,19 @@ namespace myseq
 
         private void GetKnownMobInfo(Spawntimer st)
         {
-            Spawntimer stold = (Spawntimer)mobsTimer[st.ZoneSpawnLoc];
+            Spawntimer oldTimer = (Spawntimer)mobsTimer[st.ZoneSpawnLoc];
 
             // check if we add names in the merge.  If so, make sure we save.
-            var startlen = stold.AllNames.Length;
-            stold.Merge(st);
-            if (stold.AllNames.Length > startlen)
+            var startlen = oldTimer.AllNames.Length;
+            oldTimer.Merge(st);
+            if (oldTimer.AllNames.Length > startlen)
             {
                 MustSave = true;
             }
 
-            if (stold.SpawnCount > 1 && stold.SpawnTimer > 10 && !mobsTimer2.ContainsKey(stold.ZoneSpawnLoc))
+            if (oldTimer.SpawnCount > 1 && oldTimer.SpawnTimer > 10 && !mobsTimer2.ContainsKey(oldTimer.ZoneSpawnLoc))
             {
-                mobsTimer2.Add(stold.ZoneSpawnLoc, stold);
+                mobsTimer2.Add(oldTimer.ZoneSpawnLoc, oldTimer);
             }
         }
 
@@ -432,7 +427,8 @@ namespace myseq
             }
             if (Voidmaps)
             {
-                DeleteMapTimers(timerfile);
+                MustSave = false;
+                FileOps.DeleteFile(timerfile);
                 return;
             }
 
@@ -469,19 +465,6 @@ namespace myseq
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in SaveTimers():", ex); }
-        }
-
-        private void DeleteMapTimers(string timerfile)
-        {
-            MustSave = false;
-            LastSaveTime = DateTime.Now;
-
-            // We are not saving timers for these zone.  If they exist, then delete them.
-            if (!Directory.Exists(Settings.Default.TimerDir))
-            {
-                return;
-            }
-            FileOps.DeleteFile(timerfile);
         }
 
         internal bool Voidmaps => mapName == "clz" || mapName == "default" || mapName == "bazaar" || mapName.Contains("guild") || mapName == "poknowledge" || mapName == "nexus";

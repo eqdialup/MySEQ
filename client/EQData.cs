@@ -26,18 +26,13 @@ namespace myseq
 
         //// Map data
         // Max + Min map coordinates - define the bounds of the zone
-
         public float MinmapX { get; set; } = -1000;
-
         public float MaxMapX { get; set; } = 1000;
-
         public float MinMapY { get; set; } = -1000;
-
         public float MaxMapY { get; set; } = 1000;
-
         public float minMapZ { get; set; } = -1000;
-
         public float MaxMapZ { get; set; } = 1000;
+
 
         private readonly List<GroundItem> itemcollection = new List<GroundItem>();          // Hold the items that are on the ground
 
@@ -50,18 +45,15 @@ namespace myseq
 
         public float SpawnY { get; set; } = -1;
 
-        private int EQSelectedID = 0;
+        private int EQSelectedID;
 
-        public DateTime gametime { get; set; } = new DateTime();
+        public DateTime gametime { get; private set; } = new DateTime();
 
         // Mobs / UI Lists
-
         private List<ListViewItem> NewSpawns { get; } = new List<ListViewItem>();
-
         private List<ListViewItem> NewGroundItems { get; } = new List<ListViewItem>();
 
         // Items List by ID and Description loaded from file
-
         public List<ListItem> GroundSpawn { get; set; } = new List<ListItem>();
 
         // Guild List by ID and Description loaded from file
@@ -83,13 +75,13 @@ namespace myseq
 
         public List<GroundItem> GetItemsReadonly() => itemcollection;
 
-        public void ProcessSpawnTimer(MainForm f1)
-        {
-            if (mobsTimers.mobsTimer2.Count > 0)
-            {
-                mobsTimers.UpdateList(f1.SpawnTimerList);
-            }
-        }
+        //public void ProcessSpawnTimer(MainForm f1)
+        //{
+        //    if (mobsTimers.mobsTimer2.Count > 0)
+        //    {
+        //        mobsTimers.UpdateList(f1.SpawnTimerList);
+        //    }
+        //}
 
         public bool SelectTimer(float x, float y, float delta)
         {
@@ -97,10 +89,10 @@ namespace myseq
 
             if (st != null)
             {
-                if (Settings.Default.AutoSelectSpawnList && st.itmSpawnTimerList != null)
+                if (Settings.Default.AutoSelectSpawnList && st.ItmSpawnTimerList != null)
                 {
-                    st.itmSpawnTimerList.EnsureVisible();
-                    st.itmSpawnTimerList.Selected = true;
+                    st.ItmSpawnTimerList.EnsureVisible();
+                    st.ItmSpawnTimerList.Selected = true;
                 }
                 Spawninfo sp = FindMobTimer(st.SpawnLoc);
 
@@ -259,7 +251,7 @@ namespace myseq
             // This returns mobsTimer2
             foreach (Spawntimer st in mobsTimers.GetRespawned().Values)
             {
-                if (st.itmSpawnTimerList == listItem)
+                if (st.ItmSpawnTimerList == listItem)
                 {
                     return st;
                 }
@@ -298,17 +290,13 @@ namespace myseq
 
         public Spawninfo GetSelectedMob() => (Spawninfo)mobsHashTable[selectedID];
 
-        // Originally called when first loading program.
-        // Now called when reconnect(and char change), so we can modify these list more "on the fly"
         public void InitLookups()
         {
             Classes = GetStrArrayFromTextFile("Classes.txt");
-
             Races = GetStrArrayFromTextFile("Races.txt");
 
             GroundSpawn.Clear();
-
-            GroundSpawn.Add(ReadItemList("GroundItems.ini"));
+            ReadItemList("GroundItems.ini", this);
             //guildList.Clear();
 
             //ReadGuildList(FileOps.CombineCfgDir("Guilds.txt"));
@@ -563,9 +551,7 @@ namespace myseq
 
                     item1.SubItems.Add(si.Name);
 
-                    DateTime dt = DateTime.Now;
-
-                    item1.SubItems.Add(dt.ToLongTimeString());
+                    item1.SubItems.Add(DateTime.Now.ToLongTimeString());
 
                     item1.SubItems.Add(si.X.ToString("#.000"));
 
@@ -638,15 +624,13 @@ namespace myseq
          * gameMin = si.Class
         */
 
-        public void ProcessSpawns(Spawninfo si, MainForm f1, bool update_hidden)
+        public void ProcessSpawns(Spawninfo si, bool update_hidden)
         {
             try
             {
                 var listReAdd = false;
 
                 var found = false;
-
-                Spawninfo mob;
 
                 // Converted mob collection to a hashtable so we can do
                 // a fast lookup to see if a mob already exists
@@ -655,7 +639,7 @@ namespace myseq
                 {
                     found = true;
 
-                    mob = (Spawninfo)mobsHashTable[si.SpawnID];
+                    Spawninfo mob = (Spawninfo)mobsHashTable[si.SpawnID];
 
                     mob.gone = 0;
 
@@ -669,10 +653,16 @@ namespace myseq
                     {   // Update mob types
                         if (mob.Type != si.Type)
                         {
-                            UpdateMobTypes(si, f1.SpawnList, mob);
+                            mob.Type = si.Type;
+                            UpdateMobTypes(mob);
+                            SetListColors(mob);
                         }
-                        MobLevelSetColor(si, f1.SpawnList, mob);
-
+                        if (mob.Level != si.Level)
+                        {
+                            mob.Level = si.Level;
+                            mob.listitem.SubItems[1].Text = mob.Level.ToString();
+                            MobLevelSetColor(mob);
+                        }
                         // Update Hidden flags
                         if (update_hidden)
                         {
@@ -718,7 +708,7 @@ namespace myseq
                             mob.OwnerID = si.OwnerID;
                             MobHasOwner(mob);
                             mob.Hide = si.Hide;
-                            mob.listitem.SubItems[9].Text = PrettyNames.GetHideStatus(si.Hide);
+                            mob.listitem.SubItems[9].Text = si.Hide.GetHideStatus();
                         }
 
                         //if (mob.Guild != si.Guild)
@@ -732,7 +722,7 @@ namespace myseq
                         //}
 
                         mob.refresh = 0;
-                    } 
+                    }
 
                     mob.refresh++;
 
@@ -752,7 +742,7 @@ namespace myseq
                     if ((mob.X != si.X) || (mob.Y != si.Y) || (mob.Z != si.Z))
                     {
                         // this should be the selected id
-                        PopulateListview(si, f1, mob);
+                        PopulateListview(si, mob);
                     }
 
                     if (listReAdd)
@@ -765,7 +755,7 @@ namespace myseq
 
                 if (!found && !string.IsNullOrEmpty(si.Name))
                 {
-                    SpawnNotFound(si, f1);
+                    SpawnNotFound(si);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawns(): ", ex); }
@@ -794,11 +784,8 @@ namespace myseq
             }
         }
 
-        private void SpawnNotFound(Spawninfo si, MainForm f1)
+        private void SpawnNotFound(Spawninfo si)
         {
-            // ensure that map is big enough to show all spawns.
-            //CheckBigMap(si, f1.mapPane);
-
             // Set mob type info
             if (si.Type == 0)
             {
@@ -824,12 +811,8 @@ namespace myseq
 
             mobsTimers.Spawn(si);
 
-            IsSpawnInFilterLists(si, f1);
-            try
-            {
-                mobsHashTable.Add(si.SpawnID, si);
-            }
-            catch (Exception ex) { LogLib.WriteLine($"Error adding {si.Name} to mobs hashtable: ", ex); }
+            IsSpawnInFilterLists(si);
+            mobsHashTable.Add(si.SpawnID, si);
         }
 
         private static void Tainted_Egg(Spawninfo si)
@@ -851,7 +834,7 @@ namespace myseq
                     mob.isPet = true;
                     mob.listitem.ForeColor = Color.Gray;
                 }
-                mob.listitem.SubItems[6].Text = RegexHelper.FixMobName(owner.Name);
+                mob.listitem.SubItems[6].Text = owner.Name.FixMobName();
             }
             else
             {
@@ -860,26 +843,20 @@ namespace myseq
             }
         }
 
-        private void MobLevelSetColor(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
+        private void MobLevelSetColor(Spawninfo mob)
         {
-            if (mob.Level != si.Level)
+            // update forecolor
+            if (mob.Type == 2 || mob.Type == 3 || mob.isLDONObject)
             {
-                mob.Level = si.Level;
-                mob.listitem.SubItems[1].Text = si.Level.ToString();
-
-                // update forecolor
-                if (mob.Type == 2 || mob.Type == 3 || mob.isLDONObject)
-                {
-                    mob.listitem.ForeColor = Color.Gray;
-                }
-                else if (mob.isEventController)
-                {
-                    mob.listitem.ForeColor = Color.DarkOrchid;
-                }
-                else
-                {
-                    SetListColors(si, SpawnList, mob);
-                }
+                mob.listitem.ForeColor = Color.Gray;
+            }
+            else if (mob.isEventController)
+            {
+                mob.listitem.ForeColor = Color.DarkOrchid;
+            }
+            else
+            {
+                SetListColors(mob);
             }
         }
 
@@ -929,23 +906,16 @@ namespace myseq
                 }
             }
 
-            if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
-            {
-                si.isEventController = true;
-                if (!Settings.Default.ShowInvis)
-                {
-                    si.hidden = true;
-                }
-            }
+            si.IsSpawnController(si);
             si.IsSpawnLDON(si);
 
             // Mercenary Identification - Only do it once now
 
-            if (!string.IsNullOrEmpty(si.Lastname) && RegexHelper.IsMerc(si.Lastname))
+            if (!string.IsNullOrEmpty(si.Lastname) && si.Lastname.IsMerc())
             {
                 si.isMerc = true;
             }
-            else if (RegexHelper.IsMount(si.Name)) // Mounts
+            else if (si.Name.IsMount()) // Mounts
             {
                 si.isMount = true;
 
@@ -954,7 +924,7 @@ namespace myseq
                     si.hidden = true;
                 }
             }
-            else if (RegexHelper.IsFamiliar(si.Name))
+            else if (si.Name.IsFamiliar())
             {
                 // reset these, if match a familiar
                 si.isPet = false;
@@ -1007,7 +977,7 @@ namespace myseq
             }
         }
 
-        private void PopulateListview(Spawninfo si, MainForm f1, Spawninfo mob)
+        private void PopulateListview(Spawninfo si, Spawninfo mob)
         {
             mob.X = si.X;
             mob.listitem.SubItems[14].Text = si.Y.ToString();
@@ -1018,23 +988,20 @@ namespace myseq
             mob.Z = si.Z;
             mob.listitem.SubItems[15].Text = si.Z.ToString();
 
-            if (Settings.Default.FollowOption == FollowOption.Target)
-            {
-                f1.ReAdjust();
-            }
+            //if (Settings.Default.FollowOption == FollowOption.Target)
+            //{
+            //    f1.ReAdjust();
+            //}
 
             mob.listitem.SubItems[16].Text = si.SpawnDistance(si, gamerInfo).ToString("#.00");
         }
 
-        private void UpdateMobTypes(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
+        private void UpdateMobTypes(Spawninfo mob)
         {
-            mob.Type = si.Type;
-            mob.listitem.SubItems[8].Text = PrettyNames.GetSpawnType(si.Type);
+            mob.listitem.SubItems[8].Text = mob.Type.GetSpawnType();
 
-            if (si.Type == 2 || si.Type == 3)
+            if (mob.Type == 2 || mob.Type == 3)
             {
-                mob.listitem.ForeColor = Color.Gray;
-
                 mob.isCorpse = true;
 
                 if (!CorpseAlerts)
@@ -1048,41 +1015,21 @@ namespace myseq
                     mob.isAlert = false;
                 }
             }
-            else if ((si.Race == 127) && ((si.Name.IndexOf("_") == 0) || (si.Level < 2) || (si.Class == 62))) // Invisible Man Race
-            {
-                mob.listitem.ForeColor = Color.DarkOrchid;
-                si.isEventController = true;
-            }
-            else if (si.IsSpawnLDON(si))
-            {
-                mob.listitem.ForeColor = Color.Gray;
-            }
-            else
-            {
-                SetListColors(si, SpawnList, mob);
-            }
         }
 
-        private void SetListColors(Spawninfo si, ListViewPanel SpawnList, Spawninfo mob)
+        private void SetListColors(Spawninfo mob)
         {
-            mob.listitem.ForeColor = SpawnColors.ConColors[si.Level].Color;
+            mob.listitem.ForeColor = SpawnColors.ConColors[mob.Level].Color;
 
             if (mob.listitem.ForeColor == Color.Maroon)
             {
                 mob.listitem.ForeColor = Color.Red;
             }
-            else if (SpawnList.listView.BackColor == Color.White)
+            else if (Settings.Default.ListBackColor == Color.White)
             {
                 // Change the colors to be more visible on white if the background is white
 
-                if (mob.listitem.ForeColor == Color.White)
-                {
-                    mob.listitem.ForeColor = Color.Black;
-                }
-                else if (mob.listitem.ForeColor == Color.Yellow)
-                {
-                    mob.listitem.ForeColor = Color.Goldenrod;
-                }
+                mob.MakeVisOnWhite();
             }
         }
 
@@ -1152,11 +1099,11 @@ namespace myseq
             mob.hidden = si.hidden;
         }
 
-        private void IsSpawnInFilterLists(Spawninfo si, MainForm f1)
+        private void IsSpawnInFilterLists(Spawninfo si)
         {
-            var mobname = si.isMerc ? RegexHelper.FixMobNameMatch(si.Name) : RegexHelper.FixMobName(si.Name);
+            var mobname = si.isMerc ? si.Name.FixMobNameMatch() : si.Name.FixMobName();
 
-            var matchmobname = RegexHelper.FixMobNameMatch(mobname);
+            var matchmobname = mobname.FixMobNameMatch();
             var alert = false;
             if (matchmobname.Length < 2)
             {
@@ -1171,14 +1118,13 @@ namespace myseq
             {
                 AssignAlertStatus(si, matchmobname, ref alert, ref mobnameWithInfo);
 
-                FormMethods.LookupBoxMatch(si, f1);
+                //FormMethods.LookupBoxMatch(si, f1);
             }
 
-            ListViewItem item1 = AddDetailsToList(si, f1.SpawnList, mobnameWithInfo);
             PlayAudioMatch(si, mobnameWithInfo);
             if (!si.hidden)
             {
-                NewSpawns.Add(item1);
+                NewSpawns.Add(AddDetailsToList(si, mobnameWithInfo));
             }
         }
 
@@ -1191,99 +1137,75 @@ namespace myseq
             }
         }
 
-        private ListViewItem AddDetailsToList(Spawninfo si, ListViewPanel SpawnList, string mobnameWithInfo)
+        private ListViewItem AddDetailsToList(Spawninfo si, string mobnameWithInfo)
         {
-            ListViewItem item1 = new ListViewItem(mobnameWithInfo);
+            var listView = new ListViewItem(mobnameWithInfo);
 
-            item1.SubItems.Add(si.Level.ToString());
+            listView.SubItems.Add(si.Level.ToString());
 
-            item1.SubItems.Add(GetClass(si.Class));
+            listView.SubItems.Add(GetClass(si.Class));
 
-            item1.SubItems.Add(si.PrimaryName);
-            item1.SubItems.Add(si.OffhandName);
+            listView.SubItems.Add(si.PrimaryName);
+            listView.SubItems.Add(si.OffhandName);
 
-            item1.SubItems.Add(GetRace(si.Race));
+            listView.SubItems.Add(GetRace(si.Race));
 
-            OwnerFlag(si, item1);
+            listView.SubItems.Add(OwnerFlag(si));
 
-            item1.SubItems.Add(si.Lastname);
+            listView.SubItems.Add(si.Lastname);
 
-            item1.SubItems.Add(PrettyNames.GetSpawnType(si.Type));
+            listView.SubItems.Add(si.Type.GetSpawnType());
 
-            item1.SubItems.Add(PrettyNames.GetHideStatus(si.Hide));
+            listView.SubItems.Add(si.Hide.GetHideStatus());
 
-            item1.SubItems.Add(si.SpeedRun.ToString());
+            listView.SubItems.Add(si.SpeedRun.ToString());
 
-            item1.SubItems.Add(si.SpawnID.ToString());
+            listView.SubItems.Add(si.SpawnID.ToString());
 
-            item1.SubItems.Add(DateTime.Now.ToLongTimeString());
+            listView.SubItems.Add(DateTime.Now.ToLongTimeString());
 
-            item1.SubItems.Add(si.X.ToString("#.00"));
+            listView.SubItems.Add(si.X.ToString("#.00"));
 
-            item1.SubItems.Add(si.Y.ToString("#.00"));
+            listView.SubItems.Add(si.Y.ToString("#.00"));
 
-            item1.SubItems.Add(si.Z.ToString("#.00"));
+            listView.SubItems.Add(si.Z.ToString("#.00"));
 
-            item1.SubItems.Add(si.SpawnDistance(si, gamerInfo).ToString("#.00"));
+            listView.SubItems.Add(si.SpawnDistance(si, gamerInfo).ToString("#.00"));
 
             //            item1.SubItems.Add(GuildNumToString(si.Guild));
 
-            item1.SubItems.Add(RegexHelper.FixMobName(si.Name));
+            listView.SubItems.Add(si.Name.FixMobName());
 
-            SetSpawnListColors(si, SpawnList, item1);
+            listView.ForeColor = GetSpawnListColors(si);
 
             si.gone = 0;
 
             si.refresh = new Random().Next(0, 10);
 
-            si.listitem = item1;
-            return item1;
+            si.listitem = listView;
+            return listView;
         }
 
-        private void SetSpawnListColors(Spawninfo si, ListViewPanel SpawnList, ListViewItem item1)
+        private Color GetSpawnListColors(Spawninfo si)
         {
             if (si.Type == 2 || si.Type == 3 || si.isLDONObject)
             {
-                item1.ForeColor = Color.Gray;
+                return Color.Gray;
             }
             else if (si.isEventController)
             {
-                item1.ForeColor = Color.DarkOrchid;
+                return Color.DarkOrchid;
             }
             else
             {
-                item1.ForeColor = SpawnColors.ConColors[si.Level].Color;
-
-                if (item1.ForeColor == Color.Maroon)
-                {
-                    item1.ForeColor = Color.Red;
-                }
-
-                // Change the colors to be more visible on white if the background is white
-
-                ImproveVisibiltyInList(SpawnList, item1);
-            }
-        }
-
-        private static void ImproveVisibiltyInList(ListViewPanel SpawnList, ListViewItem item1)
-        {
-            if (SpawnList.listView.BackColor == Color.White)
-            {
-                if (item1.ForeColor == Color.White)
-                {
-                    item1.ForeColor = Color.Black;
-                }
-                else if (item1.ForeColor == Color.Yellow)
-                {
-                    item1.ForeColor = Color.Goldenrod;
-                }
+                return SpawnColors.ConColors[si.Level].Color;
             }
         }
 
         private void NameChngOrDead(Spawninfo si, Spawninfo mob)
         {
-            var newname = RegexHelper.FixMobName(si.Name);
-            var oldname = RegexHelper.FixMobName(mob.Name);
+            var newname = si.Name.FixMobName();
+            var oldname = mob.Name.FixMobName();
 
             mob.listitem.Text = mob.listitem.Text.Replace(oldname, newname);
 
@@ -1303,23 +1225,22 @@ namespace myseq
             mob.Name = si.Name;
         }
 
-        private void OwnerFlag(Spawninfo si, ListViewItem item1)
+        private string OwnerFlag(Spawninfo si)
         {
             if (si.OwnerID > 0)
             {
                 if (mobsHashTable.ContainsKey(si.OwnerID))
                 {
-                    Spawninfo owner = (Spawninfo)mobsHashTable[si.OwnerID];
-                    item1.SubItems.Add(RegexHelper.FixMobName(owner.Name));
+                    return ((Spawninfo)mobsHashTable[si.OwnerID]).Name.FixMobName();
                 }
                 else
                 {
-                    item1.SubItems.Add(si.OwnerID.ToString());
+                    return si.OwnerID.ToString();
                 }
             }
             else
             {
-                item1.SubItems.Add("");
+                return "";
             }
         }
 
@@ -1331,48 +1252,8 @@ namespace myseq
                 {
                     if (si.listitem != null)
                     {
-                        if (si.Type == 2 || si.Type == 3 || si.isLDONObject)
-                        {
-                            si.listitem.ForeColor = Color.Gray;
-                        }
-                        else if (si.isEventController)
-                        {
-                            si.listitem.ForeColor = Color.DarkOrchid;
-                        }
-                        else
-                        {
-                            si.listitem.ForeColor = SpawnColors.ConColors[si.Level].Color;
-
-                            if (si.listitem.ForeColor == Color.Maroon)
-                            {
-                                si.listitem.ForeColor = Color.Red;
-                            }
-
-                            // Change the colors to be more visible on white if the background is white
-
-                            MakeVisOnWhite(si);
-
-                            if (Settings.Default.ListBackColor == Color.Black && si.listitem.ForeColor == Color.Black)
-                            {
-                                si.listitem.ForeColor = Color.White;
-                            }
-                        }
+                        MobLevelSetColor(si);
                     }
-                }
-            }
-        }
-
-        private static void MakeVisOnWhite(Spawninfo si)
-        {
-            if (Settings.Default.ListBackColor == Color.White)
-            {
-                if (si.listitem.ForeColor == Color.White)
-                {
-                    si.listitem.ForeColor = Color.Black;
-                }
-                else if (si.listitem.ForeColor == Color.Yellow)
-                {
-                    si.listitem.ForeColor = Color.Goldenrod;
                 }
             }
         }
@@ -1397,8 +1278,8 @@ namespace myseq
                              GetClass(si.Class),
                              GetRace(si.Race),
                              si.Lastname,
-                             PrettyNames.GetSpawnType(si.Type),
-                             PrettyNames.GetHideStatus(si.Hide),
+                             si.Type.GetSpawnType(),
+                             si.Hide.GetHideStatus(),
                              si.SpeedRun,
                              si.SpawnID,
                              si.Y,
@@ -1552,10 +1433,10 @@ namespace myseq
                 gamerInfo.X = si.X;
                 gamerInfo.Y = si.Y;
 
-                if (Settings.Default.FollowOption == FollowOption.Player)
-                {
-                    f1.ReAdjust();
-                }
+                //if (Settings.Default.FollowOption == FollowOption.Player)
+                //{
+                //    f1.ReAdjust();
+                //}
 
                 gamerInfo.Z = si.Z;
 
@@ -1567,7 +1448,7 @@ namespace myseq
                 gconLevel = Settings.Default.LevelOverride;
                 if (gamerInfo.Level != si.Level)
                 {
-                    if (GConBaseName.Length > 0)
+                    if (GConBaseName.Length > 1)
                     {
                         if (si.Level > gamerInfo.Level)
                         {
@@ -1636,10 +1517,10 @@ namespace myseq
                 {
                     SetSelectedID(st.SpawnID);
                     Spawntimer spawntimer = FindTimer(st.X, st.Y, 1.0f);
-                    if (spawntimer?.itmSpawnTimerList != null)
+                    if (spawntimer?.ItmSpawnTimerList != null)
                     {
-                        spawntimer.itmSpawnTimerList.Selected = true;
-                        spawntimer.itmSpawnTimerList.EnsureVisible();
+                        spawntimer.ItmSpawnTimerList.Selected = true;
+                        spawntimer.ItmSpawnTimerList.EnsureVisible();
                     }
 
                     SpawnX = st.X;
@@ -1670,7 +1551,7 @@ namespace myseq
             {
                 ThreadStart threadDelegate = new ThreadStart(new Talker
                 {
-                    SpeakingText = $"{TalkDescr}, {RegexHelper.SearchName(mobname)}, is up."
+                    SpeakingText = $"{TalkDescr}, {mobname.SearchName()}, is up."
                 }.SpeakText);
 
                 new Thread(threadDelegate).Start();

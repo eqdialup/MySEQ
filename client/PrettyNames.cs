@@ -1,7 +1,4 @@
-﻿using System.Windows.Forms;
-using myseq;
-
-namespace Structures
+﻿namespace Structures
 {
     public static class PrettyNames
     {
@@ -16,12 +13,12 @@ namespace Structures
             return index < source.GetLowerBound(0) || index > source.GetUpperBound(0) ? $"{index}: Unknown" : source[index];
         }
 
-        public static string GetSpawnType(byte index)
+        public static string GetSpawnType(this byte index)
         {
             return ArrayIndextoStr(s_Spawntypes, index);
         }
 
-        public static string GetHideStatus(byte index)
+        public static string GetHideStatus(this byte index)
         {
             return ArrayIndextoStr(s_HideTypes, index);
         }

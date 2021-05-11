@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using myseq.Properties;
 
 namespace Structures
 
@@ -67,7 +68,7 @@ namespace Structures
 
         public bool isLDONObject {get; private set; }
 
-        public bool isEventController {get; set; }
+        public bool isEventController {get; private set; }
 
         public bool isLookup {get; set; }
 
@@ -102,6 +103,20 @@ namespace Structures
             if (si.Class == 62)
             {
                 si.isLDONObject = true;
+                return true;
+            }
+            return false;
+        }
+        public bool IsSpawnController(Spawninfo si)
+        {
+            if ((si.Race == 127) && si.Name.IndexOf("_") == 0) // Invisible Man Race
+            {
+                si.isEventController = true;
+                
+                if (!Settings.Default.ShowInvis)
+                {
+                    si.hidden = true;
+                }
                 return true;
             }
             return false;

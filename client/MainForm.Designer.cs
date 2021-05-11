@@ -46,10 +46,33 @@ namespace myseq
             System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
-            System.Windows.Forms.ToolStripLabel toolStripZPosLabel;
-            System.Windows.Forms.ToolStripLabel toolStripZOffsetLabel;
             System.Windows.Forms.ToolStripLabel toolStripLabel1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.toolbarsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewMenuBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewStatusBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuViewDepthFilterBar = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowSpawnList = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowSpawnListTimer = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowGroundItemList = new System.Windows.Forms.ToolStripMenuItem();
+            this.thinSpawnlistmnuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowListGridLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowListSearchBox = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowGridLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowCorpses = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowPCCorpses = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowMyCorpse = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowPlayers = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowInvis = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowMounts = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowFamiliars = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowPets = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowNPCs = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLookupText = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuShowLookupNumber = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripZPosLabel = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripZOffsetLabel = new System.Windows.Forms.ToolStripLabel();
             this.mnuMainMenu = new System.Windows.Forms.MenuStrip();
             this.mnuFileMain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions = new System.Windows.Forms.ToolStripMenuItem();
@@ -97,29 +120,6 @@ namespace myseq
             this.mnuRefreshSpawnList = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuClearSavedTimers = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSaveSpawnLog = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolbarsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuViewMenuBar = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuViewStatusBar = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuViewDepthFilterBar = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowSpawnList = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowSpawnListTimer = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowGroundItemList = new System.Windows.Forms.ToolStripMenuItem();
-            this.thinSpawnlistmnuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowListGridLines = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowListSearchBox = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowGridLines = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowCorpses = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowPCCorpses = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowMyCorpse = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowPlayers = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowInvis = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowMounts = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowFamiliars = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowPets = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowNPCs = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowLookupText = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuShowLookupNumber = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMapSettingsMain = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDepthFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -294,8 +294,6 @@ namespace myseq
             toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
-            toolStripZPosLabel = new System.Windows.Forms.ToolStripLabel();
-            toolStripZOffsetLabel = new System.Windows.Forms.ToolStripLabel();
             toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.mnuMainMenu.SuspendLayout();
             this.mnuContext.SuspendLayout();
@@ -306,461 +304,30 @@ namespace myseq
             this.toolBarStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            toolStripSeparator2.Size = new System.Drawing.Size(174, 6);
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(174, 6);
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
-            // 
-            // mnuMainMenu
-            // 
-            this.mnuMainMenu.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.mnuMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFileMain,
-            this.mnuEditMain,
-            mnuViewMain,
-            this.mnuMapSettingsMain,
-            this.mnuHelpMain});
-            this.mnuMainMenu.Location = new System.Drawing.Point(0, 0);
-            this.mnuMainMenu.Name = "mnuMainMenu";
-            this.mnuMainMenu.Size = new System.Drawing.Size(1309, 24);
-            this.mnuMainMenu.TabIndex = 0;
-            this.mnuMainMenu.Text = "mnuMainMenu";
-            // 
-            // mnuFileMain
-            // 
-            this.mnuFileMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuOptions,
-            this.mnuSavePrefs,
-            toolStripSeparator2,
-            this.mnuOpenMap,
-            this.mnuSaveMobs,
-            toolStripSeparator1,
-            this.mnuConnect,
-            this.mnuAutoConnect,
-            this.mnuServerSelection,
-            this.mnuCharSelect,
-            toolStripSeparator3,
-            this.mnuExit});
-            this.mnuFileMain.Name = "mnuFileMain";
-            this.mnuFileMain.Size = new System.Drawing.Size(37, 20);
-            this.mnuFileMain.Text = "&File";
-            this.mnuFileMain.DropDownOpening += new System.EventHandler(this.MnuFileMain_DropDownOpening);
-            // 
-            // mnuOptions
-            // 
-            this.mnuOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mnuOptions.Name = "mnuOptions";
-            this.mnuOptions.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.mnuOptions.Size = new System.Drawing.Size(180, 22);
-            this.mnuOptions.Text = "&Options";
-            this.mnuOptions.Click += new System.EventHandler(this.MnuOptions_Click);
-            // 
-            // mnuSavePrefs
-            // 
-            this.mnuSavePrefs.Name = "mnuSavePrefs";
-            this.mnuSavePrefs.Size = new System.Drawing.Size(180, 22);
-            this.mnuSavePrefs.Text = "Save &Prefs";
-            this.mnuSavePrefs.Click += new System.EventHandler(this.MnuSavePrefs_Click);
-            // 
-            // mnuOpenMap
-            // 
-            this.mnuOpenMap.Name = "mnuOpenMap";
-            this.mnuOpenMap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.mnuOpenMap.Size = new System.Drawing.Size(180, 22);
-            this.mnuOpenMap.Text = "&Open Map";
-            this.mnuOpenMap.Click += new System.EventHandler(this.MnuOpenMap_Click);
-            // 
-            // mnuSaveMobs
-            // 
-            this.mnuSaveMobs.Name = "mnuSaveMobs";
-            this.mnuSaveMobs.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuSaveMobs.Size = new System.Drawing.Size(180, 22);
-            this.mnuSaveMobs.Text = "&Save Mobs";
-            this.mnuSaveMobs.Click += new System.EventHandler(this.MnuSaveMobs_Click);
-            // 
-            // mnuConnect
-            // 
-            this.mnuConnect.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.mnuConnect.Name = "mnuConnect";
-            this.mnuConnect.Size = new System.Drawing.Size(180, 22);
-            this.mnuConnect.Text = "&Connect";
-            this.mnuConnect.Click += new System.EventHandler(this.CmdCommand_Click);
-            // 
-            // mnuAutoConnect
-            // 
-            this.mnuAutoConnect.Name = "mnuAutoConnect";
-            this.mnuAutoConnect.Size = new System.Drawing.Size(180, 22);
-            this.mnuAutoConnect.Text = "Connect on Startup";
-            this.mnuAutoConnect.Click += new System.EventHandler(this.MnuAutoConnect_Click);
-            // 
-            // mnuServerSelection
-            // 
-            this.mnuServerSelection.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuIPAddress1,
-            this.mnuIPAddress2,
-            this.mnuIPAddress3,
-            this.mnuIPAddress4,
-            this.mnuIPAddress5});
-            this.mnuServerSelection.Name = "mnuServerSelection";
-            this.mnuServerSelection.Size = new System.Drawing.Size(180, 22);
-            this.mnuServerSelection.Text = "&Server Selection";
-            // 
-            // mnuIPAddress1
-            // 
-            this.mnuIPAddress1.Name = "mnuIPAddress1";
-            this.mnuIPAddress1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D1)));
-            this.mnuIPAddress1.Size = new System.Drawing.Size(107, 22);
-            this.mnuIPAddress1.Click += new System.EventHandler(this.MnuIPAddress1_Click);
-            // 
-            // mnuIPAddress2
-            // 
-            this.mnuIPAddress2.Name = "mnuIPAddress2";
-            this.mnuIPAddress2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
-            this.mnuIPAddress2.Size = new System.Drawing.Size(107, 22);
-            this.mnuIPAddress2.Click += new System.EventHandler(this.MnuIPAddress2_Click);
-            // 
-            // mnuIPAddress3
-            // 
-            this.mnuIPAddress3.Name = "mnuIPAddress3";
-            this.mnuIPAddress3.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
-            this.mnuIPAddress3.Size = new System.Drawing.Size(107, 22);
-            this.mnuIPAddress3.Click += new System.EventHandler(this.MnuIPAddress3_Click);
-            // 
-            // mnuIPAddress4
-            // 
-            this.mnuIPAddress4.Name = "mnuIPAddress4";
-            this.mnuIPAddress4.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D4)));
-            this.mnuIPAddress4.Size = new System.Drawing.Size(107, 22);
-            this.mnuIPAddress4.Click += new System.EventHandler(this.MnuIPAddress4_Click);
-            // 
-            // mnuIPAddress5
-            // 
-            this.mnuIPAddress5.Name = "mnuIPAddress5";
-            this.mnuIPAddress5.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D5)));
-            this.mnuIPAddress5.Size = new System.Drawing.Size(107, 22);
-            this.mnuIPAddress5.Click += new System.EventHandler(this.MnuIPAddress5_Click);
-            // 
-            // mnuCharSelect
-            // 
-            this.mnuCharSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuChar1,
-            this.mnuChar2,
-            this.mnuChar3,
-            this.mnuChar4,
-            this.mnuChar5,
-            this.mnuChar6,
-            this.mnuChar7,
-            this.mnuChar8,
-            this.mnuChar9,
-            this.mnuChar10,
-            this.mnuChar11,
-            this.mnuChar12,
-            this.menuItem13,
-            this.mnuCharRefresh});
-            this.mnuCharSelect.Name = "mnuCharSelect";
-            this.mnuCharSelect.Overflow = System.Windows.Forms.ToolStripItemOverflow.Always;
-            this.mnuCharSelect.Size = new System.Drawing.Size(180, 22);
-            this.mnuCharSelect.Text = "&Character Selection";
-            // 
-            // mnuChar1
-            // 
-            this.mnuChar1.Checked = true;
-            this.mnuChar1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mnuChar1.Name = "mnuChar1";
-            this.mnuChar1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D1)));
-            this.mnuChar1.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar1.Text = "Char 1";
-            this.mnuChar1.Visible = false;
-            this.mnuChar1.Click += new System.EventHandler(this.MnuChar1_Click);
-            // 
-            // mnuChar2
-            // 
-            this.mnuChar2.Name = "mnuChar2";
-            this.mnuChar2.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D2)));
-            this.mnuChar2.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar2.Text = "Char 2";
-            this.mnuChar2.Visible = false;
-            this.mnuChar2.Click += new System.EventHandler(this.MnuChar2_Click);
-            // 
-            // mnuChar3
-            // 
-            this.mnuChar3.Name = "mnuChar3";
-            this.mnuChar3.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D3)));
-            this.mnuChar3.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar3.Text = "Char 3";
-            this.mnuChar3.Visible = false;
-            this.mnuChar3.Click += new System.EventHandler(this.MnuChar3_Click);
-            // 
-            // mnuChar4
-            // 
-            this.mnuChar4.Name = "mnuChar4";
-            this.mnuChar4.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D4)));
-            this.mnuChar4.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar4.Text = "Char 4";
-            this.mnuChar4.Visible = false;
-            this.mnuChar4.Click += new System.EventHandler(this.MnuChar4_Click);
-            // 
-            // mnuChar5
-            // 
-            this.mnuChar5.Name = "mnuChar5";
-            this.mnuChar5.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D5)));
-            this.mnuChar5.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar5.Text = "Char 5";
-            this.mnuChar5.Visible = false;
-            this.mnuChar5.Click += new System.EventHandler(this.MnuChar5_Click);
-            // 
-            // mnuChar6
-            // 
-            this.mnuChar6.Name = "mnuChar6";
-            this.mnuChar6.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D6)));
-            this.mnuChar6.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar6.Text = "Char 6";
-            this.mnuChar6.Visible = false;
-            this.mnuChar6.Click += new System.EventHandler(this.MnuChar6_Click);
-            // 
-            // mnuChar7
-            // 
-            this.mnuChar7.Name = "mnuChar7";
-            this.mnuChar7.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D7)));
-            this.mnuChar7.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar7.Text = "Char 7";
-            this.mnuChar7.Visible = false;
-            this.mnuChar7.Click += new System.EventHandler(this.MnuChar7_Click);
-            // 
-            // mnuChar8
-            // 
-            this.mnuChar8.Name = "mnuChar8";
-            this.mnuChar8.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D8)));
-            this.mnuChar8.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar8.Text = "Char 8";
-            this.mnuChar8.Visible = false;
-            this.mnuChar8.Click += new System.EventHandler(this.MnuChar8_Click);
-            // 
-            // mnuChar9
-            // 
-            this.mnuChar9.Name = "mnuChar9";
-            this.mnuChar9.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D9)));
-            this.mnuChar9.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar9.Text = "Char 9";
-            this.mnuChar9.Visible = false;
-            this.mnuChar9.Click += new System.EventHandler(this.MnuChar9_Click);
-            // 
-            // mnuChar10
-            // 
-            this.mnuChar10.Name = "mnuChar10";
-            this.mnuChar10.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.D0)));
-            this.mnuChar10.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar10.Text = "Char 10";
-            this.mnuChar10.Visible = false;
-            this.mnuChar10.Click += new System.EventHandler(this.MnuChar10_Click);
-            // 
-            // mnuChar11
-            // 
-            this.mnuChar11.Name = "mnuChar11";
-            this.mnuChar11.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.B)));
-            this.mnuChar11.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar11.Text = "Char 11";
-            this.mnuChar11.Visible = false;
-            this.mnuChar11.Click += new System.EventHandler(this.MnuChar11_Click);
-            // 
-            // mnuChar12
-            // 
-            this.mnuChar12.Name = "mnuChar12";
-            this.mnuChar12.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.C)));
-            this.mnuChar12.Size = new System.Drawing.Size(188, 22);
-            this.mnuChar12.Text = "Char 12";
-            this.mnuChar12.Visible = false;
-            this.mnuChar12.Click += new System.EventHandler(this.MnuChar12_Click);
-            // 
-            // menuItem13
-            // 
-            this.menuItem13.Name = "menuItem13";
-            this.menuItem13.Size = new System.Drawing.Size(185, 6);
-            this.menuItem13.Visible = true;
-            // 
-            // mnuCharRefresh
-            // 
-            this.mnuCharRefresh.Name = "mnuCharRefresh";
-            this.mnuCharRefresh.Size = new System.Drawing.Size(188, 22);
-            this.mnuCharRefresh.Text = "Refresh List";
-            this.mnuCharRefresh.Visible = false;
-            this.mnuCharRefresh.Click += new System.EventHandler(this.MnuCharRefresh_Click);
-            // 
-            // mnuExit
-            // 
-            this.mnuExit.Name = "mnuExit";
-            this.mnuExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.mnuExit.Size = new System.Drawing.Size(180, 22);
-            this.mnuExit.Text = "E&xit";
-            this.mnuExit.Click += new System.EventHandler(this.MnuExit_Click);
-            // 
-            // mnuEditMain
-            // 
-            this.mnuEditMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuChangeColor,
-            this.mnuChangeFont,
-            toolStripSeparator18,
-            this.mnuReloadAlerts,
-            this.toolStripSeparator4,
-            this.mnuEditGlobalAlerts,
-            this.mnuEditZoneAlerts,
-            toolStripSeparator5,
-            this.mnuRefreshSpawnList,
-            this.mnuClearSavedTimers,
-            this.mnuSaveSpawnLog});
-            this.mnuEditMain.Name = "mnuEditMain";
-            this.mnuEditMain.Size = new System.Drawing.Size(39, 20);
-            this.mnuEditMain.Text = "&Edit";
-            // 
-            // mnuChangeColor
-            // 
-            this.mnuChangeColor.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuGridColor,
-            this.mnuGridLabelColor,
-            this.mnuListColor,
-            this.mnuBackgroungColor});
-            this.mnuChangeColor.Name = "mnuChangeColor";
-            this.mnuChangeColor.Size = new System.Drawing.Size(180, 22);
-            this.mnuChangeColor.Text = "C&hange Color";
-            // 
-            // mnuGridColor
-            // 
-            this.mnuGridColor.Name = "mnuGridColor";
-            this.mnuGridColor.Size = new System.Drawing.Size(197, 22);
-            this.mnuGridColor.Text = "Grid Color";
-            this.mnuGridColor.Click += new System.EventHandler(this.MnuGridColor_Click);
-            // 
-            // mnuGridLabelColor
-            // 
-            this.mnuGridLabelColor.Name = "mnuGridLabelColor";
-            this.mnuGridLabelColor.Size = new System.Drawing.Size(197, 22);
-            this.mnuGridLabelColor.Text = "Grid Label Color";
-            this.mnuGridLabelColor.Click += new System.EventHandler(this.MnuGridLabelColor_Click);
-            // 
-            // mnuListColor
-            // 
-            this.mnuListColor.Name = "mnuListColor";
-            this.mnuListColor.Size = new System.Drawing.Size(197, 22);
-            this.mnuListColor.Text = "Spawn List Color";
-            this.mnuListColor.Click += new System.EventHandler(this.MnuListColor_Click);
-            // 
-            // mnuBackgroungColor
-            // 
-            this.mnuBackgroungColor.Name = "mnuBackgroungColor";
-            this.mnuBackgroungColor.Size = new System.Drawing.Size(197, 22);
-            this.mnuBackgroungColor.Text = "Map Background Color";
-            this.mnuBackgroungColor.Click += new System.EventHandler(this.MnuBackgroundColor_Click);
-            // 
-            // mnuChangeFont
-            // 
-            this.mnuChangeFont.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuSpawnListFont,
-            this.mnuTargetInfoFont,
-            this.mnuMapLabelsFont});
-            this.mnuChangeFont.Name = "mnuChangeFont";
-            this.mnuChangeFont.Size = new System.Drawing.Size(180, 22);
-            this.mnuChangeFont.Text = "Change &Font";
-            // 
-            // mnuSpawnListFont
-            // 
-            this.mnuSpawnListFont.Name = "mnuSpawnListFont";
-            this.mnuSpawnListFont.Size = new System.Drawing.Size(161, 22);
-            this.mnuSpawnListFont.Text = "Spawn List Font";
-            this.mnuSpawnListFont.Click += new System.EventHandler(this.MnuSpawnListFont_Click);
-            // 
-            // mnuTargetInfoFont
-            // 
-            this.mnuTargetInfoFont.Name = "mnuTargetInfoFont";
-            this.mnuTargetInfoFont.Size = new System.Drawing.Size(161, 22);
-            this.mnuTargetInfoFont.Text = "Target Info Font";
-            this.mnuTargetInfoFont.Click += new System.EventHandler(this.MnuTargetInfoFont_Click);
-            // 
-            // mnuMapLabelsFont
-            // 
-            this.mnuMapLabelsFont.Name = "mnuMapLabelsFont";
-            this.mnuMapLabelsFont.Size = new System.Drawing.Size(161, 22);
-            this.mnuMapLabelsFont.Text = "Map Labels Font";
-            this.mnuMapLabelsFont.Click += new System.EventHandler(this.MnuMapLabelsFont_Click);
+            toolStripSeparator3.Size = new System.Drawing.Size(174, 6);
             // 
             // toolStripSeparator18
             // 
             toolStripSeparator18.Name = "toolStripSeparator18";
-            toolStripSeparator18.Size = new System.Drawing.Size(177, 6);
-            // 
-            // mnuReloadAlerts
-            // 
-            this.mnuReloadAlerts.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.mnuReloadAlerts.Name = "mnuReloadAlerts";
-            this.mnuReloadAlerts.Size = new System.Drawing.Size(180, 22);
-            this.mnuReloadAlerts.Text = "&Reload Alerts";
-            this.mnuReloadAlerts.Click += new System.EventHandler(this.MnuReloadAlerts_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
-            // 
-            // mnuEditGlobalAlerts
-            // 
-            this.mnuEditGlobalAlerts.Name = "mnuEditGlobalAlerts";
-            this.mnuEditGlobalAlerts.Size = new System.Drawing.Size(180, 22);
-            this.mnuEditGlobalAlerts.Text = "Edit &Global Alerts";
-            this.mnuEditGlobalAlerts.Click += new System.EventHandler(this.MnuGlobalAlerts_Click);
-            // 
-            // mnuEditZoneAlerts
-            // 
-            this.mnuEditZoneAlerts.Name = "mnuEditZoneAlerts";
-            this.mnuEditZoneAlerts.Size = new System.Drawing.Size(180, 22);
-            this.mnuEditZoneAlerts.Text = "Edit &Zone Alerts";
-            this.mnuEditZoneAlerts.Click += new System.EventHandler(this.MnuAddEditAlerts_Click);
+            toolStripSeparator18.Size = new System.Drawing.Size(170, 6);
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
-            // 
-            // mnuRefreshSpawnList
-            // 
-            this.mnuRefreshSpawnList.Name = "mnuRefreshSpawnList";
-            this.mnuRefreshSpawnList.Size = new System.Drawing.Size(180, 22);
-            this.mnuRefreshSpawnList.Text = "&Refresh Spawn List";
-            this.mnuRefreshSpawnList.Click += new System.EventHandler(this.MnuRefreshSpawnList_Click);
-            // 
-            // mnuClearSavedTimers
-            // 
-            this.mnuClearSavedTimers.Name = "mnuClearSavedTimers";
-            this.mnuClearSavedTimers.Size = new System.Drawing.Size(180, 22);
-            this.mnuClearSavedTimers.Text = "Clear Saved &Timers";
-            this.mnuClearSavedTimers.Click += new System.EventHandler(this.MnuClearSavedTimers_Click);
-            // 
-            // mnuSaveSpawnLog
-            // 
-            this.mnuSaveSpawnLog.Name = "mnuSaveSpawnLog";
-            this.mnuSaveSpawnLog.Size = new System.Drawing.Size(180, 22);
-            this.mnuSaveSpawnLog.Text = "Save Spawn Log";
-            this.mnuSaveSpawnLog.Click += new System.EventHandler(this.MnuSaveSpawnLog_Click);
+            toolStripSeparator5.Size = new System.Drawing.Size(170, 6);
             // 
             // mnuViewMain
             // 
@@ -978,6 +545,477 @@ namespace myseq
             this.mnuAlwaysOnTop.Text = "Always On Top";
             this.mnuAlwaysOnTop.Click += new System.EventHandler(this.MnuAlwaysOnTop_Click);
             // 
+            // toolStripSeparator12
+            // 
+            toolStripSeparator12.Name = "toolStripSeparator12";
+            toolStripSeparator12.Size = new System.Drawing.Size(192, 6);
+            // 
+            // toolStripSeparator10
+            // 
+            toolStripSeparator10.Name = "toolStripSeparator10";
+            toolStripSeparator10.Size = new System.Drawing.Size(192, 6);
+            // 
+            // toolStripSeparator11
+            // 
+            toolStripSeparator11.Name = "toolStripSeparator11";
+            toolStripSeparator11.Size = new System.Drawing.Size(192, 6);
+            // 
+            // toolStripSeparator13
+            // 
+            toolStripSeparator13.Name = "toolStripSeparator13";
+            toolStripSeparator13.Size = new System.Drawing.Size(192, 6);
+            // 
+            // toolStripZPosLabel
+            // 
+            this.toolStripZPosLabel.Name = "toolStripZPosLabel";
+            this.toolStripZPosLabel.Size = new System.Drawing.Size(38, 22);
+            this.toolStripZPosLabel.Text = "Z-Pos";
+            this.toolStripZPosLabel.ToolTipText = "The range above the player that is not depth filtered.";
+            // 
+            // toolStripZOffsetLabel
+            // 
+            this.toolStripZOffsetLabel.Name = "toolStripZOffsetLabel";
+            this.toolStripZOffsetLabel.Size = new System.Drawing.Size(41, 22);
+            this.toolStripZOffsetLabel.Text = "Z-Neg";
+            this.toolStripZOffsetLabel.ToolTipText = "The range below the player that is not depth filtered.";
+            // 
+            // toolStripLabel1
+            // 
+            toolStripLabel1.Name = "toolStripLabel1";
+            toolStripLabel1.Size = new System.Drawing.Size(30, 22);
+            toolStripLabel1.Text = "Find";
+            toolStripLabel1.ToolTipText = "Find and temporarily mark mobs on map.";
+            // 
+            // mnuMainMenu
+            // 
+            this.mnuMainMenu.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.mnuMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileMain,
+            this.mnuEditMain,
+            mnuViewMain,
+            this.mnuMapSettingsMain,
+            this.mnuHelpMain});
+            this.mnuMainMenu.Location = new System.Drawing.Point(0, 0);
+            this.mnuMainMenu.Name = "mnuMainMenu";
+            this.mnuMainMenu.Size = new System.Drawing.Size(1309, 24);
+            this.mnuMainMenu.TabIndex = 0;
+            this.mnuMainMenu.Text = "mnuMainMenu";
+            // 
+            // mnuFileMain
+            // 
+            this.mnuFileMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuOptions,
+            this.mnuSavePrefs,
+            toolStripSeparator2,
+            this.mnuOpenMap,
+            this.mnuSaveMobs,
+            toolStripSeparator1,
+            this.mnuConnect,
+            this.mnuAutoConnect,
+            this.mnuServerSelection,
+            this.mnuCharSelect,
+            toolStripSeparator3,
+            this.mnuExit});
+            this.mnuFileMain.Name = "mnuFileMain";
+            this.mnuFileMain.Size = new System.Drawing.Size(37, 20);
+            this.mnuFileMain.Text = "&File";
+            this.mnuFileMain.DropDownOpening += new System.EventHandler(this.MnuFileMain_DropDownOpening);
+            // 
+            // mnuOptions
+            // 
+            this.mnuOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnuOptions.Name = "mnuOptions";
+            this.mnuOptions.ShortcutKeys = System.Windows.Forms.Keys.F1;
+            this.mnuOptions.Size = new System.Drawing.Size(177, 22);
+            this.mnuOptions.Text = "&Options";
+            this.mnuOptions.Click += new System.EventHandler(this.MnuOptions_Click);
+            // 
+            // mnuSavePrefs
+            // 
+            this.mnuSavePrefs.Name = "mnuSavePrefs";
+            this.mnuSavePrefs.Size = new System.Drawing.Size(177, 22);
+            this.mnuSavePrefs.Text = "Save &Prefs";
+            this.mnuSavePrefs.Click += new System.EventHandler(this.MnuSavePrefs_Click);
+            // 
+            // mnuOpenMap
+            // 
+            this.mnuOpenMap.Name = "mnuOpenMap";
+            this.mnuOpenMap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.mnuOpenMap.Size = new System.Drawing.Size(177, 22);
+            this.mnuOpenMap.Text = "&Open Map";
+            this.mnuOpenMap.Click += new System.EventHandler(this.MnuOpenMap_Click);
+            // 
+            // mnuSaveMobs
+            // 
+            this.mnuSaveMobs.Name = "mnuSaveMobs";
+            this.mnuSaveMobs.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.mnuSaveMobs.Size = new System.Drawing.Size(177, 22);
+            this.mnuSaveMobs.Text = "&Save Mobs";
+            this.mnuSaveMobs.Click += new System.EventHandler(this.MnuSaveMobs_Click);
+            // 
+            // mnuConnect
+            // 
+            this.mnuConnect.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.mnuConnect.Name = "mnuConnect";
+            this.mnuConnect.Size = new System.Drawing.Size(177, 22);
+            this.mnuConnect.Text = "&Connect";
+            this.mnuConnect.Click += new System.EventHandler(this.CmdCommand_Click);
+            // 
+            // mnuAutoConnect
+            // 
+            this.mnuAutoConnect.Name = "mnuAutoConnect";
+            this.mnuAutoConnect.Size = new System.Drawing.Size(177, 22);
+            this.mnuAutoConnect.Text = "Connect on Startup";
+            this.mnuAutoConnect.Click += new System.EventHandler(this.MnuAutoConnect_Click);
+            // 
+            // mnuServerSelection
+            // 
+            this.mnuServerSelection.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuIPAddress1,
+            this.mnuIPAddress2,
+            this.mnuIPAddress3,
+            this.mnuIPAddress4,
+            this.mnuIPAddress5});
+            this.mnuServerSelection.Name = "mnuServerSelection";
+            this.mnuServerSelection.Size = new System.Drawing.Size(177, 22);
+            this.mnuServerSelection.Text = "&Server Selection";
+            // 
+            // mnuIPAddress1
+            // 
+            this.mnuIPAddress1.Name = "mnuIPAddress1";
+            this.mnuIPAddress1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D1)));
+            this.mnuIPAddress1.Size = new System.Drawing.Size(107, 22);
+            this.mnuIPAddress1.Click += new System.EventHandler(this.MnuIPAddress1_Click);
+            // 
+            // mnuIPAddress2
+            // 
+            this.mnuIPAddress2.Name = "mnuIPAddress2";
+            this.mnuIPAddress2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
+            this.mnuIPAddress2.Size = new System.Drawing.Size(107, 22);
+            this.mnuIPAddress2.Click += new System.EventHandler(this.MnuIPAddress2_Click);
+            // 
+            // mnuIPAddress3
+            // 
+            this.mnuIPAddress3.Name = "mnuIPAddress3";
+            this.mnuIPAddress3.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
+            this.mnuIPAddress3.Size = new System.Drawing.Size(107, 22);
+            this.mnuIPAddress3.Click += new System.EventHandler(this.MnuIPAddress3_Click);
+            // 
+            // mnuIPAddress4
+            // 
+            this.mnuIPAddress4.Name = "mnuIPAddress4";
+            this.mnuIPAddress4.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D4)));
+            this.mnuIPAddress4.Size = new System.Drawing.Size(107, 22);
+            this.mnuIPAddress4.Click += new System.EventHandler(this.MnuIPAddress4_Click);
+            // 
+            // mnuIPAddress5
+            // 
+            this.mnuIPAddress5.Name = "mnuIPAddress5";
+            this.mnuIPAddress5.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D5)));
+            this.mnuIPAddress5.Size = new System.Drawing.Size(107, 22);
+            this.mnuIPAddress5.Click += new System.EventHandler(this.MnuIPAddress5_Click);
+            // 
+            // mnuCharSelect
+            // 
+            this.mnuCharSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuChar1,
+            this.mnuChar2,
+            this.mnuChar3,
+            this.mnuChar4,
+            this.mnuChar5,
+            this.mnuChar6,
+            this.mnuChar7,
+            this.mnuChar8,
+            this.mnuChar9,
+            this.mnuChar10,
+            this.mnuChar11,
+            this.mnuChar12,
+            this.menuItem13,
+            this.mnuCharRefresh});
+            this.mnuCharSelect.Name = "mnuCharSelect";
+            this.mnuCharSelect.Overflow = System.Windows.Forms.ToolStripItemOverflow.Always;
+            this.mnuCharSelect.Size = new System.Drawing.Size(177, 22);
+            this.mnuCharSelect.Text = "&Character Selection";
+            // 
+            // mnuChar1
+            // 
+            this.mnuChar1.Checked = true;
+            this.mnuChar1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuChar1.Name = "mnuChar1";
+            this.mnuChar1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D1)));
+            this.mnuChar1.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar1.Text = "Char 1";
+            this.mnuChar1.Visible = false;
+            this.mnuChar1.Click += new System.EventHandler(this.MnuChar1_Click);
+            // 
+            // mnuChar2
+            // 
+            this.mnuChar2.Name = "mnuChar2";
+            this.mnuChar2.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D2)));
+            this.mnuChar2.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar2.Text = "Char 2";
+            this.mnuChar2.Visible = false;
+            this.mnuChar2.Click += new System.EventHandler(this.MnuChar2_Click);
+            // 
+            // mnuChar3
+            // 
+            this.mnuChar3.Name = "mnuChar3";
+            this.mnuChar3.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D3)));
+            this.mnuChar3.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar3.Text = "Char 3";
+            this.mnuChar3.Visible = false;
+            this.mnuChar3.Click += new System.EventHandler(this.MnuChar3_Click);
+            // 
+            // mnuChar4
+            // 
+            this.mnuChar4.Name = "mnuChar4";
+            this.mnuChar4.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D4)));
+            this.mnuChar4.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar4.Text = "Char 4";
+            this.mnuChar4.Visible = false;
+            this.mnuChar4.Click += new System.EventHandler(this.MnuChar4_Click);
+            // 
+            // mnuChar5
+            // 
+            this.mnuChar5.Name = "mnuChar5";
+            this.mnuChar5.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D5)));
+            this.mnuChar5.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar5.Text = "Char 5";
+            this.mnuChar5.Visible = false;
+            this.mnuChar5.Click += new System.EventHandler(this.MnuChar5_Click);
+            // 
+            // mnuChar6
+            // 
+            this.mnuChar6.Name = "mnuChar6";
+            this.mnuChar6.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D6)));
+            this.mnuChar6.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar6.Text = "Char 6";
+            this.mnuChar6.Visible = false;
+            this.mnuChar6.Click += new System.EventHandler(this.MnuChar6_Click);
+            // 
+            // mnuChar7
+            // 
+            this.mnuChar7.Name = "mnuChar7";
+            this.mnuChar7.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D7)));
+            this.mnuChar7.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar7.Text = "Char 7";
+            this.mnuChar7.Visible = false;
+            this.mnuChar7.Click += new System.EventHandler(this.MnuChar7_Click);
+            // 
+            // mnuChar8
+            // 
+            this.mnuChar8.Name = "mnuChar8";
+            this.mnuChar8.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D8)));
+            this.mnuChar8.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar8.Text = "Char 8";
+            this.mnuChar8.Visible = false;
+            this.mnuChar8.Click += new System.EventHandler(this.MnuChar8_Click);
+            // 
+            // mnuChar9
+            // 
+            this.mnuChar9.Name = "mnuChar9";
+            this.mnuChar9.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D9)));
+            this.mnuChar9.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar9.Text = "Char 9";
+            this.mnuChar9.Visible = false;
+            this.mnuChar9.Click += new System.EventHandler(this.MnuChar9_Click);
+            // 
+            // mnuChar10
+            // 
+            this.mnuChar10.Name = "mnuChar10";
+            this.mnuChar10.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.D0)));
+            this.mnuChar10.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar10.Text = "Char 10";
+            this.mnuChar10.Visible = false;
+            this.mnuChar10.Click += new System.EventHandler(this.MnuChar10_Click);
+            // 
+            // mnuChar11
+            // 
+            this.mnuChar11.Name = "mnuChar11";
+            this.mnuChar11.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.B)));
+            this.mnuChar11.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar11.Text = "Char 11";
+            this.mnuChar11.Visible = false;
+            this.mnuChar11.Click += new System.EventHandler(this.MnuChar11_Click);
+            // 
+            // mnuChar12
+            // 
+            this.mnuChar12.Name = "mnuChar12";
+            this.mnuChar12.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.C)));
+            this.mnuChar12.Size = new System.Drawing.Size(188, 22);
+            this.mnuChar12.Text = "Char 12";
+            this.mnuChar12.Visible = false;
+            this.mnuChar12.Click += new System.EventHandler(this.MnuChar12_Click);
+            // 
+            // menuItem13
+            // 
+            this.menuItem13.Name = "menuItem13";
+            this.menuItem13.Size = new System.Drawing.Size(185, 6);
+            // 
+            // mnuCharRefresh
+            // 
+            this.mnuCharRefresh.Name = "mnuCharRefresh";
+            this.mnuCharRefresh.Size = new System.Drawing.Size(188, 22);
+            this.mnuCharRefresh.Text = "Refresh List";
+            this.mnuCharRefresh.Visible = false;
+            this.mnuCharRefresh.Click += new System.EventHandler(this.MnuCharRefresh_Click);
+            // 
+            // mnuExit
+            // 
+            this.mnuExit.Name = "mnuExit";
+            this.mnuExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.mnuExit.Size = new System.Drawing.Size(177, 22);
+            this.mnuExit.Text = "E&xit";
+            this.mnuExit.Click += new System.EventHandler(this.MnuExit_Click);
+            // 
+            // mnuEditMain
+            // 
+            this.mnuEditMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuChangeColor,
+            this.mnuChangeFont,
+            toolStripSeparator18,
+            this.mnuReloadAlerts,
+            this.toolStripSeparator4,
+            this.mnuEditGlobalAlerts,
+            this.mnuEditZoneAlerts,
+            toolStripSeparator5,
+            this.mnuRefreshSpawnList,
+            this.mnuClearSavedTimers,
+            this.mnuSaveSpawnLog});
+            this.mnuEditMain.Name = "mnuEditMain";
+            this.mnuEditMain.Size = new System.Drawing.Size(39, 20);
+            this.mnuEditMain.Text = "&Edit";
+            // 
+            // mnuChangeColor
+            // 
+            this.mnuChangeColor.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuGridColor,
+            this.mnuGridLabelColor,
+            this.mnuListColor,
+            this.mnuBackgroungColor});
+            this.mnuChangeColor.Name = "mnuChangeColor";
+            this.mnuChangeColor.Size = new System.Drawing.Size(173, 22);
+            this.mnuChangeColor.Text = "C&hange Color";
+            // 
+            // mnuGridColor
+            // 
+            this.mnuGridColor.Name = "mnuGridColor";
+            this.mnuGridColor.Size = new System.Drawing.Size(197, 22);
+            this.mnuGridColor.Text = "Grid Color";
+            this.mnuGridColor.Click += new System.EventHandler(this.MnuGridColor_Click);
+            // 
+            // mnuGridLabelColor
+            // 
+            this.mnuGridLabelColor.Name = "mnuGridLabelColor";
+            this.mnuGridLabelColor.Size = new System.Drawing.Size(197, 22);
+            this.mnuGridLabelColor.Text = "Grid Label Color";
+            this.mnuGridLabelColor.Click += new System.EventHandler(this.MnuGridLabelColor_Click);
+            // 
+            // mnuListColor
+            // 
+            this.mnuListColor.Name = "mnuListColor";
+            this.mnuListColor.Size = new System.Drawing.Size(197, 22);
+            this.mnuListColor.Text = "Spawn List Color";
+            this.mnuListColor.Click += new System.EventHandler(this.MnuListColor_Click);
+            // 
+            // mnuBackgroungColor
+            // 
+            this.mnuBackgroungColor.Name = "mnuBackgroungColor";
+            this.mnuBackgroungColor.Size = new System.Drawing.Size(197, 22);
+            this.mnuBackgroungColor.Text = "Map Background Color";
+            this.mnuBackgroungColor.Click += new System.EventHandler(this.MnuBackgroundColor_Click);
+            // 
+            // mnuChangeFont
+            // 
+            this.mnuChangeFont.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuSpawnListFont,
+            this.mnuTargetInfoFont,
+            this.mnuMapLabelsFont});
+            this.mnuChangeFont.Name = "mnuChangeFont";
+            this.mnuChangeFont.Size = new System.Drawing.Size(173, 22);
+            this.mnuChangeFont.Text = "Change &Font";
+            // 
+            // mnuSpawnListFont
+            // 
+            this.mnuSpawnListFont.Name = "mnuSpawnListFont";
+            this.mnuSpawnListFont.Size = new System.Drawing.Size(161, 22);
+            this.mnuSpawnListFont.Text = "Spawn List Font";
+            this.mnuSpawnListFont.Click += new System.EventHandler(this.MnuSpawnListFont_Click);
+            // 
+            // mnuTargetInfoFont
+            // 
+            this.mnuTargetInfoFont.Name = "mnuTargetInfoFont";
+            this.mnuTargetInfoFont.Size = new System.Drawing.Size(161, 22);
+            this.mnuTargetInfoFont.Text = "Target Info Font";
+            this.mnuTargetInfoFont.Click += new System.EventHandler(this.MnuTargetInfoFont_Click);
+            // 
+            // mnuMapLabelsFont
+            // 
+            this.mnuMapLabelsFont.Name = "mnuMapLabelsFont";
+            this.mnuMapLabelsFont.Size = new System.Drawing.Size(161, 22);
+            this.mnuMapLabelsFont.Text = "Map Labels Font";
+            this.mnuMapLabelsFont.Click += new System.EventHandler(this.MnuMapLabelsFont_Click);
+            // 
+            // mnuReloadAlerts
+            // 
+            this.mnuReloadAlerts.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.mnuReloadAlerts.Name = "mnuReloadAlerts";
+            this.mnuReloadAlerts.Size = new System.Drawing.Size(173, 22);
+            this.mnuReloadAlerts.Text = "&Reload Alerts";
+            this.mnuReloadAlerts.Click += new System.EventHandler(this.MnuReloadAlerts_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(170, 6);
+            // 
+            // mnuEditGlobalAlerts
+            // 
+            this.mnuEditGlobalAlerts.Name = "mnuEditGlobalAlerts";
+            this.mnuEditGlobalAlerts.Size = new System.Drawing.Size(173, 22);
+            this.mnuEditGlobalAlerts.Text = "Edit &Global Alerts";
+            this.mnuEditGlobalAlerts.Click += new System.EventHandler(this.MnuGlobalAlerts_Click);
+            // 
+            // mnuEditZoneAlerts
+            // 
+            this.mnuEditZoneAlerts.Name = "mnuEditZoneAlerts";
+            this.mnuEditZoneAlerts.Size = new System.Drawing.Size(173, 22);
+            this.mnuEditZoneAlerts.Text = "Edit &Zone Alerts";
+            this.mnuEditZoneAlerts.Click += new System.EventHandler(this.MnuAddEditAlerts_Click);
+            // 
+            // mnuRefreshSpawnList
+            // 
+            this.mnuRefreshSpawnList.Name = "mnuRefreshSpawnList";
+            this.mnuRefreshSpawnList.Size = new System.Drawing.Size(173, 22);
+            this.mnuRefreshSpawnList.Text = "&Refresh Spawn List";
+            this.mnuRefreshSpawnList.Click += new System.EventHandler(this.MnuRefreshSpawnList_Click);
+            // 
+            // mnuClearSavedTimers
+            // 
+            this.mnuClearSavedTimers.Name = "mnuClearSavedTimers";
+            this.mnuClearSavedTimers.Size = new System.Drawing.Size(173, 22);
+            this.mnuClearSavedTimers.Text = "Clear Saved &Timers";
+            this.mnuClearSavedTimers.Click += new System.EventHandler(this.MnuClearSavedTimers_Click);
+            // 
+            // mnuSaveSpawnLog
+            // 
+            this.mnuSaveSpawnLog.Name = "mnuSaveSpawnLog";
+            this.mnuSaveSpawnLog.Size = new System.Drawing.Size(173, 22);
+            this.mnuSaveSpawnLog.Text = "Save Spawn Log";
+            this.mnuSaveSpawnLog.Click += new System.EventHandler(this.MnuSaveSpawnLog_Click);
+            // 
             // mnuMapSettingsMain
             // 
             this.mnuMapSettingsMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1109,11 +1147,6 @@ namespace myseq
             this.mnuForceDistinctText.Size = new System.Drawing.Size(195, 22);
             this.mnuForceDistinctText.Text = "Force Distinct &Text";
             this.mnuForceDistinctText.Click += new System.EventHandler(this.MnuForceDistinctText_Click);
-            // 
-            // toolStripSeparator12
-            // 
-            toolStripSeparator12.Name = "toolStripSeparator12";
-            toolStripSeparator12.Size = new System.Drawing.Size(192, 6);
             // 
             // mnuLabelShow
             // 
@@ -1342,11 +1375,6 @@ namespace myseq
             this.mnuAutoSelectEQTarget.Text = "Auto Select &EQ Target";
             this.mnuAutoSelectEQTarget.Click += new System.EventHandler(this.MnuAutoSelectEQTarget_Click);
             // 
-            // toolStripSeparator10
-            // 
-            toolStripSeparator10.Name = "toolStripSeparator10";
-            toolStripSeparator10.Size = new System.Drawing.Size(192, 6);
-            // 
             // mnuFollowNone
             // 
             this.mnuFollowNone.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
@@ -1374,11 +1402,6 @@ namespace myseq
             this.mnuFollowTarget.Text = "Follow Target";
             this.mnuFollowTarget.Click += new System.EventHandler(this.MnuFollowTarget_Click);
             // 
-            // toolStripSeparator11
-            // 
-            toolStripSeparator11.Name = "toolStripSeparator11";
-            toolStripSeparator11.Size = new System.Drawing.Size(192, 6);
-            // 
             // mnuKeepCentered
             // 
             this.mnuKeepCentered.Name = "mnuKeepCentered";
@@ -1392,11 +1415,6 @@ namespace myseq
             this.mnuAutoExpand.Size = new System.Drawing.Size(195, 22);
             this.mnuAutoExpand.Text = "Auto Expand";
             this.mnuAutoExpand.Click += new System.EventHandler(this.MnuAutoExpand_Click);
-            // 
-            // toolStripSeparator13
-            // 
-            toolStripSeparator13.Name = "toolStripSeparator13";
-            toolStripSeparator13.Size = new System.Drawing.Size(192, 6);
             // 
             // mnuMapReset
             // 
@@ -1417,14 +1435,14 @@ namespace myseq
             // mnuAbout
             // 
             this.mnuAbout.Name = "mnuAbout";
-            this.mnuAbout.Size = new System.Drawing.Size(180, 22);
+            this.mnuAbout.Size = new System.Drawing.Size(107, 22);
             this.mnuAbout.Text = "About";
             this.mnuAbout.Click += new System.EventHandler(this.MnuAbout_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.helpToolStripMenuItem.Text = "Help";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
@@ -1923,7 +1941,7 @@ namespace myseq
             this.toolStripCoPStatus,
             this.toolStripShortName,
             this.toolStripFPS});
-            this.statusBarStrip.Location = new System.Drawing.Point(0, 507);
+            this.statusBarStrip.Location = new System.Drawing.Point(0, 465);
             this.statusBarStrip.Name = "statusBarStrip";
             this.statusBarStrip.Size = new System.Drawing.Size(1309, 22);
             this.statusBarStrip.TabIndex = 0;
@@ -2018,11 +2036,11 @@ namespace myseq
             this.toolStripZoomOut,
             this.toolStripScale,
             this.toolStripDepthFilterButton,
-            toolStripZPosLabel,
+            this.toolStripZPosLabel,
             this.toolStripZPos,
             this.toolStripZPosDown,
             this.toolStripZPosUp,
-            toolStripZOffsetLabel,
+            this.toolStripZOffsetLabel,
             this.toolStripZNeg,
             this.toolStripZNegUp,
             this.toolStripZNegDown,
@@ -2173,13 +2191,6 @@ namespace myseq
             this.toolStripDepthFilterButton.ToolTipText = "Toggle Depth Filter On/Off";
             this.toolStripDepthFilterButton.Click += new System.EventHandler(this.MnuDepthFilter_Click);
             // 
-            // toolStripZPosLabel
-            // 
-            toolStripZPosLabel.Name = "toolStripZPosLabel";
-            toolStripZPosLabel.Size = new System.Drawing.Size(38, 22);
-            toolStripZPosLabel.Text = "Z-Pos";
-            toolStripZPosLabel.ToolTipText = "The range above the player that is not depth filtered.";
-            // 
             // toolStripZPos
             // 
             this.toolStripZPos.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -2216,13 +2227,6 @@ namespace myseq
             this.toolStripZPosUp.Text = "toolStripButton4";
             this.toolStripZPosUp.ToolTipText = "Increase Z-Pos above player for depth filter.";
             this.toolStripZPosUp.Click += new System.EventHandler(this.ToolStripZPosUp_Click);
-            // 
-            // toolStripZOffsetLabel
-            // 
-            toolStripZOffsetLabel.Name = "toolStripZOffsetLabel";
-            toolStripZOffsetLabel.Size = new System.Drawing.Size(41, 22);
-            toolStripZOffsetLabel.Text = "Z-Neg";
-            toolStripZOffsetLabel.ToolTipText = "The range below the player that is not depth filtered.";
             // 
             // toolStripZNeg
             // 
@@ -2289,13 +2293,6 @@ namespace myseq
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
             this.toolStripSeparator19.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripLabel1
-            // 
-            toolStripLabel1.Name = "toolStripLabel1";
-            toolStripLabel1.Size = new System.Drawing.Size(30, 22);
-            toolStripLabel1.Text = "Find";
-            toolStripLabel1.ToolTipText = "Find and temporarily mark mobs on map.";
             // 
             // toolStripLookupBox
             // 
@@ -2480,7 +2477,7 @@ namespace myseq
             this.dockPanel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
             this.dockPanel.Location = new System.Drawing.Point(0, 49);
             this.dockPanel.Name = "dockPanel";
-            this.dockPanel.Size = new System.Drawing.Size(1309, 458);
+            this.dockPanel.Size = new System.Drawing.Size(1309, 416);
             this.dockPanel.TabIndex = 2;
             // 
             // MainForm
@@ -2489,7 +2486,7 @@ namespace myseq
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(1309, 529);
+            this.ClientSize = new System.Drawing.Size(1309, 487);
             this.ContextMenuStrip = this.mnuContext;
             this.Controls.Add(this.dockPanel);
             this.Controls.Add(this.toolBarStrip);
@@ -2788,5 +2785,7 @@ namespace myseq
 
         private ToolStripMenuItem toolStripBasecon;
         private ToolStripMenuItem helpToolStripMenuItem;
+        private ToolStripLabel toolStripZPosLabel;
+        private ToolStripLabel toolStripZOffsetLabel;
     }
 }

@@ -86,7 +86,7 @@ namespace myseq
                 int.TryParse(search.Substring(2), out var searchLevel);
                 levelCheck = LevelCheck(sp, levelCheck, searchLevel);
             }
-            if (levelCheck || RegexHelper.GetRegex(search).Match(sp.Name).Success)
+            if (levelCheck || search.GetRegex().Match(sp.Name).Success)
             {
                 sp.isLookup = true;
                 sp.lookupNumber = ln;

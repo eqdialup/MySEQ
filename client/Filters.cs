@@ -100,8 +100,6 @@ namespace Structures
                     }
                     else if (type > 0 && type < 7)
                     {
-                        // unknown section headers
-
                         if (inp.StartsWith("</section>", true, null))
                         {
                             type = 0;
@@ -109,10 +107,9 @@ namespace Structures
                         }
 
                         var inputstring = line.Trim();
-                        // Remove extra stuff
 
                         inputstring = FormatStrings(inp, inputstring);
-                        // remove Name: from line if it exists
+
                         DetermineType(type, inputstring, zoneName);
                     }
                 }
