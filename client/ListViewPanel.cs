@@ -64,7 +64,7 @@ namespace myseq
 
         private ToolStripSeparator mnuSep3;
 
-        public string mobname {get; set; }  = "";
+        public string mobname { get; set; } = "";
 
         private string smoblevel = "1";
 
@@ -634,8 +634,8 @@ namespace myseq
         private void ListView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             curDescend = !curDescend;
-
-            listView.ListViewItemSorter = new ListComparer(e.Column);
+            SortOrder sort_order = curDescend ? SortOrder.Ascending : SortOrder.Descending;
+            listView.ListViewItemSorter = new ListViewComparer(e.Column, sort_order);
         }
 
         private void ListView_SelectedIndexChanged(object sender, EventArgs e)
@@ -672,22 +672,6 @@ namespace myseq
         {
             listView.Columns.Add(ColumnName, ColumnWidth, CoulumnAlign);
         }
-
-        //public void RemoveColumn(int Index)
-        //{
-        //    try
-        //    {
-        //        if (Index <= listView.Columns.Count)
-        //        {
-        //            listView.Columns.RemoveByKey("Offhand");
-        //            listView.Columns.RemoveByKey("Last Name");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogLib.WriteLine("ListViewPanel.RemoveColumn: ", ex);
-        //    }
-        //}
 
         private void AddFilter(List<string> fltr, string zone)
         {
@@ -778,7 +762,7 @@ namespace myseq
 
         private void MnuSearchAllakhazam_Click(object sender, EventArgs e)
         {
-            f1.SearchZam(mobname);
+            mobname.StartSearch();
         }
 
         private void AddMapLabelToolStripMenuItem_Click(object sender, EventArgs e)

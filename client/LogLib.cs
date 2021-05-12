@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Windows.Forms;
-using myseq.Properties;
 
 namespace Structures
 {
@@ -30,19 +28,13 @@ namespace Structures
         {
             if (logLevel <= maxLogLevel && logLevel > LogLevel.Off)
             {
-                var logpath = string.IsNullOrEmpty(Settings.Default.LogDir)
-                    ? Path.Combine(Application.StartupPath, "logs")
-                    : Settings.Default.LogDir;
-
                 var logfile = $"{DateTime.Now:MM-dd-yyyy}.txt";
-                Directory.CreateDirectory(logpath);
 
-                FileStream fs = new FileStream(Path.Combine(logpath, logfile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                using (FileStream fs = new FileStream(FileOps.CombineLog(logfile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
                 using (StreamWriter outLog = new StreamWriter(fs))
                 {
                     outLog.WriteLine($"[{(int)logLevel}] {DateTime.Now:MM/dd/yyyy HH:mm:ss.ff} - {msg}");
                 }
-                fs.Close();
                 /* How does one log an error if the logging function is the one erroring? */
             }
         }

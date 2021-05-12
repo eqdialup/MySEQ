@@ -6,7 +6,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace myseq
 {
-    public class MapPane : DockContent, IMarkLookup
+    public class MapPane : DockContent
     {
         public MapCon mapCon;// {get; set; }
         private MainForm f1; // Caution: may be null
@@ -299,23 +299,23 @@ namespace myseq
             var current_val = scale.Value;
             if (current_val <= 100)
             {
-                current_val = subhundred(current_val);
+                current_val = current_val.subhundred();
             }
             else if (current_val <= 200)
             {
-                current_val = Twohundred(current_val);
+                current_val = current_val.Twohundred();
             }
             else if (current_val <= 300)
             {
-                current_val = Threehundred(current_val);
+                current_val = current_val.Threehundred();
             }
             else if (current_val <= 400)
             {
-                current_val = Fourhundred(current_val);
+                current_val = current_val.Fourhundred();
             }
             else if (current_val <= 500)
             {
-                current_val = FiveHundred(current_val);
+                current_val = current_val.FiveHundred();
             }
             else
             {
@@ -328,89 +328,24 @@ namespace myseq
             }
         }
 
-        private static decimal FiveHundred(decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val < 400)
-            {
-                current_val = 400;
-            }
-
-            return current_val;
-        }
-
-        private static decimal Fourhundred(decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val < 300)
-            {
-                current_val = 300;
-            }
-
-            return current_val;
-        }
-
-        private static decimal Threehundred(decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val <= 200)
-            {
-                current_val = 200;
-            }
-
-            return current_val;
-        }
-
-        private static decimal Twohundred(decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val < 100)
-            {
-                current_val = 100;
-            }
-
-            return current_val;
-        }
-
-        private static decimal subhundred(decimal current_val)
-        {
-            current_val -= 10;
-            if (current_val < 10)
-            {
-                current_val = 10;
-            }
-
-            return current_val;
-        }
-
         private void Offsetx_ValueChanged(object sender, EventArgs e)
         {
-            mapCon.PanOffsetX = -(int)offsetx.Value;
-            mapCon.ReAdjust();
-            mapCon.Invalidate();
+            mapCon.Offset_X_ValueChanged(offsetx);
         }
 
         private void Offsety_ValueChanged(object sender, EventArgs e)
         {
-            mapCon.PanOffsetY = -(int)offsety.Value;
-
-            mapCon.ReAdjust();
-            mapCon.Invalidate();
+            mapCon.Offset_Y_ValueChanged(offsety);
         }
 
         private void Scale_ValueChanged(object sender, EventArgs e)
         {
-            mapCon.scale = (float)scale.Value / 100.0f;
             f1.toolStripScale.Text = $"{scale.Value / 100:0%}";
+            mapCon.scale = (float)scale.Value / 100.0f;
 
             mapCon.ReAdjust();
             mapCon.Invalidate();
         }
-
-        //private void CmdCommand_Click(object sender, EventArgs e)
-        //{
-        //    f1?.CmdCommand_Click(sender, e);
-        //}
 
         private void Filterzpos_ValueChanged(object sender, EventArgs e)
         {
@@ -541,9 +476,5 @@ namespace myseq
             Invalidate();
         }
         #endregion
-
-        public void MarkLookups(string name, ref bool filterMob)
-        {
-        }
     }
 }

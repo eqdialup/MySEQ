@@ -15,6 +15,8 @@ namespace Structures
         public static string CombineTimer(string mapName) => Path.Combine(Settings.Default.TimerDir, $"spawns-{mapName}.txt");
         public static string CombineFilter(string filename ) => Path.Combine(Settings.Default.FilterDir, filename);
 
+        public static string CombineLog(string filename ) => Path.Combine(Settings.Default.FilterDir, filename);
+
         public static void DeleteFile(string timerfile)
         {
             if (File.Exists(timerfile))
@@ -116,30 +118,33 @@ namespace Structures
         {
             if (string.IsNullOrEmpty(Settings.Default.MapDir))
             {
-                Settings.Default.MapDir = Path.Combine(Application.StartupPath, "maps");
+                Settings.Default.MapDir = StartPath("maps");
                 Directory.CreateDirectory(Settings.Default.MapDir);
             }
             if (string.IsNullOrEmpty(Settings.Default.FilterDir))
             {
-                Settings.Default.FilterDir = Path.Combine(Application.StartupPath, "filters");
+                Settings.Default.FilterDir = StartPath("filters");
                 Directory.CreateDirectory(Settings.Default.FilterDir);
             }
             if (string.IsNullOrEmpty(Settings.Default.CfgDir))
             {
-                Settings.Default.CfgDir = Path.Combine(Application.StartupPath, "cfg");
+                Settings.Default.CfgDir = StartPath("cfg");
                 Directory.CreateDirectory(Settings.Default.CfgDir);
             }
             if (string.IsNullOrEmpty(Settings.Default.LogDir))
             {
-                Settings.Default.LogDir = Path.Combine(Application.StartupPath, "logs");
+                Settings.Default.LogDir = StartPath("logs");
                 Directory.CreateDirectory(Settings.Default.LogDir);
             }
             if (string.IsNullOrEmpty(Settings.Default.TimerDir))
             {
-                Settings.Default.TimerDir = Path.Combine(Application.StartupPath, "timers");
+                Settings.Default.TimerDir = StartPath("timers");
                 Directory.CreateDirectory(Settings.Default.TimerDir);
             }
         }
+
+        public static string StartPath(string folder) => Path.Combine(Application.StartupPath, folder);
+
         public bool Xor(bool a, bool b) => a ^ b;
     }
 }

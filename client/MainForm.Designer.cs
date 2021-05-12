@@ -55,7 +55,6 @@ namespace myseq
             this.mnuShowSpawnList = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowSpawnListTimer = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowGroundItemList = new System.Windows.Forms.ToolStripMenuItem();
-            this.thinSpawnlistmnuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowListGridLines = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowListSearchBox = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuShowGridLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -337,7 +336,6 @@ namespace myseq
             this.mnuShowSpawnList,
             this.mnuShowSpawnListTimer,
             this.mnuShowGroundItemList,
-            this.thinSpawnlistmnuItem,
             toolStripSeparator7,
             this.mnuShowListGridLines,
             this.mnuShowListSearchBox,
@@ -418,15 +416,6 @@ namespace myseq
             this.mnuShowGroundItemList.Size = new System.Drawing.Size(198, 22);
             this.mnuShowGroundItemList.Text = "Ground &Item List";
             this.mnuShowGroundItemList.Click += new System.EventHandler(this.MnuShowGroundItemList_Click);
-            // 
-            // thinSpawnlistmnuItem
-            // 
-            this.thinSpawnlistmnuItem.Checked = global::myseq.Properties.Settings.Default.ThinSpawnList;
-            this.thinSpawnlistmnuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.thinSpawnlistmnuItem.Name = "thinSpawnlistmnuItem";
-            this.thinSpawnlistmnuItem.Size = new System.Drawing.Size(198, 22);
-            this.thinSpawnlistmnuItem.Text = "Show thin Lists";
-            this.thinSpawnlistmnuItem.Click += new System.EventHandler(this.ThinSpawnlist_Click);
             // 
             // toolStripSeparator7
             // 
@@ -2779,7 +2768,6 @@ namespace myseq
         private ToolStripMenuItem mnuSmallTargetInfo;
         private ToolStripMenuItem mnuSmallTargetInfo2;
         private ToolStripSeparator toolStripSeparator19;
-        private ToolStripMenuItem thinSpawnlistmnuItem;
         private ToolStripMenuItem mnuAutoConnect;
         public ToolStripComboBox toolStripLevel;
 

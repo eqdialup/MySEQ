@@ -81,7 +81,7 @@ namespace myseq
         public void LoadPositionsFromConfigFile(MainForm f1)
         {
             LogLib.WriteLine("Loading Position.Xml", LogLevel.Debug);
-            var configFile = Path.Combine(Settings.Default.CfgDir, "positions.xml");
+            var configFile = FileOps.CombineCfgDir("positions.xml");
 
             if (File.Exists(configFile))
             {
@@ -176,12 +176,7 @@ namespace myseq
 
                 f1.map.Loadmap(filename);
 
-                var lastSlashIndex = filename.LastIndexOf("\\");
-
-                if (lastSlashIndex > 0)
-                {
-                    filename = filename.Substring(lastSlashIndex + 1);
-                }
+                filename = filename.GetLastSlash();
 
                 filename = filename.Substring(0, filename.Length - 4);
 
@@ -198,24 +193,24 @@ namespace myseq
             }
         }
 
-        public static void LookupBoxMatch(Spawninfo si, MainForm f1)
-        {
-            si.isLookup = false;
-            BoxMatch(f1.toolStripLookupBox, si);
-            BoxMatch(f1.toolStripLookupBox1, si);
-            BoxMatch(f1.toolStripLookupBox2, si);
-            BoxMatch(f1.toolStripLookupBox3, si);
-            BoxMatch(f1.toolStripLookupBox4, si);
-        }
+        //public static void LookupBoxMatch(Spawninfo si, MainForm f1)
+        //{
+        //    si.isLookup = false;
+        //    BoxMatch(f1.toolStripLookupBox, si);
+        //    BoxMatch(f1.toolStripLookupBox1, si);
+        //    BoxMatch(f1.toolStripLookupBox2, si);
+        //    BoxMatch(f1.toolStripLookupBox3, si);
+        //    BoxMatch(f1.toolStripLookupBox4, si);
+        //}
 
-        private static void BoxMatch(ToolStripTextBox boxtext, Spawninfo si)
-        {
-            if (boxtext.Text.Length > 1
-                && boxtext.Text != "Mob Search"
-                && boxtext.Text.GetRegex().Match(si.Name).Success)
-            {
-                si.isLookup = true;
-            }
-        }
+        //private static void BoxMatch(ToolStripTextBox boxtext, Spawninfo si)
+        //{
+        //    if (boxtext.Text.Length > 1
+        //        && boxtext.Text != "Mob Search"
+        //        && boxtext.Text.GetRegex().Match(si.Name).Success)
+        //    {
+        //        si.isLookup = true;
+        //    }
+        //}
     }
 }

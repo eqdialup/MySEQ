@@ -351,6 +351,22 @@ namespace myseq
             }
         }
 
+
+        public void Offset_X_ValueChanged(NumericUpDown offsetx)
+        {
+            PanOffsetX = -(int)offsetx.Value;
+            ReAdjust();
+            Invalidate();
+        }
+
+        public void Offset_Y_ValueChanged(NumericUpDown offsety)
+        {
+            PanOffsetY = -(int)offsety.Value;
+
+            ReAdjust();
+            Invalidate();
+        }
+
         private void MapCon_MouseScroll(object sender, MouseEventArgs me)
         {
             if (mapPane == null)
@@ -2025,7 +2041,6 @@ namespace myseq
         #endregion DrawSpawns
 
         #region DrawMap
-
         public void DrawMapLines(DrawOptions DrawOpts)
         {
             try
@@ -2230,7 +2245,6 @@ namespace myseq
         #endregion DrawMap
 
         #region DrawGamer
-
         public void DrawGamer(PointF gamer, float SpawnSize, float SpawnSizeOffset, DrawOptions DrawOpts)
         {
             try
@@ -2590,18 +2604,15 @@ namespace myseq
         public void DrawDirectionLines(Spawninfo sp, float x, float y)
         {
             try
-
             {
                 float x1, y1;
 
                 // Draw NPCs Direction Lines if heading > 0
-
                 if (sp.Heading >= 0 && sp.Heading < 512)
-
                 {
-                    y1 = -(float)(xCos[(int)sp.Heading] * (sp.SpeedRun * Ratio * 150));
+                    y1 = -(xCos[(int)sp.Heading] * (sp.SpeedRun * Ratio * 150));
 
-                    x1 = -(float)(xSin[(int)sp.Heading] * (sp.SpeedRun * Ratio * 150));
+                    x1 = -(xSin[(int)sp.Heading] * (sp.SpeedRun * Ratio * 150));
 
                     DrawLine(new Pen(new SolidBrush(Color.White)), x, y, x + x1, y + y1);
                 }

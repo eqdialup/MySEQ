@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -16,8 +15,6 @@ namespace myseq
         private readonly string Version = Application.ProductVersion;
 
         private string BaseTitle = "MySEQ Open";
-
-        private Point addTextFormLocation = new Point(0, 0);
 
         public ListViewPanel SpawnList = new ListViewPanel(0);
         public ListViewPanel SpawnTimerList = new ListViewPanel(1);
@@ -1738,22 +1735,14 @@ namespace myseq
             var new_text = textToAdd.Replace("#", "");
             FrmAddMapText mapBox = new FrmAddMapText
             {
-                txtColr = Settings.Default.SelectedAddMapText,
-                txtBkg = Settings.Default.BackColor,
                 txtAdd = new_text.Length > 0 ? new_text : "Enter Text Label",
-                Location = addTextFormLocation,
                 StartPosition = FormStartPosition.CenterParent,
                 mapName = "Add to Map: "
             };
-            addTextFormLocation = mapBox.Location;
 
             if (mapnameWithLabels.Length > 4 && mapnameWithLabels.EndsWith(".txt"))
             {
-                var lastSlashIndex = mapnameWithLabels.LastIndexOf("\\");
-                if (lastSlashIndex > 0)
-                {
-                    mapBox.mapName += mapnameWithLabels.Substring(lastSlashIndex + 1);
-                }
+                mapBox.mapName += mapnameWithLabels.GetLastSlash();
             }
             else
             {
@@ -1769,40 +1758,8 @@ namespace myseq
                 // add it to map now
                 if (new_text.Length > 0)
                 {
-                    SOEMapTextAdd(mapBox, new_text);
+                    mapBox.SOEMapTextAdd(new_text, this);
                 }
-            }
-        }
-
-        private void SOEMapTextAdd(FrmAddMapText mapBox, string new_text)
-        {
-            // string to append to map file
-            var soe_maptext = $"P {alertX * -1:f4}, {alertY * -1:f4}, {alertZ:f4}," +
-                $"{mapBox.txtColr.R}, {mapBox.txtColr.G}, {mapBox.txtColr.B}, {mapBox.txtSize}, {new_text}\n";
-
-            MapText work = new MapText(soe_maptext);
-
-            work.draw_color = eq.GetDistinctColor(work.color);
-            work.draw_pen = new Pen(work.color);
-            map.AddMapText(work);
-
-            if (DialogResult.Yes == MessageBox.Show($"Do you want to write the label to {mapBox.mapName}?" +
-                Environment.NewLine + Environment.NewLine + soe_maptext, "Write label to map",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
-            {
-                try
-                {
-                    File.AppendAllText(mapnameWithLabels, soe_maptext);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Access Violation {ex}", "Add text to Map Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            else
-            {
-                map.DeleteMapText(work);
             }
         }
 
@@ -2172,19 +2129,7 @@ namespace myseq
 
         private void MnuSearchAllakhazam_Click(object sender, EventArgs e)
         {
-            SearchZam(alertAddmobname);
-        }
-
-        public void SearchZam(string mobname)
-        {
-            var searchname = mobname.SearchName();
-
-            if (searchname.Length > 0)
-            {
-                var searchURL = string.Format(Settings.Default.SearchString, searchname);
-
-                Process.Start(searchURL);
-            }
+            alertAddmobname.StartSearch();
         }
 
         private void MnuShowMenuBar_Click(object sender, EventArgs e)
@@ -2438,7 +2383,7 @@ namespace myseq
                 alertX = eq.gamerInfo.X;
                 alertY = eq.gamerInfo.Y;
                 alertZ = eq.gamerInfo.Z;
-                AddMapText("Text to Add");
+                AddMapText("");
             }
         }
 
@@ -2766,13 +2711,6 @@ namespace myseq
         private void EnablePlayAlerts() => Settings.Default.playAlerts = true;
 
         private void DisablePlayAlerts() => Settings.Default.playAlerts = false;
-
-        private void ThinSpawnlist_Click(object sender, EventArgs e)
-        {
-            Settings.Default.ThinSpawnList = !Settings.Default.ThinSpawnList;
-            thinSpawnlistmnuItem.Checked = Settings.Default.ThinSpawnList;
-            // Need to build more on this to actually make a thin spawnlist
-        }
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {

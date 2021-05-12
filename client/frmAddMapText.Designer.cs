@@ -1,6 +1,4 @@
-﻿using myseq.Properties;
-
-namespace myseq
+﻿namespace myseq
 {
     partial class FrmAddMapText
     {
@@ -138,7 +136,7 @@ namespace myseq
             this.label1.Location = new System.Drawing.Point(17, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(110, 13);
-            this.label1.Text = "Current selected color";
+            this.label1.Text = "Chosen color";
             // 
             // pictureBox1
             // 
@@ -168,8 +166,8 @@ namespace myseq
             this.Controls.Add(this.MapTextToAdd);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Name = "FrmAddMapText";
-            this.Text = "Add Map Text";
+            this.Name = "AddMapText";
+            this.Text = "";
             this.TopMost = true;
             this.FontSizeGroupBox.ResumeLayout(false);
             this.FontSizeGroupBox.PerformLayout();

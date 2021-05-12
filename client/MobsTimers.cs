@@ -293,33 +293,27 @@ namespace myseq
                 return;
             }
 
-            FileStream fs = new FileStream(Path.Combine(Settings.Default.LogDir, "SpawnTimer.txt"), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+            using (FileStream fs = new FileStream(FileOps.CombineLog("SpawnTimer.txt"), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
             using (StreamWriter outLog = new StreamWriter(fs))
             {
                 outLog.WriteLine($"{DateTime.Now:MM/dd/yyyy HH:mm:ss.ff} - {msg}");
             }
-            fs.Close();
         }
 
         private void LogSpawns(string msg)
-
         {
             if (!Settings.Default.SaveSpawnLogs || mapName.Length < 3)
             {
                 return;
             }
 
-            var logpath = Settings.Default.LogDir;
             var logfile = $"spawns-{DateTime.Now:MM-dd-yyyy}-{mapName}.txt";
 
-            Directory.CreateDirectory(logpath);
-
-            FileStream fs = new FileStream(Path.Combine(logpath, logfile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+            using (FileStream fs = new FileStream(FileOps.CombineLog(logfile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
             using (StreamWriter spawnLog = new StreamWriter(fs))
             {
                 spawnLog.WriteLine($"[{DateTime.Now:MM/dd/yyyy HH:mm:ss.ff}] {msg}");
             }
-            fs.Close();
         }
 
         // Loads timers from a file for the current map
