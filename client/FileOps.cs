@@ -8,14 +8,10 @@ namespace Structures
 {
     public class FileOps
     {
-
-        public string shortname { get; set; } = "";
-       
         public static string CombineCfgDir(string file) => Path.Combine(Settings.Default.CfgDir, file);
         public static string CombineTimer(string mapName) => Path.Combine(Settings.Default.TimerDir, $"spawns-{mapName}.txt");
         public static string CombineFilter(string filename ) => Path.Combine(Settings.Default.FilterDir, filename);
-
-        public static string CombineLog(string filename ) => Path.Combine(Settings.Default.FilterDir, filename);
+        public static string CombineLog(string filename ) => Path.Combine(Settings.Default.LogDir, filename);
 
         public static void DeleteFile(string timerfile)
         {
@@ -25,7 +21,7 @@ namespace Structures
             }
         }
 
-        public void MakeFilterExist(string filterFile)
+        public void MakeFilter(string filterFile)
         {
             if (!File.Exists(filterFile))
             {

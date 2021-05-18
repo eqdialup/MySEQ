@@ -342,3 +342,6 @@ healthchecksdb
 /client/CodeGraphData
 /CodeGraphData
 /client/.cr/personal/FavoritesList/List.xml
+/client/utils
+/client/UIFiles
+/client/Structures

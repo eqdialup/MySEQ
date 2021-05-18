@@ -43,8 +43,6 @@ namespace myseq
 
         private float m_dragStartPanY;
 
-        private bool lookup_set;
-
         private Color gridColor;
 
         private Color gridLabelColor;
@@ -54,10 +52,6 @@ namespace myseq
         private int skittle;
 
         private int flash_count;
-
-        // m_zoom - factor by which map has been zoomed.
-
-        private float m_zoom = 1.0f;
 
         // m_mapCenter - centre point of screen in Map Units.
         private PointF mapCenter;
@@ -718,8 +712,6 @@ namespace myseq
 
         public void ClearPan()
         {
-            //panOffset.X = 0;
-            //panOffset.Y = 0;
             PanOffsetX = 0;
             PanOffsetY = 0;
             ReAdjust();
@@ -739,20 +731,13 @@ namespace myseq
 
             screenCenter.Y = (float)Height / 2;
 
-            var zoom = scale;
-
-            if (m_zoom > 32)
-            {
-                m_zoom = 32;
-            }
-
             var xratio = ScreenWidth / mapWidth;
 
             var yratio = ScreenHeight / mapHeight;
 
             // Use the smaller scale ratio so that the map fits in the screen at a zoom of 1.
 
-            Ratio = xratio < yratio ? xratio * zoom : yratio * zoom;
+            Ratio = xratio < yratio ? xratio * scale : yratio * scale;
 
             // Calculate the Map Center
             if (Settings.Default.FollowOption == FollowOption.None)
@@ -1541,11 +1526,11 @@ namespace myseq
 
                     // Draw All Other Spawns
 
-                    if (sp.SpawnID == eq.gamerInfo.SpawnID)
-                    {
-                        return;
-                    }
-                    else if (sp.flags == 0 && sp.Name.Length > 0)
+                    //if (sp.SpawnID == eq.gamerInfo.SpawnID)
+                    //{
+                    //    return;
+                    //}
+                    if (sp.flags == 0 && sp.Name.Length > 0)
                     {
                         if (curTarget == sp.Name)
                         {
@@ -1576,7 +1561,6 @@ namespace myseq
                     }
                 }
             }
-            lookup_set = false;
         }
 
         internal Font GetdrawFont() => drawFont;
@@ -1836,12 +1820,7 @@ namespace myseq
 
             y = (float)Math.Round(CalcScreenCoordY(sp.Y), 0);
         }
-        private void SetLookupValues()
-        {
-            LookupRingSize = SpawnPlusSize + (skittle / (float)UpdateSteps * SelectSize);
-            LookupRingOffset = LookupRingSize / 2.0f;
-            lookup_set = true;
-        }
+
 
         private void DrawSpecialMobs(float pZ, Spawninfo sp, float x, float y, Color color)
         {
@@ -2017,12 +1996,11 @@ namespace myseq
             //            string gName = eq.GuildNumToString(sp.Guild);
             if (sp.isLookup && (!sp.isCorpse || Settings.Default.CorpseAlerts))
             {
-                if (!lookup_set)
-                {
-                    SetLookupValues();
-                }
+                LookupRingSize = SpawnPlusSize + (skittle / (float)UpdateSteps * SelectSize);
+                var x1 = x - (LookupRingSize / 2.0f);
+                var y1 = y - (LookupRingSize / 2.0f);
 
-                DrawEllipse(new Pen(new SolidBrush(Color.White)), x - LookupRingOffset, y - LookupRingOffset, LookupRingSize, LookupRingSize);
+                DrawEllipse(new Pen(new SolidBrush(Color.White)), x1, y1, LookupRingSize, LookupRingSize);
 
                 if (Settings.Default.ShowLookupText)
                 {
@@ -2213,33 +2191,40 @@ namespace myseq
             else
             {
                 // No Depth Filtering
-                foreach (MapText t in map.Texts)
+                foreach (MapText text in map.Texts)
                 {
-                    AddTextToDrawnMap(t);
+                    AddTextToDrawnMap(text);
                 }
             }
         }
 
         private void AddTextToDrawnMap(MapText t)
         {
-            var x_cord = (int)CalcScreenCoordX(t.x);
-            var y_cord = (int)CalcScreenCoordY(t.y);
-            if (t.draw_color is null) t.draw_color = new SolidBrush(Color.HotPink);
-            if (t.draw_pen is null) t.draw_pen = new Pen(Color.HotPink);
-            if (t.size == 2)
-            {// check for null
-                bkgBuffer.Graphics.DrawString(t.label, drawFont, t.draw_color, x_cord, y_cord - t.offset);
-            }
-            else if (t.size == 1)
+            try
             {
-                bkgBuffer.Graphics.DrawString(t.label, drawFont1, t.draw_color, x_cord, y_cord - t.offset);
+                var x_cord = (int)CalcScreenCoordX(t.x);
+                var y_cord = (int)CalcScreenCoordY(t.y);
+                if (t.draw_color is null) t.draw_color = new SolidBrush(Color.HotPink);
+                if (t.draw_pen is null) t.draw_pen = new Pen(Color.HotPink);
+                if (t.size == 2)
+                {// check for null
+                    bkgBuffer.Graphics.DrawString(t.label, drawFont, t.draw_color, x_cord, y_cord - t.offset);
+                }
+                else if (t.size == 1)
+                {
+                    bkgBuffer.Graphics.DrawString(t.label, drawFont1, t.draw_color, x_cord, y_cord - t.offset);
+                }
+                else
+                {
+                    bkgBuffer.Graphics.DrawString(t.label, drawFont3, t.draw_color, x_cord, y_cord - t.offset);
+                }
+                bkgBuffer.Graphics.DrawLine(t.draw_pen, x_cord - 1, y_cord, x_cord + 1, y_cord);
+                bkgBuffer.Graphics.DrawLine(t.draw_pen, x_cord, y_cord - 1, x_cord, y_cord + 1);
             }
-            else
+            catch (Exception ex)
             {
-                bkgBuffer.Graphics.DrawString(t.label, drawFont3, t.draw_color, x_cord, y_cord - t.offset);
+                LogLib.WriteLine("Error in AddText" + ex.StackTrace, ex);
             }
-            bkgBuffer.Graphics.DrawLine(t.draw_pen, x_cord - 1, y_cord, x_cord + 1, y_cord);
-            bkgBuffer.Graphics.DrawLine(t.draw_pen, x_cord, y_cord - 1, x_cord, y_cord + 1);
         }
 
         #endregion DrawMap
@@ -2379,7 +2364,7 @@ namespace myseq
 
                     foreach (Spawntimer st in eq.mobsTimers.GetRespawned().Values)
                     {
-                        if (st.zone == eq.shortname)
+                        if (st.zone == eq.Shortname)
                         {
                             PointF timerPoint = new PointF((float)Math.Round(CalcScreenCoordX(st.X), 0), (float)Math.Round(CalcScreenCoordY(st.Y), 0));
 

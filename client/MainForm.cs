@@ -104,8 +104,6 @@ namespace myseq
             GroundItemList.VisibleChanged += new EventHandler(GroundItemList_VisibleChanged);
             GroundItemList.SetComponents(eq, filters, this);
 
-
-
             map.SetComponents(mapCon, eq);
             eq.mobsTimers.SetComponents(map);
             formMethod.LoadPositionsFromConfigFile(this);
@@ -116,12 +114,6 @@ namespace myseq
                 TopLevel = true;
             }
 
-            // Add the Columns to the Spawn List Window
-
-            // Set the Font, Size, Style for the list windows
-            SetFontandStyle();
-
-            formMethod.CreateSpawnlistView(this);
             toolStripVersion.Text = Version;
             mapCon?.ReAdjust();
 
@@ -141,13 +133,6 @@ namespace myseq
             {
                 StartListening();
             }
-        }
-
-        private void SetFontandStyle()
-        {
-            SpawnList.listView.Font = new Font(Settings.Default.ListFont.FontFamily, Settings.Default.ListFont.Size, Settings.Default.ListFont.Style);
-            SpawnTimerList.listView.Font = new Font(Settings.Default.ListFont.Name, Settings.Default.ListFont.Size, Settings.Default.ListFont.Style);
-            GroundItemList.listView.Font = Settings.Default.ListFontStyle;
         }
 
         public void StopListening()
@@ -909,8 +894,8 @@ namespace myseq
         private void MnuOpenMap_Click(object sender, EventArgs e)
         {
             formMethod.MnuOpenMap(this);
-            eq.shortname = curZone;
-            eq.Longname = eq.shortname;
+            eq.Shortname = curZone;
+            eq.Longname = eq.Shortname;
 
             eq.CalcExtents(map.Lines);
         }
@@ -2567,8 +2552,8 @@ namespace myseq
             }
             else
             {
-                toolStripLookupBox4.ForeColor = SystemColors.GrayText;
-                toolStripLookupBox4.Text = "Mob Search";
+                box.ForeColor = SystemColors.GrayText;
+                box.Text = "Mob Search";
             }
         }
 

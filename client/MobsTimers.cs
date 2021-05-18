@@ -58,7 +58,7 @@ namespace myseq
         public void EnterMap(EQMap map)
         {
             ResetTimers();
-            mapName = map.eq.shortname;
+            mapName = map.eq.Shortname;
             LoadTimers();
         }
 

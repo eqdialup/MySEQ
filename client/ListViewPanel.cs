@@ -79,6 +79,53 @@ namespace myseq
             ListType = listType; // 0 = spawn list, 1 = spawn timer list, 2 = ground spawn list
 
             InitializeComponent();
+            Font = new Font(Settings.Default.ListFont.FontFamily, Settings.Default.ListFont.Size, Settings.Default.ListFont.Style);
+
+            if (listType == 0) // Add Columns to Spawnlist window
+            {
+                ColumnsAdd("Name", Settings.Default.c1w, HorizontalAlignment.Left);
+                ColumnsAdd("Level", Settings.Default.c2w, HorizontalAlignment.Left);
+                ColumnsAdd("Class", Settings.Default.c3w, HorizontalAlignment.Left);
+                ColumnsAdd("Primary", Settings.Default.c3w, HorizontalAlignment.Left);
+                ColumnsAdd("Offhand", Settings.Default.c3w, HorizontalAlignment.Left);
+                ColumnsAdd("Race", Settings.Default.c4w, HorizontalAlignment.Left);
+                ColumnsAdd("Owner", Settings.Default.c4w, HorizontalAlignment.Left);
+                ColumnsAdd("Last Name", Settings.Default.c5w, HorizontalAlignment.Left);
+                ColumnsAdd("Type", Settings.Default.c6w, HorizontalAlignment.Left);
+                ColumnsAdd("Invis", Settings.Default.c7w, HorizontalAlignment.Left);
+                ColumnsAdd("Run Speed", Settings.Default.c8w, HorizontalAlignment.Left);
+                ColumnsAdd("SpawnID", Settings.Default.c9w, HorizontalAlignment.Left);
+                ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
+                ColumnsAdd("X", Settings.Default.c11w, HorizontalAlignment.Left);
+                ColumnsAdd("Y", Settings.Default.c12w, HorizontalAlignment.Left);
+                ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
+                ColumnsAdd("Distance", Settings.Default.c14w, HorizontalAlignment.Left);
+                //            SpawnList.ColumnsAdd("Guild", Settings.Default.c14w, HorizontalAlignment.Left); //17
+            }
+            else if (listType == 1)     // Add the Columns to the Spawn Timer Window
+            {
+                ColumnsAdd("Spawn Name", Settings.Default.c1w, HorizontalAlignment.Left);
+                ColumnsAdd("Remain", Settings.Default.c10w, HorizontalAlignment.Left);
+                ColumnsAdd("Interval", Settings.Default.c10w, HorizontalAlignment.Left);
+                ColumnsAdd("Zone", Settings.Default.c10w, HorizontalAlignment.Left);
+                ColumnsAdd("X", Settings.Default.c12w, HorizontalAlignment.Left);
+                ColumnsAdd("Y", Settings.Default.c11w, HorizontalAlignment.Left);
+                ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
+                ColumnsAdd("Count", Settings.Default.c9w, HorizontalAlignment.Left);
+                ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
+                ColumnsAdd("Kill Time", Settings.Default.c10w, HorizontalAlignment.Left);
+                ColumnsAdd("Next Spawn", Settings.Default.c10w, HorizontalAlignment.Left);
+            }
+
+            else if (listType == 2)     // Add Columns to Ground Items window
+            {
+                ColumnsAdd("Description", Settings.Default.c1w, HorizontalAlignment.Left);
+                ColumnsAdd("Name", Settings.Default.c1w, HorizontalAlignment.Left);
+                ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
+                ColumnsAdd("X", Settings.Default.c12w, HorizontalAlignment.Left);
+                ColumnsAdd("Y", Settings.Default.c11w, HorizontalAlignment.Left);
+                ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
+            }
 
             DoubleBuffered = true;
 

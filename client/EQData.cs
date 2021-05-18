@@ -23,6 +23,7 @@ namespace myseq
 
         // Map details
         public string Longname { get; set; } = "";
+        public string Shortname { get; set; } = "";
 
         //// Map data
         // Max + Min map coordinates - define the bounds of the zone
@@ -33,19 +34,17 @@ namespace myseq
         public float minMapZ { get; set; } = -1000;
         public float MaxMapZ { get; set; } = 1000;
 
+        private List<GroundItem> itemcollection = new List<GroundItem>();          // Hold the items that are on the ground
 
-        private readonly List<GroundItem> itemcollection = new List<GroundItem>();          // Hold the items that are on the ground
-
-        private readonly Hashtable mobsHashTable = new Hashtable();             // Holds the details of the mobs in the current zone.
+        private Hashtable mobsHashTable = new Hashtable();             // Holds the details of the mobs in the current zone.
         public MobsTimers mobsTimers { get; } = new MobsTimers();               // Manages the timers
 
-        public int selectedID { get; set; } = 99999;
-
+        private int EQSelectedID;
         public float SpawnX { get; set; } = -1;
 
         public float SpawnY { get; set; } = -1;
 
-        private int EQSelectedID;
+        public int selectedID { get; set; } = 99999;
 
         public DateTime gametime { get; private set; } = new DateTime();
 
@@ -74,14 +73,6 @@ namespace myseq
         public Hashtable GetMobsReadonly() => mobsHashTable;
 
         public List<GroundItem> GetItemsReadonly() => itemcollection;
-
-        //public void ProcessSpawnTimer(MainForm f1)
-        //{
-        //    if (mobsTimers.mobsTimer2.Count > 0)
-        //    {
-        //        mobsTimers.UpdateList(f1.SpawnTimerList);
-        //    }
-        //}
 
         public bool SelectTimer(float x, float y, float delta)
         {
@@ -650,7 +641,7 @@ namespace myseq
 
                     // some of these should not change often, so only check every 10 times through
                     if (mob.refresh >= 10)
-                    {   // Update mob types
+                    {
                         if (mob.Type != si.Type)
                         {
                             mob.Type = si.Type;
@@ -1104,7 +1095,6 @@ namespace myseq
             var mobname = si.isMerc ? si.Name.FixMobNameMatch() : si.Name.FixMobName();
 
             var matchmobname = mobname.FixMobNameMatch();
-            var alert = false;
             if (matchmobname.Length < 2)
             {
                 matchmobname = mobname;
@@ -1116,7 +1106,7 @@ namespace myseq
             // Don't do alert matches for controllers, Ldon objects, pets, mercs, mounts, or familiars
             if (!(si.isLDONObject || si.IsPlayer || si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
             {
-                AssignAlertStatus(si, matchmobname, ref alert, ref mobnameWithInfo);
+                AssignAlertStatus(si, matchmobname, ref mobnameWithInfo);
 
                 //FormMethods.LookupBoxMatch(si, f1);
             }
@@ -1264,15 +1254,15 @@ namespace myseq
         {
             var dt = DateTime.Now;
 
-            var filename = $"{shortname} - {dt.Month}-{dt.Day}-{dt.Year}-{dt.Hour}.txt";
+            var filename = $"{Longname} - {dt.Month}-{dt.Day}-{dt.Year}-{dt.Hour}.txt";
 
             StreamWriter sw = new StreamWriter(filename, false);
 
-            sw.Write("Name\tLevel\t Class\tRace\tLastname\tType\tInvis\tRun\tSpeed\tSpawnID\tX\tY\tZ\tHeading");
+            sw.Write("Name\t\tLevel\t Class\t\tRace\tLastname\t\tType\tInvis\tRun\tSpeed\tSpawnID\tX\tY\tZ\tHeading");
 
             foreach (Spawninfo si in mobsHashTable.Values)
             {
-                sw.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}",
+                sw.WriteLine("{0}\t\t{1}\t\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}",
                              si.Name,
                              si.Level,
                              GetClass(si.Class),
@@ -1611,13 +1601,12 @@ namespace myseq
             return mname;
         }
 
-        private void AssignAlertStatus(Spawninfo si, string matchmobname, ref bool alert, ref string mobnameWithInfo)
+        private void AssignAlertStatus(Spawninfo si, string matchmobname, ref string mobnameWithInfo)
         {
-            if ((!si.isCorpse || CorpseAlerts) && !alert)
+            if (!si.isCorpse || CorpseAlerts)
             {
                 if (FindMatches(Filters.Hunt, matchmobname, FullTxtH) || FindMatches(Filters.GlobalHunt, matchmobname, FullTxtH))
                 {
-                    alert = true;
                     si.isHunt = true;
                     mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, HuntPrefix);
                 }
@@ -1625,7 +1614,6 @@ namespace myseq
                 // [caution]
                 if (FindMatches(Filters.Caution, matchmobname, FullTxtC) || FindMatches(Filters.GlobalCaution, matchmobname, FullTxtC))
                 {
-                    alert = true;
                     si.isCaution = true;
                     mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, CautionPrefix);
                 }
@@ -1633,7 +1621,6 @@ namespace myseq
                 // [danger]
                 if (((!si.isCorpse || CorpseAlerts) && FindMatches(Filters.Danger, matchmobname, FullTxtD)) || FindMatches(Filters.GlobalDanger, matchmobname, FullTxtD))
                 {
-                    alert = true;
                     si.isDanger = true;
                     mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, DangerPrefix);
                 }
@@ -1641,7 +1628,6 @@ namespace myseq
                 // [rare]
                 if (FindMatches(Filters.Alert, matchmobname, FullTxtA) || FindMatches(Filters.GlobalAlert, matchmobname, FullTxtA))
                 {
-                    alert = true;
                     si.isAlert = true;
                     mobnameWithInfo = PrefixAffixLabel(mobnameWithInfo, AlertPrefix);
                 }

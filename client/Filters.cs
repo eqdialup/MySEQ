@@ -61,7 +61,7 @@ namespace Structures
 
             var filterFile = CombineFilter($"{zoneName}.xml");
 
-            MakeFilterExist(filterFile);
+            MakeFilter(filterFile);
 
             ReadAlertLines(zoneName, filterFile);
         }
@@ -308,7 +308,7 @@ namespace Structures
 
                 var filterFile = CombineFilter($"{zoneName}.xml");
 
-                MakeFilterExist(filterFile);
+                MakeFilter(filterFile);
 
                 Process.Start("notepad.exe", filterFile);
             }
