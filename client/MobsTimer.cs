@@ -1200,9 +1200,7 @@ namespace myseq {
         // This updates KillTime and NextSpawn.
 
         public void Kill(SPAWNINFO mob)
-
         {
-
             try
             {
 
@@ -1211,14 +1209,14 @@ namespace myseq {
 
                 if (mobsTimer.ContainsKey(mob.ZoneSpawnLoc))
                 {
-                    SPAWNTIMER stold = (SPAWNTIMER)mobsTimer[mob.ZoneSpawnLoc];
+                    var stold = (SPAWNTIMER)mobsTimer[mob.ZoneSpawnLoc];
 
                     string log = stold.Kill(DateTime.Now);
 
                     // update mobsTimer2 also with kill info
                     if (mobsTimer2.ContainsKey(stold.ZoneSpawnLoc))
                     {
-                        SPAWNTIMER st2 = (SPAWNTIMER)mobsTimer2[stold.ZoneSpawnLoc];
+                        var st2 = (SPAWNTIMER)mobsTimer2[stold.ZoneSpawnLoc];
 
                         st2.KillTimeDT = stold.KillTimeDT;
                         st2.KillTimeStr = stold.KillTimeStr;
@@ -1228,9 +1226,7 @@ namespace myseq {
 
                     if (log != string.Empty && Settings.Instance.MaxLogLevel > 0)
                     {
-
                         SpawnTimerLog(String.Format("Updating Kill Time for Spawn: {0} Name: {1} Killed: {2}", mob.SpawnLoc, mob.Name, log));
-
                     }
 
                 }
@@ -1238,20 +1234,16 @@ namespace myseq {
 
             catch (Exception ex) { LogLib.WriteLine("Error updating the SPAWNTIMER for " + mob.Name + ": ", ex); }
 
-            
-
             MustSave=true;
-
         }                           
 
 
 
         // Add new spawns to the list, or update changed spawns.
-
         // Also misused to save the spawn list occasionally
 
-        public void UpdateList(ListViewPanel SpawnTimerList) {        
-
+        public void UpdateList(ListViewPanel SpawnTimerList)
+            {
             LogLib.WriteLine("Entering UpdateList()", LogLevel.Trace);
             DateTime now = DateTime.Now;
             try 

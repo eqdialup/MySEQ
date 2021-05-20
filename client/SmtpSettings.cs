@@ -105,7 +105,7 @@ namespace Structures
         {
             if (prefsDir?.Length == 0)
             {
-                prefsDir = Path.Combine(Application.StartupPath, "Prefs");
+                prefsDir = FileOps.StartPath("Prefs");
             }
 
             // Dont save password if we are not selecting to save it
@@ -129,7 +129,7 @@ namespace Structures
 
             fs.Close();
 
-            var oldconfigFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "myseq.xml");
+            var oldconfigFile = FileOps.StartPath("myseq.xml");
             FileOps.DeleteFile(oldconfigFile);
         }
 

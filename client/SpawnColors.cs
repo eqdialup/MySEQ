@@ -91,11 +91,11 @@ namespace Structures
             }
             else if (Settings.Default.DefaultCon)
             {
-                DefaultCon(level);
+                ConLevelFile(level);
             }
             else
             {
-                ConLevelFile(level);
+                DefaultCon(level);
             }
         }
 

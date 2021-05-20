@@ -120,6 +120,8 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Enums.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="HelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,9 +134,7 @@
     <Compile Include="ListComparer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EQCommunications.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="EQCommunications.cs" />
     <Compile Include="EQData.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -184,7 +184,6 @@
     </Compile>
     <Compile Include="MarkLookup.cs" />
     <Compile Include="MobsTimers.cs" />
-    <Compile Include="Enums.cs" />
     <Compile Include="MobTrails.cs" />
     <Compile Include="OptionsForm.cs">
       <SubType>Form</SubType>

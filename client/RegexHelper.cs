@@ -12,31 +12,20 @@ namespace Structures
     /// </summary>
     public static class RegexHelper
     {
-        public static bool IsMount(string mobName)
-        => mobName.IndexOf("s_Mount") >= 1;
-
-        public static bool IsFamiliar(string mobName)
-        => mobName.IndexOf("`s_fami") >= 1;
-
-        public static bool IsMerc(string mobName)
-        => mobName.IndexOf("'s Merc") >= 1;
-
-        public static string FixMobName(string name)
+        public static string FixMobName(this string name)
             => name?.IndexOf("_", StringComparison.OrdinalIgnoreCase) == 0 ? name : name?.Replace("_", " ").Trim();
 
-        public static string FixMercName(string name) => Regex.Replace(name, "^*[^a-zA-Z ]", "");
+        public static string FixMobNameMatch(this string name) => Regex.Replace(name, "^*[^a-zA-Z #]", "");
 
-        public static string FixMobNameMatch(string name) => Regex.Replace(name, "^*[^a-zA-Z #]", "");
+        public static string FilterMobName(this string name) => Regex.Replace(name, "^*[^a-zA-Z_ #]", "").Trim();
 
-        public static string FilterMobName(string name) => Regex.Replace(name, "^*[^a-zA-Z_ #]", "").Trim();
+        public static string TrimName(this string name) => Regex.Replace(name?.Replace("_", " "), "[0-9]", "").Trim();
 
-        public static string TrimName(string name) => Regex.Replace(name?.Replace("_", " "), "[0-9]", "").Trim();
+        internal static string SearchName(this string name) => Regex.Replace(name.Replace("_", " "), "[0-9#]", "").Trim();
 
-        internal static string SearchName(string name) => Regex.Replace(name.Replace("_", " "), "[0-9#]", "").Trim();
+        public static bool RegexMatch(this string name) => Regex.IsMatch(name, "^[A-Z#]");
 
-        public static bool RegexMatch(string name) => Regex.IsMatch(name, "^[A-Z#]");
-
-        public static Regex GetRegex(string name) => new Regex($".*{name}.*", RegexOptions.IgnoreCase);
+        public static Regex GetRegex(this string name) => new Regex($".*{name}.*", RegexOptions.IgnoreCase);
 
         public static bool IsSubstring(string toSearch, string forSearch)
         {

@@ -30,7 +30,6 @@ namespace myseq
 
         public delegate void EnterMapHandler(EQMap Map);
 
-
         public event EnterMapHandler EnterMap; // Fires when the map is loaded
 
         protected void OnExitMap()
@@ -50,7 +49,6 @@ namespace myseq
                 eq.SpawnY = -1.0f;
             }
         }
-
 
         protected void OnEnterMap()
         {
@@ -201,7 +199,7 @@ namespace myseq
                 RemoveLines(linesToRemove);
                 NormalizeMaxMinZ();
                 // Put in offsets for use when drawing text on map, for duplicate text at same location
-                OptimizeText();
+                //OptimizeText();
             }
         }
 
@@ -237,10 +235,7 @@ namespace myseq
                         {
                             prod = CalcDotProduct(lastprev, thispoint, thisnext);
 
-                            if (prod > 0.9999f)
-                            {
-                                droppoint = 1;
-                            }
+                            droppoint = ProdPoint(prod, droppoint);
                         }
 
                         // Second Line Starts at End of First Line
@@ -284,10 +279,7 @@ namespace myseq
                         {
                             prod = CalcDotProduct(thisprev, thispoint, lastnext);
 
-                            if (prod > 0.9999f)
-                            {
-                                droppoint = 1;
-                            }
+                            droppoint = ProdPoint(prod, droppoint);
 
                             // Second Line Starts at End of First Line
 
@@ -323,6 +315,16 @@ namespace myseq
 
                 lastline = thisline;
             }
+        }
+
+        private static int ProdPoint(float prod, int droppoint)
+        {
+            if (prod > 0.9999f)
+            {
+                droppoint = 1;
+            }
+
+            return droppoint;
         }
 
         internal static bool PointsAreEqual(ref MapPoint thispoint, ref MapPoint lastpoint, Pen thisColor, Pen lastColor) => lastpoint.X == thispoint.X && lastpoint.Y == thispoint.Y && lastpoint.Z == thispoint.Z && thisColor.Color == lastColor.Color;
