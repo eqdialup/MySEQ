@@ -10,4 +10,3 @@ namespace Structures
         public void SpeakText() => Speech.Speak(SpeakingText, SpeechVoiceSpeakFlags.SVSFDefault);
     }
 }
-

@@ -167,7 +167,7 @@
     <Setting Name="DrawFoV" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ColorRangeCircle" Type="System.Boolean" Scope="User">
+    <Setting Name="AlertInsideRangeCircle" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="BackColor" Type="System.Drawing.Color" Scope="User">
@@ -386,7 +386,7 @@
     <Setting Name="ListFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
     </Setting>
-    <Setting Name="FollowOption" Type="myseq.FollowOption" Scope="User">
+    <Setting Name="FollowOption" Type="Structures.FollowOption" Scope="User">
       <Value Profile="(Default)">Player</Value>
     </Setting>
     <Setting Name="PVPLevels" Type="System.Int32" Scope="User">
@@ -462,6 +462,12 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="EmailAlerts" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ThinSpawnList" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="playAlerts" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
