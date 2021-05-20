@@ -12,77 +12,59 @@ namespace myseq
         public AboutDialog()
         {
             InitializeComponent();
-            Text = $"About {AssemblyTitle}";
-            labelProductName.Text = AssemblyProduct;
+            Text = $"About {GetAssemblyTitle()}";
+            labelProductName.Text = GetAssemblyProduct();
             labelVersion.Text = $"Version {AssemblyVersion}";
-            labelCopyright.Text = AssemblyCopyright;
-            labelCompanyName.Text = AssemblyCompany;
+            labelCopyright.Text = GetAssemblyCopyright();
+            labelCompanyName.Text = GetAssemblyCompany();
         }
 
         #region Assembly Attribute Accessors
 
-        public static string AssemblyTitle
+        public static string GetAssemblyTitle()
         {
-            get
+            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            if (attributes.Length > 0)
             {
-                var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-                if (attributes.Length > 0)
+                AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                if (!string.IsNullOrEmpty(titleAttribute.Title))
                 {
-                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if (!string.IsNullOrEmpty(titleAttribute.Title))
-                    {
-                        return titleAttribute.Title;
-                    }
+                    return titleAttribute.Title;
                 }
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
             }
+            return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
         }
 
-        public static string AssemblyVersion
+        public static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+        public static string GetAssemblyProduct()
         {
-            get
+            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+            if (attributes.Length == 0)
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                return "";
             }
+            return ((AssemblyProductAttribute)attributes[0]).Product;
         }
 
-        public static string AssemblyProduct
+        public static string GetAssemblyCopyright()
         {
-            get
+            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+            if (attributes.Length == 0)
             {
-                var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return "";
-                }
-                return ((AssemblyProductAttribute)attributes[0]).Product;
+                return "";
             }
+            return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
         }
 
-        public static string AssemblyCopyright
+        public static string GetAssemblyCompany()
         {
-            get
+            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
+            if (attributes.Length == 0)
             {
-                var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return "";
-                }
-                return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
+                return "";
             }
-        }
-
-        public static string AssemblyCompany
-        {
-            get
-            {
-                var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return "";
-                }
-                return ((AssemblyCompanyAttribute)attributes[0]).Company;
-            }
+            return ((AssemblyCompanyAttribute)attributes[0]).Company;
         }
 
         #endregion Assembly Attribute Accessors

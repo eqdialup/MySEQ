@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -16,8 +15,6 @@ namespace myseq
         private readonly string Version = Application.ProductVersion;
 
         private string BaseTitle = "MySEQ Open";
-
-        private Point addTextFormLocation = new Point(0, 0);
 
         public ListViewPanel SpawnList = new ListViewPanel(0);
         public ListViewPanel SpawnTimerList = new ListViewPanel(1);
@@ -91,23 +88,21 @@ namespace myseq
             SpawnList.HideOnClose = true;
             SpawnList.TabText = "Spawn List";
             SpawnList.VisibleChanged += new EventHandler(SpawnList_VisibleChanged);
-            SpawnList.SetComponents(eq, mapCon, filters, this);
+            SpawnList.SetComponents(eq, filters, this);
 
             // Set Spawn Timer Window Options
             LogLib.WriteLine("Creating SpawnTimerList Window", LogLevel.Debug);
             SpawnTimerList.HideOnClose = true;
             SpawnTimerList.TabText = "Spawn Timer List";
             SpawnTimerList.VisibleChanged += new EventHandler(SpawnTimerList_VisibleChanged);
-            SpawnTimerList.SetComponents(eq, mapCon, filters, this);
+            SpawnTimerList.SetComponents(eq, filters, this);
 
             // Set Ground Item Window Options
             LogLib.WriteLine("Creating GroundItemList Window", LogLevel.Debug);
             GroundItemList.HideOnClose = true;
             GroundItemList.TabText = "Ground Items";
             GroundItemList.VisibleChanged += new EventHandler(GroundItemList_VisibleChanged);
-            GroundItemList.SetComponents(eq, mapCon, filters, this);
-
-
+            GroundItemList.SetComponents(eq, filters, this);
 
             map.SetComponents(mapCon, eq);
             eq.mobsTimers.SetComponents(map);
@@ -119,12 +114,6 @@ namespace myseq
                 TopLevel = true;
             }
 
-            // Add the Columns to the Spawn List Window
-
-            // Set the Font, Size, Style for the list windows
-            SetFontandStyle();
-
-            formMethod.CreateSpawnlistView(this);
             toolStripVersion.Text = Version;
             mapCon?.ReAdjust();
 
@@ -146,13 +135,6 @@ namespace myseq
             }
         }
 
-        private void SetFontandStyle()
-        {
-            SpawnList.listView.Font = new Font(Settings.Default.ListFont.FontFamily, Settings.Default.ListFont.Size, Settings.Default.ListFont.Style);
-            SpawnTimerList.listView.Font = new Font(Settings.Default.ListFont.Name, Settings.Default.ListFont.Size, Settings.Default.ListFont.Style);
-            GroundItemList.listView.Font = Settings.Default.ListFontStyle;
-        }
-
         public void StopListening()
         {
             // Stop the Timer
@@ -161,11 +143,7 @@ namespace myseq
             DisablePlayAlerts();
 
             comm.StopListening();
-
-            mapPane.cmdCommand.Text = "GO";
-
             mnuConnect.Text = "&Connect";
-
             mnuConnect.Image = Resources.PlayHS;
 
             toolStripStartStop.Text = "Go";
@@ -253,8 +231,6 @@ namespace myseq
             //sets some variables | Loads race, class, gi files.
             eq.LoadSpawnInfo();
             eq.InitLookups();
-
-            mapPane.cmdCommand.Text = "Stop";
 
             mnuConnect.Text = "&Disconnect";
 
@@ -413,10 +389,10 @@ namespace myseq
             toolStripZNeg.Enabled = Settings.Default.DepthFilter;
             toolStripZNegDown.Enabled = Settings.Default.DepthFilter;
             toolStripZPosDown.Enabled = Settings.Default.DepthFilter;
-//            toolStripZOffsetLabel.Enabled = Settings.Default.DepthFilter;
+            toolStripZOffsetLabel.Enabled = Settings.Default.DepthFilter;
             toolStripZPosUp.Enabled = Settings.Default.DepthFilter;
             toolStripZPos.Enabled = Settings.Default.DepthFilter;
-//            toolStripZPosLabel.Enabled = Settings.Default.DepthFilter;
+            toolStripZPosLabel.Enabled = Settings.Default.DepthFilter;
             toolStripResetDepthFilter.Enabled = Settings.Default.DepthFilter;
 
             if (Settings.Default.DepthFilter)
@@ -558,7 +534,7 @@ namespace myseq
                 Settings.Default.WindowsSize = Size;
             }
             Settings.Default.WindowState = WindowState;
-            ReAdjust();
+//            ReAdjust();
         }
 
         private void TimPackets_Tick(object sender, EventArgs e)
@@ -566,6 +542,7 @@ namespace myseq
             DrawOpts = Settings.Default.DrawOptions;
             comm.Tick();
             mapCon.Tick();
+            map.trails.CountMobTrails(eq);
         }
 
         private void TimDelayPlay_Tick(object sender, EventArgs e)
@@ -578,11 +555,18 @@ namespace myseq
         private void TimProcessTimers_Tick(object sender, EventArgs e)
         {
             // allow processing timers.
-            eq.ProcessSpawnTimer(this);
+            //eq.ProcessSpawnTimer(this);
+
+            //eq.CheckMobs(SpawnList, GroundItemList);
+
+            if (eq.mobsTimers.mobsTimer2.Count > 0)
+            {
+                eq.mobsTimers.UpdateList(SpawnTimerList);
+            }
 
             if (!bIsRunning && mapCon != null)
             {
-                mapCon.Invalidate();
+                MapConInvalidate();
             }
         }
 
@@ -910,13 +894,13 @@ namespace myseq
         private void MnuOpenMap_Click(object sender, EventArgs e)
         {
             formMethod.MnuOpenMap(this);
-            eq.shortname = curZone;
-            eq.Longname = eq.shortname;
+            eq.Shortname = curZone;
+            eq.Longname = eq.Shortname;
 
             eq.CalcExtents(map.Lines);
         }
 
-        public void ClearMap()
+        private void ClearMap()
         {
             eq.Clear();
             map.trails.Clear();
@@ -932,7 +916,7 @@ namespace myseq
             {
                 foreach (Spawntimer st in eq.mobsTimers.mobsTimer2.Values)
                 {
-                    st.itmSpawnTimerList = null;
+                    st.ItmSpawnTimerList = null;
                 }
             }
 
@@ -953,12 +937,9 @@ namespace myseq
         }
 
         private void MnuExit_Click(object sender, EventArgs e)
-
         {
             StopListening();
-
             Close();
-
             Application.Exit();
         }
 
@@ -1009,7 +990,7 @@ namespace myseq
 
             SavePrefs();
 
-            mapCon?.Invalidate();
+            MapConInvalidate();
         }
 
         private void ServerSelection()
@@ -1037,15 +1018,8 @@ namespace myseq
         }
 
         private void MnuRefreshSpawnList_Click(object sender, EventArgs e)
-
         {
-            DisablePlayAlerts();
-
-            eq.mobsTimers.ResetTimers();
-
-            ClearMap();
-
-            eq.mobsTimers.LoadTimers();
+            ResetTimers();
         }
 
         private void MnuDepthFilter_Click(object sender, EventArgs e)
@@ -1072,7 +1046,7 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error writing depth filter setting to ini file: ", ex); }
         }
 
-        public void ToggleDepthFilter()
+        private void ToggleDepthFilter()
         {
             mnuDepthFilter.Checked = !mnuDepthFilter.Checked;
             mnuDepthFilter2.Checked = mnuDepthFilter.Checked;
@@ -1085,10 +1059,10 @@ namespace myseq
             toolStripZNeg.Enabled = Settings.Default.DepthFilter;
             toolStripZNegDown.Enabled = Settings.Default.DepthFilter;
             toolStripZPosDown.Enabled = Settings.Default.DepthFilter;
-//            toolStripZOffsetLabel.Enabled = Settings.Default.DepthFilter;
+            toolStripZOffsetLabel.Enabled = Settings.Default.DepthFilter;
             toolStripZPosUp.Enabled = Settings.Default.DepthFilter;
             toolStripZPos.Enabled = Settings.Default.DepthFilter;
-//            toolStripZPosLabel.Enabled = Settings.Default.DepthFilter;
+            toolStripZPosLabel.Enabled = Settings.Default.DepthFilter;
             toolStripResetDepthFilter.Enabled = Settings.Default.DepthFilter;
 
             toolStripDepthFilterButton.Image = Settings.Default.DepthFilter ? Resources.ExpandSpaceHS : Resources.ShrinkSpaceHS;
@@ -1125,7 +1099,7 @@ namespace myseq
 
             DrawOpts = Settings.Default.DrawOptions;
 
-            mapCon?.Invalidate();
+            MapConInvalidate();
         }
 
         private void MnuShowListGridLines_Click(object sender, EventArgs e)
@@ -1155,7 +1129,7 @@ namespace myseq
 
             Settings.Default.GridInterval = GridInterval();
 
-            mapCon?.Invalidate();
+            MapConInvalidate();
         }
 
         private void MnuGridColor_Click(object sender, EventArgs e)
@@ -1166,7 +1140,7 @@ namespace myseq
             {
                 Settings.Default.GridColor = colorPicker.Color;
 
-                mapCon?.Invalidate();
+                MapConInvalidate();
             }
         }
 
@@ -1260,18 +1234,7 @@ namespace myseq
         {
             if (bIsRunning)
             {
-                filters.ClearLists();
-
-                filters.LoadAlerts(curZone);
-
-                timDelayAlerts.Start();
-
-                DisablePlayAlerts();
-
-                eq.mobsTimers.ResetTimers();
-                ClearMap();
-
-                eq.mobsTimers.LoadTimers();
+                ReloadAlertFiles();
             }
         }
 
@@ -1301,7 +1264,7 @@ namespace myseq
 
             Settings.Default.CollectMobTrails = mnuCollectMobTrails.Checked;
 
-            mapCon?.Invalidate();
+            MapConInvalidate();
         }
 
         private void MnuShowSpawnList_Click(object sender, EventArgs e)
@@ -1355,7 +1318,6 @@ namespace myseq
         }
 
         private void MnuShowMobTrails_Click(object sender, EventArgs e)
-
         {
             mnuShowMobTrails.Checked = !mnuShowMobTrails.Checked;
 
@@ -1363,27 +1325,22 @@ namespace myseq
                 ? Settings.Default.DrawOptions | DrawOptions.SpawnTrails
                 : Settings.Default.DrawOptions & (DrawOptions.DrawAll ^ DrawOptions.SpawnTrails);
 
-            mapCon?.Invalidate();
+            MapConInvalidate();
         }
 
         private void MnuAbout_Click(object sender, EventArgs e)
-
         {
-            AboutDialog ab = new AboutDialog();
-            TopMost = false;
-            ab.ShowDialog();
-            TopMost = mnuAlwaysOnTop.Checked;
+            new AboutDialog().ShowDialog();
         }
 
         private void MnuShowTargetInfo_Click(object sender, EventArgs e)
-
         {
             Settings.Default.ShowTargetInfo = !Settings.Default.ShowTargetInfo;
 
             mnuShowTargetInfo.Checked = Settings.Default.ShowTargetInfo;
             mnuShowTargetInfo2.Checked = Settings.Default.ShowTargetInfo;
 
-            mapCon?.Invalidate();
+            MapConInvalidate();
         }
 
         private void MnuListColor_Click(object sender, EventArgs e)
@@ -1401,7 +1358,6 @@ namespace myseq
         }
 
         private void MnuAutoSelectEQTarget_Click(object sender, EventArgs e)
-
         {
             Settings.Default.AutoSelectEQTarget = !Settings.Default.AutoSelectEQTarget;
 
@@ -1414,27 +1370,20 @@ namespace myseq
         private void MnuShowNPCs_Click(object sender, EventArgs e)
         {
             mnuShowNPCs.Checked = !mnuShowNPCs.Checked;
-
             Settings.Default.ShowNPCs = mnuShowNPCs.Checked;
-
             comm.UpdateHidden();
         }
 
         private void MnuShowLookupText_Click(object sender, EventArgs e)
-
         {
             mnuShowLookupText.Checked = !mnuShowLookupText.Checked;
-
             Settings.Default.ShowLookupText = mnuShowLookupText.Checked;
-
             comm.UpdateHidden();
         }
 
         private void MnuAlwaysOnTop_Click(object sender, EventArgs e)
-
         {
             mnuAlwaysOnTop.Checked = !mnuAlwaysOnTop.Checked;
-
             Settings.Default.AlwaysOnTop = mnuAlwaysOnTop.Checked;
 
             if (mnuAlwaysOnTop.Checked)
@@ -1449,10 +1398,8 @@ namespace myseq
         }
 
         private void MnuShowLookupNumber_Click(object sender, EventArgs e)
-
         {
             mnuShowLookupNumber.Checked = !mnuShowLookupNumber.Checked;
-
             Settings.Default.ShowLookupNumber = mnuShowLookupNumber.Checked;
 
             comm.UpdateHidden();
@@ -1462,7 +1409,6 @@ namespace myseq
 
         {
             mnuShowCorpses.Checked = !mnuShowCorpses.Checked;
-
             Settings.Default.ShowCorpses = mnuShowCorpses.Checked;
 
             comm.UpdateHidden();
@@ -1472,7 +1418,6 @@ namespace myseq
 
         {
             mnuShowPlayers.Checked = !mnuShowPlayers.Checked;
-
             Settings.Default.ShowPlayers = mnuShowPlayers.Checked;
 
             comm.UpdateHidden();
@@ -1482,7 +1427,6 @@ namespace myseq
 
         {
             mnuShowInvis.Checked = !mnuShowInvis.Checked;
-
             Settings.Default.ShowInvis = mnuShowInvis.Checked;
 
             comm.UpdateHidden();
@@ -1492,52 +1436,38 @@ namespace myseq
 
         {
             mnuShowMounts.Checked = !mnuShowMounts.Checked;
-
             Settings.Default.ShowMounts = mnuShowMounts.Checked;
 
             comm.UpdateHidden();
         }
 
         private void MnuShowFamiliars_Click(object sender, EventArgs e)
-
         {
             mnuShowFamiliars.Checked = !mnuShowFamiliars.Checked;
-
             Settings.Default.ShowFamiliars = mnuShowFamiliars.Checked;
 
             comm.UpdateHidden();
         }
 
         private void MnuShowPets_Click(object sender, EventArgs e)
-
         {
             mnuShowPets.Checked = !mnuShowPets.Checked;
-
             Settings.Default.ShowPets = mnuShowPets.Checked;
 
             comm.UpdateHidden();
         }
 
         private void MnuTargetInfoFont_Click(object sender, EventArgs e)
-
         {
-            fontDialog1.Font = mapCon.lblMobInfo.Font;
-
+            fontDialog1.Font = Settings.Default.TargetInfoFont;
             fontDialog1.ShowApply = true;
-
             if (fontDialog1.ShowDialog() != DialogResult.Cancel)
-
             {
-                mapCon.lblMobInfo.Font = fontDialog1.Font;
-
-                mapCon.lblGameClock.Font = new Font(fontDialog1.Font.Name, fontDialog1.Font.Size, FontStyle.Bold);
-
                 Settings.Default.TargetInfoFont = fontDialog1.Font;
             }
         }
 
         private void MnuShowSpawnPoints_Click(object sender, EventArgs e)
-
         {
             if (sender.Equals(mnuShowSpawnPoints))
             {
@@ -1713,7 +1643,7 @@ namespace myseq
             mnuKeepCentered.Checked = mnuKeepCentered2.Checked = Settings.Default.KeepCentered;
         }
 
-        public void ReAdjust() => mapCon?.ReAdjust();
+        //public void ReAdjust() => mapCon?.ReAdjust();
 
         public void ReloadAlertFiles()
         {
@@ -1723,6 +1653,11 @@ namespace myseq
 
             timDelayAlerts.Start();
 
+            ResetTimers();
+        }
+
+        private void ResetTimers()
+        {
             DisablePlayAlerts();
 
             eq.mobsTimers.ResetTimers();
@@ -1735,7 +1670,7 @@ namespace myseq
         private void ResetMapPens()
         {
             eq.CalculateMapLinePens(map.Lines, map.Texts);
-            mapCon?.Invalidate();
+            MapConInvalidate();
         }
 
         private void MnuMapLabelsFont_Click(object sender, EventArgs e)
@@ -1776,7 +1711,7 @@ namespace myseq
             {
                 Settings.Default.GridLabelColor = colorPicker.Color;
 
-                mapCon?.Invalidate();
+                MapConInvalidate();
             }
         }
 
@@ -1785,22 +1720,14 @@ namespace myseq
             var new_text = textToAdd.Replace("#", "");
             FrmAddMapText mapBox = new FrmAddMapText
             {
-                txtColr = Settings.Default.SelectedAddMapText,
-                txtBkg = Settings.Default.BackColor,
                 txtAdd = new_text.Length > 0 ? new_text : "Enter Text Label",
-                Location = addTextFormLocation,
                 StartPosition = FormStartPosition.CenterParent,
                 mapName = "Add to Map: "
             };
-            addTextFormLocation = mapBox.Location;
 
             if (mapnameWithLabels.Length > 4 && mapnameWithLabels.EndsWith(".txt"))
             {
-                var lastSlashIndex = mapnameWithLabels.LastIndexOf("\\");
-                if (lastSlashIndex > 0)
-                {
-                    mapBox.mapName += mapnameWithLabels.Substring(lastSlashIndex + 1);
-                }
+                mapBox.mapName += mapnameWithLabels.GetLastSlash();
             }
             else
             {
@@ -1816,40 +1743,8 @@ namespace myseq
                 // add it to map now
                 if (new_text.Length > 0)
                 {
-                    SOEMapTextAdd(mapBox, new_text);
+                    mapBox.SOEMapTextAdd(new_text, this);
                 }
-            }
-        }
-
-        private void SOEMapTextAdd(FrmAddMapText mapBox, string new_text)
-        {
-            // string to append to map file
-            var soe_maptext = $"P {alertX * -1:f4}, {alertY * -1:f4}, {alertZ:f4}," +
-                $"{mapBox.txtColr.R}, {mapBox.txtColr.G}, {mapBox.txtColr.B}, {mapBox.txtSize}, {new_text}\n";
-
-            MapText work = new MapText(soe_maptext);
-
-            work.draw_color = eq.GetDistinctColor(work.color);
-            work.draw_pen = new Pen(work.color);
-            map.AddMapText(work);
-
-            if (DialogResult.Yes == MessageBox.Show($"Do you want to write the label to {mapBox.mapName}?" +
-                Environment.NewLine + Environment.NewLine + soe_maptext, "Write label to map",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
-            {
-                try
-                {
-                    File.AppendAllText(mapnameWithLabels, soe_maptext);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Access Violation {ex}", "Add text to Map Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            else
-            {
-                map.DeleteMapText(work);
             }
         }
 
@@ -1895,7 +1790,7 @@ namespace myseq
 
             DrawOpts = Settings.Default.DrawOptions;
 
-            mapCon?.Invalidate();
+            MapConInvalidate();
         }
 
         private void MnuMapReset_Click(object sender, EventArgs e) => mapPane.MapReset();
@@ -2130,7 +2025,6 @@ namespace myseq
         }
 
         private void MnuSaveSpawnLog_Click(object sender, EventArgs e)
-
         {
             mnuSaveSpawnLog.Checked = !mnuSaveSpawnLog.Checked;
 
@@ -2138,7 +2032,6 @@ namespace myseq
         }
 
         private void MnuSpawnCountdown_Click(object sender, EventArgs e)
-
         {
             Settings.Default.SpawnCountdown = !Settings.Default.SpawnCountdown;
 
@@ -2147,7 +2040,6 @@ namespace myseq
         }
 
         private void MnuShowPCCorpses_Click(object sender, EventArgs e)
-
         {
             mnuShowPCCorpses.Checked = !mnuShowPCCorpses.Checked;
 
@@ -2157,7 +2049,6 @@ namespace myseq
         }
 
         private void MnuShowMyCorpse_Click(object sender, EventArgs e)
-
         {
             mnuShowMyCorpse.Checked = !mnuShowMyCorpse.Checked;
 
@@ -2223,14 +2114,7 @@ namespace myseq
 
         private void MnuSearchAllakhazam_Click(object sender, EventArgs e)
         {
-            var searchname = RegexHelper.SearchName(alertAddmobname);
-
-            if (searchname.Length > 0)
-            {
-                var searchURL = string.Format(Settings.Default.SearchString, searchname);
-
-                Process.Start(searchURL);
-            }
+            alertAddmobname.StartSearch();
         }
 
         private void MnuShowMenuBar_Click(object sender, EventArgs e)
@@ -2288,8 +2172,7 @@ namespace myseq
             // allow a value of 0 to 3500
             var Str = toolStripZPos.Text.Trim();
 
-            var validnum = ValidateZNum(Str);
-            if (!validnum)
+            if (!Str.ValidateZNum())
             {
                 toolStripZPos.Text = $"{mapPane.filterzpos.Value}";
                 MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Pos Value Entered.");
@@ -2382,32 +2265,11 @@ namespace myseq
             // allow a value of 0 to 3500
             var Str = toolStripZNeg.Text.Trim();
 
-            var validnum = ValidateZNum(Str);
-            if (!validnum)
+            if (!Str.ValidateZNum())
             {
                 toolStripZNeg.Text = $"{mapPane.filterzneg.Value}";
                 MessageBox.Show("Enter a number between 0 and 3500", "Invalid Z-Neg Value Entered.");
             }
-        }
-
-        private static bool ValidateZNum(string Str)
-        {
-            var validnum = true;
-            if (Str.Length > 0)
-            {
-                var isNum = decimal.TryParse(Str, out var Num);
-                validnum = false;
-                if (isNum)
-                {
-                    validnum = Num >= 0 && Num <= 3500;
-                }
-                if (Str.Length == 1 && Str == ".")
-                {
-                    validnum = true;
-                }
-            }
-
-            return validnum;
         }
 
         private void ToolStripZNeg_Leave(object sender, EventArgs e)
@@ -2506,7 +2368,7 @@ namespace myseq
                 alertX = eq.gamerInfo.X;
                 alertY = eq.gamerInfo.Y;
                 alertZ = eq.gamerInfo.Z;
-                AddMapText("Text to Add");
+                AddMapText("");
             }
         }
 
@@ -2690,8 +2552,8 @@ namespace myseq
             }
             else
             {
-                toolStripLookupBox4.ForeColor = SystemColors.GrayText;
-                toolStripLookupBox4.Text = "Mob Search";
+                box.ForeColor = SystemColors.GrayText;
+                box.Text = "Mob Search";
             }
         }
 
@@ -2818,7 +2680,7 @@ namespace myseq
 
         private void ToolStripLevel_TextUpdate(object sender, EventArgs e) => formMethod.ToolStripLevelCheck(toolStripLevel.Text.Trim(), this);
 
-       private void ToolStripLevel_Leave(object sender, EventArgs e) => formMethod.ToolStripLevelCheck(toolStripLevel.Text.Trim(), this);
+        private void ToolStripLevel_Leave(object sender, EventArgs e) => formMethod.ToolStripLevelCheck(toolStripLevel.Text.Trim(), this);
 
         private void ToolStripLevel_DropDownClosed(object sender, EventArgs e) => formMethod.ToolStripLevelCheck(toolStripLevel.SelectedItem.ToString(), this);
 
@@ -2831,16 +2693,9 @@ namespace myseq
             }
         }
 
-        public void EnablePlayAlerts() => Settings.Default.playAlerts = true;
+        private void EnablePlayAlerts() => Settings.Default.playAlerts = true;
 
-        public void DisablePlayAlerts() => Settings.Default.playAlerts = false;
-
-        private void ThinSpawnlist_Click(object sender, EventArgs e)
-        {
-            Settings.Default.ThinSpawnList = !Settings.Default.ThinSpawnList;
-            thinSpawnlistmnuItem.Checked = Settings.Default.ThinSpawnList;
-            // Need to build more on this to actually make a thin spawnlist
-        }
+        private void DisablePlayAlerts() => Settings.Default.playAlerts = false;
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2850,5 +2705,34 @@ namespace myseq
                 help.ShowDialog();
             }
         }
+
+        public void FocusMouse()
+        {
+            var dockstate = SpawnList.DockState == DockState.DockLeftAutoHide ||
+                            SpawnList.DockState == DockState.DockRightAutoHide ||
+                            SpawnList.DockState == DockState.DockTopAutoHide ||
+                            SpawnList.DockState == DockState.DockBottomAutoHide;
+            // focus for docking panel changes, to autohide panels that may be visible
+            if (SpawnList.ContainsFocus && dockstate)
+            {
+                mapCon.Focus();
+            }
+
+            if (SpawnTimerList.ContainsFocus && dockstate)
+            {
+                mapCon.Focus();
+            }
+
+            if (GroundItemList.ContainsFocus && dockstate)
+            {
+                mapCon.Focus();
+            }
+        }
+
+        public void MapConInvalidate()
+        {
+            mapCon?.Invalidate();
+            }
+
     }
 }

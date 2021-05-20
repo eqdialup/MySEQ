@@ -8,12 +8,10 @@ namespace Structures
 {
     public class FileOps
     {
-
-        public string shortname { get; set; } = "";
-       
         public static string CombineCfgDir(string file) => Path.Combine(Settings.Default.CfgDir, file);
         public static string CombineTimer(string mapName) => Path.Combine(Settings.Default.TimerDir, $"spawns-{mapName}.txt");
         public static string CombineFilter(string filename ) => Path.Combine(Settings.Default.FilterDir, filename);
+        public static string CombineLog(string filename ) => Path.Combine(Settings.Default.LogDir, filename);
 
         public static void DeleteFile(string timerfile)
         {
@@ -23,7 +21,7 @@ namespace Structures
             }
         }
 
-        public void MakeFilterExist(string filterFile)
+        public void MakeFilter(string filterFile)
         {
             if (!File.Exists(filterFile))
             {
@@ -49,13 +47,13 @@ namespace Structures
             return arList.ToArray();
         }
 
-        public ListItem ReadItemList(string file)// ref List<ListItem> ground)
+        public void ReadItemList(string file, myseq.EQData eq)
         {
             var filePath = CombineCfgDir(file);
             if (!File.Exists(filePath))
             {
                 LogLib.WriteLine("GroundItems.ini file not found", LogLevel.Warning);
-                return default;
+                return;
             }
 
             foreach (var line in File.ReadAllLines(filePath).ToList())
@@ -65,15 +63,14 @@ namespace Structures
                 {
                     var entries = line.Split('=');
                     var tmp = entries[0].Split('_');
-                    return new ListItem
+                    eq.GroundSpawn.Add(new ListItem
                     {
                         ID = int.Parse(tmp[0].Remove(0, 2)),
                         ActorDef = entries[0],
                         Name = entries[1]
-                    };
+                    });
                 }
             }
-            return default;
         }
 
         private void CreateAlertFile(string fileName)
@@ -117,30 +114,33 @@ namespace Structures
         {
             if (string.IsNullOrEmpty(Settings.Default.MapDir))
             {
-                Settings.Default.MapDir = Path.Combine(Application.StartupPath, "maps");
+                Settings.Default.MapDir = StartPath("maps");
                 Directory.CreateDirectory(Settings.Default.MapDir);
             }
             if (string.IsNullOrEmpty(Settings.Default.FilterDir))
             {
-                Settings.Default.FilterDir = Path.Combine(Application.StartupPath, "filters");
+                Settings.Default.FilterDir = StartPath("filters");
                 Directory.CreateDirectory(Settings.Default.FilterDir);
             }
             if (string.IsNullOrEmpty(Settings.Default.CfgDir))
             {
-                Settings.Default.CfgDir = Path.Combine(Application.StartupPath, "cfg");
+                Settings.Default.CfgDir = StartPath("cfg");
                 Directory.CreateDirectory(Settings.Default.CfgDir);
             }
             if (string.IsNullOrEmpty(Settings.Default.LogDir))
             {
-                Settings.Default.LogDir = Path.Combine(Application.StartupPath, "logs");
+                Settings.Default.LogDir = StartPath("logs");
                 Directory.CreateDirectory(Settings.Default.LogDir);
             }
             if (string.IsNullOrEmpty(Settings.Default.TimerDir))
             {
-                Settings.Default.TimerDir = Path.Combine(Application.StartupPath, "timers");
+                Settings.Default.TimerDir = StartPath("timers");
                 Directory.CreateDirectory(Settings.Default.TimerDir);
             }
         }
+
+        public static string StartPath(string folder) => Path.Combine(Application.StartupPath, folder);
+
         public bool Xor(bool a, bool b) => a ^ b;
     }
 }

@@ -11,7 +11,7 @@ namespace Structures
 
         public IniFile(string INIPath)
         {
-            path = Path.Combine(Settings.Default.CfgDir, INIPath);
+            path = FileOps.CombineCfgDir(INIPath);
         }
 
         public void WriteValue(string Section, string Key, string Value) => SafeNativeMethods.WritePrivateProfileString(Section, Key, Value, path);

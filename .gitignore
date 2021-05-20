@@ -339,3 +339,9 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /MigrationBackup/8813b55d/MySEQ.client
+/client/CodeGraphData
+/CodeGraphData
+/client/.cr/personal/FavoritesList/List.xml
+/client/utils
+/client/UIFiles
+/client/Structures

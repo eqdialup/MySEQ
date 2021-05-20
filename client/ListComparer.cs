@@ -1,128 +1,67 @@
+using System;
 using System.Collections;
 using System.Windows.Forms;
 
 namespace myseq
 {
-    public class ListComparer : IComparer
+    // Compares two ListView items based on a selected column.
+    public class ListViewComparer : IComparer
     {
-        private readonly int col;
+        private int ColumnNumber;
+        private SortOrder SortOrder;
 
-        public ListComparer()
+        public ListViewComparer(int column_number, SortOrder sort_order)
         {
-            col = 0;
+            ColumnNumber = column_number;
+            SortOrder = sort_order;
         }
 
-        public ListComparer(int column)
-        {
-            col = column;
-        }
-
+        // Compare two ListViewItems.
         public int Compare(object x, object y)
         {
-            return string.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+            // Get the objects as ListViewItems.
+            ListViewItem item_x = x as ListViewItem;
+            ListViewItem item_y = y as ListViewItem;
+
+            // Get the corresponding sub-item values.
+            var string_x = (item_x.SubItems.Count <= ColumnNumber) ? "" : item_x.SubItems[ColumnNumber].Text;
+
+            var string_y = item_y.SubItems.Count <= ColumnNumber ? "" : item_y.SubItems[ColumnNumber].Text;
+
+            // Compare them.
+            int result = CompareItems(string_x, string_y);
+
+            // Return the correct result depending on whether
+            // we're sorting ascending or descending.
+            return SortOrder == SortOrder.Ascending ? result : -result;
         }
 
-        //public int Compare(object x, object y)
+        private static int CompareItems(string string_x, string string_y)
+        {
+            int result;
+            if (double.TryParse(string_x, out var double_x) &&
+                double.TryParse(string_y, out var double_y))
+            {
+                // Treat as a number.
+                result = double_x.CompareTo(double_y);
+            }
+            else
+            {
+                DateTime date_x, date_y;
+                if (DateTime.TryParse(string_x, out date_x) &&
+                    DateTime.TryParse(string_y, out date_y))
+                {
+                    // Treat as a date.
+                    result = date_x.CompareTo(date_y);
+                }
+                else
+                {
+                    // Treat as a string.
+                    result = string_x.CompareTo(string_y);
+                }
+            }
 
-        //{
-        //    ListViewItem sa = (ListViewItem)x;
-
-        //    ListViewItem sb = (ListViewItem)y;
-
-        //    int res = 0;
-
-        //    if (Column == 0)    // Name
-        //    {
-        //        res = string.Compare(sa.Text, sb.Text);
-        //    }
-        //    else if (Column == 1)   // Level
-
-        //    {
-        //        int ia = int.Parse(sa.SubItems[1].Text);
-
-        //        int ib = int.Parse(sb.SubItems[1].Text);
-
-        //        if (ia < ib) res = -1;
-        //        else res = ia > ib ? 1 : 0;
-        //    }
-        //    else if ((Column == 2) ||   // Class
-
-        //        (Column == 3) ||    // Primary
-
-        //        (Column == 4) ||    // Offhand
-
-        //        (Column == 5) ||    // Race
-
-        //        (Column == 6) ||    // Owner
-
-        //        (Column == 7) ||    // Last Name
-
-        //        (Column == 8) ||    // Type
-
-        //        (Column == 9) ||    // Invis
-
-        //        (Column == 17))     // Guild
-
-        //    {
-        //        res = string.Compare(sa.SubItems[Column].Text, sb.SubItems[Column].Text);
-        //    }
-        //    else if ((Column == 10) ||   // Run Speed
-
-        //       (Column == 13) ||   // X
-
-        //       (Column == 14) ||   // Y
-
-        //       (Column == 15) ||   // Z
-
-        //       (Column == 16))     // Distance
-
-        //    {
-        //        float fa = float.Parse(sa.SubItems[Column].Text);
-
-        //        float fb = float.Parse(sb.SubItems[Column].Text);
-
-        //        if (fa < fb) res = -1;
-        //        else res = fa > fb ? 1 : 0;
-        //    }
-        //    else if (Column == 11)
-
-        //    { // SpawnID
-        //        uint ia = uint.Parse(sa.SubItems[11].Text);
-
-        //        uint ib = uint.Parse(sb.SubItems[11].Text);
-
-        //        if (ia < ib) res = -1;
-        //        else res = ia > ib ? 1 : 0;
-        //    }
-        //    else if (Column == 12)
-
-        //    {
-        //        DateTime dta = DateTime.Parse(sa.SubItems[12].Text);
-
-        //        DateTime dtb = DateTime.Parse(sb.SubItems[12].Text);
-
-        //        res = DateTime.Compare(dta, dtb);
-        //    }
-
-        //    if (Descending) res = -res;
-
-        //    return res;
-        //}
-
-        //public ListBoxComparerSpawnList(ListView.ListViewItemCollection spawns, bool descending, int column)
-
-        //{
-        //    Spawns = spawns;
-
-        //    Descending = descending;
-
-        //    Column = column;
-        //}
-
-        //private ListView.ListViewItemCollection Spawns;
-
-        //private bool Descending;
-
-        //private int Column;
+            return result;
+        }
     }
 }

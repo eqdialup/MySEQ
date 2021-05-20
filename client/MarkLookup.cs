@@ -30,7 +30,7 @@ namespace myseq
 
         public void MarkLookups(string name, ref bool filterMob)
         {
-            GetCheckNameLength(name, filterMob, ref search0, ref filter0, "1:");
+            GetCheckNameLength(name, filterMob, ref search0, ref filter0, "1");
             GetCheckNameLength(name, filterMob, ref search1, ref filter1, "2");
             GetCheckNameLength(name, filterMob, ref search2, ref filter2, "3");
             GetCheckNameLength(name, filterMob, ref search3, ref filter3, "4");
@@ -86,7 +86,7 @@ namespace myseq
                 int.TryParse(search.Substring(2), out var searchLevel);
                 levelCheck = LevelCheck(sp, levelCheck, searchLevel);
             }
-            if (levelCheck || RegexHelper.GetRegex(search).Match(sp.Name).Success)
+            if (levelCheck || search.GetRegex().Match(sp.Name).Success)
             {
                 sp.isLookup = true;
                 sp.lookupNumber = ln;
