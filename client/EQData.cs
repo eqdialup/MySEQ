@@ -990,9 +990,9 @@ namespace myseq
                     point2.y = -(int)float.Parse(parsedLine[4], NumFormat);
                     point2.z = -(int)float.Parse(parsedLine[5], NumFormat);
 
-                    int r = int.Parse(parsedLine[6].PadRight(4).Substring(0, 3));
-                    int g = int.Parse(parsedLine[7].PadRight(4).Substring(0, 3));
-                    int b = int.Parse(parsedLine[8].PadRight(4).Substring(0, 3));
+                    int r = int.Parse(parsedLine[6].Trim().PadRight(4).Substring(0, 3));
+                    int g = int.Parse(parsedLine[7].Trim().PadRight(4).Substring(0, 3));
+                    int b = int.Parse(parsedLine[8].Trim().PadRight(4).Substring(0, 3));
                     work.color = new Pen(new SolidBrush(Color.FromArgb(r, g, b)));
 
                     work.aPoints.Add(point1);

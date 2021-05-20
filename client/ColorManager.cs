@@ -3,7 +3,7 @@ using System.Collections;
 using System.Text;
 using System.Drawing;
 
-using MySEQ.Structures;
+using Structures;
 
 namespace MySEQ
 {

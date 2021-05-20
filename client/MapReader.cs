@@ -4,7 +4,7 @@ using System.Text;
 using System.Drawing;
 using System.Collections;
 
-using MySEQ.Structures;
+using Structures;
 
 namespace MySEQ
 {
@@ -169,7 +169,7 @@ namespace MySEQ
             }
             catch (Exception ex)
             {
-                Logger.Debug("MapReader:ParseLine - " + ex.Message);
+                //Logger.Debug("MapReader:ParseLine - " + ex.Message);
                 return MapFileLineType.MLT_INVALID;
             }
         }
