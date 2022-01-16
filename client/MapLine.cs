@@ -113,6 +113,9 @@ namespace myseq
                 point2.Y = -(int)float.Parse(parsedLine[4], NumFormat);
                 point2.Z = -(int)float.Parse(parsedLine[5], NumFormat);
 
+                parsedLine[6] = parsedLine[6].Trim();
+                parsedLine[7] = parsedLine[7].Trim();
+                parsedLine[8] = parsedLine[8].Trim();
                 var R = int.Parse(parsedLine[6].PadRight(4).Substring(0, 3));
                 var G = int.Parse(parsedLine[7].PadRight(4).Substring(0, 3));
                 var B = int.Parse(parsedLine[8].PadRight(4).Substring(0, 3));

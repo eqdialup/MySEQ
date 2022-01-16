@@ -628,6 +628,9 @@ namespace myseq
             // 
             // chkColorRangeCircle
             // 
+            this.chkColorRangeCircle.Checked = global::myseq.Properties.Settings.Default.AlertInsideRangeCircle;
+            this.chkColorRangeCircle.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkColorRangeCircle.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::myseq.Properties.Settings.Default, "AlertInsideRangeCircle", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkColorRangeCircle.Location = new System.Drawing.Point(7, 20);
             this.chkColorRangeCircle.Name = "chkColorRangeCircle";
             this.chkColorRangeCircle.Size = new System.Drawing.Size(100, 16);
