@@ -82,7 +82,7 @@ DWORD MemReader::getCurrentPID()
 
 }
 
-DWORD MemReader::getCurrentBaseAddress()
+DWORD_PTR MemReader::getCurrentBaseAddress()
 
 {
 
@@ -313,7 +313,7 @@ bool MemReader::openProcess(string filename, bool first, bool debug)
 
 	if (rtn)
 
-		cout << "MemReader: Found process ID " << dec << currentEQProcessID << " Base Address: 0x" << hex << (DWORD)currentEQProcessBaseAddress << endl;
+		cout << "MemReader: Found process ID " << dec << currentEQProcessID << " Base Address: 0x" << hex << (DWORD_PTR)currentEQProcessBaseAddress << endl;
 
 	else if (first)
 
@@ -440,11 +440,11 @@ bool MemReader::validateProcess(bool forceCheck)
 
 
 
-UINT MemReader::extractPointer(UINT offset)
+UINT_PTR MemReader::extractPointer(UINT_PTR offset)
 
 {
 
-	UINT rtn = 0;
+	UINT_PTR rtn = 0;
 
 	ReadProcessMemory(currentEQProcessHandle, (void*) offset,(void*) &rtn, sizeof(rtn), NULL);
 
@@ -452,11 +452,11 @@ UINT MemReader::extractPointer(UINT offset)
 
 }
 
-UINT MemReader::extractRAWPointer(UINT offset)
+UINT_PTR MemReader::extractRAWPointer(UINT_PTR offset)
 
 {
 
-	UINT rtn = 0;
+	UINT_PTR rtn = 0;
 
 	ReadProcessMemory(currentEQProcessHandle, (void*) (offset - 0x400000 + currentEQProcessBaseAddress),(void*) &rtn, sizeof(rtn), NULL);
 
@@ -466,7 +466,7 @@ UINT MemReader::extractRAWPointer(UINT offset)
 
 
 
-string MemReader::extractString(UINT offset)
+string MemReader::extractString(UINT_PTR offset)
 
 {
 
@@ -484,7 +484,7 @@ string MemReader::extractString(UINT offset)
 
 }
 
-string MemReader::extractString2(UINT offset)
+string MemReader::extractString2(UINT_PTR offset)
 
 {
 	// This one is for extracting a string that must begin with an alphanumeric
@@ -505,7 +505,7 @@ string MemReader::extractString2(UINT offset)
 }
 
 
-bool MemReader::extractToBuffer(UINT offset, char* buffer, UINT size) {
+bool MemReader::extractToBuffer(UINT_PTR offset, char* buffer, UINT size) {
 	//better check if we can actually read this much memory... -eqmule 12/31 2014
 	//Basically if we ask ReadProcessMemory to read <size> bytes but the
 	//region we read from is smaller than <size> we end up in a scenario where we dont get ANY
@@ -546,7 +546,7 @@ bool MemReader::extractToBuffer(UINT offset, char* buffer, UINT size) {
 
 
 
-float MemReader::extractFloat(UINT offset)
+float MemReader::extractFloat(UINT_PTR offset)
 
 {
 
@@ -558,7 +558,7 @@ float MemReader::extractFloat(UINT offset)
 
 }
 
-BYTE MemReader::extractBYTE(UINT offset)
+BYTE MemReader::extractBYTE(UINT_PTR offset)
 
 {
 
@@ -570,7 +570,7 @@ BYTE MemReader::extractBYTE(UINT offset)
 
 }
 
-UINT MemReader::extractUINT(UINT offset)
+UINT MemReader::extractUINT(UINT_PTR offset)
 
 {
 
@@ -582,7 +582,7 @@ UINT MemReader::extractUINT(UINT offset)
 
 }
 
-DWORD MemReader::GetModuleBaseAddress(DWORD iProcId, TCHAR* DLLName)
+DWORD_PTR MemReader::GetModuleBaseAddress(DWORD iProcId, TCHAR* DLLName)
 {
 	HANDLE hSnap; // Process snapshot handle.
 	MODULEENTRY32 xModule; // Module information structure.
@@ -599,7 +599,7 @@ DWORD MemReader::GetModuleBaseAddress(DWORD iProcId, TCHAR* DLLName)
 		if (lstrcmpi (xModule.szModule, DLLName) == 0) // If this is the module we want...
 		{
 			CloseHandle(hSnap); // Free the handle.
-			return (DWORD)xModule.modBaseAddr; // return the base address.
+			return (DWORD_PTR)xModule.modBaseAddr; // return the base address.
 		}
 
 		bModule = Module32Next(hSnap, &xModule); // Loops through the rest of the modules.

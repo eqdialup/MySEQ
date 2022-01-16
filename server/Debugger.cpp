@@ -945,7 +945,7 @@ void Debugger::scanForString(MemReaderInterface* mr_intf, offset_types ot, UINT 
 
 {
 
-	UINT pMem, pStart, pDeepMem, pDeepMem2, nameOffset;
+	UINT_PTR pMem, pStart, pDeepMem, pDeepMem2, nameOffset;
 
 	char buffer[100];
 
@@ -963,7 +963,7 @@ void Debugger::scanForString(MemReaderInterface* mr_intf, offset_types ot, UINT 
 
 	
 
-	pStart = offsets[ot] - 4*size - 0x400000 + (UINT)mr_intf->getCurrentBaseAddress();
+	pStart = offsets[ot] - 4*size - 0x400000 + (UINT_PTR)mr_intf->getCurrentBaseAddress();
 
 	
 

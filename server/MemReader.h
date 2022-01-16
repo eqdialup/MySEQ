@@ -44,27 +44,27 @@ public:
 
 	virtual bool openNextProcess(string filename, bool debug = false) = 0;
 
-	virtual UINT extractPointer(UINT offset) = 0;
+	virtual UINT_PTR extractPointer(UINT_PTR offset) = 0;
 
-	virtual UINT extractRAWPointer(UINT offset) = 0;
+	virtual UINT_PTR extractRAWPointer(UINT_PTR offset) = 0;
 
-	virtual string extractString(UINT offset) = 0;
+	virtual string extractString(UINT_PTR offset) = 0;
 
-	virtual string extractString2(UINT offset) = 0;
+	virtual string extractString2(UINT_PTR offset) = 0;
 
-	virtual bool extractToBuffer(UINT offset, char* buffer, UINT size) = 0;
+	virtual bool extractToBuffer(UINT_PTR offset, char* buffer, UINT size) = 0;
 
 	virtual DWORD getCurrentPID() = 0;
 
-	virtual DWORD getCurrentBaseAddress() = 0;
+	virtual DWORD_PTR getCurrentBaseAddress() = 0;
 
 	virtual HANDLE getCurrentHandle() = 0;
 
-	virtual float extractFloat(UINT offset) = 0;
+	virtual float extractFloat(UINT_PTR offset) = 0;
 
-	virtual BYTE extractBYTE(UINT offset) = 0;
+	virtual BYTE extractBYTE(UINT_PTR offset) = 0;
 
-	virtual UINT extractUINT(UINT offset) = 0;
+	virtual UINT extractUINT(UINT_PTR offset) = 0;
 
 };
 
@@ -94,7 +94,7 @@ protected:
 
 	DWORD	currentEQProcessID;
 
-	DWORD	currentEQProcessBaseAddress;
+	DWORD_PTR	currentEQProcessBaseAddress;
 
 public:
 
@@ -114,31 +114,31 @@ public:
 
 	bool validateProcess(bool forceCheck);
 
-	UINT extractPointer(UINT offset);
+	UINT_PTR extractPointer(UINT_PTR offset);
 
-	UINT extractRAWPointer(UINT offset);
+	UINT_PTR extractRAWPointer(UINT_PTR offset);
 
-	string extractString(UINT offset);
+	string extractString(UINT_PTR offset);
 
-	string extractString2(UINT offset);
+	string extractString2(UINT_PTR offset);
 
-	bool extractToBuffer(UINT offset, char* buffer, UINT size);
+	bool extractToBuffer(UINT_PTR offset, char* buffer, UINT size);
 
 	DWORD getCurrentPID();
 
-	DWORD getCurrentBaseAddress();
+	DWORD_PTR getCurrentBaseAddress();
 
 	HANDLE getCurrentHandle();
 
-	float extractFloat(UINT offset);
+	float extractFloat(UINT_PTR offset);
 
-	BYTE extractBYTE(UINT offset);
+	BYTE extractBYTE(UINT_PTR offset);
 
-	UINT extractUINT(UINT offset);
+	UINT extractUINT(UINT_PTR offset);
 
 	bool AdjustPrivileges();
 
-	DWORD MemReader::GetModuleBaseAddress(DWORD iProcId, TCHAR* DLLName);
+	DWORD_PTR MemReader::GetModuleBaseAddress(DWORD iProcId, TCHAR* DLLName);
 
 };
 
