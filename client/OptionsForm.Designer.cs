@@ -296,6 +296,9 @@ namespace myseq
             // 
             // chkDangerMatchFull
             // 
+            this.chkDangerMatchFull.Checked = global::myseq.Properties.Settings.Default.MatchFullTextD;
+            this.chkDangerMatchFull.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDangerMatchFull.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::myseq.Properties.Settings.Default, "MatchFullTextD", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkDangerMatchFull.Location = new System.Drawing.Point(136, 11);
             this.chkDangerMatchFull.Name = "chkDangerMatchFull";
             this.chkDangerMatchFull.Size = new System.Drawing.Size(104, 24);
@@ -379,6 +382,9 @@ namespace myseq
             // 
             // chkAlertMatchFull
             // 
+            this.chkAlertMatchFull.Checked = global::myseq.Properties.Settings.Default.MatchFullTextA;
+            this.chkAlertMatchFull.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAlertMatchFull.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::myseq.Properties.Settings.Default, "MatchFullTextA", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkAlertMatchFull.Location = new System.Drawing.Point(136, 11);
             this.chkAlertMatchFull.Name = "chkAlertMatchFull";
             this.chkAlertMatchFull.Size = new System.Drawing.Size(104, 24);
@@ -462,6 +468,9 @@ namespace myseq
             // 
             // chkCautionMatchFull
             // 
+            this.chkCautionMatchFull.Checked = global::myseq.Properties.Settings.Default.MatchFullTextC;
+            this.chkCautionMatchFull.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCautionMatchFull.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::myseq.Properties.Settings.Default, "MatchFullTextC", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkCautionMatchFull.Location = new System.Drawing.Point(136, 11);
             this.chkCautionMatchFull.Name = "chkCautionMatchFull";
             this.chkCautionMatchFull.Size = new System.Drawing.Size(104, 24);
@@ -545,6 +554,9 @@ namespace myseq
             // 
             // chkHuntMatchFull
             // 
+            this.chkHuntMatchFull.Checked = global::myseq.Properties.Settings.Default.MatchFullTextH;
+            this.chkHuntMatchFull.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkHuntMatchFull.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::myseq.Properties.Settings.Default, "MatchFullTextH", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkHuntMatchFull.Location = new System.Drawing.Point(136, 11);
             this.chkHuntMatchFull.Name = "chkHuntMatchFull";
             this.chkHuntMatchFull.Size = new System.Drawing.Size(104, 24);
@@ -865,10 +877,12 @@ namespace myseq
             // 
             // txtIPAddress5
             // 
+            this.txtIPAddress5.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "IPAddress5", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtIPAddress5.Location = new System.Drawing.Point(128, 112);
             this.txtIPAddress5.Name = "txtIPAddress5";
             this.txtIPAddress5.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress5.TabIndex = 10;
+            this.txtIPAddress5.Text = global::myseq.Properties.Settings.Default.IPAddress5;
             // 
             // lblIPAddress5
             // 
@@ -880,10 +894,12 @@ namespace myseq
             // 
             // txtIPAddress4
             // 
+            this.txtIPAddress4.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "IPAddress4", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtIPAddress4.Location = new System.Drawing.Point(128, 88);
             this.txtIPAddress4.Name = "txtIPAddress4";
             this.txtIPAddress4.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress4.TabIndex = 8;
+            this.txtIPAddress4.Text = global::myseq.Properties.Settings.Default.IPAddress4;
             // 
             // lblIPAddress4
             // 
@@ -895,10 +911,12 @@ namespace myseq
             // 
             // txtIPAddress3
             // 
+            this.txtIPAddress3.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "IPAddress3", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtIPAddress3.Location = new System.Drawing.Point(128, 64);
             this.txtIPAddress3.Name = "txtIPAddress3";
             this.txtIPAddress3.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress3.TabIndex = 6;
+            this.txtIPAddress3.Text = global::myseq.Properties.Settings.Default.IPAddress3;
             // 
             // lblIPAddress3
             // 
@@ -910,10 +928,12 @@ namespace myseq
             // 
             // txtIPAddress2
             // 
+            this.txtIPAddress2.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "IPAddress2", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtIPAddress2.Location = new System.Drawing.Point(128, 40);
             this.txtIPAddress2.Name = "txtIPAddress2";
             this.txtIPAddress2.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress2.TabIndex = 4;
+            this.txtIPAddress2.Text = global::myseq.Properties.Settings.Default.IPAddress2;
             // 
             // lblIPAddress2
             // 
@@ -933,11 +953,12 @@ namespace myseq
             // 
             // txtIPAddress1
             // 
+            this.txtIPAddress1.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "IPAddress1", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtIPAddress1.Location = new System.Drawing.Point(128, 16);
             this.txtIPAddress1.Name = "txtIPAddress1";
             this.txtIPAddress1.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress1.TabIndex = 2;
-            this.txtIPAddress1.Text = "localhost";
+            this.txtIPAddress1.Text = global::myseq.Properties.Settings.Default.IPAddress1;
             // 
             // lblIPAddress1
             // 
@@ -1004,8 +1025,8 @@ namespace myseq
             // chkShowCharName
             // 
             this.chkShowCharName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkShowCharName.Checked = true;
-            this.chkShowCharName.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowCharName.Checked = global::myseq.Properties.Settings.Default.ShowCharName;
+            this.chkShowCharName.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::myseq.Properties.Settings.Default, "ShowCharName", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkShowCharName.Location = new System.Drawing.Point(134, 320);
             this.chkShowCharName.Name = "chkShowCharName";
             this.chkShowCharName.Size = new System.Drawing.Size(114, 24);
@@ -1035,8 +1056,8 @@ namespace myseq
             // chkShowZoneName
             // 
             this.chkShowZoneName.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkShowZoneName.Checked = true;
-            this.chkShowZoneName.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowZoneName.Checked = global::myseq.Properties.Settings.Default.ShowZoneName;
+            this.chkShowZoneName.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::myseq.Properties.Settings.Default, "ShowZoneName", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkShowZoneName.Location = new System.Drawing.Point(8, 320);
             this.chkShowZoneName.Name = "chkShowZoneName";
             this.chkShowZoneName.Size = new System.Drawing.Size(114, 24);
@@ -1158,6 +1179,9 @@ namespace myseq
             // 
             // chkSelectSpawnList
             // 
+            this.chkSelectSpawnList.Checked = global::myseq.Properties.Settings.Default.AutoSelectSpawnList;
+            this.chkSelectSpawnList.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSelectSpawnList.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::myseq.Properties.Settings.Default, "AutoSelectSpawnList", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkSelectSpawnList.Location = new System.Drawing.Point(8, 32);
             this.chkSelectSpawnList.Name = "chkSelectSpawnList";
             this.chkSelectSpawnList.Size = new System.Drawing.Size(231, 16);
@@ -1189,6 +1213,9 @@ namespace myseq
             // 
             // chkShowTargetInfo
             // 
+            this.chkShowTargetInfo.Checked = global::myseq.Properties.Settings.Default.ShowTargetInfo;
+            this.chkShowTargetInfo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowTargetInfo.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::myseq.Properties.Settings.Default, "ShowTargetInfo", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chkShowTargetInfo.Location = new System.Drawing.Point(8, 12);
             this.chkShowTargetInfo.Name = "chkShowTargetInfo";
             this.chkShowTargetInfo.Size = new System.Drawing.Size(231, 16);
@@ -1283,42 +1310,52 @@ namespace myseq
             // txtTimerDir
             // 
             this.txtTimerDir.BackColor = System.Drawing.Color.White;
+            this.txtTimerDir.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "TimerDir", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtTimerDir.Location = new System.Drawing.Point(8, 184);
             this.txtTimerDir.Name = "txtTimerDir";
             this.txtTimerDir.Size = new System.Drawing.Size(216, 20);
             this.txtTimerDir.TabIndex = 39;
+            this.txtTimerDir.Text = global::myseq.Properties.Settings.Default.TimerDir;
             // 
             // txtLogDir
             // 
             this.txtLogDir.BackColor = System.Drawing.Color.White;
+            this.txtLogDir.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "LogDir", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtLogDir.Location = new System.Drawing.Point(8, 144);
             this.txtLogDir.Name = "txtLogDir";
             this.txtLogDir.Size = new System.Drawing.Size(216, 20);
             this.txtLogDir.TabIndex = 36;
+            this.txtLogDir.Text = global::myseq.Properties.Settings.Default.LogDir;
             // 
             // txtFilterDir
             // 
             this.txtFilterDir.BackColor = System.Drawing.Color.White;
+            this.txtFilterDir.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "FilterDir", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtFilterDir.Location = new System.Drawing.Point(8, 104);
             this.txtFilterDir.Name = "txtFilterDir";
             this.txtFilterDir.Size = new System.Drawing.Size(216, 20);
             this.txtFilterDir.TabIndex = 33;
+            this.txtFilterDir.Text = global::myseq.Properties.Settings.Default.FilterDir;
             // 
             // txtCfgDir
             // 
             this.txtCfgDir.BackColor = System.Drawing.Color.White;
+            this.txtCfgDir.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "CfgDir", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtCfgDir.Location = new System.Drawing.Point(8, 64);
             this.txtCfgDir.Name = "txtCfgDir";
             this.txtCfgDir.Size = new System.Drawing.Size(216, 20);
             this.txtCfgDir.TabIndex = 30;
+            this.txtCfgDir.Text = global::myseq.Properties.Settings.Default.CfgDir;
             // 
             // txtMapDir
             // 
             this.txtMapDir.BackColor = System.Drawing.Color.White;
+            this.txtMapDir.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::myseq.Properties.Settings.Default, "MapDir", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txtMapDir.Location = new System.Drawing.Point(8, 24);
             this.txtMapDir.Name = "txtMapDir";
             this.txtMapDir.Size = new System.Drawing.Size(216, 20);
             this.txtMapDir.TabIndex = 27;
+            this.txtMapDir.Text = global::myseq.Properties.Settings.Default.MapDir;
             // 
             // cmdLogDir
             // 
