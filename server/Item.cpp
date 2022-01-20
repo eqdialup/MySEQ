@@ -22,7 +22,7 @@
 
 #include "Item.h"
 
- 
+
 
 Item::Item(void)
 
@@ -36,29 +36,29 @@ Item::Item(void)
 
 }
 
- 
+
 
 void Item::init(IniReaderInterface* ir_intf)
 
 {
 
-	setOffset(OT_prev, ir_intf->readIntegerEntry("GroundItem Offsets", "PrevOffset"), "Previous");
+	setOffset(OT_prev, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "PrevOffset"), "Previous");
 
-	setOffset(OT_next, ir_intf->readIntegerEntry("GroundItem Offsets", "NextOffset"), "Next");
+	setOffset(OT_next, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "NextOffset"), "Next");
 
-	setOffset(OT_id, ir_intf->readIntegerEntry("GroundItem Offsets", "IdOffset"), "ID");
+	setOffset(OT_id, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "IdOffset"), "ID");
 
-	setOffset(OT_dropid, ir_intf->readIntegerEntry("GroundItem Offsets", "DropIdOffset"), "Drop ID");
+	setOffset(OT_dropid, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "DropIdOffset"), "Drop ID");
 
-	setOffset(OT_x, ir_intf->readIntegerEntry("GroundItem Offsets", "XOffset"), "X");
+	setOffset(OT_x, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "XOffset"), "X");
 
-	setOffset(OT_y, ir_intf->readIntegerEntry("GroundItem Offsets", "YOffset"), "Y");
+	setOffset(OT_y, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "YOffset"), "Y");
 
-	setOffset(OT_z, ir_intf->readIntegerEntry("GroundItem Offsets", "ZOffset"), "Z");
+	setOffset(OT_z, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "ZOffset"), "Z");
 
-	setOffset(OT_name, ir_intf->readIntegerEntry("GroundItem Offsets", "NameOffset"), "Model Name");
+	setOffset(OT_name, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "NameOffset"), "Model Name");
 
- 
+
 
 	// Determine how many bytes we should read at item in memory
 
@@ -70,13 +70,13 @@ void Item::init(IniReaderInterface* ir_intf)
 
 		if (offsets[i] > largestOffset)
 
-			largestOffset = offsets[i]; 
+			largestOffset = offsets[i];
 
 	}
 
 	largestOffset += 30;
 
- 
+
 
 	// Allocate memory for our temporary buffer
 
@@ -90,7 +90,7 @@ void Item::init(IniReaderInterface* ir_intf)
 
 }
 
- 
+
 
 void Item::setOffset(offset_types ot, int value, string name)
 
@@ -110,21 +110,21 @@ void Item::packItemBuffer(UINT flags)
 
 	tempItemBuffer.name = extractRawString(OT_name);
 
-	
 
-	tempItemBuffer.x			= extractRawFloat(OT_x);
 
-	tempItemBuffer.y			= extractRawFloat(OT_y);
+	tempItemBuffer.x = extractRawFloat(OT_x);
 
-	tempItemBuffer.z			= extractRawFloat(OT_z);
+	tempItemBuffer.y = extractRawFloat(OT_y);
 
-	
+	tempItemBuffer.z = extractRawFloat(OT_z);
 
-	tempItemBuffer.id		= extractRawDWord(OT_id);
 
-	tempItemBuffer.dropid	= extractRawDWord(OT_dropid);
 
-	
+	tempItemBuffer.id = extractRawDWord(OT_id);
+
+	tempItemBuffer.dropid = extractRawDWord(OT_dropid);
+
+
 
 	tempItemBuffer.flags = flags;
 

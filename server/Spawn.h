@@ -30,6 +30,8 @@
 
 #include "World.h"
 
+typedef uint64_t QWORD;
+
 
 
 #pragma pack(push, 1)
@@ -40,7 +42,7 @@ struct netBuffer_t
 
 	char name[30];
 
-	float x,y,z;
+	float x, y, z;
 
 	float heading, speed;
 
@@ -74,17 +76,19 @@ class Spawn
 
 public:
 
-	enum offset_types { OT_name, OT_lastname, OT_x, OT_y, OT_z, OT_speed, OT_heading,
+	enum offset_types {
+		OT_name, OT_lastname, OT_x, OT_y, OT_z, OT_speed, OT_heading,
 
-						OT_id, OT_owner, OT_race, OT_class, OT_type, OT_level, OT_hidden,
-						
-						OT_primary, OT_offhand, 
+		OT_id, OT_owner, OT_race, OT_class, OT_type, OT_level, OT_hidden,
 
-						OT_prev, OT_next, OT_max };
+		OT_primary, OT_offhand,
+
+		OT_prev, OT_next, OT_max
+	};
 
 	UINT largestOffset;
 
-	char* rawBuffer;
+	char* rawBuffer{};
 
 	/*
 
@@ -116,11 +120,11 @@ public:
 
 	*/
 
-	netBuffer_t tempNetBuffer;
+	netBuffer_t tempNetBuffer{};
 
 	vector<netBuffer_t> spawnList;
 
-	
+
 
 	//string name, lastname;
 
@@ -136,23 +140,25 @@ public:
 
 private:
 
-	UINT pSpawnZero;
+	UINT pSpawnZero{};
 
-	string extractRawString(offset_types ot)	{ return string(&rawBuffer[offsets[ot]]); }
+	string extractRawString(offset_types ot) { return string(&rawBuffer[offsets[ot]]); }
 
-	float extractRawFloat(offset_types ot)		{ return *((float*) &rawBuffer[offsets[ot]]); }
+	float extractRawFloat(offset_types ot) { return *((float*)&rawBuffer[offsets[ot]]); }
 
-	DWORD extractRawDWord(offset_types ot)		{ return *((DWORD*) &rawBuffer[offsets[ot]]); }
+	DWORD extractRawDWord(offset_types ot) { return *((DWORD*)&rawBuffer[offsets[ot]]); }
 
-	WORD extractRawWord(offset_types ot)		{ return *((WORD*) &rawBuffer[offsets[ot]]); }
+	QWORD extractRawQWord(offset_types ot) { return *((QWORD*)&rawBuffer[offsets[ot]]); }
 
-	int extractRawInt(offset_types ot)			{ return *((int*)	&rawBuffer[offsets[ot]]); }
+	WORD extractRawWord(offset_types ot) { return *((WORD*)&rawBuffer[offsets[ot]]); }
+
+	int extractRawInt(offset_types ot) { return *((int*)&rawBuffer[offsets[ot]]); }
 
 public:
 
-	BYTE extractRawByte(offset_types ot)		{ return *((BYTE*)  &rawBuffer[offsets[ot]]); }
+	BYTE extractRawByte(offset_types ot) { return *((BYTE*)&rawBuffer[offsets[ot]]); }
 
-	UINT offsets[OT_max];
+	UINT offsets[OT_max]{};
 
 	string ptrNames[OT_max];
 
@@ -164,25 +170,25 @@ public:
 
 	void packNetBufferStrings(UINT flags, string firstname, string lastname);
 
-	void packNetBufferRaw(UINT flags, UINT _this);
+	void packNetBufferRaw(UINT flags, QWORD _this);
 
-	void packNetBufferEmpty(UINT flags, UINT _this);
+	void packNetBufferEmpty(UINT flags, QWORD _this);
 
 	/* when you are done filling out a NetBuffer, push it for shipping across the network */
 
-	void pushNetBuffer()						{ spawnList.push_back(tempNetBuffer); }
+	void pushNetBuffer() { spawnList.push_back(tempNetBuffer); }
 
-	UINT getNetBufferSize()						{ return (UINT) spawnList.size(); }
+	UINT getNetBufferSize() { return (UINT)spawnList.size(); }
 
-	netBuffer_t* getNetBufferStart()			{ return &spawnList.front(); }
+	netBuffer_t* getNetBufferStart() { return &spawnList.front(); }
 
 	/* when you are done shipping all the data across the network, reset/clear the NetBuffers */
 
-	void clearNetBuffer()						{ spawnList.clear(); }
+	void clearNetBuffer() { spawnList.clear(); }
 
-	UINT extractNextPointer()					{ return extractRawDWord(OT_next); }
+	QWORD extractNextPointer() { return extractRawQWord(OT_next); }
 
-	UINT extractPrevPointer()					{ return extractRawDWord(OT_prev); }
+	QWORD extractPrevPointer() { return extractRawQWord(OT_prev); }
 
 	/* convert other structures into spawn structures for shipping across the network */
 
@@ -190,7 +196,6 @@ public:
 
 	void packNetBufferWorld(World world);
 private:
-	bool race8;
+	bool race8{};
 
 };
-

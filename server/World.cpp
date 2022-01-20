@@ -17,12 +17,12 @@
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
   ==============================================================================*/
- 
+
 #include "StdAfx.h"
 
 #include "World.h"
 
- 
+
 
 World::World(void)
 
@@ -36,7 +36,7 @@ World::World(void)
 
 }
 
- 
+
 
 void World::init(IniReaderInterface* ir_intf)
 
@@ -45,17 +45,17 @@ void World::init(IniReaderInterface* ir_intf)
 		race8 = false;
 	else
 		race8 = true;
-	setOffset(OT_hour, ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldHourOffset"), "Hour");
+	setOffset(OT_hour, (UINT)ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldHourOffset"), "Hour");
 
-	setOffset(OT_minute, ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldMinuteOffset"), "Minute");
+	setOffset(OT_minute, (UINT)ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldMinuteOffset"), "Minute");
 
-	setOffset(OT_day, ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldDayOffset"), "Day");
+	setOffset(OT_day, (UINT)ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldDayOffset"), "Day");
 
-	setOffset(OT_month, ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldMonthOffset"), "Month");
+	setOffset(OT_month, (UINT)ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldMonthOffset"), "Month");
 
-	setOffset(OT_year, ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldYearOffset"), "Year");
+	setOffset(OT_year, (UINT)ir_intf->readIntegerEntry("WorldInfo Offsets", "WorldYearOffset"), "Year");
 
- 
+
 
 	// Determine how many bytes we should read at item in memory
 
@@ -67,13 +67,13 @@ void World::init(IniReaderInterface* ir_intf)
 
 		if (offsets[i] > largestOffset)
 
-			largestOffset = offsets[i]; 
+			largestOffset = offsets[i];
 
 	}
 
 	largestOffset += 30;
 
- 
+
 
 	// Allocate memory for our temporary buffer
 
@@ -87,7 +87,7 @@ void World::init(IniReaderInterface* ir_intf)
 
 }
 
- 
+
 
 void World::setOffset(offset_types ot, int value, string name)
 
