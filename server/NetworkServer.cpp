@@ -18,14 +18,17 @@
   ==============================================================================*/
 
 #include "StdAfx.h"
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
 #include "NetworkServer.h"
 #include <stdlib.h>
 #include <IPHlpApi.h>
 
+
 NetworkServer::NetworkServer()
 {
 	sockAddrSize = sizeof(sockAddr);
-	psockAddrIn = (sockaddr_in*) &sockAddr;
+	psockAddrIn = (sockaddr_in*)&sockAddr;
 	zoneName = "StartUp";
 	sockClient = INVALID_SOCKET;
 	LastProcess = 0;
@@ -39,47 +42,48 @@ NetworkServer::~NetworkServer(void)
 
 void NetworkServer::listIPAddresses()
 {
-		TCHAR mybuffer[1024];
-		mybuffer[0] = _T('\0');
-		hostent* localHost;
-		int j = 0;
-		localHost = gethostbyname("localhost");
-		for (int i = 0; localHost->h_addr_list[i] != 0; ++i) {
-			struct in_addr addr;
-			memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
-			// assign our local host to the designated ip address
-			if (mybuffer[0] == _T('\0'))
-				sprintf_s(mybuffer, "%s", inet_ntoa(addr));
-			else
-				strcat_s(mybuffer, inet_ntoa(addr));
-			j = j + 1;
-			if (j > 10)
-				break;
-		}
+	TCHAR mybuffer[1024];
+	mybuffer[0] = _T('\0');
+	hostent* localHost;
+	int j = 0;
+	localHost = gethostbyname("localhost");
+	for (int i = 0; localHost->h_addr_list[i] != 0; ++i) {
+		struct in_addr addr;
+		memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
+		// assign our local host to the designated ip address
+		if (mybuffer[0] == _T('\0'))
+			sprintf_s(mybuffer, "%s", inet_ntoa(addr));
+		else
+			strcat_s(mybuffer, inet_ntoa(addr));
+		j = j + 1;
+		if (j > 10)
+			break;
+	}
 
-		localHost = gethostbyname("");
-		for (int i = 0; localHost->h_addr_list[i] != 0; ++i) {
-			struct in_addr addr;
-			memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
-			if (mybuffer[0] == _T('\0')) {
-				sprintf_s(mybuffer, "%s", inet_ntoa(addr));
-			} else {
-				strcat_s(mybuffer, "\r\n");
-				strcat_s(mybuffer, inet_ntoa(addr));
-			}
-			j = j + 1;
-			if (j > 10)
-				break;
+	localHost = gethostbyname("");
+	for (int i = 0; localHost->h_addr_list[i] != 0; ++i) {
+		struct in_addr addr;
+		memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
+		if (mybuffer[0] == _T('\0')) {
+			sprintf_s(mybuffer, "%s", inet_ntoa(addr));
 		}
-		MessageBox(h_MySEQServer ? h_MySEQServer: NULL, (LPCSTR)&mybuffer, "MySEQ Open Server: Local IP Addresses", MB_OK | MB_TOPMOST | MB_ICONINFORMATION);
-		
+		else {
+			strcat_s(mybuffer, "\r\n");
+			strcat_s(mybuffer, inet_ntoa(addr));
+		}
+		j = j + 1;
+		if (j > 10)
+			break;
+	}
+	MessageBox(h_MySEQServer ? h_MySEQServer : NULL, (LPCSTR)&mybuffer, "MySEQ Open Server: Local IP Addresses", MB_OK | MB_TOPMOST | MB_ICONINFORMATION);
+
 }
 
 bool NetworkServer::openListenerSocket(bool service)
 {
 	WSADATA wsa;
-	
-	if (WSAStartup(MAKEWORD(1,1), &wsa) != 0)
+
+	if (WSAStartup(MAKEWORD(1, 1), &wsa) != 0)
 	{
 		MessageBox(NULL, "Error: NetworkServer: Failed to initialize Winsock.", "Failed to initialize Winsock", 0);
 		// ostrstream strm;
@@ -100,14 +104,14 @@ bool NetworkServer::openListenerSocket(bool service)
 
 	// Fill out the sockaddr structure with typical values
 	memset(&sockAddr, 0, sockAddrSize);
-    psockAddrIn->sin_family = AF_INET;
-	
+	psockAddrIn->sin_family = AF_INET;
+
 	psockAddrIn->sin_addr.s_addr = INADDR_ANY;
 
 	// Attempt to bind the listener socket
-	psockAddrIn->sin_port = htons(port);	
-		
-	if ( bind(sockListener, (struct sockaddr*)&sockAddr, sockAddrSize) == SOCKET_ERROR )
+	psockAddrIn->sin_port = htons(port);
+
+	if (bind(sockListener, (struct sockaddr*)&sockAddr, sockAddrSize) == SOCKET_ERROR)
 	{
 		cout << "MySEQServer: Failed binding to port: " << port << endl;
 		std::string str("Failed binding to port: ");
@@ -118,7 +122,7 @@ bool NetworkServer::openListenerSocket(bool service)
 		MessageBox(NULL, str.c_str(), "WindSock Error: Failed binding to port.", MB_OK | MB_TOPMOST | MB_ICONERROR);
 		return false;
 	}
-	
+
 	// Setup the backlog
 	if (service) {
 		if (listen(sockListener, 10) == SOCKET_ERROR)
@@ -129,7 +133,8 @@ bool NetworkServer::openListenerSocket(bool service)
 			//strm << "Error: NetworkServer: Listen request failed with code " << dec << WSAGetLastError() << ends ;
 			//throw Exception(EXCLEV_ERROR, strm.str());
 		}
-	} else {
+	}
+	else {
 		// Setup the backlog
 		if (listen(sockListener, 10) == SOCKET_ERROR)
 		{
@@ -140,9 +145,9 @@ bool NetworkServer::openListenerSocket(bool service)
 			//throw Exception(EXCLEV_ERROR, strm.str());
 		}
 		//Switch to Non-Blocking mode
-		WSAAsyncSelect (sockListener, hwnd, 1045, FD_READ | FD_CONNECT | FD_CLOSE | FD_ACCEPT); 
+		WSAAsyncSelect(sockListener, hwnd, 1045, FD_READ | FD_CONNECT | FD_CLOSE | FD_ACCEPT);
 
-		TCHAR active_address[128];
+		TCHAR active_address[128]{};
 		hostent* localHost;
 
 		localHost = gethostbyname("localhost");
@@ -157,51 +162,61 @@ bool NetworkServer::openListenerSocket(bool service)
 		// use this to store the current non-localhost address being used
 		in_addr current_host;
 		current_host.S_un.S_addr = NULL;
-		
+
 		localHost = gethostbyname("");
 		for (int i = 0; localHost->h_addr_list[i] != 0; ++i) {
 			struct in_addr addr;
 			memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
 			if (addr.s_net == 0) {
 				//cout << "Broadcast address " << inet_ntoa(addr) << endl;
-			} else if (addr.s_net == 127) {
+			}
+			else if (addr.s_net == 127) {
 				//cout << "Localhost " << inet_ntoa(addr) << endl;
-			} else if (addr.s_net == 169 && addr.s_host == 254) {
+			}
+			else if (addr.s_net == 169 && addr.s_host == 254) {
 				//cout << "Autoconfig address " << inet_ntoa(addr) << endl;
-			} else if (addr.s_net == 192 && addr.s_host == 0) {
+			}
+			else if (addr.s_net == 192 && addr.s_host == 0) {
 				//cout << "Test-Net-1 address " << inet_ntoa(addr) << endl;
-			} else if (addr.s_net == 198 && addr.s_host == 51 && addr.s_lh == 100) {
+			}
+			else if (addr.s_net == 198 && addr.s_host == 51 && addr.s_lh == 100) {
 				//cout << "Test-Net-2 address " << inet_ntoa(addr) << endl;
-			} else if (addr.s_net == 203 && addr.s_host == 0 && addr.s_lh == 113) {
+			}
+			else if (addr.s_net == 203 && addr.s_host == 0 && addr.s_lh == 113) {
 				//cout << "Test-Net-3 address " << inet_ntoa(addr) << endl;
-			} else if (addr.s_net == 192 && addr.s_host == 88 && addr.s_lh == 99) {
+			}
+			else if (addr.s_net == 192 && addr.s_host == 88 && addr.s_lh == 99) {
 				//cout << "6 to 4 anycast relays address " << inet_ntoa(addr) << endl;
-			} else if (addr.s_net == 198 && (addr.s_host == 18 || addr.s_lh == 19)) {
+			}
+			else if (addr.s_net == 198 && (addr.s_host == 18 || addr.s_lh == 19)) {
 				//cout << "inter-network comms address " << inet_ntoa(addr) << endl;
-			} else if (addr.s_net >= 224 && addr.s_net <= 240) {
+			}
+			else if (addr.s_net >= 224 && addr.s_net <= 240) {
 				//cout << "Multicast / Limited broadcast address " << inet_ntoa(addr) << endl;
-			} else {
+			}
+			else {
 				if (current_host.S_un.S_addr == NULL) {
 					// cout << "current host is null, copying in some values." << endl;
 					memcpy(&current_host, localHost->h_addr_list[i], sizeof(struct in_addr));
 					sprintf_s(active_address, "%s", inet_ntoa(addr));
-				} else {
+				}
+				else {
 					// we have a value in current host
 					// do some handling for lan addresses
 					if ((addr.s_net == 192 && addr.s_host == 168) || addr.s_net == 10 || (addr.s_net == 177 && addr.s_host >= 16 && addr.s_host <= 31)) {
 						// we have what looks like a local lan addres
 						// 192.168.xx.xx or 10.xx.xx.xx or 176.16.xx.xx to 176.31.xx.xx
-						if ((current_host.s_net != 192 || current_host.s_host != 168) && (current_host.s_net != 10) && (current_host.s_net != 176))  {
+						if ((current_host.s_net != 192 || current_host.s_host != 168) && (current_host.s_net != 10) && (current_host.s_net != 176)) {
 							// our current address does not look like a lan address, so set it.
-							memcpy(&current_host, localHost->h_addr_list[i],sizeof(struct in_addr));
+							memcpy(&current_host, localHost->h_addr_list[i], sizeof(struct in_addr));
 							//cout << "We have a new lan address." << endl;
 						}
 					}
 					// now update for better (lower) addresses on the same net/host range
 					if (addr.s_net == current_host.s_net && addr.s_host == current_host.s_host && ((addr.s_lh < current_host.s_lh) || (addr.s_lh <= current_host.s_lh && addr.s_impno <= current_host.s_impno))) {
-						memcpy(&current_host, localHost->h_addr_list[i],sizeof(struct in_addr));
+						memcpy(&current_host, localHost->h_addr_list[i], sizeof(struct in_addr));
 						//cout << "We have an updated better address." << endl;
-					}					
+					}
 				}
 				sprintf_s(active_address, "%s", inet_ntoa(current_host));
 			}
@@ -211,10 +226,10 @@ bool NetworkServer::openListenerSocket(bool service)
 		// Set the port in the gui
 		if (h_MySEQServer != NULL) {
 			char buffer[65];
-			_itoa_s( port, buffer, 65, 10);
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_PORT, (LPCSTR) &buffer);
+			_itoa_s(port, buffer, 65, 10);
+			SetDlgItemText(h_MySEQServer, IDC_TEXT_PORT, (LPCSTR)&buffer);
 			// Set the best ip address in the gui
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_PRIMARY, (LPCSTR) &active_address);
+			SetDlgItemText(h_MySEQServer, IDC_TEXT_PRIMARY, (LPCSTR)&active_address);
 		}
 	}
 	return true;
@@ -224,12 +239,12 @@ void NetworkServer::openClientSocket()
 {
 	// Wait for incoming connections
 	sockClient = accept(sockListener, &sockAddr, &sockAddrSize);
-	
+
 	if (sockClient == INVALID_SOCKET)
 	{
 		MessageBox(NULL, "Error: NetworkServer: Error with connection request.", "Error with connection request", 0);
 		ostrstream strm;
-		strm << "Error: NetworkServer: Error with connection request 0x" << dec << WSAGetLastError() << ends ;
+		strm << "Error: NetworkServer: Error with connection request 0x" << dec << WSAGetLastError() << ends;
 		throw Exception(EXCLEV_ERROR, strm.str());
 	}
 	zoneName = "StartUp";
@@ -237,9 +252,8 @@ void NetworkServer::openClientSocket()
 		SetDlgItemText(h_MySEQServer, IDC_TEXT_ZONE, _T(""));
 		SetDlgItemText(h_MySEQServer, IDC_TEXT_NAME, _T(""));
 	}
-			
-	cout << "MySEQServer: New connection from: " << inet_ntoa(psockAddrIn->sin_addr) << endl;
 
+	cout << "MySEQServer: New connection from: " << inet_ntoa(psockAddrIn->sin_addr) << endl;
 }
 
 void NetworkServer::closeClientSocket()
@@ -266,13 +280,13 @@ string NetworkServer::getCharName(MemReaderInterface* mr_intf)
 {
 	// get current character name
 	string rtn = "";
-	UINT pTemp = 0;
-	UINT nameOff;
-			
+	QWORD pTemp = 0;
+	QWORD nameOff;
+
 	if (offsets[OT_self])
 		pTemp = mr_intf->extractRAWPointer(offsets[OT_self]);
-	
-    nameOff = spawnParser.offsets[spawnParser.OT_name];	
+
+	nameOff = spawnParser.offsets[spawnParser.OT_name];
 	if (pTemp)
 	{
 		rtn = mr_intf->extractString(pTemp + nameOff);
@@ -280,7 +294,7 @@ string NetworkServer::getCharName(MemReaderInterface* mr_intf)
 	return rtn;
 }
 
-void NetworkServer::setOffset(offset_types ot, UINT value)
+void NetworkServer::setOffset(offset_types ot, QWORD value)
 {
 	offsets[ot] = value;
 }
@@ -290,16 +304,16 @@ void NetworkServer::init(IniReaderInterface* ir_intf)
 	spawnParser.init(ir_intf);
 	itemParser.init(ir_intf);
 	worldParser.init(ir_intf);
-	
-	port = ir_intf->readIntegerEntry("Port", "Port");
-	
-	setOffset(OT_spawnlist,	ir_intf->readIntegerEntry("Memory Offsets", "SpawnHeaderAddr"));
-	setOffset(OT_self,		ir_intf->readIntegerEntry("Memory Offsets", "CharInfo"));
-	setOffset(OT_target,	ir_intf->readIntegerEntry("Memory Offsets", "TargetAddr"));
-	setOffset(OT_zonename,	ir_intf->readIntegerEntry("Memory Offsets", "ZoneAddr"));
-	setOffset(OT_ground,	ir_intf->readIntegerEntry("Memory Offsets", "ItemsAddr"));
-	setOffset(OT_world,		ir_intf->readIntegerEntry("Memory Offsets", "WorldAddr"));
-	
+
+	port = (UINT)ir_intf->readIntegerEntry("Port", "Port");
+
+	setOffset(OT_spawnlist, ir_intf->readIntegerEntry("Memory Offsets", "SpawnHeaderAddr"));
+	setOffset(OT_self, ir_intf->readIntegerEntry("Memory Offsets", "CharInfo"));
+	setOffset(OT_target, ir_intf->readIntegerEntry("Memory Offsets", "TargetAddr"));
+	setOffset(OT_zonename, ir_intf->readIntegerEntry("Memory Offsets", "ZoneAddr"));
+	setOffset(OT_ground, ir_intf->readIntegerEntry("Memory Offsets", "ItemsAddr"));
+	setOffset(OT_world, ir_intf->readIntegerEntry("Memory Offsets", "WorldAddr"));
+
 	if (h_MySEQServer) {
 		// Set offsets in GUI
 		TCHAR ot_spawnlist[16];
@@ -309,12 +323,12 @@ void NetworkServer::init(IniReaderInterface* ir_intf)
 		TCHAR ot_ground[16];
 		TCHAR ot_world[16];
 		// Put in our offsets in a hex format
-		sprintf_s(ot_spawnlist,"0x%x",offsets[OT_spawnlist]);
-		sprintf_s(ot_self,"0x%x",offsets[OT_self]);
-		sprintf_s(ot_target,"0x%x",offsets[OT_target]);
-		sprintf_s(ot_zonename,"0x%x",offsets[OT_zonename]);
-		sprintf_s(ot_ground,"0x%x",offsets[OT_ground]);
-		sprintf_s(ot_world,"0x%x",offsets[OT_world]);
+		sprintf_s(ot_spawnlist, "0x%llx", offsets[OT_spawnlist]);
+		sprintf_s(ot_self, "0x%llx", offsets[OT_self]);
+		sprintf_s(ot_target, "0x%llx", offsets[OT_target]);
+		sprintf_s(ot_zonename, "0x%llx", offsets[OT_zonename]);
+		sprintf_s(ot_ground, "0x%llx", offsets[OT_ground]);
+		sprintf_s(ot_world, "0x%llx", offsets[OT_world]);
 		// Update the dialog
 		SetDlgItemText(h_MySEQServer, IDC_TEXT_SPAWNHEADER, ot_spawnlist);
 		SetDlgItemText(h_MySEQServer, IDC_TEXT_CHARINFO, ot_self);
@@ -333,32 +347,32 @@ void NetworkServer::enterReceiveLoop(MemReaderInterface* mr_intf)
 
 	while (!exitLoop)
 	{
-		exitLoop = processReceivedData(mr_intf);	
+		exitLoop = processReceivedData(mr_intf);
 	}
 }
 
 UINT NetworkServer::current_offset(int type)
-{ 
-		return (UINT)offsets[(offset_types)type]; 
+{
+	return (UINT)offsets[(offset_types)type];
 }
 
 bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 {
 	int bytesRecvd, maxLoop;
-	UINT pTemp, pTemp2;
+	QWORD pTemp, pTemp2;
 	string newZoneName;
 	int numSpawns = 0, numItems = 0, numElements;
-	
+
 	quickInfo = false;
 
 	if (LastProcess != mr_intf->getCurrentPID()) {
 		quickInfo = true;
 		LastProcess = mr_intf->getCurrentPID();
-	}	
-		
+	}
+
 	// Wait for request from the client
 	bytesRecvd = recv(sockClient, (char*)&clientRequest, sizeof(clientRequest), 0);
-	
+
 	if (bytesRecvd == 0 || bytesRecvd == SOCKET_ERROR || bytesRecvd != sizeof(clientRequest))
 	{
 		return true;
@@ -368,7 +382,7 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 						// should contain the process id, to switch to
 	{
 		DWORD originalPID = mr_intf->getCurrentPID();
-		cout << "MySEQServer: Setting process to 0x" << hex <<  clientRequest << endl;
+		cout << "MySEQServer: Setting process to 0x" << hex << clientRequest << endl;
 		mr_intf->openFirstProcess("eqgame", false);
 		while (1)
 		{
@@ -403,7 +417,7 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 		return false;
 	}
 
-	if ( !mr_intf->isValid() ) {
+	if (!mr_intf->isValid()) {
 		// we dont have a valid process
 		// send a reply to keep stream connected
 
@@ -411,16 +425,16 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 		spawnParser.pushNetBuffer();
 		// First send the number of elements
 		numElements = spawnParser.getNetBufferSize();
-		send(sockClient, (char*) &numElements, sizeof(numElements), 0);
-		
+		send(sockClient, (char*)&numElements, sizeof(numElements), 0);
+
 		// Now sent the array of elements
-		if ( numElements )
+		if (numElements)
 		{
 			// Show the spawncount (minus the zonename and yourself, if there is targeted mob we will get one extra)
 			if (quickInfo)
 				cout << "MySEQServer: numSpawns(" << dec << numSpawns << ") numItems(" << numItems << ")" << endl;
-			
-			send(sockClient, (char*) spawnParser.getNetBufferStart(), numElements * sizeof(netBuffer_t), 0);
+
+			send(sockClient, (char*)spawnParser.getNetBufferStart(), numElements * sizeof(netBuffer_t), 0);
 			spawnParser.clearNetBuffer();
 			numSpawns = numItems = 0;
 		}
@@ -430,18 +444,18 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 	}
 
 	// Send get_process requests
-	if ( requestContains(IPT_getproc) )
+	if (requestContains(IPT_getproc))
 	{
 		pTemp = 0;
 		MemReader tempMemReader;
-			
+
 		// Look for the first available process match
 		tempMemReader.openFirstProcess("eqgame");
 		while (tempMemReader.isValid())
 		{
 			if (offsets[OT_self])
 				pTemp = tempMemReader.extractRAWPointer(offsets[OT_self]);
-			
+
 			if (pTemp)
 			{
 				if (tempMemReader.extractToBuffer(pTemp, spawnParser.rawBuffer, spawnParser.largestOffset))
@@ -451,7 +465,7 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 					spawnParser.pushNetBuffer();
 				}
 			}
-				
+
 			// Look for the next available process match
 			if (!tempMemReader.openNextProcess("eqgame"))
 				break;
@@ -459,7 +473,7 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 	}
 
 	// Send set_process requests
-	if ( requestContains(IPT_setproc) )
+	if (requestContains(IPT_setproc))
 	{
 		change_process = true;
 		return false;
@@ -468,13 +482,13 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 	}
 
 	// Send zonename requests
-	if ( requestContains(IPT_zone) )
+	if (requestContains(IPT_zone))
 	{
 		if (offsets[OT_zonename])
-			newZoneName = mr_intf->extractString2(offsets[OT_zonename] - 0x400000 + (UINT)mr_intf->getCurrentBaseAddress());
-				
+			newZoneName = mr_intf->extractString2(offsets[OT_zonename] - 0x140000000 + (QWORD)mr_intf->getCurrentBaseAddress());
+
 		// Only send zonename response if zone changed
-		if ( newZoneName != zoneName )
+		if (newZoneName != zoneName)
 		{
 			quickInfo = true;
 			zoneName = newZoneName;
@@ -485,7 +499,8 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 					SetDlgItemText(h_MySEQServer, IDC_TEXT_ZONE, zoneName.c_str());
 					// force an update of the spawns count numbers on gui
 					loopCount = 50;
-				} else {
+				}
+				else {
 					SetDlgItemText(h_MySEQServer, IDC_TEXT_NAME, _T(""));
 					SetDlgItemText(h_MySEQServer, IDC_TEXT_ZONE, _T(""));
 				}
@@ -497,18 +512,18 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 		if (quickInfo)
 			cout << "MySEQServer: Zonename is " << newZoneName << endl;
 	}
-		
+
 	// Send player requests
-	if ( requestContains(IPT_self) )
+	if (requestContains(IPT_self))
 	{
 		pTemp = 0;
-			
+
 		if (offsets[OT_self])
 			pTemp = mr_intf->extractRAWPointer(offsets[OT_self]);
-				
+
 		if (quickInfo)
 			cout << "MySEQServer: pSelf is 0x" << hex << pTemp << endl;
-			
+
 		if (pTemp)
 			if (mr_intf->extractToBuffer(pTemp, spawnParser.rawBuffer, spawnParser.largestOffset))
 			{
@@ -516,41 +531,45 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 				spawnParser.pushNetBuffer();
 			}
 	}
-		
+
 	// Send spawnlist requests
-	if ( requestContains(IPT_spawns) )
+	if (requestContains(IPT_spawns))
 	{
 		pTemp = pTemp2 = 0;
-			
+
 		if (offsets[OT_spawnlist])
 			pTemp = pTemp2 = mr_intf->extractRAWPointer(offsets[OT_spawnlist]);
-				
+		cout << "ptemp " << pTemp << " pTemp2 " << pTemp2 << endl;
+
 		/* As of TSS, after shrouds or hover, this pointer may point to a spawn in the
 			middle of the list. Back up to the top of the spawn list just to be sure we
 			grab the whole thing. */
-		for (maxLoop=0; maxLoop<2000; maxLoop++)
+		for (maxLoop = 0; maxLoop < 2000; maxLoop++)
 		{
 			if (mr_intf->extractToBuffer(pTemp, spawnParser.rawBuffer, spawnParser.largestOffset))
 			{
 				if (spawnParser.extractPrevPointer())
+				{
 					pTemp = spawnParser.extractPrevPointer();
+					cout << "pTemp extract " << pTemp << " raw " << spawnParser.rawBuffer << " largest offset " << spawnParser.largestOffset << endl;
+				}
 				else
 					break;
 			}
 		}
-			
+
 		if (quickInfo)
 		{
 			cout << "MySEQServer: pSpawnlist is 0x" << hex << pTemp << endl;
-				
+
 			if (maxLoop == 2000)
 				cout << "MySEQServer: Warning: maxLoop reached finding pSpawnlist!" << endl;
-				
+
 			if (pTemp != pTemp2)
-				cout << "MySEQServer: pSpawnlist changed from INI setting of 0x" << hex << pTemp2 << endl;
+				cout << "MySEQServer: pSpawnlist changed from INI setting of 0x" << hex << pTemp2 << " to " << pTemp << endl;
 		}
 		loopCount++;
-							
+
 		while (pTemp)
 		{
 			if (mr_intf->extractToBuffer(pTemp, spawnParser.rawBuffer, spawnParser.largestOffset))
@@ -566,10 +585,10 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 		if (loopCount > 20) {
 			// Update the gui with the spawn/item counts
 			if (offsets[OT_spawnlist])
-			pTemp = mr_intf->extractRAWPointer(offsets[OT_spawnlist]);
-		
+				pTemp = mr_intf->extractRAWPointer(offsets[OT_spawnlist]);
+
 			// Get us to the top of the list
-			for (maxLoop=0; maxLoop<2000; maxLoop++)
+			for (maxLoop = 0; maxLoop < 2000; maxLoop++)
 			{
 				if (mr_intf->extractToBuffer(pTemp, spawnParser.rawBuffer, spawnParser.largestOffset))
 				{
@@ -581,92 +600,95 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 			}
 			UINT typeOffset = spawnParser.offsets[spawnParser.OT_type];
 			BYTE result;
-			int pcNum=0, npcNum=0, corpseNum=0;
+			int pcNum = 0, npcNum = 0, corpseNum = 0;
 			while (pTemp)
 			{
 				if (mr_intf->extractToBuffer(pTemp, spawnParser.rawBuffer, spawnParser.largestOffset))
 				{
 					result = spawnParser.extractRawByte(spawnParser.OT_type);
-					switch(result)
+					switch (result)
 					{
-						case 0:
-							pcNum++;
-							break;
-						case 1:
-							npcNum++;
-							break;
-						default:
-							corpseNum++;
+					case 0:
+						pcNum++;
+						break;
+					case 1:
+						npcNum++;
+						break;
+					default:
+						corpseNum++;
 					}
 					pTemp = spawnParser.extractNextPointer();
 				}
 				else
 					pTemp = 0;
 			}
-			
+
 			char buffer[65];
-			_itoa_s( npcNum, buffer, 65, 10);
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_SPAWNS, (LPCSTR) &buffer);
-			_itoa_s( pcNum, buffer, 65, 10);
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_SPAWNS2, (LPCSTR) &buffer);
-			_itoa_s( corpseNum, buffer, 65, 10);
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_SPAWNS3, (LPCSTR) &buffer);
+			_itoa_s(npcNum, buffer, 65, 10);
+			SetDlgItemText(h_MySEQServer, IDC_TEXT_SPAWNS, (LPCSTR)&buffer);
+			_itoa_s(pcNum, buffer, 65, 10);
+			SetDlgItemText(h_MySEQServer, IDC_TEXT_SPAWNS2, (LPCSTR)&buffer);
+			_itoa_s(corpseNum, buffer, 65, 10);
+			SetDlgItemText(h_MySEQServer, IDC_TEXT_SPAWNS3, (LPCSTR)&buffer);
 		}
 	}
 
-		// Send target requests
-	if ( requestContains(IPT_target) )
+	// Send target requests
+	if (requestContains(IPT_target))
 	{
 		pTemp = 0;
-			
+
 		if (offsets[OT_target])
 			pTemp = mr_intf->extractRAWPointer(offsets[OT_target]);
 
 		if (quickInfo)
 			cout << "MySEQServer: pTarget is 0x" << hex << pTemp << endl;
-			
+
 		if (pTemp)
 		{
 			if (mr_intf->extractToBuffer(pTemp, spawnParser.rawBuffer, spawnParser.largestOffset))
 			{
 				spawnParser.packNetBufferRaw(OPT_target, pTemp);
 				spawnParser.pushNetBuffer();
-			} else {
+			}
+			else {
 				// Send target of spawn ID 99999 (no target)
 				spawnParser.packNetBufferEmpty(OPT_target, pTemp);
 				spawnParser.pushNetBuffer();
 			}
-		} else {
-				// Send target of spawn ID 99999 (no target)
-				spawnParser.packNetBufferEmpty(OPT_target, pTemp);
-				spawnParser.pushNetBuffer();
-			}
-	}		
+		}
+		else {
+			// Send target of spawn ID 99999 (no target)
+			spawnParser.packNetBufferEmpty(OPT_target, pTemp);
+			spawnParser.pushNetBuffer();
+		}
+	}
 
 	// Send grounditem requests
-	if ( requestContains(IPT_ground) )
+	if (requestContains(IPT_ground))
 	{
 		pTemp = pTemp2 = 0;
 		UINT nameOff;
 		string itName = "";
 		nameOff = itemParser.offsets[itemParser.OT_name];
-			
+
 		if (offsets[OT_ground])
 			pTemp2 = mr_intf->extractRAWPointer(offsets[OT_ground]);
 
 		if (pTemp2)
 			itName = mr_intf->extractString(pTemp2 + nameOff);
 
-		if (itName.compare(0,2,"IT") == 0) {
+		if (itName.compare(0, 2, "IT") == 0) {
 			pTemp = pTemp2;
-		} else if (pTemp2) {
+		}
+		else if (pTemp2) {
 			pTemp = mr_intf->extractPointer(pTemp2);
 		}
 		if (quickInfo)
 		{
 			cout << "MySEQServer: pItems is 0x" << hex << pTemp << endl;
 		}
-							
+
 		while (pTemp)
 		{
 			if (mr_intf->extractToBuffer(pTemp, itemParser.rawBuffer, itemParser.largestOffset))
@@ -676,7 +698,7 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 				spawnParser.pushNetBuffer();
 				numItems++;
 				// Avoid infinite loops
-				if ((numItems > 300) || (pTemp == itemParser.extractNextPointer()) )
+				if ((numItems > 300) || (pTemp == itemParser.extractNextPointer()))
 					pTemp = 0;
 				else
 					pTemp = itemParser.extractNextPointer();
@@ -687,21 +709,21 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 		if (loopCount > 20) {
 			// Update the gui with the spawn/item counts
 			char buffer[65];
-			_itoa_s( numItems, buffer, 65, 10);
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_ITEMS, (LPCSTR) &buffer);
+			_itoa_s(numItems, buffer, 65, 10);
+			SetDlgItemText(h_MySEQServer, IDC_TEXT_ITEMS, (LPCSTR)&buffer);
 
 			loopCount = 0;
 		}
 	}
-				
+
 	// Send world requests
-	if ( requestContains(IPT_world) )
+	if (requestContains(IPT_world))
 	{
 		pTemp = 0;
-			
+
 		if (offsets[OT_world])
 			pTemp = mr_intf->extractRAWPointer(offsets[OT_world]);
-				
+
 		if (quickInfo)
 			cout << "MySEQServer: pWorldInfo is 0x" << hex << pTemp << endl;
 
@@ -716,21 +738,21 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 				spawnParser.pushNetBuffer();
 			}
 	}
-		
+
 	// Send spawn information (most other information is also packed into a spawn structure)
 	numElements = spawnParser.getNetBufferSize();
-		
+
 	// First send the number of elements
-	send(sockClient, (char*) &numElements, sizeof(numElements), 0);
-		
+	send(sockClient, (char*)&numElements, sizeof(numElements), 0);
+
 	// Now sent the array of elements
-	if ( numElements )
+	if (numElements)
 	{
 		// Show the spawncount (minus the zonename and yourself, if there is targeted mob we will get one extra)
 		if (quickInfo)
 			cout << "MySEQServer: numSpawns(" << dec << numSpawns << ") numItems(" << numItems << ")" << endl;
-			
-		send(sockClient, (char*) spawnParser.getNetBufferStart(), numElements * sizeof(netBuffer_t), 0);
+
+		send(sockClient, (char*)spawnParser.getNetBufferStart(), numElements * sizeof(netBuffer_t), 0);
 		spawnParser.clearNetBuffer();
 		numSpawns = numItems = 0;
 	}

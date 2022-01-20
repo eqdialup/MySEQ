@@ -24,6 +24,8 @@
 
 #include "Common.h"
 
+typedef uint64_t QWORD;
+
 
 
 class IniReaderInterface
@@ -38,7 +40,7 @@ public:
 
 	virtual string readStringEntry(string section, string entry, bool config = false) = 0;
 
-	virtual long readIntegerEntry(string section, string entry, bool config = false) = 0;
+	virtual QWORD readIntegerEntry(string section, string entry, bool config = false) = 0;
 
 	virtual bool writeStringEntry(string section, string entry, string value, bool config = false) = 0;
 
@@ -62,10 +64,10 @@ private:
 
 	string configfilename;
 
-	_TCHAR buffer[255];
+	_TCHAR buffer[255]{};
 
 	bool StartMinimized;
-	
+
 
 public:
 
@@ -77,7 +79,7 @@ public:
 
 	string readEscapeStrings(string section, string entry);
 
-	long readIntegerEntry(string section, string entry, bool config = false);
+	QWORD readIntegerEntry(string section, string entry, bool config = false);
 
 	bool writeStringEntry(string section, string entry, string value, bool config = false);
 
