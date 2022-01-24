@@ -20,20 +20,18 @@
 
 #pragma once
 
-
-
 #include "Common.h"
-
 #include "IniReader.h"
-
 
 
 #pragma pack(push, 1)
 
+
+
+
+
 struct itemBuffer_t
-
 {
-
 	DWORD id{};
 
 	DWORD dropid{};
@@ -47,19 +45,14 @@ struct itemBuffer_t
 	string name;
 
 	UINT flags{};
-
 };
 
 
 
 #pragma pack(pop) 
-
 class Item
-
 {
-
 public:
-
 	enum offset_types { OT_prev, OT_next, OT_id, OT_dropid, OT_x, OT_y, OT_z, OT_name, OT_max };
 
 	UINT offsets[OT_max]{};
@@ -74,10 +67,7 @@ public:
 
 	vector<itemBuffer_t> itemList;
 
-
-
 private:
-
 	string extractRawString(offset_types ot) { return string(&rawBuffer[offsets[ot]]); }
 
 	float extractRawFloat(offset_types ot) { return *((float*)&rawBuffer[offsets[ot]]); }
@@ -90,10 +80,7 @@ private:
 
 	int extractRawInt(offset_types ot) { return *((int*)&rawBuffer[offsets[ot]]); }
 
-
-
 public:
-
 	Item(void);
 
 	void init(IniReaderInterface* ir_intf);
@@ -117,5 +104,4 @@ public:
 	QWORD extractNextPointer() { return extractRawQWord(OT_next); }
 
 	QWORD extractPrevPointer() { return extractRawQWord(OT_prev); }
-
 };

@@ -20,20 +20,16 @@
 
 #pragma once
 
-
-
 #include "Common.h"
-
 #include "IniReader.h"
 
 
 
+
+
 #pragma pack(push, 1)
-
 struct worldBuffer_t
-
 {
-
 	BYTE hour;
 
 	BYTE minute;
@@ -45,19 +41,14 @@ struct worldBuffer_t
 	DWORD year;
 
 	UINT flags;
-
 };
 
 
 
 #pragma pack(pop) 
-
 class World
-
 {
-
 public:
-
 	enum offset_types { OT_hour, OT_minute, OT_day, OT_month, OT_year, OT_max };
 
 	UINT offsets[(UINT)World::offset_types::OT_max]{};
@@ -72,10 +63,7 @@ public:
 
 	vector<worldBuffer_t> worldList;
 
-
-
 private:
-
 	string extractRawString(World::offset_types ot) { return string(&rawBuffer[World::offsets[(UINT)ot]]); }
 
 	float extractRawFloat(World::offset_types ot) { return *((float*)&rawBuffer[World::offsets[(UINT)ot]]); }
@@ -88,10 +76,7 @@ private:
 
 	int extractRawInt(World::offset_types ot) { return *((int*)&rawBuffer[World::offsets[(UINT)ot]]); }
 
-
-
 public:
-
 	World(void);
 
 	void init(IniReaderInterface* ir_intf);
@@ -100,20 +85,16 @@ public:
 
 	void packWorldBuffer(UINT flags);
 
-	/* when you are done filling out a NetBuffer, push it for shipping across the network */
-
+	// when you are done filling out a NetBuffer, push it for shipping across the network
 	void pushNetBuffer() { World::worldList.push_back(tempWorldBuffer); }
 
 	UINT getNetBufferSize() { return (UINT)World::worldList.size(); }
 
 	World::worldBuffer_t* getNetBufferStart() { return &World::worldList.front(); }
 
-	/* when you are done shipping all the data across the network, reset/clear the NetBuffers */
-
+	// when you are done shipping all the data across the network, reset/clear the NetBuffers
 	void clearNetBuffer() { World::worldList.clear(); }
 
 private:
-
 	bool race8{};
-
 };

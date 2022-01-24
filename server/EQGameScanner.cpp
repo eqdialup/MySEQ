@@ -15,12 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "stdafx.h"
 #include <fstream>
 #include "EQGameScanner.h"
 #include "minwindef.h"
 
+
 typedef uint64_t* PQWORD;
+
+
+
+
 
 /*
  * Offset Value Storage
@@ -35,6 +41,8 @@ namespace EQPrimaryOffsets
 	QWORD Target = 0x0;
 	QWORD World = 0x0;
 };
+
+
 
 namespace EQSpawnInfoOffsets
 {
@@ -55,17 +63,23 @@ namespace EQSpawnInfoOffsets
 	QWORD Class = 0x0;
 };
 
-EQGameScanner::EQGameScanner(void)
-{
-}
 
-EQGameScanner::~EQGameScanner(void)
-{
-}
+
+EQGameScanner::EQGameScanner(void) {}
+
+
+
+EQGameScanner::~EQGameScanner(void) {}
+
+
+
 void EQGameScanner::setExe(TCHAR* str)
 {
 	executablePath = str;
 }
+
+
+
 bool EQGameScanner::executableExists() const
 {
 	std::ifstream file(executablePath.c_str(), std::ios::in);
@@ -78,6 +92,8 @@ bool EQGameScanner::executableExists() const
 
 	return false;
 }
+
+
 
 DWORD EQGameScanner::findEQPointerOffset(DWORD startAddress, std::size_t blockSize, const PBYTE byteMask, const PCHAR charMask)
 {
@@ -125,6 +141,7 @@ DWORD EQGameScanner::findEQPointerOffset(DWORD startAddress, std::size_t blockSi
 			else {
 				checkRet = *reinterpret_cast<PDWORD>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
 			}
+
 			//DWORD checkRet = *reinterpret_cast<PDWORD>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
 			if (checkRet < 536870912)
 				break;
@@ -151,10 +168,13 @@ DWORD EQGameScanner::findEQPointerOffset(DWORD startAddress, std::size_t blockSi
 	else {
 		nRet = *reinterpret_cast<PDWORD>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
 	}
+
 	delete[] buffer;
 
 	return nRet;
 }
+
+
 
 DWORD EQGameScanner::findEQStructureOffset(DWORD startAddress, std::size_t blockSize, const PBYTE byteMask, const PCHAR charMask, const QWORD baseEQPointerAddress)
 {
@@ -180,6 +200,8 @@ DWORD EQGameScanner::findEQStructureOffset(DWORD startAddress, std::size_t block
 	return nRet;
 }
 
+
+
 // Thanks to dom1n1k for the piece of code this is based off of.
 bool EQGameScanner::compareData(PBYTE data, PBYTE byteMask, PCHAR charMask)
 {
@@ -191,6 +213,8 @@ bool EQGameScanner::compareData(PBYTE data, PBYTE byteMask, PCHAR charMask)
 	return (*charMask) == NULL;
 }
 
+
+
 bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, NetworkServerInterface* net_intf, bool write_out)
 {
 
@@ -199,6 +223,7 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 		SetDlgItemText(hDlg, IDC_EDIT2, "Error: Could not locate the specified executable file.");
 		return false;
 	}
+
 	bool reload = false;
 
 	// We'll use this for comparisons
@@ -255,12 +280,12 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 				std::stringstream strm;
 				strm << std::hex << matchAddr;
 				strout.append(strm.str());
+
 				if (ir_intf->writeStringEntry("Memory Offsets", "ZoneAddr", strout.c_str()))
 				{
 					reload = true;
 					outputStream << " # Written to ini file\r\n";
 				}
-
 				else
 				{
 					outputStream << " # Found - Write failed\r\n";
@@ -298,6 +323,7 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 				std::stringstream strm;
 				strm << std::hex << matchAddr;
 				strout.append(strm.str());
+
 				if (ir_intf->writeStringEntry("Memory Offsets", "SpawnHeaderAddr", strout.c_str()))
 				{
 					reload = true;
@@ -340,6 +366,7 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 				std::stringstream strm;
 				strm << std::hex << matchAddr;
 				strout.append(strm.str());
+
 				if (ir_intf->writeStringEntry("Memory Offsets", "CharInfo", strout.c_str()))
 				{
 					reload = true;
@@ -351,7 +378,8 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 					outputStream << " # Found - Write failed\r\n";
 				}
 			}
-			else {
+			else
+			{
 				outputStream << " # Does not match ini file.\r\n";
 				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
 			}
@@ -382,6 +410,7 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 				std::stringstream strm;
 				strm << std::hex << matchAddr;
 				strout.append(strm.str());
+
 				if (ir_intf->writeStringEntry("Memory Offsets", "ItemsAddr", strout.c_str()))
 				{
 					reload = true;
@@ -393,7 +422,8 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 					outputStream << " # Found - Write failed\r\n";
 				}
 			}
-			else {
+			else
+			{
 				outputStream << " # Does not match ini file.\r\n";
 				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
 			}
@@ -424,18 +454,19 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 				std::stringstream strm;
 				strm << std::hex << matchAddr;
 				strout.append(strm.str());
+
 				if (ir_intf->writeStringEntry("Memory Offsets", "TargetAddr", strout.c_str()))
 				{
 					reload = true;
 					outputStream << " # Written to ini file\r\n";
 				}
-
 				else
 				{
 					outputStream << " # Found - Write failed\r\n";
 				}
 			}
-			else {
+			else
+			{
 				outputStream << " # Does not match ini file.\r\n";
 				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
 			}
@@ -466,18 +497,19 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 				std::stringstream strm;
 				strm << std::hex << matchAddr;
 				strout.append(strm.str());
+
 				if (ir_intf->writeStringEntry("Memory Offsets", "WorldAddr", strout.c_str()))
 				{
 					reload = true;
 					outputStream << " # Written to ini file\r\n";
 				}
-
 				else
 				{
 					outputStream << " # Found - Write failed\r\n";
 				}
 			}
-			else {
+			else
+			{
 				outputStream << " # Does not match ini file.\r\n";
 				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
 			}
@@ -494,8 +526,9 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 	SetDlgItemText(hDlg, IDC_EDIT2, v.c_str());
 
 	return reload;
-
 }
+
+
 
 void EQGameScanner::ScanSecondary(HWND hDlg, IniReaderInterface* ir_intf, NetworkServerInterface* net_intf)
 {
@@ -513,7 +546,9 @@ void EQGameScanner::ScanSecondary(HWND hDlg, IniReaderInterface* ir_intf, Networ
 	std::ostringstream outputStream;
 
 	WIN32_FILE_ATTRIBUTE_DATA FileData = { 0 };
-	if (GetFileAttributesEx(executablePath.c_str(), GetFileExInfoStandard, &FileData)) {
+
+	if (GetFileAttributesEx(executablePath.c_str(), GetFileExInfoStandard, &FileData))
+	{
 		TCHAR szFileDate[255];
 		FILETIME ftLastMod = FileData.ftLastWriteTime;
 		SYSTEMTIME st;
@@ -524,6 +559,7 @@ void EQGameScanner::ScanSecondary(HWND hDlg, IniReaderInterface* ir_intf, Networ
 		findResults << myfilename.c_str() << " Modified=" << szFileDate << "\r\n";
 
 	}
+
 	EQPrimaryOffsets::CharInfo = net_intf->current_offset((int)NetworkServer::OT_self);
 
 
@@ -538,14 +574,17 @@ void EQGameScanner::ScanSecondary(HWND hDlg, IniReaderInterface* ir_intf, Networ
 	// CharInfo
 	matchAddr = findEQPointerOffset(mystart, 0x100000, (PBYTE)mypattern.c_str(), (PCHAR)mymask.c_str());
 
-	if (matchAddr != NULL) {
+	if (matchAddr != NULL)
+	{
 		// If we match char info offset by pattern search use it
 		EQPrimaryOffsets::CharInfo = matchAddr;
 	}
-	else {
+	else
+	{
 		// Otherwise use what is in the myseqserver.ini file
 		EQPrimaryOffsets::CharInfo = net_intf->current_offset((int)NetworkServer::OT_self);
 	}
+
 	outputStream << "SpawnInfo Offsets" << "\r\n";
 	matchAddr = 0;
 
@@ -789,5 +828,4 @@ void EQGameScanner::ScanSecondary(HWND hDlg, IniReaderInterface* ir_intf, Networ
 	SetDlgItemText(hDlg, IDC_EDIT2, v.c_str());
 
 	return;
-
 }
