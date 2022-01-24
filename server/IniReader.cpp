@@ -19,115 +19,105 @@
   ==============================================================================*/
 
 #include "StdAfx.h"
-
 #include "IniReader.h"
-
 #include "resource.h"
+
+
 
   // Macro to assist in decoding escape sequence
 #define IS_HEX_CHAR( st ) ((st >= _T('0')) && (st <= _T('9'))) || ((st >= _T('a')) && (st <= _T('f'))) || (( st >= _T('A')) && (st <= _T('F')))
+
+
+
+
 
 IniReader::IniReader()
 {
 	StartMinimized = false;
 }
 
-IniReader::~IniReader(void)
+
+
+IniReader::~IniReader(void) {}
+
+
+
+string IniReader::GetPatchDate()
 {
-
-}
-
-
-
-string IniReader::GetPatchDate() {
-
 	return patchDate;
 }
 
 
+
 void IniReader::openFile(string _filename)
-
 {
-
 	filename = _filename;
 
 	patchDate = readStringEntry("File Info", "PatchDate");
 
-	if (patchDate == "")
 
+	if (patchDate == "")
 	{
 		MessageBox(NULL, "Error: Invalid INI file", "Error Loading INI file", 0);
 		ostrstream strm;
 		strm << "Error: IniReader: Invalid INI file " << filename << ends; \
 			throw Exception(EXCLEV_ERROR, strm.str());
-
 	}
-
 	else
-
 	{
-
 		cout << "IniReader: Reading INI file" << endl;
-
 		cout << "IniFile: " << filename << endl;
-
 		cout << "Patch Date: " << patchDate << endl;
-
 	}
-
 }
 
+
+
 void IniReader::openConfigFile(string _filename)
-
 {
-
 	configfilename = _filename;
 
 	UINT rtn = 0;
 
+
 	rtn = GetPrivateProfileInt("Server", "StartMinimized", 0, configfilename.c_str());
 
 	if (rtn > 0)
-
 		SetStartMinimized(true);
 
 	cout << "IniReader: Reading Config INI file" << endl;
-
 	cout << "ConfigIniFile: " << filename << endl;
-
 }
 
 
 
 string IniReader::readStringEntry(string section, string entry, bool config)
-
 {
-
 	string rtn("");
 
+
 	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), buffer, sizeof(buffer), config ? configfilename.c_str() : filename.c_str()) > 0)
-
 	{
-
 		rtn = buffer;
-
 	}
-	else {
+	else
+	{
 		return "";
 	}
 
 	return rtn;
-
 }
 
+
+
 string IniReader::readEscapeStrings(string section, string entry)
-
 {
-
 	string rtn("");
-	TCHAR newbuff[1024];
-	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), newbuff, sizeof(newbuff), configfilename.c_str()) > 0)
 
+	TCHAR newbuff[1024];
+
+
+	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), newbuff, sizeof(newbuff), configfilename.c_str()) > 0)
 	{
 		bool inescape = false;
 		bool inhex = false;
@@ -136,6 +126,7 @@ string IniReader::readEscapeStrings(string section, string entry)
 		string in = newbuff;
 		string out("");
 		size_t j = in.length();
+
 		for (size_t i = 0; i < in.length(); i++)
 		{
 			if (inescape == true) {
@@ -145,15 +136,19 @@ string IniReader::readEscapeStrings(string section, string entry)
 					inescape = false;
 					digits = 1;
 				}
-				else {
+				else
+				{
 					// Bad escape sequence, so reset.  Should always start with \x
 					inescape = false;
 				}
 			}
-			else if (inhex == true) {
-				if (IS_HEX_CHAR(_T(in.at(i)))) {
+			else if (inhex == true)
+			{
+				if (IS_HEX_CHAR(_T(in.at(i))))
+				{
 					// add a check to make sure they are hex digits, ie 0-9, a-f
-					if (digits++ == 2) {
+					if (digits++ == 2)
+					{
 						char buff[16];
 						buff[0] = '0';
 						buff[1] = 'x';
@@ -167,75 +162,66 @@ string IniReader::readEscapeStrings(string section, string entry)
 						inhex = false;
 					}
 				}
-				else {
+				else
+				{
 					// Bad hex character, so let's not try to convert it
 					inhex = false;
 				}
 			}
-			else if (_T(in.at(i)) == _T('\\')) {
+			else if (_T(in.at(i)) == _T('\\'))
+			{
 				inescape = true;
 			}
-			else {
+			else
+			{
 				inescape = false;
 			}
-
 		}
 
 		rtn = out;
-
 	}
 
 	return rtn;
-
 }
+
 
 
 QWORD IniReader::readIntegerEntry(string section, string entry, bool config)
-
 {
-
 	QWORD rtn = 0;
 	_TCHAR buffer[255];
+
+
 	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), buffer, sizeof(buffer), config ? configfilename.c_str() : filename.c_str()) > 0)
-
 	{
-
 		// See if number is hex (prefixed with 0x) or decimal (no prefix)
-
 		if (buffer[0] == '0')
-
 			rtn = strtoull(buffer, NULL, 16);
-
 		else
-
 			rtn = (QWORD)atoi(buffer);
-
 	}
 
 	return rtn;
-
 }
 
+
+
 bool IniReader::writeStringEntry(string section, string entry, string value, bool config)
-
 {
-
 	if (WritePrivateProfileString(section.c_str(), entry.c_str(), value.c_str(), config ? configfilename.c_str() : filename.c_str()) > 0)
 		return true;
 	else
 		return false;
-
 }
+
+
 
 void IniReader::ToggleStartMinimized()
 {
 	SetStartMinimized(GetStartMinimized() == false);
 
 	if (GetStartMinimized())
-
 		WritePrivateProfileString("Server", "StartMinimized", TEXT("1"), configfilename.c_str());
 	else
-
 		WritePrivateProfileString("Server", "StartMinimized", TEXT("0"), configfilename.c_str());
-
 }

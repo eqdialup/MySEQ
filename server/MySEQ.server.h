@@ -22,18 +22,14 @@
 #pragma once
 
 #include "resource.h"
-
 #include "Common.h"
-
 #include "IniReader.h"
-
 #include "MemReader.h"
-
 #include "NetworkServer.h"
-
 #include "EQGameScanner.h"
-
 #include "Debugger.h"
+
+
 
 
 
@@ -48,8 +44,8 @@ bool otherini;
 
 IniReader iniReader;
 
-char iniFile[_MAX_PATH+1];
-char configIniFile[_MAX_PATH+1];
+char iniFile[_MAX_PATH + 1];
+char configIniFile[_MAX_PATH + 1];
 
 int server_status;
 int check_delay;
@@ -65,7 +61,9 @@ NetworkServer netServer;
 EQGameScanner scanner;
 
 void Minimize();
-void Restore();
-void InitNotifyIconData();
-void ToggleStartMinimized();
 
+void Restore();
+
+void InitNotifyIconData();
+
+void ToggleStartMinimized();

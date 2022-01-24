@@ -20,20 +20,18 @@
 
 #pragma once
 
-
-
 #include "Common.h"
+
 
 typedef uint64_t QWORD;
 
 
 
+
+
 class IniReaderInterface
-
 {
-
 public:
-
 	virtual void openFile(string filename) = 0;
 
 	virtual void openConfigFile(string filename) = 0;
@@ -50,16 +48,13 @@ public:
 
 
 class IniReader : public IniReaderInterface
-
 {
 public:
-
 	IniReader();
 
 	~IniReader(void);
 
 private:
-
 	string filename;
 
 	string configfilename;
@@ -68,9 +63,7 @@ private:
 
 	bool StartMinimized;
 
-
 public:
-
 	void openFile(string filename);
 
 	void openConfigFile(string filename);
@@ -92,8 +85,5 @@ public:
 	void ToggleStartMinimized();
 
 private:
-
 	void SetStartMinimized(bool value) { StartMinimized = value; }
-
 };
-

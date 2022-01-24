@@ -23,6 +23,9 @@
 #include <cstdlib>
 #include <string>
 
+
+
+
 #define TO_LOWER(str) (transform(str.begin(), str.end(), str.begin(), (int(*)(int))tolower))
 
 #define DISPLAY_SPAWN_ITEM(off, member) cout << "    " << spawnParser.ptrNames[spawnParser.off] << " -> " << spawnParser.tempNetBuffer.member << endl
@@ -30,7 +33,11 @@
 #define DISPLAY_SPAWN_ITEMI(off, member) cout << "    " << spawnParser.ptrNames[spawnParser.off] << " -> " << spawnParser.tempNetBuffer.member << endl
 
 
+
+
+
 Debugger::Debugger() {}
+
 
 
 bool Debugger::setOffset(offset_types ot, QWORD value)
@@ -44,12 +51,14 @@ bool Debugger::setOffset(offset_types ot, QWORD value)
 }
 
 
+
 void Debugger::setOffset(offset_types ot, QWORD value, string ptrName)
 {
 	setOffset(ot, value);
 
 	ptrNames[ot] = ptrName;
 }
+
 
 
 void Debugger::init(IniReaderInterface* ir_intf)
@@ -76,6 +85,7 @@ void Debugger::init(IniReaderInterface* ir_intf)
 
 	cout << "Debugger: Memory offsets read in." << endl;
 }
+
 
 
 void Debugger::printMenu()
@@ -109,6 +119,7 @@ void Debugger::printMenu()
 	cout << "    x) exit debugger" << endl;
 	cout << endl;
 }
+
 
 
 void Debugger::enterDebugLoop(MemReaderInterface* mr_intf, IniReaderInterface* ir_intf)
@@ -244,7 +255,6 @@ void Debugger::displayCurrentOffsets()
 			setw(3) << hex << setfill('0') << worldParser.offsets[i] <<
 			dec << " (" << worldParser.offsets[i] << ")" << endl;
 	}
-
 
 	cout << endl;
 }
@@ -554,9 +564,7 @@ void Debugger::walkSpawnList(MemReaderInterface* mr_intf, offset_types ot, bool 
 				pMem = 0;
 			}
 		}
-	}
-
-	while (((!reverse && pNext) || (reverse && pPrev)) && (spawnCount < 1000));
+	} while (((!reverse && pNext) || (reverse && pPrev)) && (spawnCount < 1000));
 
 	cout << " Discovered " << dec << spawnCount << " spawn entities during the walk." << endl;
 
@@ -575,9 +583,7 @@ void Debugger::scanForPtr(MemReaderInterface* mr_intf, QWORD pSearch, QWORD pSta
 	if (!pStart)
 		return;
 
-
 	cout << " Scanning for 0x" << hex << pSearch << " from 0x" << (pStart) << " to 0x" << (pStart + size) << endl;
-
 
 	for (pMem = pStart; pMem < (pStart + size); pMem += 1)
 	{
@@ -649,7 +655,6 @@ void Debugger::scanForString(MemReaderInterface* mr_intf, offset_types ot, QWORD
 
 			pMem += 1;
 		}
-
 		else if ((ot == OT_target) || (ot == OT_self))
 		{
 			// When seaching for spawn names, we have an additional pointer to go thru first.
@@ -674,7 +679,6 @@ void Debugger::scanForString(MemReaderInterface* mr_intf, offset_types ot, QWORD
 
 			pMem += 8;
 		}
-
 		else if (ot == OT_ground)
 		{
 			// When seaching for ground items, we have an additional pointer to go thru first.
@@ -746,6 +750,8 @@ void Debugger::scanForFloatFromTarget(MemReaderInterface* mr_intf, string args)
 	scanForFloat(mr_intf, args, pStart, false);
 }
 
+
+
 void Debugger::scanForFloatFromSelf(MemReaderInterface* mr_intf, string args)
 {
 	QWORD pStart;
@@ -755,6 +761,8 @@ void Debugger::scanForFloatFromSelf(MemReaderInterface* mr_intf, string args)
 
 	scanForFloat(mr_intf, args, pStart, false);
 }
+
+
 
 void Debugger::scanForUINTFromSelf(MemReaderInterface* mr_intf, QWORD size, string args)
 {
@@ -766,6 +774,8 @@ void Debugger::scanForUINTFromSelf(MemReaderInterface* mr_intf, QWORD size, stri
 	scanForUINT(mr_intf, pStart, size, 4, args);
 }
 
+
+
 void Debugger::scanForBYTEFromTarget(MemReaderInterface* mr_intf, QWORD size, string args)
 {
 	QWORD pStart;
@@ -776,6 +786,8 @@ void Debugger::scanForBYTEFromTarget(MemReaderInterface* mr_intf, QWORD size, st
 	scanForUINT(mr_intf, pStart, size, 2, args);
 }
 
+
+
 void Debugger::scanForBYTEFromSelf(MemReaderInterface* mr_intf, QWORD size, string args)
 {
 	QWORD pStart;
@@ -785,6 +797,8 @@ void Debugger::scanForBYTEFromSelf(MemReaderInterface* mr_intf, QWORD size, stri
 
 	scanForUINT(mr_intf, pStart, size, 2, args);
 }
+
+
 
 void Debugger::scanForFloatFromAddress(MemReaderInterface* mr_intf, string args)
 {
@@ -814,10 +828,7 @@ void Debugger::scanForFloat(MemReaderInterface* mr_intf, string args, QWORD pSta
 
 	bool sCheck, dCheck, tCheck;
 
-
-
 	// First get our x/y/z values if given
-
 	xFind = yFind = zFind = INVALID;
 
 	sCheck = dCheck = tCheck = false;
@@ -842,7 +853,6 @@ void Debugger::scanForFloat(MemReaderInterface* mr_intf, string args, QWORD pSta
 		tCheck = true;
 
 		break;
-
 	case 3:
 		xFind = (float)atof(tokens[0].c_str());
 
@@ -863,7 +873,6 @@ void Debugger::scanForFloat(MemReaderInterface* mr_intf, string args, QWORD pSta
 		}
 
 		break;
-
 	case 2:
 		xFind = (float)atof(tokens[0].c_str());
 
@@ -882,14 +891,12 @@ void Debugger::scanForFloat(MemReaderInterface* mr_intf, string args, QWORD pSta
 		}
 
 		break;
-
 	case 1:
 		xFind = (float)atof(tokens[0].c_str());
 
 		sCheck = true;
 
 		break;
-
 	default:
 		break;
 	}
@@ -1111,7 +1118,6 @@ void Debugger::scanForUINT(MemReaderInterface* mr_intf, QWORD pStart, QWORD size
 		pMem += 1;
 	}
 }
-
 
 
 
