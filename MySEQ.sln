@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31313.79
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySEQ.client", "client\MySEQ.client.csproj", "{874224EA-A207-4C8A-8BB4-76F473680C8F}"
 EndProject
@@ -36,7 +36,8 @@ Global
 		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Mixed Platforms.Build.0 = Debug|x64
 		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Win32.ActiveCfg = Debug|x86
 		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Win32.Build.0 = Debug|x86
-		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|x64.ActiveCfg = Debug|x86
+		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|x64.ActiveCfg = Debug|x64
+		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|x64.Build.0 = Debug|x64
 		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|x86.ActiveCfg = Debug|x86
 		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - GUI|Any CPU.ActiveCfg = Debug - GUI|x86
 		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - GUI|Mixed Platforms.ActiveCfg = Debug - GUI|x86
@@ -72,8 +73,8 @@ Global
 		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - Console|Mixed Platforms.Build.0 = Debug - Console|x64
 		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - Console|Win32.ActiveCfg = Debug|Win32
 		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - Console|Win32.Build.0 = Debug|Win32
-		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - Console|x64.ActiveCfg = Debug - Console|x64
-		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - Console|x64.Build.0 = Debug - Console|x64
+		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - Console|x64.ActiveCfg = Release|x64
+		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - Console|x64.Build.0 = Release|x64
 		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - Console|x86.ActiveCfg = Debug|Win32
 		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - GUI|Any CPU.ActiveCfg = Debug - GUI|Win32
 		{B2A33963-4874-4E74-B9F8-36666B4F9BEF}.Debug - GUI|Mixed Platforms.ActiveCfg = Debug - GUI|Win32
@@ -107,7 +108,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B9705BA4-7FBF-44E1-AB87-51C0043E505A}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {B9705BA4-7FBF-44E1-AB87-51C0043E505A}
 	EndGlobalSection
 EndGlobal

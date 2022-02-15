@@ -2098,13 +2098,14 @@ namespace myseq
             "100",
             "105",
             "110",
-            "115"});
+            "115",
+            "120"});
             this.toolStripLevel.MaxDropDownItems = 80;
             this.toolStripLevel.MaxLength = 4;
             this.toolStripLevel.Name = "toolStripLevel";
             this.toolStripLevel.Size = new System.Drawing.Size(75, 25);
             this.toolStripLevel.Text = "Auto";
-            this.toolStripLevel.ToolTipText = "Auto or 1-115 to filter mobcolors accordingly";
+            this.toolStripLevel.ToolTipText = "Auto or 1-120 to filter mobcolors accordingly";
             this.toolStripLevel.DropDownClosed += new System.EventHandler(this.ToolStripLevel_DropDownClosed);
             this.toolStripLevel.TextUpdate += new System.EventHandler(this.ToolStripLevel_TextUpdate);
             this.toolStripLevel.Leave += new System.EventHandler(this.ToolStripLevel_Leave);

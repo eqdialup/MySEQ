@@ -51,7 +51,7 @@ namespace myseq
             {
                 var isNum = int.TryParse(Str, out var Num);
 
-                if (isNum && (Num < 1 || Num > 115))
+                if (isNum && (Num < 1 || Num > 120))
                 {
                     validnum = false;
                 }

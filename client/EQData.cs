@@ -1173,6 +1173,7 @@ namespace myseq
             si.refresh = new Random().Next(0, 10);
 
             si.listitem = listView;
+            SetListColors(si);
             return listView;
         }
 
@@ -1448,9 +1449,9 @@ namespace myseq
                         {
                             gconLevel -= gamerInfo.Level - si.Level;
                         }
-                        if (gconLevel > 115)
+                        if (gconLevel > 120)
                         {
-                            gconLevel = 115;
+                            gconLevel = 120;
                         }
 
                         if (gconLevel < 1)
