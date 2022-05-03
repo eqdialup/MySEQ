@@ -539,6 +539,7 @@ bool MemReader::extractToBuffer(UINT_PTR offset, char* buffer, UINT size) {
 			0,
 			NULL);
 		Sleep(0);
+		LocalFree(szError);
 	}
 	return rtn;
 
