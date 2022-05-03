@@ -20,20 +20,16 @@
 
 #pragma once
 
-
-
 #include "Common.h"
-
 #include "IniReader.h"
 
- 
+
+
+
 
 #pragma pack(push, 1)
-
 struct worldBuffer_t
-
 {
-
 	BYTE hour;
 
 	BYTE minute;
@@ -45,76 +41,60 @@ struct worldBuffer_t
 	DWORD year;
 
 	UINT flags;
-
 };
 
- 
+
 
 #pragma pack(pop) 
-
 class World
-
 {
-
 public:
-
 	enum offset_types { OT_hour, OT_minute, OT_day, OT_month, OT_year, OT_max };
 
-	UINT offsets[OT_max];
+	UINT offsets[(UINT)World::offset_types::OT_max]{};
 
 	UINT largestOffset;
 
-	string offsetNames[OT_max];
+	string offsetNames[(UINT)World::offset_types::OT_max];
 
-	char *rawBuffer;
+	char* rawBuffer{};
 
-	worldBuffer_t tempWorldBuffer;
+	worldBuffer_t tempWorldBuffer{};
 
 	vector<worldBuffer_t> worldList;
 
-	
-
 private:
+	string extractRawString(World::offset_types ot) { return string(&rawBuffer[World::offsets[(UINT)ot]]); }
 
-	string extractRawString(offset_types ot)	{ return string(&rawBuffer[offsets[ot]]); }
+	float extractRawFloat(World::offset_types ot) { return *((float*)&rawBuffer[World::offsets[(UINT)ot]]); }
 
-	float extractRawFloat(offset_types ot)		{ return *((float*) &rawBuffer[offsets[ot]]); }
+	DWORD extractRawDWord(World::offset_types ot) { return *((DWORD*)&rawBuffer[World::offsets[(UINT)ot]]); }
 
-	DWORD extractRawDWord(offset_types ot)		{ return *((DWORD*) &rawBuffer[offsets[ot]]); }
+	WORD extractRawWord(World::offset_types ot) { return *((WORD*)&rawBuffer[World::offsets[(UINT)ot]]); }
 
-	WORD extractRawWord(offset_types ot)		{ return *((WORD*) &rawBuffer[offsets[ot]]); }
+	BYTE extractRawByte(World::offset_types ot) { return *((BYTE*)&rawBuffer[World::offsets[(UINT)ot]]); }
 
-	BYTE extractRawByte(offset_types ot)		{ return *((BYTE*)  &rawBuffer[offsets[ot]]); }
+	int extractRawInt(World::offset_types ot) { return *((int*)&rawBuffer[World::offsets[(UINT)ot]]); }
 
-	int extractRawInt(offset_types ot)			{ return *((int*)	&rawBuffer[offsets[ot]]); }	
-
-	
-
-public:	
-
+public:
 	World(void);
 
 	void init(IniReaderInterface* ir_intf);
 
-	void setOffset(offset_types ot, int value, string name);
+	void setOffset(World::offset_types ot, int value, string name);
 
 	void packWorldBuffer(UINT flags);
 
-	/* when you are done filling out a NetBuffer, push it for shipping across the network */
+	// when you are done filling out a NetBuffer, push it for shipping across the network
+	void pushNetBuffer() { World::worldList.push_back(tempWorldBuffer); }
 
-	void pushNetBuffer()						{ worldList.push_back(tempWorldBuffer); }
+	UINT getNetBufferSize() { return (UINT)World::worldList.size(); }
 
-	UINT getNetBufferSize()						{ return (UINT) worldList.size(); }
+	World::worldBuffer_t* getNetBufferStart() { return &World::worldList.front(); }
 
-	worldBuffer_t* getNetBufferStart()		{ return &worldList.front(); }
-
-	/* when you are done shipping all the data across the network, reset/clear the NetBuffers */
-
-	void clearNetBuffer()						{ worldList.clear(); }
+	// when you are done shipping all the data across the network, reset/clear the NetBuffers
+	void clearNetBuffer() { World::worldList.clear(); }
 
 private:
-
-	bool race8;
-
+	bool race8{};
 };
-

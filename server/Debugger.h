@@ -20,51 +20,40 @@
 
 #pragma once
 
-
-
 #include "Common.h"
-
 #include "MemReader.h"
-
 #include "Spawn.h"
-
 #include "Item.h"
-
 #include "World.h"
 
 
 
+
+
 class Debugger
-
 {
-
 public:
-
 	enum offset_types { OT_zonename, OT_spawnlist, OT_self, OT_target, OT_ground, OT_world, OT_max };
 
-
-
 private:
-
 	Spawn spawnParser;
 
 	Item itemParser;
 
 	World worldParser;
 
-	UINT offsets[OT_max];
+	QWORD offsets[OT_max]{};
 
 	string ptrNames[OT_max];
 
-	
 
 	void init(IniReaderInterface* ir_intf);
 
 	void displayCurrentOffsets();
 
-	bool setOffset(offset_types ot, UINT value);
+	bool setOffset(offset_types ot, QWORD value);
 
-	void setOffset(offset_types ot, UINT value, string ptrName);
+	void setOffset(offset_types ot, QWORD value, string ptrName);
 
 	void setOffset(bool primary, string userInput);
 
@@ -76,13 +65,13 @@ private:
 
 	void walkSpawnList(MemReaderInterface* mr_intf, offset_types ot, bool reverse);
 
-	void scanForPtr(MemReaderInterface* mr_intf, UINT pSearch, UINT pStart, UINT size);
+	void scanForPtr(MemReaderInterface* mr_intf, QWORD pSearch, QWORD pStart, QWORD size);
 
-	void scanForString(MemReaderInterface* mr_intf, offset_types ot, UINT size, string searchStr);
+	void scanForString(MemReaderInterface* mr_intf, offset_types ot, QWORD size, string searchStr);
 
-	void scanForWorldFromDate(MemReaderInterface* mr_intf, offset_types ot, UINT size, string args);
+	void scanForWorldFromDate(MemReaderInterface* mr_intf, offset_types ot, QWORD size, string args);
 
-	void scanForUINT(MemReaderInterface* mr_intf, UINT pStart, UINT size, string args);
+	void scanForUINT(MemReaderInterface* mr_intf, QWORD pStart, QWORD size, UINT length, string args);
 
 	void showProcesses(MemReaderInterface* mr_intf, string processName);
 
@@ -90,23 +79,22 @@ private:
 
 	void scanForFloatFromSelf(MemReaderInterface* mr_intf, string args);
 
-	void scanForUINTFromSelf(MemReaderInterface* mr_intf, UINT size, string args);
+	void scanForUINTFromSelf(MemReaderInterface* mr_intf, QWORD size, string args);
+
+	void scanForBYTEFromTarget(MemReaderInterface* mr_intf, QWORD size, string args);
+
+	void scanForBYTEFromSelf(MemReaderInterface* mr_intf, QWORD size, string args);
 
 	void scanForFloatFromAddress(MemReaderInterface* mr_intf, string args);
 
-	void scanForFloat(MemReaderInterface* mr_intf, string args, UINT pStart, bool yankPstart);
+	void scanForFloat(MemReaderInterface* mr_intf, string args, QWORD pStart, bool yankPstart);
 
 	int  tokenizeString(string input, vector<string>& tokens);
 
 	int  tokenizeDate(string input, vector<string>& tokens);
 
-	
-
 public:
-
 	Debugger();
 
 	void enterDebugLoop(MemReaderInterface* mr_intf, IniReaderInterface* ir_intf);
-
 };
-

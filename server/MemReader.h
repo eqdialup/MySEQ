@@ -20,62 +20,55 @@
 
 #pragma once
 
-
-
 #include "Common.h"
-
 #include "IniReader.h"
-
 #include <tlhelp32.h>
+
+
+typedef uint64_t QWORD;
+
+
 
 
 
 // The interface classes can be extended, but never changed! They force backwards compatibility.
-
 class MemReaderInterface
-
 {
-
 public:
-
 	virtual bool isValid() = 0;
 
 	virtual bool openFirstProcess(string filename, bool debug = false) = 0;
 
 	virtual bool openNextProcess(string filename, bool debug = false) = 0;
 
-	virtual UINT_PTR extractPointer(UINT_PTR offset) = 0;
+	virtual QWORD extractPointer(QWORD offset) = 0;
 
-	virtual UINT_PTR extractRAWPointer(UINT_PTR offset) = 0;
+	virtual QWORD extractRAWPointer(QWORD offset) = 0;
 
-	virtual string extractString(UINT_PTR offset) = 0;
+	virtual string extractString(QWORD offset) = 0;
 
-	virtual string extractString2(UINT_PTR offset) = 0;
+	virtual string extractString2(QWORD offset) = 0;
 
-	virtual bool extractToBuffer(UINT_PTR offset, char* buffer, UINT size) = 0;
+	virtual bool extractToBuffer(QWORD offset, char* buffer, UINT size) = 0;
 
 	virtual DWORD getCurrentPID() = 0;
 
-	virtual DWORD_PTR getCurrentBaseAddress() = 0;
+	virtual QWORD getCurrentBaseAddress() = 0;
 
 	virtual HANDLE getCurrentHandle() = 0;
 
-	virtual float extractFloat(UINT_PTR offset) = 0;
+	virtual float extractFloat(QWORD offset) = 0;
 
-	virtual BYTE extractBYTE(UINT_PTR offset) = 0;
+	virtual BYTE extractBYTE(QWORD offset) = 0;
 
-	virtual UINT extractUINT(UINT_PTR offset) = 0;
-
+	virtual UINT extractUINT(QWORD offset) = 0;
 };
 
 
 
 class MemReader : public MemReaderInterface
-
 {
-
 private:
-
 	string	originalFilename;
 
 	//HANDLE 	currentEQProcessHandle;
@@ -89,15 +82,13 @@ private:
 	bool openProcess(string filename, bool first, bool debug);
 
 protected:
-
 	HANDLE 	currentEQProcessHandle;
 
 	DWORD	currentEQProcessID;
 
-	DWORD_PTR	currentEQProcessBaseAddress;
+	QWORD	currentEQProcessBaseAddress;
 
 public:
-
 	MemReader();
 
 	~MemReader();
@@ -114,31 +105,29 @@ public:
 
 	bool validateProcess(bool forceCheck);
 
-	UINT_PTR extractPointer(UINT_PTR offset);
+	QWORD extractPointer(QWORD offset);
 
-	UINT_PTR extractRAWPointer(UINT_PTR offset);
+	QWORD extractRAWPointer(QWORD offset);
 
-	string extractString(UINT_PTR offset);
+	string extractString(QWORD offset);
 
-	string extractString2(UINT_PTR offset);
+	string extractString2(QWORD offset);
 
-	bool extractToBuffer(UINT_PTR offset, char* buffer, UINT size);
+	bool extractToBuffer(QWORD offset, char* buffer, UINT size);
 
 	DWORD getCurrentPID();
 
-	DWORD_PTR getCurrentBaseAddress();
+	QWORD getCurrentBaseAddress();
 
 	HANDLE getCurrentHandle();
 
-	float extractFloat(UINT_PTR offset);
+	float extractFloat(QWORD offset);
 
-	BYTE extractBYTE(UINT_PTR offset);
+	BYTE extractBYTE(QWORD offset);
 
-	UINT extractUINT(UINT_PTR offset);
+	UINT extractUINT(QWORD offset);
 
 	bool AdjustPrivileges();
 
-	DWORD_PTR MemReader::GetModuleBaseAddress(DWORD iProcId, TCHAR* DLLName);
-
+	QWORD MemReader::GetModuleBaseAddress(DWORD iProcId, TCHAR* DLLName);
 };
-
