@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32014.148
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32630.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySEQ.client", "client\MySEQ.client.csproj", "{874224EA-A207-4C8A-8BB4-76F473680C8F}"
 EndProject
@@ -30,8 +30,8 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Any CPU.ActiveCfg = Debug|x86
-		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Any CPU.Build.0 = Debug|x86
+		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Any CPU.ActiveCfg = Debug|x64
+		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Any CPU.Build.0 = Debug|x64
 		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Mixed Platforms.ActiveCfg = Debug|x64
 		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Mixed Platforms.Build.0 = Debug|x64
 		{874224EA-A207-4C8A-8BB4-76F473680C8F}.Debug - Console|Win32.ActiveCfg = Debug|x86
@@ -108,7 +108,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {B9705BA4-7FBF-44E1-AB87-51C0043E505A}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

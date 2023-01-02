@@ -12,7 +12,7 @@ namespace Structures
     {
         private const string ServConErr = "Server Connection Error";
 
-        // Variables to store any incomplete packets till the next chunk arrives.
+         // Variables to store any incomplete packets till the next chunk arrives.
         private int incompleteCount = 0;
 
         private bool RequestPending;
@@ -20,7 +20,8 @@ namespace Structures
         private CSocketClient pSocketClient;
 
         // Processing stuff-
-        public ProcessInfo CurrentProcess {get; private set; } = new ProcessInfo(0, "");
+        public ProcessInfo CurrentProcess { get; private set; } = new ProcessInfo(0, "");
+
         private int processcount;
         public List<ProcessInfo> ColProcesses { get; } = new List<ProcessInfo>();
 
@@ -39,8 +40,8 @@ namespace Structures
         private readonly MainForm f1;
 
         public int NewProcessID { get; set; }
-        public string curZone { get; set; }
-        public string mapnameWithLabels { get; set; }
+//        public string curZone { get; set; }
+//        public string mapnameWithLabels { get; set; }
 
         public void UpdateHidden()
         {
@@ -74,8 +75,8 @@ namespace Structures
 
                 // Instantiate a CSocketClient object
                 pSocketClient = new CSocketClient(100000,
-                    new CSocketClient.MESSAGE_HANDLER(MessageHandlerClient),
-                    new CSocketClient.CLOSE_HANDLER(CloseHandler)
+                    MessageHandlerClient,
+                    CloseHandler
                     );
 
                 // Establish a connection to the server
@@ -93,9 +94,9 @@ namespace Structures
                     MessageBox.Show(
                         msg
                         + "\r\nTry selecting a different server!",
-                        caption: ServConErr,
-                        buttons: MessageBoxButtons.OK,
-                        icon: MessageBoxIcon.Error);
+                        ServConErr,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                 }
                 return false;
             }
@@ -106,20 +107,18 @@ namespace Structures
         {
             ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);
         }
+
         private void CloseHandler(CSocketClient pSocket)
         {
             if (f1 == null)
             {
                 StopListening();
+                return;
             }
-            else
-            {
-                f1.StopListening();
-            }
+            f1.StopListening();
         }
 
         //********************************************************************
-
         public void Tick()
         {
             int Request;
@@ -378,7 +377,7 @@ namespace Structures
                 // Finished proceessing the request
                 FinalizeProcess();
 
-                CheckMobs();
+                eq.CheckMobs(f1.SpawnList, f1.GroundItemList);
                 f1.MapConInvalidate();
             }
         }
@@ -417,7 +416,6 @@ namespace Structures
             }
         }
 
-        private void CheckMobs() => eq.CheckMobs(f1.SpawnList, f1.GroundItemList);
         internal void ProcessClear() => ColProcesses.Clear();
     }
 }

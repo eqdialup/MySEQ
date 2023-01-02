@@ -390,6 +390,7 @@ namespace myseq
             this.chkAlertMatchFull.Size = new System.Drawing.Size(104, 24);
             this.chkAlertMatchFull.TabIndex = 23;
             this.chkAlertMatchFull.Text = "Match Full Text";
+            this.chkAlertMatchFull.CheckedChanged += new System.EventHandler(this.ChkAlertMatchFull_CheckedChanged);
             // 
             // grpCaution
             // 
@@ -431,6 +432,7 @@ namespace myseq
             this.optCautionBeep.Size = new System.Drawing.Size(72, 16);
             this.optCautionBeep.TabIndex = 16;
             this.optCautionBeep.Text = "Beep";
+            this.optCautionBeep.CheckedChanged += new System.EventHandler(this.OptCautionBeep_CheckedChanged);
             // 
             // optCautionNone
             // 
@@ -476,6 +478,7 @@ namespace myseq
             this.chkCautionMatchFull.Size = new System.Drawing.Size(104, 24);
             this.chkCautionMatchFull.TabIndex = 14;
             this.chkCautionMatchFull.Text = "Match Full Text";
+            this.chkCautionMatchFull.CheckedChanged += new System.EventHandler(this.ChkCautionMatchFull_CheckedChanged);
             // 
             // grpHunt
             // 
@@ -562,6 +565,7 @@ namespace myseq
             this.chkHuntMatchFull.Size = new System.Drawing.Size(104, 24);
             this.chkHuntMatchFull.TabIndex = 5;
             this.chkHuntMatchFull.Text = "Match Full Text";
+            this.chkHuntMatchFull.CheckedChanged += new System.EventHandler(this.ChkHuntMatchFull_CheckedChanged);
             // 
             // lblFadedLines
             // 
@@ -665,6 +669,7 @@ namespace myseq
             0,
             0,
             0});
+            this.spnRangeCircle.ValueChanged += new System.EventHandler(this.spnRangeCircle_ValueChanged);
             // 
             // numMinAlertLevel
             // 
@@ -1254,6 +1259,7 @@ namespace myseq
             this.chkAffixAlerts.Size = new System.Drawing.Size(112, 24);
             this.chkAffixAlerts.TabIndex = 1;
             this.chkAffixAlerts.Text = "Attach Suffix Text";
+            this.chkAffixAlerts.CheckedChanged += new System.EventHandler(this.ChkAffixAlerts_CheckedChanged);
             // 
             // chkPrefixAlerts
             // 
@@ -1264,6 +1270,7 @@ namespace myseq
             this.chkPrefixAlerts.Size = new System.Drawing.Size(120, 24);
             this.chkPrefixAlerts.TabIndex = 0;
             this.chkPrefixAlerts.Text = "Attach Prefix Text";
+            this.chkPrefixAlerts.CheckedChanged += new System.EventHandler(this.ChkPrefixAlerts_CheckedChanged);
             // 
             // chkCorpsesAlerts
             // 
@@ -1274,6 +1281,7 @@ namespace myseq
             this.chkCorpsesAlerts.Size = new System.Drawing.Size(100, 24);
             this.chkCorpsesAlerts.TabIndex = 24;
             this.chkCorpsesAlerts.Text = "Match Corpses";
+            this.chkCorpsesAlerts.CheckedChanged += new System.EventHandler(this.ChkCorpsesAlerts_CheckedChanged);
             // 
             // tabFolders
             // 
