@@ -415,6 +415,7 @@ bool MemReader::extractToBuffer(QWORD offset, char* buffer, UINT size) {
 			NULL);
 
 		Sleep(0);
+		LocalFree(szError);
 	}
 
 	return rtn;
