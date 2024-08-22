@@ -17,50 +17,44 @@ namespace Structures
         public delegate void CLOSE_HANDLER(CSocketClient pSocket);
 
         /// <summary> RefType: A network stream object </summary>
-        private NetworkStream GetNetworkStream { get; set; }
+        private NetworkStream _networkStream;
 
         /// <summary> RefType: A TcpClient object for socket connection </summary>
-        private TcpClient GetTcpClient { get; set; }
+        private TcpClient _TcpClient;
 
         /// <summary> RetType: A callback object for processing recieved socket data </summary>
-        private AsyncCallback GetCallbackReadMethod { get; }
+        private readonly AsyncCallback _callbackReadMethod;
 
         /// <summary> RetType: A callback object for processing send socket data </summary>
-        private AsyncCallback GetCallbackWriteMethod { get; }
+        private readonly AsyncCallback _callbackWriteMethod;
 
         /// <summary> DelType: A reference to a user supplied function to be called when a socket message arrives </summary>
-        private MESSAGE_HANDLER GetMessageHandler { get; }
+        private readonly MESSAGE_HANDLER _messageHandler;
 
         /// <summary> DelType: A reference to a user supplied function to be called when a socket connection is closed </summary>
-        private CLOSE_HANDLER GetCloseHandler { get; }
+        private readonly CLOSE_HANDLER _closeHandler;
 
         /// <summary> SimType: A raw buffer to capture data comming off the socket </summary>
-        public byte[] GetRawBuffer { get; set; }
+        public byte[] RawBuffer { get; set; }
 
         /// <summary> SimType: Size of the raw buffer for received socket data </summary>
-        public int GetSizeOfRawBuffer { get; set; }
+        public int SizeOfRawBuffer { get; set; }
 
         // Constructor, Finalize, Dispose
         //********************************************************************
         /// <summary> Constructor for client support </summary>
         /// <param name="iSizeOfRawBuffer"> SimType: The size of the raw buffer </param>
-        /// <param name="pfnMessageHandler"> DelType: Reference to the user defined message handler method </param>
-        /// <param name="pfnCloseHandler"> DelType: Reference to the user defined close handler method </param>
+        /// <param name="messageHandler"> DelType: Reference to the user defined message handler method </param>
+        /// <param name="closeHandler"> DelType: Reference to the user defined close handler method </param>
         public CSocketClient(int iSizeOfRawBuffer,
-            MESSAGE_HANDLER pfnMessageHandler, CLOSE_HANDLER pfnCloseHandler)
+            MESSAGE_HANDLER messageHandler, CLOSE_HANDLER closeHandler)
         {
-            // Create the raw buffer
-            GetSizeOfRawBuffer = iSizeOfRawBuffer;
-            GetRawBuffer = new byte[iSizeOfRawBuffer];
-
-            // Set the handler methods
-            GetMessageHandler = pfnMessageHandler;
-            GetCloseHandler = pfnCloseHandler;
-
-            // Set the async socket method handlers
-
-            GetCallbackReadMethod = new AsyncCallback(ReceiveComplete);
-            GetCallbackWriteMethod = new AsyncCallback(SendComplete);
+            SizeOfRawBuffer = iSizeOfRawBuffer;
+            RawBuffer = new byte[iSizeOfRawBuffer];
+            _messageHandler = messageHandler;
+            _closeHandler = closeHandler;
+            _callbackReadMethod = new AsyncCallback(ReceiveComplete);
+            _callbackWriteMethod = new AsyncCallback(SendComplete);
         }
 
         // Private Methods
@@ -72,16 +66,16 @@ namespace Structures
             try
             {
                 // Is the Network Stream object valid
-                if (GetNetworkStream.CanRead)
+                if (_networkStream.CanRead)
                 {
                     // Read the current bytes from the stream buffer
-                    var iBytesRecieved = GetNetworkStream.EndRead(ar);
+                    var iBytesRecieved = _networkStream.EndRead(ar);
 
                     // If there are bytes to process else the connection is lost
                     if (iBytesRecieved > 0)
                     {
                         // A message came in send it to the MessageHandler
-                        try { GetMessageHandler(this, iBytesRecieved); }
+                        try { _messageHandler(this, iBytesRecieved); }
                         catch (Exception ex) { LogLib.WriteLine("Error GetMessageHandler - CSocketClient.ReceiveComplete(): ", ex); }
 
                         // Wait for a new message
@@ -89,56 +83,42 @@ namespace Structures
                     }
                     else
                     {
+                        _closeHandler(this);
                         LogLib.WriteLine("CSocketClient.ReceiveComplete(): Shuting Down", LogLevel.Error);
-                        throw new SocketException();
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // The connection must have dropped call the CloseHandler
-                try { GetCloseHandler(this); }
-                catch (Exception ex) { LogLib.WriteLine("Error CSocketClient.ReceiveComplete(): ", ex); }
-                Disconnect();
+                LogLib.WriteLine("Error CSocketClient.ReceiveComplete(): ", ex);
+                _closeHandler(this);
             }
         }
 
         //********************************************************************
         /// <summary> Called when a message is sent </summary>
         /// <param name="ar"> RefType: An async result interface </param>
-        private void SendComplete(IAsyncResult ar)
-        {
-            try
-            {
-                // Is the Network Stream object valid
-                if (GetNetworkStream.CanWrite)
-                {
-                    GetNetworkStream.EndWrite(ar);
-                    LogLib.WriteLine("CSocketClient.SendComplete(): GetNetworkStream.EndWrite()", LogLevel.Debug);
-                }
-            }
-            catch (Exception ex) { LogLib.WriteLine("Error CSocketClient.SendComplete(): ", ex); }
-        }
+        private void SendComplete(IAsyncResult ar) => _networkStream.EndWrite(ar);
 
         // Public Methods
         //********************************************************************
         /// <summary> Function used to connect to a server </summary>
-        /// <param name="strIpAddress"> RefType: The address to connect to </param>
+        /// <param name="server"> RefType: The address to connect to </param>
         /// <param name="iPort"> SimType: The Port to connect to </param>
-        public void Connect(string strIpAddress, int iPort)
+        public void Connect(string server, int iPort)
         {
-            if (GetNetworkStream != null)
+            if (_networkStream != null)
             {
                 return;
             }
             // Attempt to establish a connection
-            GetTcpClient = new TcpClient(strIpAddress, iPort);
-            GetNetworkStream = GetTcpClient.GetStream();
+            _TcpClient = new TcpClient(server, iPort);
+            _networkStream = _TcpClient.GetStream();
 
             // Set these socket options
-            GetTcpClient.ReceiveBufferSize = cbufferSize;
-            GetTcpClient.SendBufferSize = cbufferSize;
-            GetTcpClient.NoDelay = true;
+            _TcpClient.ReceiveBufferSize = cbufferSize;
+            _TcpClient.SendBufferSize = cbufferSize;
+            _TcpClient.NoDelay = true;
 
             Receive();
         }
@@ -148,18 +128,18 @@ namespace Structures
         public void Disconnect()
         {
             // Close down the connection
-            GetNetworkStream?.Close();
-            GetTcpClient?.Close();
+            _networkStream?.Close();
+            _TcpClient?.Close();
         }
 
         /// <summary> Function to send a raw buffer to the server </summary>
-        /// <param name="pRawBuffer"> RefType: A Raw buffer of bytes to send </param>
-        public void Send(byte[] pRawBuffer)
+        /// <param name="data"> RefType: A Raw buffer of bytes to send </param>
+        public void Send(byte[] data)
         {
-            if (GetNetworkStream?.CanWrite == true)
+            if (_networkStream.CanWrite)
             {
                 // Issue an asynchronus write
-                GetNetworkStream.BeginWrite(pRawBuffer, 0, pRawBuffer.GetLength(0), GetCallbackWriteMethod, null);
+                _networkStream.BeginWrite(data, 0, data.GetLength(0), _callbackWriteMethod, null);
             }
             else
             {
@@ -171,10 +151,10 @@ namespace Structures
         /// <summary> Wait for a message to arrive </summary>
         public void Receive()
         {
-            if (GetNetworkStream?.CanRead == true)
+            if (_networkStream.CanRead)
             {
                 // Issue an asynchronous read
-                GetNetworkStream.BeginRead(GetRawBuffer, 0, GetSizeOfRawBuffer, GetCallbackReadMethod, null);
+                _networkStream.BeginRead(RawBuffer, 0, SizeOfRawBuffer, _callbackReadMethod, null);
             }
             else
             {

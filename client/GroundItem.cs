@@ -1,6 +1,5 @@
 using System.Windows.Forms;
 
-
 namespace Structures
 {
     #region GroundItem class
@@ -30,6 +29,21 @@ namespace Structures
         public int Gone { get; set; }
 
         public bool Filtered { get; set; }
+
+        public GroundItem(float x, float y, float z, bool isHunt, bool isCaution, bool isDanger, bool isAlert, string name, ListViewItem listitem, int gone, bool filtered)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            IsHunt = isHunt;
+            IsCaution = isCaution;
+            IsDanger = isDanger;
+            IsAlert = isAlert;
+            Name = name;
+            Listitem = listitem;
+            Gone = gone;
+            Filtered = filtered;
+        }
 
         public GroundItem(Spawninfo si)
         {

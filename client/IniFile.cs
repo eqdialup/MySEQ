@@ -1,26 +1,24 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 using myseq;
-using myseq.Properties;
 
 namespace Structures
 {
     public class IniFile
     {
-        private readonly string path;
+        private readonly string _path;
 
-        public IniFile(string INIPath)
+        public IniFile(string iniPath)
         {
-            path = FileOps.CombineCfgDir(INIPath);
+            _path = FileOps.CombineCfgDir(iniPath);
         }
 
-        public void WriteValue(string Section, string Key, string Value) => SafeNativeMethods.WritePrivateProfileString(Section, Key, Value, path);
+        public void WriteValue(string section, string key, string value) => SafeNativeMethods.WritePrivateProfileString(section, key, value, _path);
 
-        public string ReadValue(string Section, string Key, string Default)
+        public string ReadValue(string section, string key, string defaultValue)
         {
             StringBuilder buffer = new StringBuilder(255);
 
-            SafeNativeMethods.GetPrivateProfileString(Section, Key, Default, buffer, 255, path);
+            SafeNativeMethods.GetPrivateProfileString(section, key, defaultValue, buffer, 255, _path);
 
             return buffer.ToString();
         }

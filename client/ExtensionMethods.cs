@@ -15,60 +15,60 @@ namespace myseq
 
         public static bool IsMerc(this string mobName)
         => mobName.IndexOf("'s Merc") >= 1;
-        public static decimal FiveHundred(this decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val < 400)
-            {
-                current_val = 400;
-            }
+        //public static decimal FiveHundred(this decimal current_val)
+        //{
+        //    current_val -= 25;
+        //    if (current_val < 400)
+        //    {
+        //        current_val = 400;
+        //    }
 
-            return current_val;
-        }
+        //    return current_val;
+        //}
 
-        public static decimal Fourhundred(this decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val < 300)
-            {
-                current_val = 300;
-            }
+        //public static decimal Fourhundred(this decimal current_val)
+        //{
+        //    current_val -= 25;
+        //    if (current_val < 300)
+        //    {
+        //        current_val = 300;
+        //    }
 
-            return current_val;
-        }
+        //    return current_val;
+        //}
 
-        public static decimal Threehundred(this decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val <= 200)
-            {
-                current_val = 200;
-            }
+        //public static decimal Threehundred(this decimal current_val)
+        //{
+        //    current_val -= 25;
+        //    if (current_val <= 200)
+        //    {
+        //        current_val = 200;
+        //    }
 
-            return current_val;
-        }
+        //    return current_val;
+        //}
 
-        public static decimal Twohundred(this decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val < 100)
-            {
-                current_val = 100;
-            }
+        //public static decimal Twohundred(this decimal current_val)
+        //{
+        //    current_val -= 25;
+        //    if (current_val < 100)
+        //    {
+        //        current_val = 100;
+        //    }
 
-            return current_val;
-        }
+        //    return current_val;
+        //}
 
-        public static decimal subhundred(this decimal current_val)
-        {
-            current_val -= 10;
-            if (current_val < 10)
-            {
-                current_val = 10;
-            }
+        //public static decimal subhundredss(this decimal current_val)
+        //{
+        //    current_val -= 10;
+        //    if (current_val < 10)
+        //    {
+        //        current_val = 10;
+        //    }
 
-            return current_val;
-        }
+        //    return current_val;
+        //}
 
         public static void MakeVisOnWhite(this Spawninfo si)
         {

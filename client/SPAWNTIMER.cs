@@ -204,7 +204,7 @@ namespace myseq
 
         public string GetDescription()
         {
-            var countTimer = GetCountTimer();
+            //var countTimer = GetCountTimer();
             StringBuilder spawnTimer = StBuilder();
 
             spawnTimer.Append("\n")
@@ -212,65 +212,68 @@ namespace myseq
             .AppendFormat("Last Killed At: {0}\n", KillTimeStr)
             .AppendFormat("Next Spawn At: {0}\n", NextSpawnStr)
             .AppendFormat("Spawn Timer: {0} secs\n", SpawnTimer)
-            .AppendFormat("Spawning In: {0}\n", countTimer)
+            .AppendFormat("Spawning In: {0}\n", GetCountdown().ToString("hh':'mm':'ss"))//countTimer)
             .AppendFormat("Spawn Count: {0}\n", SpawnCount)
             .AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", Y, X, Z);
             return spawnTimer.ToString();
         }
 
-        private string GetCountTimer()
-        {
-            var countTimer = "";
+        //private string GetCountTimer()
+        //{
+        //    var countTimer = "";
 
+        //    if (NextSpawnDT != DateTime.MinValue)
+        //    {
+        //        TimeSpan Diff = NextSpawnDT.Subtract(DateTime.Now);
+
+        //        countTimer = $"{Diff.Hours:00}:{Diff.Minutes:00}:{Diff.Seconds:00}";
+        //    }
+
+        //    return countTimer;
+        //}
+
+        private TimeSpan GetCountdown()
+        {
+            TimeSpan countdown = TimeSpan.Zero;
             if (NextSpawnDT != DateTime.MinValue)
             {
-                TimeSpan Diff = NextSpawnDT.Subtract(DateTime.Now);
-
-                countTimer = $"{Diff.Hours:00}:{Diff.Minutes:00}:{Diff.Seconds:00}";
+                countdown = NextSpawnDT.Subtract(DateTime.UtcNow);
             }
-
-            return countTimer;
+            return countdown;
         }
 
         private StringBuilder StBuilder()
         {
             StringBuilder spawnTimer = new StringBuilder();
-
             spawnTimer.AppendFormat("Spawn Name: {0}\n", LastSpawnName);
 
-            var names_to_add = "Names encountered: ";
-            var names = AllNames.Split(',');
-
-            NameCount(spawnTimer, ref names_to_add, names);
-
-            if (names_to_add.Length > 0)
+            if (AllNames.Length > 0)
             {
-                spawnTimer.Append(names_to_add);
+                var names = AllNames.Split(',');
+                NameCount(spawnTimer, "Names encountered: ", names);
             }
 
             return spawnTimer;
         }
 
-        private static void NameCount(StringBuilder spawnTimer, ref string names_to_add, string[] names)
+        private static void NameCount(StringBuilder spawnTimer, string names_to_add, string[] names)
         {
-            StringBuilder builder = new StringBuilder();
             foreach (var name in names)
             {
-                var namet = name.TrimName();
+                var namet = name.Trim();
 
                 if ((namet.Length + names_to_add.Length + 2) < 45)
                 {
-                    builder.Append(names_to_add);
-                    builder.Append(", ");
-                    builder.Append(namet);
+                    names_to_add += ", " + namet;
                 }
                 else
                 {
-                    spawnTimer.Append(builder.ToString());
+                    spawnTimer.Append(names_to_add);
                     spawnTimer.Append("\n");
                     names_to_add = namet;
                 }
             }
+            spawnTimer.Append(names_to_add);
         }
 
         // A true re-spawn has been detected
@@ -457,43 +460,43 @@ namespace myseq
             }
         }
 
-        public string ZoneSpawnLoc {get; set; }
+        public string ZoneSpawnLoc { get; set; }
 
-        public string SpawnLoc {get; set; }            // x,y = primary key, set on first spawn
+        public string SpawnLoc { get; set; }            // x,y = primary key, set on first spawn
 
-        public string zone {get; set; }
+        public string zone { get; set; }
 
-        public bool sticky {get; set; }
+        public bool sticky { get; set; }
 
-        public float Y {get; set; }
+        public float Y { get; set; }
 
-        public float X {get; set; }
+        public float X { get; set; }
 
-        public float Z {get; set; }
+        public float Z { get; set; }
 
-        public bool filtered {get; set; }
+        public bool filtered { get; set; }
 
-        public int SpawnCount {get; set; } = 0;          // Updated on true re-spawn
+        public int SpawnCount { get; set; } = 0;          // Updated on true re-spawn
 
         public int SpawnTimeRemaining { get; set; }
 
-        public int SpawnTimer {get; set; }          // Updated on true re-spawn
+        public int SpawnTimer { get; set; }          // Updated on true re-spawn
 
-        public string SpawnTimeStr {get; set; }    // Update on spawn (last spawn time)
+        public string SpawnTimeStr { get; set; }    // Update on spawn (last spawn time)
 
-        public DateTime SpawnTimeDT {get; set; }
+        public DateTime SpawnTimeDT { get; set; }
 
-        public string KillTimeStr {get; set; } = "";     // Updated on each kill, erased on spawn
+        public string KillTimeStr { get; set; } = "";     // Updated on each kill, erased on spawn
 
-        public DateTime KillTimeDT {get; set; } = DateTime.MinValue;
+        public DateTime KillTimeDT { get; set; } = DateTime.MinValue;
 
-        public string NextSpawnStr {get; set; } = "";    // Updated on each kill, erased on spawn
+        public string NextSpawnStr { get; set; } = "";    // Updated on each kill, erased on spawn
 
-        public DateTime NextSpawnDT {get; set; } = DateTime.MinValue;
+        public DateTime NextSpawnDT { get; set; } = DateTime.MinValue;
 
-        public string LastSpawnName {get; set; }   // Updated on each spawn
+        public string LastSpawnName { get; set; }   // Updated on each spawn
 
-        public ListViewItem ItmSpawnTimerList {get; set; }
+        public ListViewItem ItmSpawnTimerList { get; set; }
 
         private bool listNeedsUpdate;
 

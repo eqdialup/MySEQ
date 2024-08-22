@@ -19,113 +19,73 @@
   ==============================================================================*/
 
 #include "StdAfx.h"
-
 #include "Item.h"
 
- 
-
 Item::Item(void)
-
 {
-
 	// Initialize member data
-
 	itemList.reserve(300);
-
 	largestOffset = 0;
-
 }
 
- 
-
 void Item::init(IniReaderInterface* ir_intf)
-
 {
+	setOffset(OT_prev, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "PrevOffset"), "Previous");
 
-	setOffset(OT_prev, ir_intf->readIntegerEntry("GroundItem Offsets", "PrevOffset"), "Previous");
+	setOffset(OT_next, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "NextOffset"), "Next");
 
-	setOffset(OT_next, ir_intf->readIntegerEntry("GroundItem Offsets", "NextOffset"), "Next");
+	setOffset(OT_id, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "IdOffset"), "ID");
 
-	setOffset(OT_id, ir_intf->readIntegerEntry("GroundItem Offsets", "IdOffset"), "ID");
+	setOffset(OT_dropid, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "DropIdOffset"), "Drop ID");
 
-	setOffset(OT_dropid, ir_intf->readIntegerEntry("GroundItem Offsets", "DropIdOffset"), "Drop ID");
+	setOffset(OT_x, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "XOffset"), "X");
 
-	setOffset(OT_x, ir_intf->readIntegerEntry("GroundItem Offsets", "XOffset"), "X");
+	setOffset(OT_y, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "YOffset"), "Y");
 
-	setOffset(OT_y, ir_intf->readIntegerEntry("GroundItem Offsets", "YOffset"), "Y");
+	setOffset(OT_z, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "ZOffset"), "Z");
 
-	setOffset(OT_z, ir_intf->readIntegerEntry("GroundItem Offsets", "ZOffset"), "Z");
-
-	setOffset(OT_name, ir_intf->readIntegerEntry("GroundItem Offsets", "NameOffset"), "Model Name");
-
- 
+	setOffset(OT_name, (UINT)ir_intf->readIntegerEntry("GroundItem Offsets", "NameOffset"), "Model Name");
 
 	// Determine how many bytes we should read at item in memory
-
 	largestOffset = 0;
 
 	for (int i = 0; i < OT_max; i++)
-
 	{
-
 		if (offsets[i] > largestOffset)
-
-			largestOffset = offsets[i]; 
-
+			largestOffset = offsets[i];
 	}
 
 	largestOffset += 30;
 
- 
-
 	// Allocate memory for our temporary buffer
-
 	// We use this to store the raw data from the EQ process
-
 	rawBuffer = new char[largestOffset];
-
-
+	
+	//std::vector<char> rawBuffer(largestOffset);
 
 	cout << "Item: GroundItem Offsets read in." << endl;
-
 }
 
- 
-
 void Item::setOffset(offset_types ot, int value, string name)
-
 {
-
 	offsets[ot] = value;
 
 	offsetNames[ot] = name;
-
 }
 
-
-
 void Item::packItemBuffer(UINT flags)
-
 {
-
 	tempItemBuffer.name = extractRawString(OT_name);
 
-	
+	tempItemBuffer.x = extractRawFloat(OT_x);
 
-	tempItemBuffer.x			= extractRawFloat(OT_x);
+	tempItemBuffer.y = extractRawFloat(OT_y);
 
-	tempItemBuffer.y			= extractRawFloat(OT_y);
+	tempItemBuffer.z = extractRawFloat(OT_z);
 
-	tempItemBuffer.z			= extractRawFloat(OT_z);
+	tempItemBuffer.id = extractRawDWord(OT_id);
 
-	
-
-	tempItemBuffer.id		= extractRawDWord(OT_id);
-
-	tempItemBuffer.dropid	= extractRawDWord(OT_dropid);
-
-	
+	tempItemBuffer.dropid = extractRawDWord(OT_dropid);
 
 	tempItemBuffer.flags = flags;
-
 }

@@ -1,24 +1,37 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MySEQ.server.w32", "MySEQ.server.w32.vcxproj", "{F5B28C00-4C1F-40DF-871D-1FBA3BB85305}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MySEQ.server", "MySEQ.server.vcxproj", "{53DD6413-7C07-477F-A036-75AA01380243}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug console|Win32 = debug console|Win32
+		debug console|x64 = debug console|x64
 		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
 		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F5B28C00-4C1F-40DF-871D-1FBA3BB85305}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F5B28C00-4C1F-40DF-871D-1FBA3BB85305}.Release|Win32.ActiveCfg = Release|Win32
-		{53DD6413-7C07-477F-A036-75AA01380243}.Debug|Win32.ActiveCfg = Debug|Win32
-		{53DD6413-7C07-477F-A036-75AA01380243}.Debug|Win32.Build.0 = Debug|Win32
-		{53DD6413-7C07-477F-A036-75AA01380243}.Release|Win32.ActiveCfg = Release|Win32
-		{53DD6413-7C07-477F-A036-75AA01380243}.Release|Win32.Build.0 = Release|Win32
+		{53DD6413-7C07-477F-A036-75AA01380243}.debug console|Win32.ActiveCfg = debug console|Win32
+		{53DD6413-7C07-477F-A036-75AA01380243}.debug console|Win32.Build.0 = debug console|Win32
+		{53DD6413-7C07-477F-A036-75AA01380243}.debug console|x64.ActiveCfg = Debug - Console|x64
+		{53DD6413-7C07-477F-A036-75AA01380243}.debug console|x64.Build.0 = Debug - Console|x64
+		{53DD6413-7C07-477F-A036-75AA01380243}.Debug|Win32.ActiveCfg = Debug - GUI|Win32
+		{53DD6413-7C07-477F-A036-75AA01380243}.Debug|Win32.Build.0 = Debug - GUI|Win32
+		{53DD6413-7C07-477F-A036-75AA01380243}.Debug|x64.ActiveCfg = Debug - GUI|x64
+		{53DD6413-7C07-477F-A036-75AA01380243}.Debug|x64.Build.0 = Debug - GUI|x64
+		{53DD6413-7C07-477F-A036-75AA01380243}.Release|Win32.ActiveCfg = Release|x64
+		{53DD6413-7C07-477F-A036-75AA01380243}.Release|Win32.Build.0 = Release|x64
+		{53DD6413-7C07-477F-A036-75AA01380243}.Release|x64.ActiveCfg = Release|x64
+		{53DD6413-7C07-477F-A036-75AA01380243}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B1ED3D79-F986-4E1C-8D9D-7F5355654796}
 	EndGlobalSection
 EndGlobal

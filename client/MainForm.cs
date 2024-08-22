@@ -534,7 +534,7 @@ namespace myseq
                 Settings.Default.WindowsSize = Size;
             }
             Settings.Default.WindowState = WindowState;
-//            ReAdjust();
+            //            ReAdjust();
         }
 
         private void TimPackets_Tick(object sender, EventArgs e)
@@ -721,35 +721,11 @@ namespace myseq
 
         private void LoadDepthFilter()
         {
-            var ConfigFile = FileOps.CombineCfgDir("config.ini");
-            var strIniValue = new IniFile(ConfigFile).ReadValue("Zones", curZone, "");
+            string configFile = FileOps.CombineCfgDir("config.ini");
+            string strIniValue = new IniFile(configFile).ReadValue("Zones", curZone, "");
 
-            if (File.Exists(ConfigFile))
-            {
-                if (strIniValue.Length > 0)
-                {
-                    if ((strIniValue == "0" && Settings.Default.DepthFilter) ||
-                    (strIniValue == "1" && !Settings.Default.DepthFilter))
-                    {
-                        ToggleDepthFilter();
-                    }
-                }
-                else
-                {
-                    // We dont currently have a setting for this zone, so set to off
-                    ToggleDepth();
-                }
-            }
-            else
-            {
-                // We dont currently have a setting file, so set depth filter to off
-                ToggleDepth();
-            }
-        }
-
-        private void ToggleDepth()
-        {
-            if (Settings.Default.DepthFilter)
+            bool iniSetting = strIniValue == "1";
+            if (File.Exists(configFile) && iniSetting != Settings.Default.DepthFilter)
             {
                 ToggleDepthFilter();
             }
@@ -926,6 +902,7 @@ namespace myseq
 
             eq.mobsTimers.ResetTimers();
         }
+
         private void MnuSaveMobs_Click(object sender, EventArgs e)
         {
             eq.SaveMobs();
@@ -1743,7 +1720,7 @@ namespace myseq
                 // add it to map now
                 if (new_text.Length > 0)
                 {
-                    mapBox.SOEMapTextAdd(new_text, this);
+                    mapBox.AddMapText(new_text, this);
                 }
             }
         }
@@ -2567,6 +2544,7 @@ namespace myseq
         {
             BoxClick(toolStripLookupBox);
         }
+
         private void BoxClick(ToolStripTextBox box)
         {
             if (box.Text == "Mob Search")
@@ -2575,6 +2553,7 @@ namespace myseq
                 box.ForeColor = SystemColors.WindowText;
             }
         }
+
         private void ToolStripLookupBox1_Click(object sender, EventArgs e)
         {
             BoxClick(toolStripLookupBox1);
@@ -2732,7 +2711,6 @@ namespace myseq
         public void MapConInvalidate()
         {
             mapCon?.Invalidate();
-            }
-
+        }
     }
 }

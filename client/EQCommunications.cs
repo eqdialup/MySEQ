@@ -20,7 +20,8 @@ namespace Structures
         private CSocketClient pSocketClient;
 
         // Processing stuff-
-        public ProcessInfo CurrentProcess {get; private set; } = new ProcessInfo(0, "");
+        public ProcessInfo CurrentProcess { get; private set; } = new ProcessInfo(0, "");
+
         private int processcount;
         public List<ProcessInfo> ColProcesses { get; } = new List<ProcessInfo>();
 
@@ -39,13 +40,8 @@ namespace Structures
         private readonly MainForm f1;
 
         public int NewProcessID { get; set; }
-        public string curZone { get; set; }
-        public string mapnameWithLabels { get; set; }
 
-        public void UpdateHidden()
-        {
-            update_hidden = true;
-        }
+        public void UpdateHidden() => update_hidden = true;
 
         public EQCommunications(EQData eq, MainForm f1)
         {
@@ -66,7 +62,6 @@ namespace Structures
         }
 
         public bool ConnectToServer(string ServerAddress, int ServerPort, bool errMsg = true)
-
         {
             try
             {
@@ -74,8 +69,8 @@ namespace Structures
 
                 // Instantiate a CSocketClient object
                 pSocketClient = new CSocketClient(100000,
-                    new CSocketClient.MESSAGE_HANDLER(MessageHandlerClient),
-                    new CSocketClient.CLOSE_HANDLER(CloseHandler)
+                    MessageHandlerClient,
+                    CloseHandler
                     );
 
                 // Establish a connection to the server
@@ -90,36 +85,26 @@ namespace Structures
                 LogLib.WriteLine(msg);
                 if (errMsg)
                 {
-                    MessageBox.Show(
-                        msg
-                        + "\r\nTry selecting a different server!",
-                        caption: ServConErr,
-                        buttons: MessageBoxButtons.OK,
-                        icon: MessageBoxIcon.Error);
+                    MessageBox.Show(msg + "\r\nTry selecting a different server!", ServConErr, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 return false;
             }
         }
 
         //********************************************************************
-        private void MessageHandlerClient(CSocketClient pSocket, int iNumberOfBytes)
-        {
-            ProcessPacket(pSocket.GetRawBuffer, iNumberOfBytes);
-        }
+        private void MessageHandlerClient(CSocketClient pSocket, int iNumberOfBytes) => ProcessPacket(pSocket.RawBuffer, iNumberOfBytes);
+
         private void CloseHandler(CSocketClient pSocket)
         {
             if (f1 == null)
             {
                 StopListening();
+                return;
             }
-            else
-            {
-                f1.StopListening();
-            }
+            f1.StopListening();
         }
 
         //********************************************************************
-
         public void Tick()
         {
             int Request;
@@ -209,37 +194,47 @@ namespace Structures
 
                     eq.BeginProcessPacket(); //clears spawn&ground arrays
 
-                    for (; offset + SIZE_OF_PACKET <= bytes; offset += SIZE_OF_PACKET)
+                    while (offset + SIZE_OF_PACKET <= bytes)
                     {
                         Spawninfo si = new Spawninfo();
-
-                        if (offset < 0)
-                        {
-                            // copy the missing chunk of the incomplete packet to the incomplete packet buffer
-                            try
-                            {
-                                PacketCopy(packet, SIZE_OF_PACKET);
-                            }
-                            catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: Copy Incomplete packet buffer: ", ex); }
-                            incompleteCount = 0;
-                            if (incompletebuffer.Length == 0)
-                            {
-                                numPackets = 0;
-                                break;
-                            }
-                            si.Frombytes(incompletebuffer, 0);
-                        }
-                        else
-                        {
-                            si.Frombytes(packet, offset);
-                        }
-
+                        si.Frombytes(packet, offset);
+                        offset += SIZE_OF_PACKET;
                         numProcessed++;
                         ProcessPacket(si);
                     }
+                    /* for (; offset + SIZE_OF_PACKET <= bytes; offset += SIZE_OF_PACKET)
+                     {
+                         Spawninfo si = new Spawninfo();
+
+                         if (offset < 0)
+                         {
+                             // copy the missing chunk of the incomplete packet to the incomplete packet buffer
+                             try
+                             {
+                                 PacketCopy(packet, SIZE_OF_PACKET);
+                             }
+                             catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: Copy Incomplete packet buffer: ", ex); }
+                             incompleteCount = 0;
+                             if (incompletebuffer.Length == 0)
+                             {
+                                 numPackets = 0;
+                                 break;
+                             }
+                             si.Frombytes(incompletebuffer, 0);
+                         }
+                         else
+                         {
+                             si.Frombytes(packet, offset);
+                         }
+
+                         numProcessed++;
+                         ProcessPacket(si);
+                     }*/
 
                     eq.ProcessSpawnList(f1.SpawnList);
                     eq.ProcessGroundItemList(f1.GroundItemList);
+
+                    FinalizeProcess(packet, bytes, offset);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error: ProcessPacket: ", ex); }
@@ -307,6 +302,53 @@ namespace Structures
                     break;
             }
         }
+        private void ProcessedPackets(byte[] packet, int bytes, int offset)
+        {
+            if (numProcessed < numPackets)
+            {
+                // Finished proceessing the request
+                FinalizeProcess(packet, bytes, offset);
+                eq.CheckMobs(f1.SpawnList, f1.GroundItemList);
+                f1.MapConInvalidate();
+            }
+            else
+            {
+                IncompleteCopy(packet, bytes, offset);
+            }
+        }
+
+        private void FinalizeProcess(byte[] packet, int bytes, int offset)
+        {
+            RequestPending = false;
+            update_hidden = false;
+
+            numPackets = numProcessed = 0;
+
+            // Save any incomplete bytes for the next chunk
+            if (offset < bytes)
+            {
+                incompleteCount = bytes - offset;
+                Array.Copy(packet, offset, incompletebuffer, 0, incompleteCount);
+            }
+        }
+
+        private void IncompleteCopy(byte[] packet, int bytes, int offset)
+        {
+            if (offset >= bytes)
+            { return; }
+
+            try
+            {
+                incompleteCount = bytes - offset;
+                Array.Copy(packet, offset, incompletebuffer, 0, incompleteCount);
+            }
+            catch (Exception ex)
+            {
+                LogLib.WriteLine("Error: ProcessPacket(): Copy to Incomplete Buffer: ", ex);
+                LogLib.WriteLine($"Packet Size: {packet.Length} Offset: {offset}");
+                LogLib.WriteLine($"Buffer Size: {incompletebuffer.Length} Incomplete Size: {incompleteCount}");
+            }
+        }
 
         private void PacketCopy(byte[] packet, int SIZE_OF_PACKET)
         {
@@ -363,61 +405,6 @@ namespace Structures
 
         private void StartNewPackets() => processcount = 0;
 
-        private void ProcessedPackets(byte[] packet, int bytes, int offset)
-        {
-            if (numProcessed < numPackets)
-            {
-                if (offset < bytes)
-                {
-                    // Copy unprocessed bytes into the incomplete buffer
-                    IncompleteCopy(packet, bytes, offset);
-                }
-            }
-            else
-            {
-                // Finished proceessing the request
-                FinalizeProcess();
-
-                CheckMobs();
-                f1.MapConInvalidate();
-            }
-        }
-
-        private void FinalizeProcess()
-        {
-            RequestPending = false;
-            update_hidden = false;
-
-            numPackets = numProcessed = 0;
-
-            incompleteCount = 0;
-            // Make sure that the incomplete buffer is actually empty
-            if (incompletebuffer.Length > 0)
-            {
-                for (var pp = 0; pp < incompletebuffer.Length; pp++)
-                {
-                    incompletebuffer[pp] = 0;
-                }
-            }
-        }
-
-        private void IncompleteCopy(byte[] packet, int bytes, int offset)
-        {
-            incompleteCount = bytes - offset;
-
-            try
-            {
-                Array.Copy(packet, offset, incompletebuffer, 0, incompleteCount);
-            }
-            catch (Exception ex)
-            {
-                LogLib.WriteLine("Error: ProcessPacket(): Copy to Incomplete Buffer: ", ex);
-                LogLib.WriteLine($"Packet Size: {packet.Length} Offset: {offset}");
-                LogLib.WriteLine($"Buffer Size: {incompletebuffer.Length} Incomplete Size: {incompleteCount}");
-            }
-        }
-
-        private void CheckMobs() => eq.CheckMobs(f1.SpawnList, f1.GroundItemList);
         internal void ProcessClear() => ColProcesses.Clear();
     }
 }

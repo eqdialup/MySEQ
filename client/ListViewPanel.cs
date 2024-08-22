@@ -697,18 +697,18 @@ namespace myseq
                     listView.Focus();
                 }
 
-                if (ListType == 0)
+                switch (ListType)
 
                 {
-                    eq?.SetSelectedID(int.Parse(listView.Items[sel[0]].SubItems[11].Text));
-                }
-                else if (ListType == 1)
-                {
-                    eq?.SetSelectedTimer(float.Parse(listView.Items[sel[0]].SubItems[4].Text), float.Parse(listView.Items[sel[0]].SubItems[5].Text));
-                }
-                else if (ListType == 2)
-                {
-                    eq?.SetSelectedGroundItem(float.Parse(listView.Items[sel[0]].SubItems[3].Text), float.Parse(listView.Items[sel[0]].SubItems[4].Text));
+                    case 0:
+                        eq?.SetSelectedID(int.Parse(listView.Items[sel[0]].SubItems[11].Text));
+                        break;
+                    case 1:
+                        eq?.SetSelectedTimer(float.Parse(listView.Items[sel[0]].SubItems[4].Text), float.Parse(listView.Items[sel[0]].SubItems[5].Text));
+                        break;
+                    case 2:
+                        eq?.SetSelectedGroundItem(float.Parse(listView.Items[sel[0]].SubItems[3].Text), float.Parse(listView.Items[sel[0]].SubItems[4].Text));
+                        break;
                 }
 
                 f1.MapConInvalidate();

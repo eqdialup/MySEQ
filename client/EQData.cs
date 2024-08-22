@@ -1,12 +1,13 @@
-using myseq.Properties;
-using Structures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using myseq.Properties;
+using Structures;
 
 namespace myseq
 {
@@ -23,11 +24,13 @@ namespace myseq
 
         // Map details
         public string Longname { get; set; } = "";
+
         public string Shortname { get; set; } = "";
 
         //// Map data
         // Max + Min map coordinates - define the bounds of the zone
         public float MinmapX { get; set; } = -1000;
+
         public float MaxMapX { get; set; } = 1000;
         public float MinMapY { get; set; } = -1000;
         public float MaxMapY { get; set; } = 1000;
@@ -50,6 +53,7 @@ namespace myseq
 
         // Mobs / UI Lists
         private List<ListViewItem> NewSpawns { get; } = new List<ListViewItem>();
+
         private List<ListViewItem> NewGroundItems { get; } = new List<ListViewItem>();
 
         // Items List by ID and Description loaded from file
@@ -59,7 +63,7 @@ namespace myseq
 
         //        public Hashtable guildList = new Hashtable();
 
-        private bool CorpseAlerts = true;
+        private bool CorpseAlerts = Settings.Default.CorpseAlerts;
 
         public bool Zoning { get; set; }
 
@@ -103,22 +107,22 @@ namespace myseq
 
         public bool SelectGroundItem(float x, float y, float delta)
         {
-            GroundItem gi = FindGroundItem(x, y, delta);
+            GroundItem groundItem = FindGroundItem(x, y, delta);
 
-            if (gi != null)
+            if (groundItem != null)
             {
                 if (Settings.Default.AutoSelectSpawnList)
                 {
-                    gi.Listitem.EnsureVisible();
+                    groundItem.Listitem.EnsureVisible();
 
-                    gi.Listitem.Selected = true;
+                    groundItem.Listitem.Selected = true;
                 }
 
                 selectedID = 99999;
 
-                SpawnX = gi.X;
+                SpawnX = groundItem.X;
 
-                SpawnY = gi.Y;
+                SpawnY = groundItem.Y;
 
                 return true;
             }
@@ -159,11 +163,7 @@ namespace myseq
         {
             foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                if (Xor(sp.hidden, Xor(sp.isFamiliar, Xor(sp.isPet, sp.isMerc))))
-                {
-                    return null;
-                }
-                if (CheckXY(sp, x, y, delta))
+                if (!sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isMerc && IsInRange(sp, x, y, delta))
                 {
                     return sp;
                 }
@@ -175,35 +175,21 @@ namespace myseq
         {
             foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                if (Xor(sp.hidden, Xor(sp.isFamiliar, Xor(sp.isPet, Xor(sp.isMerc, Xor(sp.IsPlayer, sp.isCorpse))))))
-                {
-                    return null;
-                }
-
-                if (CheckXY(sp, x, y, delta))
+                if (!sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isMerc && !sp.IsPlayer && !sp.isCorpse && IsInRange(sp, x, y, delta))
                 {
                     return sp;
                 }
             }
             return null;
         }
-        private bool CheckXY(Spawninfo sp, float x, float y, float delta)
-        {
-            var dely = sp.Y < y + delta && sp.Y > y - delta;
-            var delx = sp.X < x + delta && sp.X > x - delta;
-            return delx && dely;
-        }
+
+        private bool IsInRange(Spawninfo sp, float x, float y, float delta) => sp.Y < y + delta && sp.Y > y - delta && sp.X < x + delta && sp.X > x - delta;
 
         public Spawninfo FindMobNoPetNoPlayer(float x, float y, float delta)
         {
             foreach (Spawninfo sp in mobsHashTable.Values)
             {
-                if (Xor(sp.hidden, Xor(sp.isFamiliar, Xor(sp.isPet, Xor(sp.isMerc, sp.isCorpse)))))
-                {
-                    return null;
-                }
-
-                if (CheckXY(sp, x, y, delta))
+                if (!sp.hidden && !sp.isFamiliar && !sp.isPet && !sp.isMerc && !sp.isCorpse && IsInRange(sp, x, y, delta))
                 {
                     return sp;
                 }
@@ -363,65 +349,34 @@ namespace myseq
 
         public void CalcExtents(List<MapLine> lines)
         {
-            if (Longname != "" && lines.Count > 0)
+            if (Longname != "")
             {
                 MaxMapX = MinmapX = lines[0].Point(0).X;
-
                 MaxMapY = MinMapY = lines[0].Point(0).Y;
-
                 MaxMapZ = minMapZ = lines[0].Point(0).Z;
 
                 foreach (MapLine mapLine in lines)
                 {
-                    ExtendMapLines(mapLine);
+                    for (int i = 0; i < mapLine.APoints.Count; i++)
+                    {
+                        var point = mapLine.Point(i);
+                        MaxMapX = Math.Max(MaxMapX, point.X);
+                        MinmapX = Math.Min(MinmapX, point.X);
+                        MaxMapY = Math.Max(MaxMapY, point.Y);
+                        MinMapY = Math.Min(MinMapY, point.Y);
+                        MaxMapZ = Math.Max(MaxMapZ, point.Z);
+                        minMapZ = Math.Min(minMapZ, point.Z);
+                    }
                 }
             }
             else
             {
                 MinmapX = -1000;
-
                 MaxMapX = 1000;
-
                 MinMapY = -1000;
-
                 MaxMapY = 1000;
-
                 minMapZ = -1000;
-
                 MaxMapZ = 1000;
-            }
-        }
-
-        private void ExtendMapLines(MapLine mapLine)
-        {
-            foreach (MapPoint mapPoint in mapLine.APoints)
-            {
-                if (mapPoint.X > MaxMapX)
-                {
-                    MaxMapX = mapPoint.X;
-                }
-                else if (mapPoint.X < MinmapX)
-                {
-                    MinmapX = mapPoint.X;
-                }
-
-                if (mapPoint.Y > MaxMapY)
-                {
-                    MaxMapY = mapPoint.Y;
-                }
-                else if (mapPoint.Y < MinMapY)
-                {
-                    MinMapY = mapPoint.Y;
-                }
-
-                if (mapPoint.Z > MaxMapZ)
-                {
-                    MaxMapZ = mapPoint.Z;
-                }
-                else if (mapPoint.Z < minMapZ)
-                {
-                    minMapZ = mapPoint.Z;
-                }
             }
         }
 
@@ -534,28 +489,29 @@ namespace myseq
 
                 if (!found)
                 {
-                    GroundItem gi = new GroundItem(si);
-                    gi.Desc = GetItemDescription(gi.Name);
+                    //GroundItem gi = new GroundItem(si);
+                    GroundItem gi = new GroundItem(si.X, si.Y, si.Z, false, false, false, false, si.Name, null, 0, false);
 
                     CheckGrounditemForAlerts(gi, gi.Desc.ToLower());
-                    ListViewItem item1 = new ListViewItem(gi.Desc);
 
-                    item1.SubItems.Add(si.Name);
+                    ListViewItem GroundSpawnList = new ListViewItem(gi.Desc);
 
-                    item1.SubItems.Add(DateTime.Now.ToLongTimeString());
+                    GroundSpawnList.SubItems.Add(si.Name);
 
-                    item1.SubItems.Add(si.X.ToString("#.000"));
+                    GroundSpawnList.SubItems.Add(DateTime.Now.ToLongTimeString());
 
-                    item1.SubItems.Add(si.Y.ToString("#.000"));
+                    GroundSpawnList.SubItems.Add($"{si.X:F3}");
 
-                    item1.SubItems.Add(si.Z.ToString("#.000"));
+                    GroundSpawnList.SubItems.Add($"{si.Y:F3}");
 
-                    gi.Listitem = item1;
+                    GroundSpawnList.SubItems.Add($"{si.Z:F3}");
+
+                    gi.Listitem = GroundSpawnList;
 
                     itemcollection.Add(gi);
 
                     // Add it to the ground item list
-                    NewGroundItems.Add(item1);
+                    NewGroundItems.Add(GroundSpawnList);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItems(): ", ex); }
@@ -607,6 +563,7 @@ namespace myseq
         }
 
         public void ProcessWorld(Spawninfo si) => gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0);
+
         /*  yy/mm/dd/hh/min
          * gameYear = si.Race
          * gameMonth = si.Hide
@@ -642,81 +599,13 @@ namespace myseq
                     // some of these should not change often, so only check every 10 times through
                     if (mob.refresh >= 10)
                     {
-                        if (mob.Type != si.Type)
+                        UpdateMobProperties(si, mob);
+                        if (!si.hidden && mob.hidden)
                         {
-                            mob.Type = si.Type;
-                            UpdateMobTypes(mob);
-                            SetListColors(mob);
+                            listReAdd = true;
                         }
-                        if (mob.Level != si.Level)
-                        {
-                            mob.Level = si.Level;
-                            mob.listitem.SubItems[1].Text = mob.Level.ToString();
-                            MobLevelSetColor(mob);
-                        }
-                        // Update Hidden flags
-                        if (update_hidden)
-                        {
-                            UpdateHidden(si, mob);
-                            if (!si.hidden && mob.hidden)
-                            {
-                                listReAdd = true;
-                            }
-                        }
-
-                        // check if the mob name has changed - eg when a mob dies.
-                        if ((si.Name.Length > 0) && (string.Compare(mob.Name, si.Name) != 0))
-                        {
-                            NameChngOrDead(si, mob);
-                        }
-                        Tainted_Egg(si);
-                        if (mob.Class != si.Class)
-                        {
-                            mob.Class = si.Class;
-                            mob.listitem.SubItems[2].Text = GetClass(si.Class);
-                        }
-
-                        if (mob.Primary != si.Primary)
-                        {
-                            mob.Primary = si.Primary;
-                            mob.listitem.SubItems[3].Text = si.Primary > 0 ? ItemNumToString(si.Primary) : "";
-                        }
-
-                        if (mob.Offhand != si.Offhand)
-                        {
-                            mob.Offhand = si.Offhand;
-                            mob.listitem.SubItems[4].Text = si.Offhand > 0 ? ItemNumToString(si.Offhand) : "";
-                        }
-
-                        if (mob.Race != si.Race)
-                        {
-                            mob.Race = si.Race;
-                            mob.listitem.SubItems[5].Text = GetRace(si.Race);
-                        }
-
-                        if (mob.OwnerID != 0)
-                        {
-                            mob.OwnerID = si.OwnerID;
-                            MobHasOwner(mob);
-                            mob.Hide = si.Hide;
-                            mob.listitem.SubItems[9].Text = si.Hide.GetHideStatus();
-                        }
-
-                        //if (mob.Guild != si.Guild)
-                        //{
-                        //    mob.Guild = si.Guild;
-
-                        //    if (si.Guild > 0)
-                        //        mob.listitem.SubItems[17].Text = GuildNumToString(si.Guild);
-                        //    else
-                        //        mob.listitem.SubItems[17].Text = "";
-                        //}
-
-                        mob.refresh = 0;
                     }
-
                     mob.refresh++;
-
                     // Set variables we dont want to trigger list update
                     UpdateMobPosition(si, mob);
 
@@ -750,6 +639,31 @@ namespace myseq
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawns(): ", ex); }
+        }
+
+        private void UpdateMobProperties(Spawninfo si, Spawninfo mob)
+        {
+            mob.Type = si.Type;
+            UpdateMobTypes(mob);
+            SetListColors(mob);
+            mob.Level = si.Level;
+            mob.listitem.SubItems[1].Text = mob.Level.ToString();
+            MobLevelSetColor(mob);
+            UpdateHidden(si, mob);
+            NameChngOrDead(si, mob);
+            Tainted_Egg(si);
+            mob.Class = si.Class;
+            mob.listitem.SubItems[2].Text = GetClass(si.Class);
+            mob.Primary = si.Primary;
+            mob.listitem.SubItems[3].Text = si.Primary > 0 ? ItemNumToString(si.Primary) : "";
+            mob.Offhand = si.Offhand;
+            mob.listitem.SubItems[4].Text = si.Offhand > 0 ? ItemNumToString(si.Offhand) : "";
+            mob.Race = si.Race;
+            mob.listitem.SubItems[5].Text = GetRace(si.Race);
+            mob.OwnerID = si.OwnerID;
+            MobHasOwner(mob);
+            mob.Hide = si.Hide;
+            mob.listitem.SubItems[9].Text = si.Hide.GetHideStatus();
         }
 
         private void UpdateMobPosition(Spawninfo si, Spawninfo mob)
@@ -792,7 +706,7 @@ namespace myseq
             else if (si.Type == 2 || si.Type == 3)
             {
                 // Corpses
-                HandleCorpses(si);
+                UpdateCorpseProperties(si);// Corpses(si);
             }
             else
             {
@@ -930,9 +844,8 @@ namespace myseq
             }
         }
 
-        private void HandleCorpses(Spawninfo si)
+/*        private void HandleCorpses(Spawninfo si)
         {
-            CorpseAlerts = Settings.Default.CorpseAlerts;
             si.isCorpse = true;
 
             if (!CorpseAlerts)
@@ -967,24 +880,60 @@ namespace myseq
                 si.hidden = true;
             }
         }
+*/
+        private void UpdateCorpseProperties(Spawninfo si)
+        {
+            si.isCorpse = true;
+
+            if (!CorpseAlerts)
+            {
+                si.isHunt = false;
+                si.isCaution = false;
+                si.isDanger = false;
+                si.isAlert = false;
+            }
+
+            si.m_isPlayer = IsPlayerCorpse(si);
+
+            si.hidden = ShouldHideCorpse(si);
+
+            si.m_isMyCorpse = IsMyCorpse(si);
+        }
+
+        private bool IsPlayerCorpse(Spawninfo si)
+        {
+            return (si.Name.IndexOf("_") == -1) && (si.Name.IndexOf("a ") != 0) && (si.Name.IndexOf("an ") != 0);
+        }
+
+        private bool ShouldHideCorpse(Spawninfo si)
+        {
+            if (si.m_isPlayer && !Settings.Default.ShowPCCorpses)
+            {
+                return true;
+            }
+
+            if (IsMyCorpse(si))
+            {
+                return !Settings.Default.ShowMyCorpse;
+            }
+
+            return !Settings.Default.ShowCorpses;
+        }
+
+        private bool IsMyCorpse(Spawninfo si)
+        {
+            return si.Name.Length > 0 && CheckMyCorpse(si.Name);
+        }
 
         private void PopulateListview(Spawninfo si, Spawninfo mob)
         {
-            mob.X = si.X;
-            mob.listitem.SubItems[14].Text = si.Y.ToString();
-
-            mob.Y = si.Y;
-            mob.listitem.SubItems[13].Text = si.X.ToString();
-
-            mob.Z = si.Z;
-            mob.listitem.SubItems[15].Text = si.Z.ToString();
-
-            //if (Settings.Default.FollowOption == FollowOption.Target)
-            //{
-            //    f1.ReAdjust();
-            //}
-
-            mob.listitem.SubItems[16].Text = si.SpawnDistance(si, gamerInfo).ToString("#.00");
+            //            mob.X = si.X;
+            //            mob.Y = si.Y;
+            //            mob.Z = si.Z;
+            mob.listitem.SubItems[13].Text = $"{si.X}";
+            mob.listitem.SubItems[14].Text = $"{si.Y}";
+            mob.listitem.SubItems[15].Text = $"{si.Z}";
+            mob.listitem.SubItems[16].Text = $"{si.SpawnDistance(si, gamerInfo):#.00}";
         }
 
         private void UpdateMobTypes(Spawninfo mob)
@@ -1024,70 +973,132 @@ namespace myseq
             }
         }
 
-        private static void UpdateHidden(Spawninfo si, Spawninfo mob)
-        {
-            if (mob.isCorpse)
-            {
-                if (mob.IsPlayer)
+        /*        private static void UpdateHidden(Spawninfo si, Spawninfo mob)
                 {
-                    // My Corpse
-
-                    if (mob.IsMyCorpse)
+                    if (mob.isCorpse)
                     {
-                        si.hidden = !Settings.Default.ShowMyCorpse;
+                        if (mob.IsPlayer)
+                        {
+                            // My Corpse
+
+                            if (mob.IsMyCorpse)
+                            {
+                                si.hidden = !Settings.Default.ShowMyCorpse;
+                            }
+                            else
+                            {
+                                // Other Players Corpses
+
+                                si.hidden = !Settings.Default.ShowPCCorpses;
+                            }
+                        }
+                        else
+                        {
+                            si.hidden = !Settings.Default.ShowCorpses;
+                        }
+                    }
+                    else if (mob.IsPlayer)
+                    {
+                        si.hidden = !Settings.Default.ShowPlayers;
                     }
                     else
                     {
-                        // Other Players Corpses
+                        // non-corpse, non-player spawn (aka NPC)
 
-                        si.hidden = !Settings.Default.ShowPCCorpses;
+                        if (!Settings.Default.ShowNPCs) // hides all NPCs
+                        {
+                            si.hidden = true;
+                        }
+                        else
+                        {
+                            si.hidden = false;
+
+                            if (si.isEventController && !Settings.Default.ShowInvis) // Invis Men
+                            {
+                                si.hidden = true;
+                            }
+                            else if (mob.isMount && !Settings.Default.ShowMounts) // Mounts
+                            {
+                                si.hidden = true;
+                            }
+                            else if (mob.isPet && !Settings.Default.ShowPets) // Pets
+                            {
+                                si.hidden = true;
+                            }
+                            else if (mob.isFamiliar && !Settings.Default.ShowFamiliars) // Familiars
+                            {
+                                si.hidden = true;
+                            }
+                        }
                     }
+
+                    if (si.hidden && !mob.hidden)
+                    {
+                        mob.delFromList = true;
+                    }
+                    mob.hidden = si.hidden;
                 }
-                else
+        */
+
+        private static bool ShouldHideMob(Spawninfo mob)
+        {
+            // My Corpse
+            if (mob.IsMyCorpse)
+            {
+                return !Settings.Default.ShowMyCorpse;
+            }
+            // Other Players Corpses
+            else if (mob.isCorpse && mob.IsPlayer)
+            {
+                return !Settings.Default.ShowPCCorpses;
+            }
+            // non-corpse, non-player spawn (aka NPC)
+            else if (!mob.IsPlayer)
+            {
+                // hides all NPCs
+                if (!Settings.Default.ShowNPCs)
                 {
-                    si.hidden = !Settings.Default.ShowCorpses;
+                    return true;
+                }
+                // Invis Men
+                else if (mob.isEventController && !Settings.Default.ShowInvis)
+                {
+                    return true;
+                }
+                // Mounts
+                else if (mob.isMount && !Settings.Default.ShowMounts)
+                {
+                    return true;
+                }
+                // Pets
+                else if (mob.isPet && !Settings.Default.ShowPets)
+                {
+                    return true;
+                }
+                // Familiars
+                else if (mob.isFamiliar && !Settings.Default.ShowFamiliars)
+                {
+                    return true;
                 }
             }
+            // Players
             else if (mob.IsPlayer)
             {
-                si.hidden = !Settings.Default.ShowPlayers;
+                return !Settings.Default.ShowPlayers;
             }
-            else
-            {
-                // non-corpse, non-player spawn (aka NPC)
 
-                if (!Settings.Default.ShowNPCs) // hides all NPCs
-                {
-                    si.hidden = true;
-                }
-                else
-                {
-                    si.hidden = false;
+            return false;
+        }
 
-                    if (si.isEventController && !Settings.Default.ShowInvis) // Invis Men
-                    {
-                        si.hidden = true;
-                    }
-                    else if (mob.isMount && !Settings.Default.ShowMounts) // Mounts
-                    {
-                        si.hidden = true;
-                    }
-                    else if (mob.isPet && !Settings.Default.ShowPets) // Pets
-                    {
-                        si.hidden = true;
-                    }
-                    else if (mob.isFamiliar && !Settings.Default.ShowFamiliars) // Familiars
-                    {
-                        si.hidden = true;
-                    }
-                }
-            }
+        private static void UpdateHidden(Spawninfo si, Spawninfo mob)
+        {
+            si.hidden = ShouldHideMob(mob);
+            mob.hidden = si.hidden;
 
             if (si.hidden && !mob.hidden)
             {
                 mob.delFromList = true;
             }
-            mob.hidden = si.hidden;
         }
 
         private void IsSpawnInFilterLists(Spawninfo si)
@@ -1252,33 +1263,28 @@ namespace myseq
 
         public void SaveMobs()
         {
-            var dt = DateTime.Now;
-
-            var filename = $"{Longname} - {dt.Month}-{dt.Day}-{dt.Year}-{dt.Hour}.txt";
-
-            StreamWriter sw = new StreamWriter(filename, false);
-
-            sw.Write("Name\t\tLevel\t Class\t\tRace\tLastname\t\tType\tInvis\tRun\tSpeed\tSpawnID\tX\tY\tZ\tHeading");
-
-            foreach (Spawninfo si in mobsHashTable.Values)
+            var filename = $"{Longname} - {DateTime.Now:MM-dd-yyyy-hh}.txt";
+            using (StreamWriter sw = new StreamWriter(filename, false))
             {
-                sw.WriteLine("{0}\t\t{1}\t\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}",
-                             si.Name,
-                             si.Level,
-                             GetClass(si.Class),
-                             GetRace(si.Race),
-                             si.Lastname,
-                             si.Type.GetSpawnType(),
-                             si.Hide.GetHideStatus(),
-                             si.SpeedRun,
-                             si.SpawnID,
-                             si.Y,
-                             si.X,
-                             si.Z,
-                             CalcRealHeading(si));
+                sw.Write("Name\t\tLevel\t Class\t\tRace\tLastname\t\tType\tInvis\tRun\tSpeed\tSpawnID\tX\tY\tZ\tHeading");
+                foreach (Spawninfo si in mobsHashTable.Values)
+                {
+                    sw.WriteLine("{0}\t\t{1}\t\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}",
+                                 si.Name,
+                                 si.Level,
+                                 GetClass(si.Class),
+                                 GetRace(si.Race),
+                                 si.Lastname,
+                                 si.Type.GetSpawnType(),
+                                 si.Hide.GetHideStatus(),
+                                 si.SpeedRun,
+                                 si.SpawnID,
+                                 si.Y,
+                                 si.X,
+                                 si.Z,
+                                 CalcRealHeading(si));
+                }
             }
-
-            sw.Close();
         }
 
         public void SetSelectedID(int id)
@@ -1290,32 +1296,29 @@ namespace myseq
 
         public void SetSelectedTimer(float x, float y)
         {
-            Spawntimer st = FindTimer(x, y, 1.0f);
-
-            if (st != null)
+            Spawntimer timer = FindTimer(x, y, 1.0f);
+            if (timer == null)
             {
-                Spawninfo sp = FindMobTimer(st.SpawnLoc);
-
-                selectedID = sp == null ? 99999 : sp.SpawnID;
-
-                SpawnX = st.X;
-
-                SpawnY = st.Y;
+                return;
             }
+
+            Spawninfo mob = FindMobTimer(timer.SpawnLoc);
+            selectedID = mob?.SpawnID ?? 99999;
+            SpawnX = timer.X;
+            SpawnY = timer.Y;
         }
 
         public void SetSelectedGroundItem(float x, float y)
         {
-            GroundItem gi = FindGroundItem(x, y, 1.0f); // was FindGroundItemNoFilter
+            GroundItem gi = FindGroundItem(x, y, 1.0f);
 
-            if (gi != null)
+            if (gi == null)
             {
-                selectedID = 99999;
-
-                SpawnX = gi.X;
-
-                SpawnY = gi.Y;
+                return;
             }
+            selectedID = 99999;
+            SpawnX = gi.X;
+            SpawnY = gi.Y;
         }
 
         public string GetClass(int num) => ArrayIndextoStr(Classes, num);
@@ -1348,32 +1351,12 @@ namespace myseq
         {
             try
             {
-                if (NewSpawns.Count > 0)
-                {
-                    if (Zoning)
-                    {
-                        SpawnList.listView.BeginUpdate();
-                    }
+                if (NewSpawns.Count == 0) return;
+                if (Zoning) SpawnList.listView.BeginUpdate();
 
-                    ListViewItem[] items = new ListViewItem[NewSpawns.Count];
-
-                    var d = 0;
-
-                    foreach (ListViewItem i in NewSpawns)
-                    {
-                        if (i != null)
-                        {
-                            items[d++] = i;
-                        }
-                    }
-
-                    SpawnList.listView.Items.AddRange(items);
-                    NewSpawns.Clear();
-                    if (Zoning)
-                    {
-                        SpawnList.listView.EndUpdate();
-                    }
-                }
+                SpawnList.listView.Items.AddRange(NewSpawns.ToArray());
+                NewSpawns.Clear();
+                if (Zoning) SpawnList.listView.EndUpdate();
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawnList(): ", ex); }
         }
@@ -1535,7 +1518,13 @@ namespace myseq
         private bool FullTxtH;
         private bool Prefix = true;
 
-        private static void AudioMatch(string mobname, string TalkDescr, bool TalkOnMatch, bool PlayOnMatch, bool BeepOnMatch, string AudioFile)
+        private static async Task PlayAudioAsync(string audioName)
+        {
+            _ = audioName.Replace("\\", "\\\\");
+            await Task.Run(() => SAudio.Play(audioName));
+        }
+
+        private static async void AudioMatch(string mobname, string TalkDescr, bool TalkOnMatch, bool PlayOnMatch, bool BeepOnMatch, string AudioFile)
         {
             if (TalkOnMatch)
             {
@@ -1548,11 +1537,11 @@ namespace myseq
             }
             else if (PlayOnMatch)
             {
-                SAudio.Play(AudioFile.Replace("\\", "\\\\"));
+                await PlayAudioAsync(AudioFile);
             }
             else if (BeepOnMatch)
             {
-                SafeNativeMethods.Beep(300, 100);
+                await Task.Run(() => SafeNativeMethods.Beep(300, 100));
             }
         }
 
@@ -1648,30 +1637,30 @@ namespace myseq
             }
         }
 
-        private void CheckGrounditemForAlerts(GroundItem gi, string itemname)
+        private void CheckGrounditemForAlerts(GroundItem groundItem, string itemName)
         {
             // [hunt]
-            if (FindMatches(Filters.Hunt, itemname, FullTxtH) || FindMatches(Filters.GlobalHunt, itemname, FullTxtH))
+            if (FindMatches(Filters.Hunt, itemName, FullTxtH) || FindMatches(Filters.GlobalHunt, itemName, FullTxtH))
             {
-                gi.IsHunt = true;
+                groundItem.IsHunt = true;
             }
 
             // [caution]
-            if (FindMatches(Filters.Caution, itemname, FullTxtC) || FindMatches(Filters.GlobalCaution, itemname, FullTxtC))
+            if (FindMatches(Filters.Caution, itemName, FullTxtC) || FindMatches(Filters.GlobalCaution, itemName, FullTxtC))
             {
-                gi.IsCaution = true;
+                groundItem.IsCaution = true;
             }
 
             // [danger]
-            if (FindMatches(Filters.Danger, itemname, FullTxtD) || FindMatches(Filters.GlobalDanger, itemname, FullTxtD))
+            if (FindMatches(Filters.Danger, itemName, FullTxtD) || FindMatches(Filters.GlobalDanger, itemName, FullTxtD))
             {
-                gi.IsDanger = true;
+                groundItem.IsDanger = true;
             }
 
             // [rare]
-            if (FindMatches(Filters.Alert, itemname, FullTxtA) || FindMatches(Filters.GlobalAlert, itemname, FullTxtA))
+            if (FindMatches(Filters.Alert, itemName, FullTxtA) || FindMatches(Filters.GlobalAlert, itemName, FullTxtA))
             {
-                gi.IsAlert = true;
+                groundItem.IsAlert = true;
             }
         }
 

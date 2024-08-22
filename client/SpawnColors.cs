@@ -1,4 +1,6 @@
 ﻿using System.Drawing;
+using System.IO;
+using System.Text.RegularExpressions;
 using myseq.Properties;
 
 namespace Structures
@@ -101,17 +103,17 @@ namespace Structures
 
         private void ConLevelFile(int level)
         {
-            var Ini = new IniFile("ConLevels.Ini");
+            string iniFile = "ConLevels.Ini";
+            string iniFileContent = File.ReadAllText(iniFile);
+            string sIniValue = Regex.Match(iniFileContent, $"{level}=(.+?)\n").Groups[1].Value;
+            string yellowLevels = Regex.Match(iniFileContent, "0=(.+?)\n").Groups[1].Value;
+            string[] conLevels = sIniValue.Split('/');
 
-            var sIniValue = Ini.ReadValue("Con Levels", level.ToString(), "0/0/0");
-            var yellowLevels = Ini.ReadValue("Con Levels", "0", "3");
-            var ConLevels = sIniValue.Split('/');
+            GreyRange = int.Parse(conLevels[0]) - level + 1;
 
-            GreyRange = int.Parse(ConLevels[0]) - level + 1;
+            GreenRange = int.Parse(conLevels[1]) - level + 1;
 
-            GreenRange = int.Parse(ConLevels[1]) - level + 1;
-
-            CyanRange = int.Parse(ConLevels[2]) - level + 1;
+            CyanRange = int.Parse(conLevels[2]) - level + 1;
 
             YellowRange = int.Parse(yellowLevels);
         }

@@ -1310,11 +1310,11 @@ namespace myseq
 
             StringBuilder grounditemInfo = new StringBuilder();
 
-            grounditemInfo.AppendFormat("Ground Item: {0}\n", gi.Desc);
+            grounditemInfo.Append($"Ground Item: {gi.Desc}\n");
 
-            grounditemInfo.AppendFormat("ActorDef: {0}\n", gi.Name);
+            grounditemInfo.Append($"ActorDef: {gi.Name}\n");
 
-            grounditemInfo.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", gi.Y, gi.X, gi.Z);
+            grounditemInfo.Append($"Y: {gi.Y:F3}  X: {gi.X:F3}  Z: {gi.Z:F3}");
 
             lblMobInfo.BackColor = Color.White;
 

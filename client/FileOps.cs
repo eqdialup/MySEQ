@@ -9,9 +9,12 @@ namespace Structures
     public class FileOps
     {
         public static string CombineCfgDir(string file) => Path.Combine(Settings.Default.CfgDir, file);
+
         public static string CombineTimer(string mapName) => Path.Combine(Settings.Default.TimerDir, $"spawns-{mapName}.txt");
-        public static string CombineFilter(string filename ) => Path.Combine(Settings.Default.FilterDir, filename);
-        public static string CombineLog(string filename ) => Path.Combine(Settings.Default.LogDir, filename);
+
+        public static string CombineFilter(string filename) => Path.Combine(Settings.Default.FilterDir, filename);
+
+        public static string CombineLog(string filename) => Path.Combine(Settings.Default.LogDir, filename);
 
         public static void DeleteFile(string timerfile)
         {
@@ -56,9 +59,9 @@ namespace Structures
                 return;
             }
 
-            foreach (var line in File.ReadAllLines(filePath).ToList())
+            var lines = File.ReadAllLines(filePath).ToList();
+            foreach (var line in lines)
             {
-                //sample:  IT0_ACTORDEF = Generic
                 if (!line.StartsWith("[") && !string.IsNullOrWhiteSpace(line))
                 {
                     var entries = line.Split('=');
@@ -140,7 +143,5 @@ namespace Structures
         }
 
         public static string StartPath(string folder) => Path.Combine(Application.StartupPath, folder);
-
-        public bool Xor(bool a, bool b) => a ^ b;
     }
 }

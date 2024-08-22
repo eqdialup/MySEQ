@@ -20,7 +20,6 @@ namespace myseq
 
         public NumericUpDown filterzpos;// {get; set; }
 
-
         private readonly System.ComponentModel.Container components;
         # endregion Designer components
 
@@ -99,27 +98,27 @@ namespace myseq
             ((System.ComponentModel.ISupportInitialize)(this.filterzneg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.filterzpos)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // offsetx
-            // 
+            //
             this.offsetx.Location = new System.Drawing.Point(114, 448);
             this.offsetx.Name = "offsetx";
             this.offsetx.Size = new System.Drawing.Size(58, 20);
             this.offsetx.TabIndex = 3;
             this.offsetx.Visible = false;
             this.offsetx.ValueChanged += new System.EventHandler(this.Offsetx_ValueChanged);
-            // 
+            //
             // offsety
-            // 
+            //
             this.offsety.Location = new System.Drawing.Point(217, 448);
             this.offsety.Name = "offsety";
             this.offsety.Size = new System.Drawing.Size(56, 20);
             this.offsety.TabIndex = 5;
             this.offsety.Visible = false;
             this.offsety.ValueChanged += new System.EventHandler(this.Offsety_ValueChanged);
-            // 
+            //
             // scale
-            // 
+            //
             scale.Location = new System.Drawing.Point(313, 447);
             scale.Maximum = new decimal(new int[] {
             10000,
@@ -158,9 +157,9 @@ namespace myseq
             this.filterzneg.TabIndex = 9;
             this.filterzneg.Visible = false;
             this.filterzneg.ValueChanged += new System.EventHandler(this.Filterzneg_ValueChanged);
-            //// 
+            ////
             // filterzpos
-            // 
+            //
             this.filterzpos.Increment = new decimal(new int[] {
             5,
             0,
@@ -177,9 +176,9 @@ namespace myseq
             this.filterzpos.TabIndex = 11;
             this.filterzpos.Visible = false;
             this.filterzpos.ValueChanged += new System.EventHandler(this.Filterzpos_ValueChanged);
-            // 
+            //
             // mapCon
-            // 
+            //
             this.mapCon.AutoScroll = true;
             this.mapCon.BackColor = SystemColors.ControlLightLight;
             this.mapCon.Location = new System.Drawing.Point(0, 0);
@@ -192,9 +191,9 @@ namespace myseq
             this.mapCon.UpdateSteps = 5;
             this.mapCon.UpdateTicks = 1;
             this.mapCon.MouseEnter += new System.EventHandler(this.MapCon_MouseEnter);
-            // 
+            //
             // MapPane
-            // 
+            //
             this.AutoValidate = AutoValidate.EnablePreventFocusChange;
             this.BackColor = SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(762, 488);
@@ -213,7 +212,6 @@ namespace myseq
             ((System.ComponentModel.ISupportInitialize)(this.filterzpos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion Component Designer generated code
@@ -229,7 +227,6 @@ namespace myseq
             mapCon.ClearPan();
         }
 
- 
         private void MapPane_Resize(object sender, EventArgs e)
         {
             Size s = mapCon.Size;
@@ -254,72 +251,55 @@ namespace myseq
             if (current_val < 100)
             {
                 current_val += 10;
-                if (current_val > 100)
-                {
-                    current_val = 100;
-                }
             }
             else if (current_val < 200)
             {
                 current_val += 25;
-                if (current_val > 200)
-                {
-                    current_val = 200;
-                }
             }
             else if (current_val < 300)
             {
                 current_val += 25;
-                if (current_val > 300)
-                {
-                    current_val = 300;
-                }
             }
             else if (current_val < 500)
             {
                 current_val += 50;
-                if (current_val > 500)
-                {
-                    current_val = 500;
-                }
             }
             else
             {
                 current_val += 100;
             }
 
-            if (current_val >= scale.Minimum && current_val <= scale.Maximum)
-            {
-                scale.Value = current_val;
-            }
+            scale.Value = current_val;
         }
 
         public void ZoomOut()
         {
-            var current_val = scale.Value;
-            if (current_val <= 100)
+            var current_val = (int)scale.Value;
+            switch (current_val)
             {
-                current_val = current_val.subhundred();
-            }
-            else if (current_val <= 200)
-            {
-                current_val = current_val.Twohundred();
-            }
-            else if (current_val <= 300)
-            {
-                current_val = current_val.Threehundred();
-            }
-            else if (current_val <= 400)
-            {
-                current_val = current_val.Fourhundred();
-            }
-            else if (current_val <= 500)
-            {
-                current_val = current_val.FiveHundred();
-            }
-            else
-            {
-                current_val -= 100;
+                case int n when n <= 100:
+                    current_val = 10;
+                    break;
+
+                case int n when n <= 200:
+                    current_val = 100;
+                    break;
+
+                case int n when n <= 300:
+                    current_val = 200;
+                    break;
+
+                case int n when n <= 400:
+                    current_val = 300;
+                    break;
+
+                case int n when n <= 500:
+                    current_val = 500;
+                    break;
+
+                default:
+                    current_val -= 100;
+                    break;
             }
 
             if (current_val >= scale.Minimum && current_val <= scale.Maximum)
@@ -378,6 +358,7 @@ namespace myseq
         }
 
         #region KeyPress
+
         public void MapCon_KeyPress(object sender, KeyPressEventArgs e)
         {
             Dictionary<char, Action> KeyInstructions = new Dictionary<char, Action>()
@@ -403,7 +384,6 @@ namespace myseq
         private void OneKey()
         {
             offsety.Value += 50;
-
             offsetx.Value -= 50;
         }
 
@@ -415,7 +395,6 @@ namespace myseq
         private void ThreeKey()
         {
             offsety.Value += 50;
-
             offsetx.Value += 50;
         }
 
@@ -475,6 +454,7 @@ namespace myseq
 
             Invalidate();
         }
-        #endregion
+
+        #endregion KeyPress
     }
 }

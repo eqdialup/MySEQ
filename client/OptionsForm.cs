@@ -282,7 +282,7 @@ namespace myseq
 
         private void CmdSpawnTimers_Click(object sender, EventArgs e)
         {
-            txtTimerDir.Text = formMethod.FolderBrowser("Timers log Directory", Settings.Default.TimerDir);
+            txtTimerDir.Text = formMethod.FolderBrowser("Timer log Directory", Settings.Default.TimerDir);
             if (!string.IsNullOrEmpty(txtTimerDir.Text)) Settings.Default.TimerDir = txtTimerDir.Text;
         }
 
@@ -308,20 +308,33 @@ namespace myseq
             }
         }
 
-        private void CmbAlertSound_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            Settings.Default.AlertSound = cmbAlertSound.SelectedItem.ToString();
-        }
+        private void CmbAlertSound_SelectionChangeCommitted(object sender, EventArgs e) => Settings.Default.AlertSound = cmbAlertSound.SelectedItem.ToString();
 
         private void SpnSpawnSize_ValueChanged(object sender, EventArgs e) => Settings.Default.SpawnDrawSize = (int)spnSpawnSize.Value;
 
         private void PvpLevels_ValueChanged(object sender, EventArgs e) => Settings.Default.PVPLevels = (int)pvpLevels.Value;
+
+        private void spnRangeCircle_ValueChanged(object sender, EventArgs e) => Settings.Default.RangeCircle = (int)spnRangeCircle.Value;
 
         private void ChkShowZoneName_CheckedChanged(object sender, EventArgs e) => Settings.Default.ShowZoneName = chkShowZoneName.Checked;
 
         private void ChkShowCharName_CheckedChanged(object sender, EventArgs e) => Settings.Default.ShowCharName = chkShowZoneName.Checked;
 
         private void ChkSaveOnExit_CheckedChanged(object sender, EventArgs e) => Settings.Default.SaveOnExit = chkSaveOnExit.Checked;
+
+        private void ChkPrefixAlerts_CheckedChanged(object sender, EventArgs e) => Settings.Default.PrefixStars = chkPrefixAlerts.Checked;
+
+        private void ChkCorpsesAlerts_CheckedChanged(object sender, EventArgs e) => Settings.Default.CorpseAlerts = chkCorpsesAlerts.Checked;
+
+        private void ChkAffixAlerts_CheckedChanged(object sender, EventArgs e) => Settings.Default.AffixStars = chkAffixAlerts.Checked;
+
+        private void ChkHuntMatchFull_CheckedChanged(object sender, EventArgs e) => Settings.Default.MatchFullTextH = chkHuntMatchFull.Checked;
+
+        private void ChkCautionMatchFull_CheckedChanged(object sender, EventArgs e) => Settings.Default.MatchFullTextC = chkCautionMatchFull.Checked;
+
+        private void OptCautionBeep_CheckedChanged(object sender, EventArgs e) => Settings.Default.BeepOnCaution = optCautionBeep.Checked;
+
+        private void ChkAlertMatchFull_CheckedChanged(object sender, EventArgs e) => Settings.Default.MatchFullTextA = chkAlertMatchFull.Checked;
         #endregion
     }
 }

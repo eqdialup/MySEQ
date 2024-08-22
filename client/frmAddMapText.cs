@@ -36,24 +36,24 @@ namespace myseq
                 pictureBox1.BackColor = colorDialog1.Color;
             }
         }
-        public void SOEMapTextAdd(string new_text, MainForm f1)
+        public void AddMapText(string newText, MainForm f1)
         {
             IFormatProvider NumFormat = new CultureInfo("en-US");
-            var soe_maptext = string.Format(NumFormat, "P {0:f3}, {1:f3}, {2}, {3}, {4}, {5}, {6}, {7}", f1.alertX * -1, f1.alertY * -1, f1.alertZ, txtColr.R, txtColr.G, txtColr.B, txtSize, new_text);
+            var soeMapText = string.Format(NumFormat, "P {0:f3}, {1:f3}, {2}, {3}, {4}, {5}, {6}, {7}", f1.alertX * -1, f1.alertY * -1, f1.alertZ, txtColr.R, txtColr.G, txtColr.B, txtSize, newText);
 
-            MapText work = new MapText(soe_maptext);
+            var mapText = new MapText(soeMapText);
 
-            work.draw_color = work.color;
-            work.draw_pen = new Pen(work.color);
-            f1.map.AddMapText(work);
+            mapText.draw_color = mapText.color;
+            mapText.draw_pen = new Pen(mapText.color);
+            f1.map.AddMapText(mapText);
 
-            if (DialogResult.Yes == MessageBox.Show($"Do you want to write the label to {mapName}?" +
-                Environment.NewLine + Environment.NewLine + soe_maptext, "Write label to map",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
+           var result = MessageBox.Show($"Do you want to write the label to {f1.mapnameWithLabels}?" + Environment.NewLine + Environment.NewLine + soeMapText, "Write label to map", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+            if (result == DialogResult.Yes)
             {
                 try
                 {
-                    File.AppendAllText(f1.mapnameWithLabels, soe_maptext);
+                    File.AppendAllText(f1.mapnameWithLabels, soeMapText);
                 }
                 catch (Exception ex)
                 {
@@ -63,7 +63,7 @@ namespace myseq
             }
             else
             {
-                f1.map.DeleteMapText(work);
+                f1.map.DeleteMapText(mapText);
             }
         }
     }

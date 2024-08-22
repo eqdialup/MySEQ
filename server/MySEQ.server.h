@@ -1,4 +1,3 @@
-
 /*==============================================================================
 
 	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
@@ -22,34 +21,22 @@
 #pragma once
 
 #include "resource.h"
-
 #include "Common.h"
-
 #include "IniReader.h"
-
 #include "MemReader.h"
-
 #include "NetworkServer.h"
-
 #include "EQGameScanner.h"
-
 #include "Debugger.h"
-
-
-
-using namespace std;
-
 
 bool debug_mode;
 bool console_mode;
 bool services;
-
 bool otherini;
 
 IniReader iniReader;
 
-char iniFile[_MAX_PATH+1];
-char configIniFile[_MAX_PATH+1];
+char iniFile[_MAX_PATH + 1];
+char configIniFile[_MAX_PATH + 1];
 
 int server_status;
 int check_delay;
@@ -65,7 +52,21 @@ NetworkServer netServer;
 EQGameScanner scanner;
 
 void Minimize();
+
 void Restore();
+
 void InitNotifyIconData();
+
 void ToggleStartMinimized();
+void handleConnectionCrashed();
+void updateStatus(const char* statusText);
+void handleAccept();
+void handleRead();
+void handleClose();
+void handleConnect();
+void HandleCommand(HWND hDlg, WPARAM wParam);
+void HandleTrayIcon(HWND hDlg, WPARAM wParam, LPARAM lParam);
+void MinimizeWindow();
+void RestoreWindow();
+void HandleSystemCommand(HWND hDlg, WPARAM wParam);
 

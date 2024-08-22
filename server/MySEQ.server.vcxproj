@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B2A33963-4874-4E74-B9F8-36666B4F9BEF}</ProjectGuid>
+    <ProjectGuid>{53DD6413-7C07-477F-A036-75AA01380243}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MySEQserver</RootNamespace>
   </PropertyGroup>

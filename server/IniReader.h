@@ -20,64 +20,52 @@
 
 #pragma once
 
-
-
 #include "Common.h"
 
-
+typedef uint64_t QWORD;
 
 class IniReaderInterface
-
 {
-
 public:
-
 	virtual void openFile(string filename) = 0;
 
 	virtual void openConfigFile(string filename) = 0;
 
 	virtual string readStringEntry(string section, string entry, bool config = false) = 0;
 
-	virtual long readIntegerEntry(string section, string entry, bool config = false) = 0;
+	virtual QWORD readIntegerEntry(string section, string entry, bool config = false) = 0;
 
 	virtual bool writeStringEntry(string section, string entry, string value, bool config = false) = 0;
 
-	virtual string readEscapeStrings(string section, string entry) = 0;
+	virtual string readEscapeStrings(const string& section,const string& entry) = 0;
 };
 
-
-
 class IniReader : public IniReaderInterface
-
 {
 public:
-
 	IniReader();
 
 	~IniReader(void);
 
 private:
-
 	string filename;
 
 	string configfilename;
 
-	_TCHAR buffer[255];
+	_TCHAR buffer[255]{};
 
 	bool StartMinimized;
-	
 
 public:
-
 	void openFile(string filename);
 
 	void openConfigFile(string filename);
 
 	string readStringEntry(string section, string entry, bool config = false);
 
-	string readEscapeStrings(string section, string entry);
+	string readEscapeStrings(const string& section, const string& entry);
 
-	long readIntegerEntry(string section, string entry, bool config = false);
+	QWORD readIntegerEntry(string section, string entry, bool config = false);
 
 	bool writeStringEntry(string section, string entry, string value, bool config = false);
 
@@ -90,8 +78,5 @@ public:
 	void ToggleStartMinimized();
 
 private:
-
 	void SetStartMinimized(bool value) { StartMinimized = value; }
-
 };
-

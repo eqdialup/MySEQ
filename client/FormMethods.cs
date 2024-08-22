@@ -22,48 +22,41 @@ namespace myseq
 
         public static void SwitchOnSoundSettings()
         {
-            if (Settings.Default.AlertSound == "Asterisk")
+            switch (Settings.Default.AlertSound)
             {
-                SystemSounds.Asterisk.Play();
-            }
-            else if (Settings.Default.AlertSound == "Beep")
-            {
-                SystemSounds.Beep.Play();
-            }
-            else if (Settings.Default.AlertSound == "Exclamation")
-            {
-                SystemSounds.Exclamation.Play();
-            }
-            else if (Settings.Default.AlertSound == "Hand")
-            {
-                SystemSounds.Hand.Play();
-            }
-            else if (Settings.Default.AlertSound == "Question")
-            {
-                SystemSounds.Question.Play();
+                case "Asterisk":
+                        SystemSounds.Asterisk.Play();
+                        break;
+                case "Beep":
+                        SystemSounds.Beep.Play();
+                        break;
+                case "Exclamation":
+                        SystemSounds.Exclamation.Play();
+                        break;
+                case "Hand":
+                        SystemSounds.Hand.Play();
+                        break;
+                case "Question":
+                        SystemSounds.Question.Play();
+                        break;
             }
         }
 
         public void ToolStripLevelCheck(string Str, MainForm f1)
         {
-            var validnum = true;
-            if (!string.IsNullOrEmpty(Str))
-            {
-                var isNum = int.TryParse(Str, out var Num);
+            bool validnum = true;
 
-                if (isNum && (Num < 1 || Num > 115))
+            // Check if Str is null or empty
+            if (string.IsNullOrEmpty(Str))
+            {
+                validnum = false;
+            }
+            // Check if Str is a number between 1 and 120
+            else if (int.TryParse(Str, out int Num))
+            {
+                if (Num < 1 || Num > 120)
                 {
                     validnum = false;
-                }
-                else if (Str != "Auto" && !isNum)
-                {
-                    validnum = false;
-                }
-                else if (Str == "Auto")
-                {
-                    validnum = true;
-                    Settings.Default.LevelOverride = -1;
-                    f1.toolStripLevel.Text = "Auto";
                 }
                 else
                 {
@@ -71,7 +64,19 @@ namespace myseq
                     Settings.Default.LevelOverride = Num;
                 }
             }
+            // Check if Str is "Auto"
+            else if (Str != "Auto")
+            {
+                validnum = false;
+            }
+            else
+            {
+                validnum = true;
+                Settings.Default.LevelOverride = -1;
+                f1.toolStripLevel.Text = "Auto";
+            }
 
+            // If Str is not a valid input, show a message box
             if (!validnum)
             {
                 MessageBox.Show("Enter a number between 1-115 or Auto");
@@ -93,16 +98,16 @@ namespace myseq
                 {
                     LogLib.WriteLine("Error loading config from positions.xml: ", ex);
                     // Re-Set up initial windows - might have bad or incompatible positions file
-                    defaultstates();
+                    Setdefaultstates();
                 }
             }
             else
             {
                 // Set up initial windows, when no previous window layout exists
-                defaultstates();
+                Setdefaultstates();
             }
 
-            void defaultstates()
+            void Setdefaultstates()
             {
                 f1.mapPane.Show(f1.dockPanel, DockState.Document);
 
@@ -164,33 +169,28 @@ namespace myseq
 
         internal void MnuOpenMap(MainForm f1)
         {
-            openFileDialog.InitialDirectory = Settings.Default.MapDir;
-
-            openFileDialog.Filter = "Map Files (*.txt)|*.txt|All Files (*.*)|*.*";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            using (openFileDialog)
             {
-                f1.mapnameWithLabels = "";
+                openFileDialog.InitialDirectory = Settings.Default.MapDir;
+                openFileDialog.Filter = "Map Files (*.txt)|*.txt|All Files (*.*)|*.*";
 
-                var filename = openFileDialog.FileName;
-
-                f1.map.Loadmap(filename);
-
-                filename = filename.GetLastSlash();
-
-                filename = filename.Substring(0, filename.Length - 4);
-
-                if (filename.EndsWith("_1"))
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    filename = filename.Substring(0, filename.Length - 2);
+                    f1.mapnameWithLabels = "";
+                    var filename = openFileDialog.FileName;
+
+                    f1.map.Loadmap(filename);
+
+                    UpdateFormProperties(f1, Path.GetFileNameWithoutExtension(filename));
                 }
-
-                f1.toolStripShortName.Text = filename.ToUpper();
-
-                f1.mapPane.TabText = filename.ToLower();
-
-                f1.curZone = filename.ToUpper();
             }
+        }
+
+        private void UpdateFormProperties(MainForm f1, string filename)
+        {
+            f1.toolStripShortName.Text = filename.ToUpper();
+            f1.mapPane.TabText = filename.ToLower();
+            f1.curZone = filename.ToUpper();
         }
 
         //public static void LookupBoxMatch(Spawninfo si, MainForm f1)

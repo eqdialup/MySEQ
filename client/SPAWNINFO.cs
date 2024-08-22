@@ -38,7 +38,7 @@ namespace Structures
         public string PrimaryName {get; set; }
         public string OffhandName {get; set; }
 
-        public int Guild {get; set; }
+//        public int Guild {get; set; }
 
         public byte Hide {get; set; }
 
@@ -171,6 +171,11 @@ namespace Structures
         }
 
         public float SpawnDistance(Spawninfo si, Spawninfo gamerInfo)
-        => (float)Math.Sqrt(((si.X - gamerInfo.X) * (si.X - gamerInfo.X)) + ((si.Y - gamerInfo.Y) * (si.Y - gamerInfo.Y)) + ((si.Z - gamerInfo.Z) * (si.Z - gamerInfo.Z)));
+        {
+            float dx = si.X - gamerInfo.X;
+            float dy = si.Y - gamerInfo.Y;
+            float dz = si.Z - gamerInfo.Z;
+            return (float)Math.Sqrt((dx * dx) + (dy * dy) + (dz * dz));
+        }
     }
 }
