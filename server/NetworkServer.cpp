@@ -1,5 +1,6 @@
 /*==============================================================================
-	Copyright (C) 2006 - 2013  All developers at http://sourceforge.net/projects/seq
+
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -17,13 +18,10 @@
 
   ==============================================================================*/
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include "NetworkServer.h"
-#include <stdlib.h>
-#include <IPHlpApi.h>
-
 
 NetworkServer::NetworkServer()
 {
@@ -76,7 +74,6 @@ void NetworkServer::listIPAddresses()
 			break;
 	}
 	MessageBox(h_MySEQServer ? h_MySEQServer : NULL, (LPCSTR)&mybuffer, "MySEQ Open Server: Local IP Addresses", MB_OK | MB_TOPMOST | MB_ICONINFORMATION);
-
 }
 
 bool NetworkServer::openListenerSocket(bool service)
@@ -86,10 +83,7 @@ bool NetworkServer::openListenerSocket(bool service)
 	if (WSAStartup(MAKEWORD(1, 1), &wsa) != 0)
 	{
 		MessageBox(NULL, "Error: NetworkServer: Failed to initialize Winsock.", "Failed to initialize Winsock", 0);
-		// ostrstream strm;
 		return false;
-		// strm << "Error: NetworkServer: Failed to initialize Winsock." << ends ; \
-		// throw Exception(EXCLEV_ERROR, strm.str());
 	}
 	// Attempt to get a socket
 	sockListener = socket(AF_INET, SOCK_STREAM, 0);
@@ -97,9 +91,6 @@ bool NetworkServer::openListenerSocket(bool service)
 	{
 		MessageBox(NULL, "Error: NetworkServer: Error creating listener socket.", "Failed to create listener socket.", 0);
 		return false;
-		//ostrstream strm;
-		//strm << "Error: NetworkServer: Error creating listener socket." << ends ; \
-		//throw Exception(EXCLEV_ERROR, strm.str());
 	}
 
 	// Fill out the sockaddr structure with typical values
@@ -129,9 +120,6 @@ bool NetworkServer::openListenerSocket(bool service)
 		{
 			MessageBox(NULL, "Error: NetworkServer: Listen request failed.", "Listen request failed", 0);
 			return false;
-			//ostrstream strm;
-			//strm << "Error: NetworkServer: Listen request failed with code " << dec << WSAGetLastError() << ends ;
-			//throw Exception(EXCLEV_ERROR, strm.str());
 		}
 	}
 	else {
@@ -140,9 +128,6 @@ bool NetworkServer::openListenerSocket(bool service)
 		{
 			MessageBox(NULL, "Error: NetworkServer: Listen request failed.", "Listen request failed", 0);
 			return false;
-			//ostrstream strm;
-			//strm << "Error: NetworkServer: Listen request failed with code " << dec << WSAGetLastError() << ends ;
-			//throw Exception(EXCLEV_ERROR, strm.str());
 		}
 		//Switch to Non-Blocking mode
 		WSAAsyncSelect(sockListener, hwnd, 1045, FD_READ | FD_CONNECT | FD_CLOSE | FD_ACCEPT);
@@ -168,35 +153,25 @@ bool NetworkServer::openListenerSocket(bool service)
 			struct in_addr addr;
 			memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
 			if (addr.s_net == 0) {
-				//cout << "Broadcast address " << inet_ntoa(addr) << endl;
 			}
 			else if (addr.s_net == 127) {
-				//cout << "Localhost " << inet_ntoa(addr) << endl;
 			}
 			else if (addr.s_net == 169 && addr.s_host == 254) {
-				//cout << "Autoconfig address " << inet_ntoa(addr) << endl;
 			}
 			else if (addr.s_net == 192 && addr.s_host == 0) {
-				//cout << "Test-Net-1 address " << inet_ntoa(addr) << endl;
 			}
 			else if (addr.s_net == 198 && addr.s_host == 51 && addr.s_lh == 100) {
-				//cout << "Test-Net-2 address " << inet_ntoa(addr) << endl;
 			}
 			else if (addr.s_net == 203 && addr.s_host == 0 && addr.s_lh == 113) {
-				//cout << "Test-Net-3 address " << inet_ntoa(addr) << endl;
 			}
 			else if (addr.s_net == 192 && addr.s_host == 88 && addr.s_lh == 99) {
-				//cout << "6 to 4 anycast relays address " << inet_ntoa(addr) << endl;
 			}
 			else if (addr.s_net == 198 && (addr.s_host == 18 || addr.s_lh == 19)) {
-				//cout << "inter-network comms address " << inet_ntoa(addr) << endl;
 			}
 			else if (addr.s_net >= 224 && addr.s_net <= 240) {
-				//cout << "Multicast / Limited broadcast address " << inet_ntoa(addr) << endl;
 			}
 			else {
 				if (current_host.S_un.S_addr == NULL) {
-					// cout << "current host is null, copying in some values." << endl;
 					memcpy(&current_host, localHost->h_addr_list[i], sizeof(struct in_addr));
 					sprintf_s(active_address, "%s", inet_ntoa(addr));
 				}
@@ -379,12 +354,12 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 	}
 
 	if (change_process) // The last request was to change the process.  So this packet
-						// should contain the process id, to switch to
+		// should contain the process id, to switch to
 	{
 		DWORD originalPID = mr_intf->getCurrentPID();
 		cout << "MySEQServer: Setting process to 0x" << hex << clientRequest << endl;
 		mr_intf->openFirstProcess("eqgame", false);
-		while (1)
+		while (true)
 		{
 			if (mr_intf->getCurrentPID() == (DWORD)clientRequest) {
 				zoneName = "StartUp";
@@ -440,7 +415,6 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 		}
 
 		return false;
-		//return true;  // return true, if not good receive
 	}
 
 	// Send get_process requests
@@ -478,7 +452,6 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 		change_process = true;
 		return false;
 		// client does not expect a return packet now
-
 	}
 
 	// Send zonename requests

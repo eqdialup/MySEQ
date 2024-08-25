@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -22,14 +22,9 @@
 
 #include "Common.h"
 #include "IniReader.h"
-#include <tlhelp32.h>
 
 
 typedef uint64_t QWORD;
-
-
-
-
 
 // The interface classes can be extended, but never changed! They force backwards compatibility.
 class MemReaderInterface
@@ -63,8 +58,6 @@ public:
 
 	virtual UINT extractUINT(QWORD offset) = 0;
 };
-
-
 
 class MemReader : public MemReaderInterface
 {

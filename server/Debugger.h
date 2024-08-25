@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -26,10 +26,6 @@
 #include "Item.h"
 #include "World.h"
 
-
-
-
-
 class Debugger
 {
 public:
@@ -45,7 +41,6 @@ private:
 	QWORD offsets[OT_max]{};
 
 	string ptrNames[OT_max];
-
 
 	void init(IniReaderInterface* ir_intf);
 
@@ -97,4 +92,5 @@ public:
 	Debugger();
 
 	void enterDebugLoop(MemReaderInterface* mr_intf, IniReaderInterface* ir_intf);
+	void displayOffsetsSection(const string& sectionTitle, const vector<string>& names, const vector<QWORD>& offsets);
 };

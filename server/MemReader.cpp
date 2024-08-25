@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -18,10 +18,8 @@
 
   ==============================================================================*/
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MemReader.h"
-#include <Psapi.h>
-
 
 
   // Runtime debug macros
@@ -30,10 +28,6 @@
 #define TO_LOWER(str) (transform(str.begin(), str.end(), str.begin(), (int(*)(int))tolower))
 
 typedef uint64_t QWORD;
-
-
-
-
 
 MemReader::MemReader() :
 	currentEQProcessID(0),
@@ -46,14 +40,10 @@ MemReader::MemReader() :
 	currentEQProcessBaseAddress = 0x140000000;
 }
 
-
-
 MemReader::~MemReader()
 {
 	closeProcess();
 }
-
-
 
 bool MemReader::isValid()
 {
@@ -63,28 +53,20 @@ bool MemReader::isValid()
 	return (validateProcess(false));
 }
 
-
-
 DWORD MemReader::getCurrentPID()
 {
 	return currentEQProcessID;
 }
-
-
 
 QWORD MemReader::getCurrentBaseAddress()
 {
 	return currentEQProcessBaseAddress;
 }
 
-
-
 HANDLE MemReader::getCurrentHandle()
 {
 	return currentEQProcessHandle;
 }
-
-
 
 void MemReader::enableDebugPrivileges()
 {
@@ -96,7 +78,6 @@ void MemReader::enableDebugPrivileges()
 	HANDLE hToken;
 
 	DWORD Bufferlen;
-
 
 	OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES ^ TOKEN_QUERY, &hToken);
 
@@ -113,8 +94,6 @@ void MemReader::enableDebugPrivileges()
 	CloseHandle(hToken);
 }
 
-
-
 /* Find the first process to match the given filename */
 bool MemReader::openFirstProcess(string filename, bool debug)
 {
@@ -127,15 +106,11 @@ bool MemReader::openFirstProcess(string filename, bool debug)
 	return openProcess(filename, true, debug);
 }
 
-
-
 /* Find the next process to match the given filename */
 bool MemReader::openNextProcess(string filename, bool debug)
 {
 	return openProcess(filename, false, debug);
 }
-
-
 
 /* Find the first process to match the given filename */
 bool MemReader::openProcess(string filename, bool first, bool debug)
@@ -148,16 +123,14 @@ bool MemReader::openProcess(string filename, bool first, bool debug)
 
 	bool rtn = false;
 
-
-
-	//  Fill in the size of the structure before using it. 
+	//  Fill in the size of the structure before using it.
 	pe32.dwSize = sizeof(PROCESSENTRY32);
 
 	RTDEBUG("Looking for process with name: " << filename);
 
 	TO_LOWER(filename);
 
-	//  Take a snapshot of all processes in the system. 
+	//  Take a snapshot of all processes in the system.
 	hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
 	RTDEBUG("hProcessSnap is 0x" << hex << hProcessSnap);
@@ -238,8 +211,6 @@ bool MemReader::openProcess(string filename, bool first, bool debug)
 	return rtn;
 }
 
-
-
 void MemReader::closeProcess()
 {
 	if (currentEQProcessHandle)
@@ -252,12 +223,9 @@ void MemReader::closeProcess()
 	currentEQProcessBaseAddress = 0x140000000;
 }
 
-
-
 bool MemReader::validateProcess(bool forceCheck)
 {
 	bool stillValid = true; // only return false if we check and fail
-
 
 	// Every 100 checks, make sure the process is still around
 	// This is now called only once for each receive.
@@ -271,11 +239,10 @@ bool MemReader::validateProcess(bool forceCheck)
 
 		stillValid = false;
 
-
-		//  Fill in the size of the structure before using it. 
+		//  Fill in the size of the structure before using it.
 		pe32.dwSize = sizeof(PROCESSENTRY32);
 
-		//  Take a snapshot of all processes in the system. 
+		//  Take a snapshot of all processes in the system.
 		hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
 		// Walk thru each process looking for the process ID we had before
@@ -306,24 +273,18 @@ bool MemReader::validateProcess(bool forceCheck)
 	return stillValid;
 }
 
-
-
 QWORD MemReader::extractPointer(QWORD offset)
 {
 	QWORD rtn = 0;
-
 
 	ReadProcessMemory(currentEQProcessHandle, (void*)offset, (void*)&rtn, sizeof(rtn), NULL);
 
 	return rtn;
 }
 
-
-
 QWORD MemReader::extractRAWPointer(QWORD offset)
 {
 	QWORD rtn = 0;
-
 
 	ReadProcessMemory(currentEQProcessHandle, (void*)(offset - 0x140000000 + currentEQProcessBaseAddress), (void*)&rtn, sizeof(rtn), NULL);
 
@@ -332,14 +293,11 @@ QWORD MemReader::extractRAWPointer(QWORD offset)
 	return rtn;
 }
 
-
-
 string MemReader::extractString(QWORD offset)
 {
 	string rtn("");
 
 	char buffer[50];
-
 
 	memset(buffer, 0, 50);
 
@@ -350,8 +308,6 @@ string MemReader::extractString(QWORD offset)
 	return (string)buffer;
 }
 
-
-
 string MemReader::extractString2(QWORD offset)
 {
 	// This one is for extracting a string that must begin with an alphanumeric
@@ -359,7 +315,6 @@ string MemReader::extractString2(QWORD offset)
 	string rtn("");
 
 	char buffer[50];
-
 
 	memset(buffer, 0, 50);
 
@@ -370,8 +325,6 @@ string MemReader::extractString2(QWORD offset)
 
 	return rtn;
 }
-
-
 
 bool MemReader::extractToBuffer(QWORD offset, char* buffer, UINT size) {
 	//better check if we can actually read this much memory... -eqmule 12/31 2014
@@ -385,11 +338,9 @@ bool MemReader::extractToBuffer(QWORD offset, char* buffer, UINT size) {
 
 	MEMORY_BASIC_INFORMATION memInfo;
 
-
 	ZeroMemory(&memInfo, sizeof(MEMORY_BASIC_INFORMATION));
 
 	if (int vret = (int)VirtualQueryEx(currentEQProcessHandle, lpAddressToReadFrom, &memInfo, sizeof(MEMORY_BASIC_INFORMATION))) {
-
 		int nBytesIntoRegion = (int)(lpAddressToReadFrom - (BYTE*)memInfo.BaseAddress);
 		int nBytesAwayFromEnd = (int)(memInfo.RegionSize - nBytesIntoRegion);
 		int ActualNumberOfBytesToRead = min(nSizeUpperBound, nBytesAwayFromEnd);
@@ -421,49 +372,37 @@ bool MemReader::extractToBuffer(QWORD offset, char* buffer, UINT size) {
 	return rtn;
 }
 
-
-
 float MemReader::extractFloat(QWORD offset)
 {
 	float rtn;
-
 
 	ReadProcessMemory(currentEQProcessHandle, (void*)offset, (void*)&rtn, 4, NULL);
 
 	return rtn;
 }
 
-
-
 BYTE MemReader::extractBYTE(QWORD offset)
 {
 	BYTE rtn;
-
 
 	ReadProcessMemory(currentEQProcessHandle, (void*)offset, (void*)&rtn, 1, NULL);
 
 	return rtn;
 }
 
-
-
 UINT MemReader::extractUINT(QWORD offset)
 {
 	UINT rtn;
-
 
 	ReadProcessMemory(currentEQProcessHandle, (void*)offset, (void*)&rtn, 4, NULL);
 
 	return rtn;
 }
 
-
-
 QWORD MemReader::GetModuleBaseAddress(DWORD iProcId, TCHAR* DLLName)
 {
 	HANDLE hSnap; // Process snapshot handle.
 	MODULEENTRY32 xModule; // Module information structure.
-
 
 	if ((hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, iProcId)) == INVALID_HANDLE_VALUE) // Creates a module
 		return 0;

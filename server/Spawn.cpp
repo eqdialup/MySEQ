@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -18,39 +18,29 @@
 
   ==============================================================================*/
 
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Spawn.h"
-
-
 
 Spawn::Spawn(void)
 
 {
-
-	// reserve space for 700 spawns, which should cover most zones. 
+	// reserve space for 700 spawns, which should cover most zones.
 
 	// note: vectors will grow as needed even if we exceed the 700
 
 	spawnList.reserve(700);
 
 	largestOffset = 0;
-
 }
-
-
 
 void Spawn::setOffset(offset_types ot, UINT value, string ptrName)
 
 {
-
 	offsets[ot] = value;
 
 	ptrNames[ot] = ptrName;
-
 }
-
-
 
 void Spawn::init(IniReaderInterface* ir_intf)
 
@@ -103,11 +93,9 @@ void Spawn::init(IniReaderInterface* ir_intf)
 	for (int i = 0; i < OT_max; i++)
 
 	{
-
 		if (offsets[i] > largestOffset)
 
 			largestOffset = offsets[i];
-
 	}
 
 	largestOffset += 30;
@@ -117,9 +105,7 @@ void Spawn::init(IniReaderInterface* ir_intf)
 	rawBuffer = new char[largestOffset];
 
 	cout << "Spawn: Spawn Offsets read in." << endl;
-
 }
-
 
 /* the rest of the net buffer can be filled in directly, but this makes
 
@@ -128,7 +114,6 @@ void Spawn::init(IniReaderInterface* ir_intf)
 void Spawn::packNetBufferStrings(UINT flags, string firstName, string lastName)
 
 {
-
 	memset(tempNetBuffer.name, 0, 30);
 
 	memset(tempNetBuffer.lastName, 0, 22);
@@ -138,15 +123,11 @@ void Spawn::packNetBufferStrings(UINT flags, string firstName, string lastName)
 	lastName._Copy_s(tempNetBuffer.lastName, 22, 22);
 
 	tempNetBuffer.flags = flags;
-
 }
-
-
 
 void Spawn::packNetBufferRaw(UINT flags, QWORD _this)
 
 {
-
 	packNetBufferStrings(flags, extractRawString(OT_name), extractRawString(OT_lastname));
 
 	tempNetBuffer.x = extractRawFloat(OT_x);
@@ -164,16 +145,11 @@ void Spawn::packNetBufferRaw(UINT flags, QWORD _this)
 	// otherwise use the real id.
 
 	if (flags == 0x06) {
-
 		tempNetBuffer.id = (UINT)_this;
-
 	}
 	else {
-
 		tempNetBuffer.id = extractRawDWord(OT_id);
-
 	}
-
 
 	tempNetBuffer.type = extractRawByte(OT_type);
 
@@ -196,29 +172,19 @@ void Spawn::packNetBufferRaw(UINT flags, QWORD _this)
 	tempNetBuffer.level = extractRawByte(OT_level);
 
 	tempNetBuffer.hidden = extractRawByte(OT_hidden);
-
-
-
 }
 
 void Spawn::packNetBufferEmpty(UINT flags, QWORD _this)
 
 {
-
 	packNetBufferStrings(flags, "", "");
 
 	tempNetBuffer.id = 99999;
-
 }
-
-
-
-
 
 void Spawn::packNetBufferFrom(Item item)
 
 {
-
 	packNetBufferStrings(item.tempItemBuffer.flags, item.tempItemBuffer.name, "");
 
 	tempNetBuffer.x = item.tempItemBuffer.x;
@@ -228,15 +194,11 @@ void Spawn::packNetBufferFrom(Item item)
 	tempNetBuffer.z = item.tempItemBuffer.z;
 
 	tempNetBuffer.id = item.tempItemBuffer.id;
-
 }
-
-
 
 void Spawn::packNetBufferWorld(World world)
 
 {
-
 	packNetBufferStrings(world.tempWorldBuffer.flags, "", "");
 
 	tempNetBuffer.type = world.tempWorldBuffer.hour;
@@ -248,5 +210,4 @@ void Spawn::packNetBufferWorld(World world)
 	tempNetBuffer.hidden = world.tempWorldBuffer.month;
 
 	tempNetBuffer.race = world.tempWorldBuffer.year;
-
 }

@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -18,12 +18,8 @@
 
   ==============================================================================*/
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Debugger.h"
-#include <cstdlib>
-#include <string>
-
-
 
 
 #define TO_LOWER(str) (transform(str.begin(), str.end(), str.begin(), (int(*)(int))tolower))
@@ -32,13 +28,7 @@
 
 #define DISPLAY_SPAWN_ITEMI(off, member) cout << "    " << spawnParser.ptrNames[spawnParser.off] << " -> " << spawnParser.tempNetBuffer.member << endl
 
-
-
-
-
 Debugger::Debugger() {}
-
-
 
 bool Debugger::setOffset(offset_types ot, QWORD value)
 {
@@ -50,16 +40,12 @@ bool Debugger::setOffset(offset_types ot, QWORD value)
 	return true;
 }
 
-
-
 void Debugger::setOffset(offset_types ot, QWORD value, string ptrName)
 {
 	setOffset(ot, value);
 
 	ptrNames[ot] = ptrName;
 }
-
-
 
 void Debugger::init(IniReaderInterface* ir_intf)
 {
@@ -68,7 +54,6 @@ void Debugger::init(IniReaderInterface* ir_intf)
 	itemParser.init(ir_intf);
 
 	worldParser.init(ir_intf);
-
 
 	setOffset(OT_spawnlist, ir_intf->readIntegerEntry("Memory Offsets", "SpawnHeaderAddr"), "pSpawns");
 
@@ -82,11 +67,8 @@ void Debugger::init(IniReaderInterface* ir_intf)
 
 	setOffset(OT_world, ir_intf->readIntegerEntry("Memory Offsets", "WorldAddr"), "pWorld");
 
-
 	cout << "Debugger: Memory offsets read in." << endl;
 }
-
-
 
 void Debugger::printMenu()
 {
@@ -121,12 +103,9 @@ void Debugger::printMenu()
 	cout << endl;
 }
 
-
-
 void Debugger::enterDebugLoop(MemReaderInterface* mr_intf, IniReaderInterface* ir_intf)
 {
 	string userInput;
-
 
 	init(ir_intf);
 
@@ -203,66 +182,43 @@ void Debugger::enterDebugLoop(MemReaderInterface* mr_intf, IniReaderInterface* i
 	}
 }
 
-
-
-void Debugger::displayCurrentOffsets()
+void Debugger::displayOffsetsSection(const string& sectionTitle, const vector<string>& names, const vector<QWORD>& offsets)
 {
-	int i;
-
-
 	cout << endl;
-	cout << "     Primary Offsets" << endl;
-	cout << "=========================" << endl;
+	cout << "    " << sectionTitle << endl;
+	cout << string(30, '=') << endl;
 
-	for (i = 0; i < OT_max; i++)
+	for (size_t i = 0; i < names.size(); ++i)
 	{
-		cout.width(10);
-		cout << setfill(' ') << right << i << ") " << ptrNames[i] << " = 0x" << hex << offsets[i] << endl;
+		cout << setw(10) << setfill(' ') << right << i << ") "
+			<< names[i] << " = 0x"
+			<< setw(3) << hex << setfill('0') << offsets[i]
+			<< dec << " (" << offsets[i] << ")" << endl;
 	}
-
-
-	cout << endl;
-	cout << "    Secondary Spawn Offsets" << endl;
-	cout << "===============================" << endl;
-
-	for (i = 0; i < spawnParser.OT_max; i++)
-	{
-		cout.width(10);
-		cout << setfill(' ') << right << i << ") " << spawnParser.ptrNames[i] << " = 0x" <<
-			setw(3) << hex << setfill('0') << spawnParser.offsets[i] <<
-			dec << " (" << spawnParser.offsets[i] << ")" << endl;
-	}
-
-
-	cout << endl;
-	cout << "    Secondary Ground Offsets" << endl;
-	cout << "===============================" << endl;
-
-	for (i = 0; i < itemParser.OT_max; i++)
-	{
-		cout.width(10);
-		cout << setfill(' ') << right << i << ") " << itemParser.offsetNames[i] << " = 0x" <<
-			setw(3) << hex << setfill('0') << itemParser.offsets[i] <<
-			dec << " (" << itemParser.offsets[i] << ")" << endl;
-	}
-
-
-	cout << endl;
-	cout << "    Secondary World Offsets" << endl;
-	cout << "===============================" << endl;
-
-	for (i = 0; i < worldParser.OT_max; i++)
-	{
-		cout.width(10);
-		cout << setfill(' ') << right << i << ") " << worldParser.offsetNames[i] << " = 0x" <<
-			setw(3) << hex << setfill('0') << worldParser.offsets[i] <<
-			dec << " (" << worldParser.offsets[i] << ")" << endl;
-	}
-
 	cout << endl;
 }
 
+void Debugger::displayCurrentOffsets()
+{
+	cout << endl;
 
+	// Convert C-style arrays to vectors before passing them
+	vector<string> primaryNames(ptrNames, ptrNames + OT_max);
+	vector<QWORD> primaryOffsets(offsets, offsets + OT_max);
+	displayOffsetsSection("Primary Offsets", primaryNames, primaryOffsets);
+
+	vector<string> spawnNames(spawnParser.ptrNames, spawnParser.ptrNames + spawnParser.OT_max);
+	vector<QWORD> spawnOffsets(spawnParser.offsets, spawnParser.offsets + spawnParser.OT_max);
+	displayOffsetsSection("Secondary Spawn Offsets", spawnNames, spawnOffsets);
+
+	vector<string> groundNames(itemParser.offsetNames, itemParser.offsetNames + itemParser.OT_max);
+	vector<QWORD> groundOffsets(itemParser.offsets, itemParser.offsets + itemParser.OT_max);
+	displayOffsetsSection("Secondary Ground Offsets", groundNames, groundOffsets);
+
+	vector<string> worldNames(worldParser.offsetNames, worldParser.offsetNames + worldParser.OT_max);
+	vector<QWORD> worldOffsets(worldParser.offsets, worldParser.offsets + worldParser.OT_max);
+	displayOffsetsSection("Secondary World Offsets", worldNames, worldOffsets);
+}
 
 void Debugger::setOffset(bool primary, string args)
 {
@@ -273,7 +229,6 @@ void Debugger::setOffset(bool primary, string args)
 	stringstream element(args);
 
 	bool useIndex = true;
-
 
 	// Primary offsets are in this Debugger class, but Secondary offsets live in the Spawn class.
 	if (primary)
@@ -302,11 +257,9 @@ void Debugger::setOffset(bool primary, string args)
 
 		string parm1Str(parm1String);
 
-
 		TO_LOWER(parm1Str);
 
 		parm1Int = OT_max;
-
 
 		for (i = 0; i < OT_max; i++)
 		{
@@ -349,8 +302,6 @@ void Debugger::setOffset(bool primary, string args)
 	}
 }
 
-
-
 void Debugger::examineRawMemory(MemReaderInterface* mr_intf, offset_types ot)
 {
 	const UINT bufSize = 6144;
@@ -360,7 +311,6 @@ void Debugger::examineRawMemory(MemReaderInterface* mr_intf, offset_types ot)
 	UINT index;
 
 	int r, c;
-
 
 	memset(buffer, 0, bufSize);
 
@@ -424,12 +374,9 @@ void Debugger::examineRawMemory(MemReaderInterface* mr_intf, offset_types ot)
 	}
 }
 
-
-
 void Debugger::processSpawn(MemReaderInterface* mr_intf, offset_types ot)
 {
 	QWORD pMem;
-
 
 	// pZone is a direct pointer. All others are indirect.
 	if (ot == OT_zonename)
@@ -497,12 +444,9 @@ void Debugger::processSpawn(MemReaderInterface* mr_intf, offset_types ot)
 	DISPLAY_SPAWN_ITEM(OT_offhand, offhand);
 }
 
-
-
 void Debugger::walkSpawnList(MemReaderInterface* mr_intf, offset_types ot, bool reverse)
 {
 	QWORD pMem, pPrev, pNext, spawnCount;
-
 
 	pMem = mr_intf->extractRAWPointer(offsets[ot]);
 
@@ -576,12 +520,9 @@ void Debugger::walkSpawnList(MemReaderInterface* mr_intf, offset_types ot, bool 
 			scanForPtr(mr_intf, pMem, 0x140000000, 0x1800000);
 }
 
-
-
 void Debugger::scanForPtr(MemReaderInterface* mr_intf, QWORD pSearch, QWORD pStart, QWORD size)
 {
 	QWORD pMem, pExtracted;
-
 
 	if (!pStart)
 		return;
@@ -605,8 +546,6 @@ void Debugger::scanForPtr(MemReaderInterface* mr_intf, QWORD pSearch, QWORD pSta
 	}
 }
 
-
-
 void Debugger::scanForString(MemReaderInterface* mr_intf, offset_types ot, QWORD size, string searchStr)
 {
 	QWORD pMem, pStart, pDeepMem, pDeepMem2, nameOffset;
@@ -614,7 +553,6 @@ void Debugger::scanForString(MemReaderInterface* mr_intf, offset_types ot, QWORD
 	char buffer[100];
 
 	string spawnName, itemName;
-
 
 	if ((offsets[ot] == 0) || (size == 0) || searchStr.length() == 0)
 	{
@@ -630,7 +568,6 @@ void Debugger::scanForString(MemReaderInterface* mr_intf, offset_types ot, QWORD
 		nameOffset = spawnParser.offsets[spawnParser.OT_name];
 
 	cout << " Scanning for '" << searchStr << "' from 0x" << hex << pStart << " to 0x" << (pStart + 8 * size) << endl;
-
 
 	for (pMem = pStart; pMem < (pStart + size * 8);)
 	{
@@ -728,8 +665,6 @@ void Debugger::scanForString(MemReaderInterface* mr_intf, offset_types ot, QWORD
 	}
 }
 
-
-
 void Debugger::showProcesses(MemReaderInterface* mr_intf, string processName)
 {
 	if (processName == "")
@@ -741,79 +676,59 @@ void Debugger::showProcesses(MemReaderInterface* mr_intf, string processName)
 	while (mr_intf->openNextProcess(processName, true)) {};
 }
 
-
-
 void Debugger::scanForFloatFromTarget(MemReaderInterface* mr_intf, string args)
 {
 	QWORD pStart;
-
 
 	pStart = mr_intf->extractRAWPointer(offsets[OT_target]);
 
 	scanForFloat(mr_intf, args, pStart, false);
 }
 
-
-
 void Debugger::scanForFloatFromSelf(MemReaderInterface* mr_intf, string args)
 {
 	QWORD pStart;
-
 
 	pStart = mr_intf->extractRAWPointer(offsets[OT_self]);
 
 	scanForFloat(mr_intf, args, pStart, false);
 }
 
-
-
 void Debugger::scanForUINTFromSelf(MemReaderInterface* mr_intf, QWORD size, string args)
 {
 	QWORD pStart;
-
 
 	pStart = mr_intf->extractRAWPointer(offsets[OT_self]);
 
 	scanForUINT(mr_intf, pStart, size, 4, args);
 }
 
-
-
 void Debugger::scanForBYTEFromTarget(MemReaderInterface* mr_intf, QWORD size, string args)
 {
 	QWORD pStart;
-
 
 	pStart = mr_intf->extractRAWPointer(offsets[OT_target]);
 
 	scanForUINT(mr_intf, pStart, size, 2, args);
 }
 
-
-
 void Debugger::scanForBYTEFromSelf(MemReaderInterface* mr_intf, QWORD size, string args)
 {
 	QWORD pStart;
-
 
 	pStart = mr_intf->extractRAWPointer(offsets[OT_self]);
 
 	scanForUINT(mr_intf, pStart, size, 2, args);
 }
 
-
-
 void Debugger::scanForFloatFromAddress(MemReaderInterface* mr_intf, string args)
 {
 	vector<string> tokens;
-
 
 	tokenizeString(args, tokens);
 
 	scanForFloat(mr_intf, args, (QWORD)strtoull(tokens[3].c_str(), NULL, 16), false);
 }
-
-
 
 void Debugger::scanForFloat(MemReaderInterface* mr_intf, string args, QWORD pStart, bool yankPstart)
 {
@@ -836,16 +751,12 @@ void Debugger::scanForFloat(MemReaderInterface* mr_intf, string args, QWORD pSta
 
 	sCheck = dCheck = tCheck = false;
 
-
-
 	switch (tokenizeString(args, tokens))
 	{
 	case 4:
 		if (yankPstart) {
-
 			pStart = strtol(tokens[3].c_str(), NULL, 16);
 			pStart = pStart - 0x140000000 + mr_intf->getCurrentBaseAddress();
-
 		}
 		xFind = (float)atof(tokens[0].c_str());
 
@@ -920,7 +831,6 @@ void Debugger::scanForFloat(MemReaderInterface* mr_intf, string args, QWORD pSta
 
 		xTemp = yTemp = zTemp = INVALID;
 
-
 		if (sCheck || dCheck || tCheck)
 		{
 			xTemp = mr_intf->extractFloat(pFloat);
@@ -972,8 +882,6 @@ void Debugger::scanForFloat(MemReaderInterface* mr_intf, string args, QWORD pSta
 	}
 }
 
-
-
 void Debugger::scanForWorldFromDate(MemReaderInterface* mr_intf, offset_types ot, QWORD size, string args)
 {
 	UINT yFind, yTemp;
@@ -989,8 +897,6 @@ void Debugger::scanForWorldFromDate(MemReaderInterface* mr_intf, offset_types ot
 	UINT dayOffset, monthOffset, yearOffset;
 
 	vector<string> tokens;
-
-
 
 	if ((offsets[ot] == 0) || (size == 0) || args.length() == 0)
 	{
@@ -1081,7 +987,6 @@ void Debugger::scanForUINT(MemReaderInterface* mr_intf, QWORD pStart, QWORD size
 
 	vector<string> tokens;
 
-
 	if ((pStart == 0) || args.length() == 0)
 	{
 		cout << "    Error: '" << args << "' appears to be an invalid value." << endl;
@@ -1112,7 +1017,6 @@ void Debugger::scanForUINT(MemReaderInterface* mr_intf, QWORD pStart, QWORD size
 		if (length == 2)
 			Temp = mr_intf->extractBYTE(pMem);
 
-
 		if (Temp == Find)
 		{
 			cout << dec << Find << "  match found at offset 0x" << hex << (pMem - pStart) << endl;
@@ -1122,14 +1026,11 @@ void Debugger::scanForUINT(MemReaderInterface* mr_intf, QWORD pStart, QWORD size
 	}
 }
 
-
-
 int Debugger::tokenizeString(string input, vector<string>& tokens)
 {
 	string::size_type from = 0;
 
 	string::size_type to = input.find(",", from);
-
 
 	while (to != string::npos)
 	{
@@ -1145,14 +1046,11 @@ int Debugger::tokenizeString(string input, vector<string>& tokens)
 	return (int)tokens.size();
 }
 
-
-
 int Debugger::tokenizeDate(string input, vector<string>& tokens)
 {
 	string::size_type from = 0;
 
 	string::size_type to = input.find("/", from);
-
 
 	while (to != string::npos)
 	{

@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -21,17 +21,6 @@
 #include "stdafx.h"
 
 #include "MySEQ.server.h"
-
-
-#include <WinSvc.h>
-#include "time.h"
-#include <ShellAPI.h>
-#include <process.h>
-#include <iostream>
-#include <CommDlg.h>
-#include <io.h>
-#include <ShlObj.h>
-
 #include "EQGameScanner.h"
 
 using namespace std;
@@ -114,7 +103,6 @@ BOOL InstallService();
 
 BOOL DeleteService();
 
-
 void WINAPI ServiceMain(DWORD argc, LPTSTR* argv)
 {
 	m_ServiceStatus.dwServiceType = SERVICE_WIN32;
@@ -146,7 +134,6 @@ void WINAPI ServiceMain(DWORD argc, LPTSTR* argv)
 
 	if (!SetServiceStatus(m_ServiceStatusHandle, &m_ServiceStatus))
 	{
-
 	}
 
 	bRunning = true;
@@ -196,14 +183,11 @@ void WINAPI ServiceMain(DWORD argc, LPTSTR* argv)
 	return;
 }
 
-
-
 void WINAPI ServiceCtrlHandler(DWORD Opcode)
 {
 	switch (Opcode)
 
 	{
-
 	case SERVICE_CONTROL_PAUSE:
 
 		m_ServiceStatus.dwCurrentState = SERVICE_PAUSED;
@@ -226,8 +210,6 @@ void WINAPI ServiceCtrlHandler(DWORD Opcode)
 
 		m_ServiceStatus.dwWaitHint = 0;
 
-
-
 		SetServiceStatus(m_ServiceStatusHandle, &m_ServiceStatus);
 
 		bRunning = false;
@@ -237,13 +219,10 @@ void WINAPI ServiceCtrlHandler(DWORD Opcode)
 	case SERVICE_CONTROL_INTERROGATE:
 
 		break;
-
 	}
 
 	return;
 }
-
-
 
 BOOL InstallService()
 {
@@ -253,7 +232,6 @@ BOOL InstallService()
 	SC_HANDLE schService;
 	TCHAR ServiceAppPath[MAX_PATH + 1];
 
-
 	GetModuleFileNameA(0, ServiceAppPath, MAX_PATH);
 
 	strcat_s(ServiceAppPath, " -k");
@@ -261,30 +239,27 @@ BOOL InstallService()
 	schSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 
 	if (schSCManager == NULL) {
-
 		return false;
-
 	}
 	LPCTSTR lpszBinaryPathName = ServiceAppPath;
-
 
 	schService = CreateService(schSCManager, lpszServiceName,
 
 		lpszServiceNameDisplay, // service name to display
 
-		SERVICE_ALL_ACCESS, // desired access 
+		SERVICE_ALL_ACCESS, // desired access
 
-		SERVICE_WIN32_OWN_PROCESS, // service type 
+		SERVICE_WIN32_OWN_PROCESS, // service type
 
-		SERVICE_AUTO_START, // start type  
+		SERVICE_AUTO_START, // start type
 
-		SERVICE_ERROR_NORMAL, // error control type 
+		SERVICE_ERROR_NORMAL, // error control type
 
-		lpszBinaryPathName, // service's binary 
+		lpszBinaryPathName, // service's binary
 
-		NULL, // no load ordering group 
+		NULL, // no load ordering group
 
-		NULL, // no tag identifier 
+		NULL, // no tag identifier
 
 		NULL, // no dependencies
 
@@ -306,13 +281,10 @@ BOOL InstallService()
 	return true;
 }
 
-
-
 BOOL DeleteService()
 {
 	SC_HANDLE schSCManager;
 	SC_HANDLE hService;
-
 
 	schSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 
@@ -477,7 +449,6 @@ int APIENTRY _tWinMain(_In_   HINSTANCE hInstance,
 		else {
 			Restore();
 		}
-
 	}
 
 	hAccelTable = LoadAccelerators(hInst, MAKEINTRESOURCE(IDC_MYSEQSERVER));
@@ -517,8 +488,6 @@ int APIENTRY _tWinMain(_In_   HINSTANCE hInstance,
 
 	return (int)msg.wParam;
 }
-
-
 
 //
 //  FUNCTION: MyRegisterClass()
@@ -571,7 +540,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 #define WS_SERVERWINDOW     ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_BORDER | \
                              WS_MINIMIZEBOX)
 
-   // This is the main window for the application.  We might add stuff to it later.  But not now.
+	// This is the main window for the application.  We might add stuff to it later.  But not now.
 	hWnd = CreateWindow(szWindowClass, szTitle, WS_SERVERWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, 300, 250, NULL, NULL, hInstance, NULL);
 
@@ -711,7 +680,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	}
 
-
 	switch (message)
 	{
 		//Winsock related message...
@@ -778,8 +746,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				SetDlgItemText(h_MySEQServer, IDC_TEXT_STATUS, "Connected");
 				check_delay = 0;
 			}
-
-
 		}
 		break;
 
@@ -875,8 +841,8 @@ INT_PTR CALLBACK ServerDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		case IDC_TEXT_STATUS:
 			if (server_status == 0) // Starting Up - Red
 				SetTextColor(hdcStatic, RGB(255, 0, 0));
-			else if (server_status == 1) // Listening - Blue 
-										 // or Connected and no eqgame.exe found
+			else if (server_status == 1) // Listening - Blue
+				// or Connected and no eqgame.exe found
 				SetTextColor(hdcStatic, RGB(0, 0, 255));
 			else // connected with EQGame - Green
 				SetTextColor(hdcStatic, RGB(0, 255, 0));
@@ -966,7 +932,7 @@ INT_PTR CALLBACK ServerDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		{
 		case SC_MINIMIZE:
 		{
-			// do stuff                
+			// do stuff
 			Minimize();
 			return (INT_PTR)TRUE;
 			break;
@@ -1090,7 +1056,6 @@ INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 						}
 					}
 				}
-
 			}
 		}
 
@@ -1217,7 +1182,6 @@ INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 							strcpy_s(eqExeName, "eqgame.exe");
 						}
 					}
-
 				}
 			}
 			if (ofn.lpstrInitialDir == 0) {
@@ -1233,7 +1197,6 @@ INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 			memset((void*)&buffer, 0, sizeof(buffer));
 			int ret_val = 0;
 			if (GetOpenFileName(&ofn)) {
-
 				strcpy_s(eqFileName, eqExeName);
 				SetDlgItemText(hDlg, IDC_EDIT2, "");
 				SetDlgItemText(hDlg, IDC_EQFILENAME, eqFileName);
@@ -1251,7 +1214,6 @@ INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 void ReadArgs(int argc, char* argv[])
 {
 	string arg;
-
 
 	if (argc > 1)
 
@@ -1332,7 +1294,6 @@ void ReadArgs(int argc, char* argv[])
 	}
 }
 
-
 void DoDebugLoop(void* dummy)
 {
 	debugger.enterDebugLoop(&memReader, &iniReader);
@@ -1343,7 +1304,6 @@ void DoDebugLoop(void* dummy)
 
 	ExitProcess(3);
 }
-
 
 void Minimize()
 {
@@ -1360,7 +1320,6 @@ void Minimize()
 	ShowWindow(h_MySEQServer, SW_HIDE);
 }
 
-
 void Restore()
 {
 	// Remove the icon from the system tray
@@ -1369,7 +1328,6 @@ void Restore()
 	// ..and show the window
 	ShowWindow(h_MySEQServer, SW_SHOW);
 }
-
 
 void ToggleStartMinimized()
 {

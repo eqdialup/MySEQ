@@ -9,7 +9,7 @@
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
-#include <windows.h>
+#include <Windows.h>
 
 // C RunTime Header Files
 #include <stdio.h>
@@ -17,6 +17,20 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <cstdlib>
+#include <string>
+#include <iphlpapi.h>
+#include <winsvc.h>
+#include "time.h"
+#include <shellAPI.h>
+#include <process.h>
+#include <iostream>
+#include <commdlg.h>
+#include <io.h>
+#include <ShlObj.h>
+#include <Psapi.h>
+#include <fstream>
+#include <minwindef.h>
 
 
-// TODO: reference additional headers your program requires here
+// reference additional headers your program requires here

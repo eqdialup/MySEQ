@@ -19,15 +19,10 @@
 #ifndef EQGAMESCANNER_H
 #define EQGAMESCANNER_H
 
-#include <string>
-#include <windows.h> // Provides "Windows Style" Type Definitions
+#include "Common.h"
 #include "IniReader.h"
 #include "NetworkServer.h"
 #include "resource.h"
-
-
-
-
 
 class EQGameScanner
 {

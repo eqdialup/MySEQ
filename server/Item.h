@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -23,12 +23,7 @@
 #include "Common.h"
 #include "IniReader.h"
 
-
 #pragma pack(push, 1)
-
-
-
-
 
 struct itemBuffer_t
 {
@@ -47,9 +42,7 @@ struct itemBuffer_t
 	UINT flags{};
 };
 
-
-
-#pragma pack(pop) 
+#pragma pack(pop)
 class Item
 {
 public:

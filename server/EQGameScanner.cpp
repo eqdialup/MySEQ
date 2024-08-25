@@ -17,16 +17,9 @@
  */
 
 #include "stdafx.h"
-#include <fstream>
 #include "EQGameScanner.h"
-#include "minwindef.h"
-
 
 typedef uint64_t* PQWORD;
-
-
-
-
 
 /*
  * Offset Value Storage
@@ -41,8 +34,6 @@ namespace EQPrimaryOffsets
 	QWORD Target = 0x0;
 	QWORD World = 0x0;
 };
-
-
 
 namespace EQSpawnInfoOffsets
 {
@@ -63,22 +54,14 @@ namespace EQSpawnInfoOffsets
 	QWORD Class = 0x0;
 };
 
-
-
 EQGameScanner::EQGameScanner(void) {}
 
-
-
 EQGameScanner::~EQGameScanner(void) {}
-
-
 
 void EQGameScanner::setExe(TCHAR* str)
 {
 	executablePath = str;
 }
-
-
 
 bool EQGameScanner::executableExists() const
 {
@@ -92,8 +75,6 @@ bool EQGameScanner::executableExists() const
 
 	return false;
 }
-
-
 
 DWORD EQGameScanner::findEQPointerOffset(DWORD startAddress, std::size_t blockSize, const PBYTE byteMask, const PCHAR charMask)
 {
@@ -174,8 +155,6 @@ DWORD EQGameScanner::findEQPointerOffset(DWORD startAddress, std::size_t blockSi
 	return nRet;
 }
 
-
-
 DWORD EQGameScanner::findEQStructureOffset(DWORD startAddress, std::size_t blockSize, const PBYTE byteMask, const PCHAR charMask, const QWORD baseEQPointerAddress)
 {
 	DWORD nRet = 0;
@@ -200,8 +179,6 @@ DWORD EQGameScanner::findEQStructureOffset(DWORD startAddress, std::size_t block
 	return nRet;
 }
 
-
-
 // Thanks to dom1n1k for the piece of code this is based off of.
 bool EQGameScanner::compareData(PBYTE data, PBYTE byteMask, PCHAR charMask)
 {
@@ -213,11 +190,8 @@ bool EQGameScanner::compareData(PBYTE data, PBYTE byteMask, PCHAR charMask)
 	return (*charMask) == NULL;
 }
 
-
-
 bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, NetworkServerInterface* net_intf, bool write_out)
 {
-
 	if (!executableExists())
 	{
 		SetDlgItemText(hDlg, IDC_EDIT2, "Error: Could not locate the specified executable file.");
@@ -266,7 +240,6 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 	matchAddr = findEQPointerOffset(mystart, 0x100000, (PBYTE)mypattern.c_str(), (PCHAR)mymask.c_str());
 
 	outputStream << "ZoneAddr=0x" << std::hex << matchAddr;
-
 
 	if (matchAddr != NULL) {
 		if (matchAddr == net_intf->current_offset((int)NetworkServer::OT_zonename))
@@ -528,11 +501,8 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 	return reload;
 }
 
-
-
 void EQGameScanner::ScanSecondary(HWND hDlg, IniReaderInterface* ir_intf, NetworkServerInterface* net_intf)
 {
-
 	if (!executableExists())
 	{
 		SetDlgItemText(hDlg, IDC_EDIT2, "Error: Could not locate the specified executable file.");
@@ -557,11 +527,9 @@ void EQGameScanner::ScanSecondary(HWND hDlg, IniReaderInterface* ir_intf, Networ
 		string::size_type index = executablePath.find_last_of("\\/");
 		string myfilename = executablePath.substr(index + 1, executablePath.size()).c_str();
 		findResults << myfilename.c_str() << " Modified=" << szFileDate << "\r\n";
-
 	}
 
 	EQPrimaryOffsets::CharInfo = net_intf->current_offset((int)NetworkServer::OT_self);
-
 
 	QWORD mystart;
 	string mypattern;
@@ -781,7 +749,6 @@ void EQGameScanner::ScanSecondary(HWND hDlg, IniReaderInterface* ir_intf, Networ
 	outputStream << "| Match Found @ " << ((matchAddr == NULL) ? "FALSE" : "TRUE") << "\r\n";
 	outputStream << "| Offset -> 0x" << std::hex << matchAddr << "\r\n";
 	outputStream << "\r\n";
-
 
 	// SpawnInfo::ClassOffset
 	matchAddr = 0;

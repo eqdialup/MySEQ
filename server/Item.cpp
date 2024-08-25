@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -18,12 +18,8 @@
 
   ==============================================================================*/
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Item.h"
-
-
-
-
 
 Item::Item(void)
 {
@@ -32,8 +28,6 @@ Item::Item(void)
 
 	largestOffset = 0;
 }
-
-
 
 void Item::init(IniReaderInterface* ir_intf)
 {
@@ -71,16 +65,12 @@ void Item::init(IniReaderInterface* ir_intf)
 	cout << "Item: GroundItem Offsets read in." << endl;
 }
 
-
-
 void Item::setOffset(offset_types ot, int value, string name)
 {
 	offsets[ot] = value;
 
 	offsetNames[ot] = name;
 }
-
-
 
 void Item::packItemBuffer(UINT flags)
 {

@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -23,44 +23,27 @@
 #include "Common.h"
 #include "IniReader.h"
 
-
-
-
-
 #pragma pack(push, 1)
 struct worldBuffer_t
 {
 	BYTE hour;
-
 	BYTE minute;
-
 	BYTE day;
-
 	BYTE month;
-
 	DWORD year;
-
 	UINT flags;
 };
 
-
-
-#pragma pack(pop) 
+#pragma pack(pop)
 class World
 {
 public:
 	enum offset_types { OT_hour, OT_minute, OT_day, OT_month, OT_year, OT_max };
-
 	UINT offsets[(UINT)World::offset_types::OT_max]{};
-
 	UINT largestOffset;
-
 	string offsetNames[(UINT)World::offset_types::OT_max];
-
 	char* rawBuffer{};
-
 	worldBuffer_t tempWorldBuffer{};
-
 	vector<worldBuffer_t> worldList;
 
 private:

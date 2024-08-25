@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -20,26 +20,18 @@
 
 #pragma once
 
-
-
 #include "Common.h"
-
 #include "IniReader.h"
-
 #include "Item.h"
-
 #include "World.h"
 
 typedef uint64_t QWORD;
-
-
 
 #pragma pack(push, 1)
 
 struct netBuffer_t
 
 {
-
 	char name[30];
 
 	float x, y, z;
@@ -63,17 +55,13 @@ struct netBuffer_t
 	char lastName[22];
 
 	UINT flags;
-
 };
 
 #pragma pack(pop)
 
-
-
 class Spawn
 
 {
-
 public:
 
 	enum offset_types {
@@ -124,8 +112,6 @@ public:
 
 	vector<netBuffer_t> spawnList;
 
-
-
 	//string name, lastname;
 
 	//float x,y,z;
@@ -135,8 +121,6 @@ public:
 	//UINT id, race;
 
 	//BYTE _class, type, level, hidden;
-
-
 
 private:
 
@@ -197,5 +181,4 @@ public:
 	void packNetBufferWorld(World world);
 private:
 	bool race8{};
-
 };

@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -18,43 +18,30 @@
 
   ==============================================================================*/
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "IniReader.h"
 #include "resource.h"
 
-
-
   // Macro to assist in decoding escape sequence
 #define IS_HEX_CHAR( st ) ((st >= _T('0')) && (st <= _T('9'))) || ((st >= _T('a')) && (st <= _T('f'))) || (( st >= _T('A')) && (st <= _T('F')))
-
-
-
-
 
 IniReader::IniReader()
 {
 	StartMinimized = false;
 }
 
-
-
 IniReader::~IniReader(void) {}
-
-
 
 string IniReader::GetPatchDate()
 {
 	return patchDate;
 }
 
-
-
 void IniReader::openFile(string _filename)
 {
 	filename = _filename;
 
 	patchDate = readStringEntry("File Info", "PatchDate");
-
 
 	if (patchDate == "")
 	{
@@ -71,14 +58,11 @@ void IniReader::openFile(string _filename)
 	}
 }
 
-
-
 void IniReader::openConfigFile(string _filename)
 {
 	configfilename = _filename;
 
 	UINT rtn = 0;
-
 
 	rtn = GetPrivateProfileInt("Server", "StartMinimized", 0, configfilename.c_str());
 
@@ -89,12 +73,9 @@ void IniReader::openConfigFile(string _filename)
 	cout << "ConfigIniFile: " << filename << endl;
 }
 
-
-
 string IniReader::readStringEntry(string section, string entry, bool config)
 {
 	string rtn("");
-
 
 	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), buffer, sizeof(buffer), config ? configfilename.c_str() : filename.c_str()) > 0)
 	{
@@ -108,14 +89,11 @@ string IniReader::readStringEntry(string section, string entry, bool config)
 	return rtn;
 }
 
-
-
 string IniReader::readEscapeStrings(string section, string entry)
 {
 	string rtn("");
 
 	TCHAR newbuff[1024];
-
 
 	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), newbuff, sizeof(newbuff), configfilename.c_str()) > 0)
 	{
@@ -184,13 +162,10 @@ string IniReader::readEscapeStrings(string section, string entry)
 	return rtn;
 }
 
-
-
 QWORD IniReader::readIntegerEntry(string section, string entry, bool config)
 {
 	QWORD rtn = 0;
 	_TCHAR buffer[255];
-
 
 	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), buffer, sizeof(buffer), config ? configfilename.c_str() : filename.c_str()) > 0)
 	{
@@ -204,8 +179,6 @@ QWORD IniReader::readIntegerEntry(string section, string entry, bool config)
 	return rtn;
 }
 
-
-
 bool IniReader::writeStringEntry(string section, string entry, string value, bool config)
 {
 	if (WritePrivateProfileString(section.c_str(), entry.c_str(), value.c_str(), config ? configfilename.c_str() : filename.c_str()) > 0)
@@ -213,8 +186,6 @@ bool IniReader::writeStringEntry(string section, string entry, string value, boo
 	else
 		return false;
 }
-
-
 
 void IniReader::ToggleStartMinimized()
 {

@@ -1,6 +1,6 @@
 /*==============================================================================
 
-	Copyright (C) 2006-2013  All developers at http://sourceforge.net/projects/seq
+	Copyright (C) 2006-2024  All developers at https://www.showeq.net/forums/forum.php
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -18,29 +18,17 @@
 
   ==============================================================================*/
 
-
 #pragma once
 
-
-
 #include "Common.h"
-
 #include "MemReader.h"
-
 #include "Spawn.h"
-
 #include "Item.h"
-
 #include "World.h"
-
-#include <winsock2.h>
-
 #include "resource.h"
 
 class NetworkServerInterface
-
 {
-
 public:
 
 	virtual UINT current_offset(int type) = 0;
@@ -49,11 +37,9 @@ public:
 class NetworkServer : public NetworkServerInterface
 
 {
-
 public:
 
 	enum offset_types { OT_zonename, OT_spawnlist, OT_self, OT_target, OT_ground, OT_world, OT_max };
-
 
 private:
 
@@ -89,8 +75,6 @@ private:
 
 	World worldParser;
 
-
-
 public:
 
 	// Bit flags (in clientRequest) determining what data the client is requesting. See client's Structures.cs.
@@ -98,7 +82,6 @@ public:
 	enum inc_packet_types : int
 
 	{
-
 		IPT_zone = 0x01,
 
 		IPT_self = 0x02,
@@ -114,17 +97,13 @@ public:
 		IPT_setproc = 0x40,
 
 		IPT_world = 0x80
-
 	};
-
-
 
 	// The type of element we are sending back to client. Lives in the 'flags' field of the outgoing packets.
 
 	enum out_packet_types : int
 
 	{
-
 		OPT_spawns = 0x00,
 
 		OPT_target = 0x01,
@@ -138,10 +117,7 @@ public:
 		OPT_world = 0x08,
 
 		OPT_self = 0xFD
-
 	};
-
-
 
 public:
 	HWND hwnd;
@@ -173,5 +149,4 @@ public:
 	string getCharName(MemReaderInterface* mr_intf);
 
 	UINT current_offset(int type);
-
 };
