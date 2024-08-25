@@ -89,7 +89,9 @@ ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	ServerDialog(HWND, UINT, WPARAM, LPARAM);
+bool FindNotepadPath(TCHAR(&notePad)[MAX_PATH]);
 INT_PTR CALLBACK	OffsetDialog(HWND, UINT, WPARAM, LPARAM);
+void GetPatchdate();
 BOOL WINAPI CtrlHandler(DWORD dwCtrlType);
 
 void DoDebugLoop(void* dummy);
@@ -382,9 +384,7 @@ int APIENTRY _tWinMain(_In_   HINSTANCE hInstance,
 
 	if (argc > 1 && (!console_mode && !debug_mode && !services && !otherini))
 	{
-		string arg;
-
-		arg = argv[1];
+		string arg = argv[1];
 
 		cout << "   Usage: server debug" << endl;
 		cout << "          server console" << endl;
@@ -433,11 +433,10 @@ int APIENTRY _tWinMain(_In_   HINSTANCE hInstance,
 		netServer.init(&iniReader);
 
 		running = netServer.openListenerSocket(false);
-		LPCSTR patchdate;
-		patchdate = iniReader.patchDate.c_str();
+
 		server_status = 1;
 		if (h_MySEQServer) {
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_PATCH, patchdate);
+			GetPatchdate();
 			SetDlgItemText(h_MySEQServer, IDC_TEXT_STATUS, "Listening");
 			SetDlgItemText(h_MySEQServer, IDC_TEXT_ZONE, "");
 			SetDlgItemText(h_MySEQServer, IDC_TEXT_NAME, "");
@@ -580,18 +579,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		ios::sync_with_stdio();
 	}
 
-	//ShowWindow(h_MySEQServer, SW_SHOW);
 	ShowWindow(hWnd, SW_HIDE);
-
 	UpdateWindow(hWnd);
-
 	Sleep(100);
 
 	h_MyConsole = GetConsoleWindow();
 
 	// set up system tray
 	memset(&g_notifyIconData, 0, sizeof(NOTIFYICONDATA));
-
 	g_notifyIconData.cbSize = sizeof(NOTIFYICONDATA);
 
 	/////
@@ -671,7 +666,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	int wmId, wmEvent;
+	int wmId;
+	int wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
 
@@ -698,7 +694,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			//Clean up
 			netServer.closeClientSocket();
-			//WSACleanup();
 			server_status = 1;
 			if (h_MySEQServer) {
 				SetDlgItemText(h_MySEQServer, IDC_TEXT_STATUS, "Listening");
@@ -780,7 +775,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wmId)
 		{
 		case IDM_ABOUT:
-			//DialogBox(hInst, MAKEINTRESOURCE(IDD_SERVERBOX), hWnd, Server);
 			break;
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
@@ -791,15 +785,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		// TODO: Add any drawing code here...
+		// Add any drawing code here...
 		SetTextColor(hdc, GetSysColor(COLOR_MENUTEXT));
 		TextOut(hdc, 10, 10, "Patch Date:", 11);
-		//TextOut(hdc,10,30, "Offsets:", 8);
-		//TextOut(hdc,10,50, "Port:", 5);
-		//TextOut(hdc, 10,70, "Status:", 7);
-		///TextOut(hdc, 10,90, "Zone:", 5);
-		//TextOut(hdc, 10,110,"Spawns:",7);
-		//TextOut(hdc, 10,130,"Ground Items:",13);
 		EndPaint(hWnd, &ps);
 		break;
 
@@ -823,192 +811,189 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 // Message handler for server dialog.
-INT_PTR CALLBACK ServerDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
+INT_PTR CALLBACK ServerDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (message)
-	{
+	switch (message) {
 	case WM_INITDIALOG:
 		return (INT_PTR)TRUE;
+
 	case WM_CTLCOLORDLG:
 		return (INT_PTR)g_hbrBackground;
+
 	case WM_CTLCOLORSTATIC:
-	{
-		HDC hdcStatic = (HDC)wParam;
-		switch (GetDlgCtrlID((HWND)lParam))
-		{
-		case IDC_TEXT_STATUS:
-			if (server_status == 0) // Starting Up - Red
-				SetTextColor(hdcStatic, RGB(255, 0, 0));
-			else if (server_status == 1) // Listening - Blue
-				// or Connected and no eqgame.exe found
-				SetTextColor(hdcStatic, RGB(0, 0, 255));
-			else // connected with EQGame - Green
-				SetTextColor(hdcStatic, RGB(0, 255, 0));
-			break;
-		default:
-			SetTextColor(hdcStatic, GetSysColor(COLOR_MENUTEXT));
-		}
-		SetBkMode(hdcStatic, TRANSPARENT);
+		HandleColorStatic(hDlg, wParam, lParam);
 		return (INT_PTR)g_hbrBackground;
-	}
-	break;
+
 	case WM_COMMAND:
-		if (LOWORD(wParam) == IDCLOSE || LOWORD(wParam) == IDCANCEL)
-		{
-			EndDialog(hDlg, LOWORD(wParam));
-			running = false;
-			FreeConsole();
-			return (INT_PTR)FALSE;
-		}
-		if (LOWORD(wParam) == IDC_BUTTON1)
-		{
-			// edit offsets
-			DWORD dwStatus;
-			GetExitCodeProcess(piProcessInfo.hProcess, &dwStatus);
-			if (dwStatus != STILL_ACTIVE) {
-				// Check in case notepad.exe not in C:\Windows
-				TCHAR basePath[_MAX_PATH + 1];
-				TCHAR notePad[MAX_PATH + 1];
-				if (!GetWindowsDirectory(basePath, MAX_PATH))
-					cout << "Windows directory lookup failed";
-				strcpy_s(notePad, basePath);
-				strcat_s(notePad, "\\NOTEPAD.exe");
-				if (_access(notePad, 0) != 0) {
-					strcpy_s(notePad, basePath);
-					strcat_s(notePad, "\\System32\\NOTEPAD.exe");
-					if (_access(notePad, 0) != 0) {
-						strcpy_s(notePad, basePath);
-						strcat_s(notePad, "\\SysWOW64\\NOTEPAD.exe");
-					}
-				}
-
-				// we need to add a space in front of file opening, for command line
-				TCHAR commandLine[MAX_PATH];
-				strcpy_s(commandLine, " ");
-				strcat_s(commandLine, iniFile);
-				CreateProcess(notePad,
-					commandLine,
-					0,
-					0,
-					FALSE,
-					CREATE_DEFAULT_ERROR_MODE,
-					0, 0,
-					&siStartupInfo,
-					&piProcessInfo);
-			}
-		}
-		if (LOWORD(wParam) == IDC_BUTTON2)
-		{
-			// reload offsets
-			iniReader.openFile(iniFile);
-			iniReader.openConfigFile(configIniFile);
-			netServer.init(&iniReader);
-
-			// close and reopen listener socket, in case port changed
-			netServer.closeListenerSocket();
-			running = netServer.openListenerSocket(false);
-
-			// update patch date in GUI
-			LPCSTR patchdate;
-			patchdate = iniReader.patchDate.c_str();
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_PATCH, patchdate);
-		}
-		if (LOWORD(wParam) == IDC_BUTTON3)
-		{
-			// list local IP Addresses
-			netServer.listIPAddresses();
-		}
-		if (LOWORD(wParam) == IDC_BUTTON4)
-		{
-			// show dialog for smart offset finder
-			DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_EQOFFSETSFINDER), h_MySEQServer, OffsetDialog);
-		}
+		HandleCommand(hDlg, wParam);
 		break;
 
 	case WM_SYSCOMMAND:
-		switch (wParam)
-		{
-		case SC_MINIMIZE:
-		{
-			// do stuff
-			Minimize();
+		if (wParam == SC_MINIMIZE) {
+			MinimizeWindow(hDlg);
 			return (INT_PTR)TRUE;
-			break;
 		}
-		default:
-			break;
-		}
+		break;
 
 	case WM_TRAYICON:
-	{
-		switch (wParam)
-		{
-		case ID_TRAY_APP_ICON:
-			break;
-		}
+		HandleTrayIcon(hDlg, wParam, lParam);
+		break;
 
-		// the mouse button has been released.
-		/*if (lParam == WM_LBUTTONUP)
-
-		{
-			Restore();
-		}
-		else */
-		if (lParam == WM_LBUTTONDBLCLK)
-		{
-			Restore();
-		}
-		else if (lParam == WM_RBUTTONDOWN) // I'm using WM_RBUTTONDOWN here because
-		{
-			// it gives the app a more responsive feel.  Some apps
-			// DO use this trick as well.  Right clicks won't make
-			// the icon disappear, so you don't get any annoying behavior
-			// with this (try it out!)
-
-			// Get current mouse position.
-			POINT curPoint;
-			GetCursorPos(&curPoint);
-
-			// should SetForegroundWindow according
-			// to original poster so the popup shows on top
-			SetForegroundWindow(hDlg);
-
-			// TrackPopupMenu blocks the app until TrackPopupMenu returns
-			UINT clicked = TrackPopupMenu(g_menu,
-				TPM_RETURNCMD | TPM_NONOTIFY, // don't send me WM_COMMAND messages about this window, instead return the identifier of the clicked menu item
-				curPoint.x,
-				curPoint.y,
-				0,
-				hDlg,
-				NULL);
-
-			if (clicked == ID_TRAY_EXIT_CONTEXT_MENU_ITEM)
-			{
-				// quit the application.
-				Shell_NotifyIcon(NIM_DELETE, &g_notifyIconData);
-				running = false;
-				EndDialog(hDlg, (INT_PTR)clicked);
-				FreeConsole();
-				PostQuitMessage(0);
-			}
-			else if (clicked == ID_TRAY_OPEN_CONTEXT_MENU_ITEM) {
-				Restore();
-			}
-			else if (clicked == ID_TRAY_START_MINIMIZED_MENU_ITEM) {
-				ToggleStartMinimized();
-
-				if (iniReader.GetStartMinimized())
-					CheckMenuItem(g_menu, ID_TRAY_START_MINIMIZED_MENU_ITEM, MF_CHECKED);
-				else
-					CheckMenuItem(g_menu, ID_TRAY_START_MINIMIZED_MENU_ITEM, MF_UNCHECKED);
-			}
-		}
-	} // end of case WM_TRAYICON:
-	break;
+	default:
+		return (INT_PTR)FALSE;
 	}
+
 	return (INT_PTR)FALSE;
+}
+
+// Handle WM_CTLCOLORSTATIC
+void HandleColorStatic(HWND hDlg, WPARAM wParam, LPARAM lParam) {
+	HDC hdcStatic = (HDC)wParam;
+	switch (GetDlgCtrlID((HWND)lParam)) {
+	case IDC_TEXT_STATUS:
+		if (server_status == 0)  // Starting Up - Red
+			SetTextColor(hdcStatic, RGB(255, 0, 0));
+		else if (server_status == 1)  // Listening - Blue or Connected with no eqgame.exe found
+			SetTextColor(hdcStatic, RGB(0, 0, 255));
+		else  // Connected with EQGame - Green
+			SetTextColor(hdcStatic, RGB(0, 255, 0));
+		break;
+	default:
+		SetTextColor(hdcStatic, GetSysColor(COLOR_MENUTEXT));
+		break;
+	}
+	SetBkMode(hdcStatic, TRANSPARENT);
+}
+
+// Handle WM_COMMAND
+void HandleCommand(HWND hDlg, WPARAM wParam) {
+	switch (LOWORD(wParam)) {
+	case IDCLOSE:
+	case IDCANCEL:
+		EndDialog(hDlg, LOWORD(wParam));
+		running = false;
+		FreeConsole();
+		break;
+
+	case IDC_BUTTON1:  // Edit offsets
+		DWORD dwStatus;
+		GetExitCodeProcess(piProcessInfo.hProcess, &dwStatus);
+		if (dwStatus != STILL_ACTIVE) {
+			TCHAR notePad[MAX_PATH];
+			if (FindNotepadPath(notePad)) {
+				TCHAR commandLine[MAX_PATH];
+				_stprintf_s(commandLine, _T(" %s"), iniFile);
+				CreateProcess(notePad, commandLine, NULL, NULL, FALSE, CREATE_DEFAULT_ERROR_MODE, NULL, NULL, &siStartupInfo, &piProcessInfo);
+			}
+		}
+		break;
+
+	case IDC_BUTTON2:  // Reload offsets
+		iniReader.openFile(iniFile);
+		iniReader.openConfigFile(configIniFile);
+		netServer.init(&iniReader);
+		netServer.closeListenerSocket();
+		running = netServer.openListenerSocket(false);
+		GetPatchdate();  // Update patch date in GUI
+		break;
+
+	case IDC_BUTTON3:  // List local IP Addresses
+		netServer.listIPAddresses();
+		break;
+
+	case IDC_BUTTON4:  // Show dialog for smart offset finder
+		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_EQOFFSETSFINDER), h_MySEQServer, OffsetDialog);
+		break;
+
+	default:
+		break;
+	}
+}
+
+// Handle WM_SYSCOMMAND Minimize
+void MinimizeWindow(HWND hDlg) {
+	// Implement minimize behavior here
+	Minimize();
+}
+
+// Handle WM_TRAYICON
+void HandleTrayIcon(HWND hDlg, WPARAM wParam, LPARAM lParam) {
+	switch (wParam) {
+	case ID_TRAY_APP_ICON:
+		// Handle tray icon interactions
+		break;
+	}
+
+	if (lParam == WM_LBUTTONDBLCLK) {
+		RestoreWindow(hDlg);
+	}
+	else if (lParam == WM_RBUTTONDOWN) {
+		ShowPopupMenu(hDlg);
+	}
+}
+
+// Restore Window from Tray
+void RestoreWindow(HWND hDlg) {
+	// Implement window restoration behavior here
+	Restore();
+}
+
+// Show Popup Menu
+void ShowPopupMenu(HWND hDlg) {
+	POINT curPoint;
+	GetCursorPos(&curPoint);
+	SetForegroundWindow(hDlg);
+
+	UINT clicked = TrackPopupMenu(g_menu,
+		TPM_RETURNCMD | TPM_NONOTIFY,
+		curPoint.x,
+		curPoint.y,
+		0,
+		hDlg,
+		NULL);
+
+	switch (clicked) {
+	case ID_TRAY_EXIT_CONTEXT_MENU_ITEM:
+		Shell_NotifyIcon(NIM_DELETE, &g_notifyIconData);
+		running = false;
+		EndDialog(hDlg, (INT_PTR)clicked);
+		FreeConsole();
+		PostQuitMessage(0);
+		break;
+
+	case ID_TRAY_OPEN_CONTEXT_MENU_ITEM:
+		RestoreWindow(hDlg);
+		break;
+
+	case ID_TRAY_START_MINIMIZED_MENU_ITEM:
+		ToggleStartMinimized();
+		CheckMenuItem(g_menu, ID_TRAY_START_MINIMIZED_MENU_ITEM,
+			iniReader.GetStartMinimized() ? MF_CHECKED : MF_UNCHECKED);
+		break;
+
+	default:
+		break;
+	}
+}
+
+bool FindNotepadPath(TCHAR(&notePad)[MAX_PATH]) {
+	TCHAR basePath[MAX_PATH];
+	if (!GetWindowsDirectory(basePath, MAX_PATH)) {
+		std::cout << "Windows directory lookup failed";
+		return false;  // Return false if Windows directory lookup fails
+	}
+
+	std::vector<std::string> subDirs = { "", "\\System32", "\\SysWOW64" };
+	for (const auto& dir : subDirs) {
+		_stprintf_s(notePad, _T("%s%s\\NOTEPAD.exe"), basePath, dir.c_str());
+		if (_access(notePad, 0) == 0) {
+			return true;  // Return true if Notepad.exe is found
+		}
+	}
+
+	std::cout << "Notepad.exe not found in default directories";
+	return false;  // Return false if Notepad.exe is not found
 }
 
 INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -1071,7 +1056,6 @@ INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		case IDOK:
 			scanner.setExe(eqFileName);
 			scanner.ScanExecutable(hDlg, &iniReader, &netServer);
-			//EndDialog(hDlg, IDOK);
 			break;
 		case IDC_BUTTON2:
 			scanner.setExe(eqFileName);
@@ -1085,123 +1069,51 @@ INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 				netServer.closeListenerSocket();
 				running = netServer.openListenerSocket(false);
 
-				// update patch date in GUI
-				LPCSTR patchdate;
-				patchdate = iniReader.patchDate.c_str();
-				SetDlgItemText(h_MySEQServer, IDC_TEXT_PATCH, patchdate);
-				//EndDialog(hDlg, IDC_BUTTON2);
+				GetPatchdate();
 			}
 			break;
 		case IDC_BUTTON3:
 			scanner.setExe(eqFileName);
 			scanner.ScanSecondary(hDlg, &iniReader, &netServer);
-			//EndDialog(hDlg, IDOK);
 			break;
 		case IDCANCEL:
 			EndDialog(hDlg, IDCANCEL);
 			break;
 		case IDC_BUTTON1:
-
 			GetDlgItemText(hDlg, IDC_EQFILENAME, eqFileName, _MAX_PATH);
 			OPENFILENAME ofn;
 			ZeroMemory(&ofn, sizeof(ofn));
 			ofn.lStructSize = sizeof(ofn);
 			ofn.hwndOwner = hDlg;
 			ofn.lpstrFilter = "EverQuest Executable (eqgame.exe)\0eqgame.exe\0All Files (*.*)\0*.*\0";
-
 			ofn.nMaxFile = _MAX_PATH;
-			// if we have an already selected eqgame, set path to it's patch
 
-			// no eqgame selected, so use some defaults paths
-			// check these first
-			// "c:\program files\sony online entertainment\installed games\everquest\"
-			// "c:\program files\sony\everquest\"
-			// "c:\program files\soe\everquest\"
-			// "c:\program files\everquest\"
 			TCHAR basePath[_MAX_PATH];
 			TCHAR szChkFile[_MAX_PATH];
+
 			if (eqExeName[0] == _T('\0')) {
 				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROGRAM_FILES, NULL, 0, basePath))) {
-					strcpy_s(eqFilePath, basePath);
-					strcat_s(eqFilePath, "\\Sony Online Entertainment\\Installed Games\\EverQuest");
-					if (_access(eqFilePath, 0) == 0) {
-						ofn.lpstrInitialDir = eqFilePath;
-						strcpy_s(szChkFile, eqFilePath);
-						strcat_s(szChkFile, "\\eqgame.exe");
-						if (_access(eqFilePath, 0) == 0) {
-							strcpy_s(eqFileName, szChkFile);
-							strcpy_s(eqExeName, "eqgame.exe");
-						}
-					}
-					strcpy_s(eqFilePath, basePath);
-					strcat_s(eqFilePath, "\\sony\\everquest");
-					if (_access(eqFilePath, 0) == 0) {
-						ofn.lpstrInitialDir = eqFilePath;
-						strcpy_s(szChkFile, eqFilePath);
-						strcat_s(szChkFile, "\\eqgame.exe");
-						if (_access(eqFilePath, 0) == 0) {
-							strcpy_s(eqFileName, szChkFile);
-							strcpy_s(eqExeName, "eqgame.exe");
-						}
-					}
-					if (eqExeName[0] == _T('\0')) {
-						// attempt 2
-						strcpy_s(eqFilePath, basePath);
-						strcat_s(eqFilePath, "\\soe\\everquest");
-						if (_access(eqFilePath, 0) == 0) {
-							ofn.lpstrInitialDir = eqFilePath;
-							strcpy_s(szChkFile, eqFilePath);
-							strcat_s(szChkFile, "\\eqgame.exe");
-							if (_access(eqFilePath, 0) == 0) {
-								strcpy_s(eqFileName, szChkFile);
-								strcpy_s(eqExeName, "eqgame.exe");
-							}
-						}
-					}
-					if (eqExeName[0] == _T('\0')) {
-						// attempt 2
-						strcpy_s(eqFilePath, basePath);
-						strcat_s(eqFilePath, "\\everquest");
-						if (_access(eqFilePath, 0) == 0) {
-							ofn.lpstrInitialDir = eqFilePath;
-							strcpy_s(szChkFile, eqFilePath);
-							strcat_s(szChkFile, "\\eqgame.exe");
-							if (_access(eqFilePath, 0) == 0) {
-								strcpy_s(eqFileName, szChkFile);
-								strcpy_s(eqExeName, "eqgame.exe");
-							}
-						}
-					}
-					if (eqExeName[0] == _T('\0')) {
+					// Check default directories for EQ
+					if (!CheckAndSetEQPath(basePath, _T("\\Sony Online Entertainment\\Installed Games\\EverQuest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
+						!CheckAndSetEQPath(basePath, _T("\\sony\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
+						!CheckAndSetEQPath(basePath, _T("\\soe\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
+						!CheckAndSetEQPath(basePath, _T("\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH)) {
+
 						GetCurrentDirectory(_MAX_PATH, eqFilePath);
 						ofn.lpstrInitialDir = eqFilePath;
-						strcpy_s(szChkFile, eqFilePath);
-						strcat_s(szChkFile, "\\eqgame.exe");
-						if (_access(eqFilePath, 0) == 0) {
-							strcpy_s(eqFileName, szChkFile);
-							strcpy_s(eqExeName, "eqgame.exe");
+						_stprintf_s(szChkFile, _T("%s\\eqgame.exe"), eqFilePath);
+						if (_access(szChkFile, 0) == 0) {
+							_tcscpy_s(eqFileName, _MAX_PATH, szChkFile);
+							_tcscpy_s(eqExeName, _MAX_PATH, _T("eqgame.exe"));
 						}
 					}
 				}
 			}
-			if (ofn.lpstrInitialDir == 0) {
-				if (eqFilePath[0] == _T('\0'))
-					GetCurrentDirectory(_MAX_PATH, eqFilePath);
-				ofn.lpstrInitialDir = eqFilePath;
-			}
-			ofn.lpstrFile = eqExeName;
+			SetInitialDirectory(eqFilePath, _MAX_PATH, eqExeName, ofn);
 
-			ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-			ofn.lpstrDefExt = "exe";
-			struct _stat buffer;
-			memset((void*)&buffer, 0, sizeof(buffer));
-			int ret_val = 0;
 			if (GetOpenFileName(&ofn)) {
-				strcpy_s(eqFileName, eqExeName);
-				SetDlgItemText(hDlg, IDC_EDIT2, "");
-				SetDlgItemText(hDlg, IDC_EQFILENAME, eqFileName);
+				SetEQFileName(hDlg, eqExeName, eqFileName);
 			}
-
 			break;
 		}
 		break;
@@ -1209,6 +1121,47 @@ INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		return FALSE;
 	}
 	return TRUE;
+}
+
+// Check if the directory exists and set EQ path
+bool CheckAndSetEQPath(const TCHAR* basePath, const TCHAR* subDir, TCHAR* eqFilePath, size_t pathSize, TCHAR* eqFileName, size_t fileNameSize, TCHAR* eqExeName, size_t exeNameSize) {
+	_stprintf_s(eqFilePath, pathSize, _T("%s%s"), basePath, subDir);
+	if (_access(eqFilePath, 0) == 0) {
+		_stprintf_s(eqFileName, fileNameSize, _T("%s\\eqgame.exe"), eqFilePath);
+		if (_access(eqFileName, 0) == 0) {
+			_tcscpy_s(eqExeName, exeNameSize, _T("eqgame.exe"));
+			return true;
+		}
+	}
+	return false;
+}
+
+// Set the initial directory for the file dialog
+void SetInitialDirectory(TCHAR* eqFilePath, size_t pathSize, TCHAR* eqExeName, OPENFILENAME& ofn) {
+	if (ofn.lpstrInitialDir == 0) {
+		if (eqFilePath[0] == _T('\0')) {
+			GetCurrentDirectory(static_cast<DWORD>(pathSize), eqFilePath);
+		}
+		ofn.lpstrInitialDir = eqFilePath;
+	}
+	ofn.lpstrFile = eqExeName;
+	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+	ofn.lpstrDefExt = _T("exe");
+}
+
+// Set the EQ file name in the dialog
+void SetEQFileName(HWND hDlg, TCHAR* eqExeName, TCHAR* eqFileName) {
+	_tcscpy_s(eqFileName, _MAX_PATH, eqExeName);
+	SetDlgItemText(hDlg, IDC_EDIT2, _T(""));
+	SetDlgItemText(hDlg, IDC_EQFILENAME, eqFileName);
+}
+
+void GetPatchdate()
+{
+	// update patch date in GUI
+	LPCSTR patchdate;
+	patchdate = iniReader.patchDate.c_str();
+	SetDlgItemText(h_MySEQServer, IDC_TEXT_PATCH, patchdate);
 }
 
 void ReadArgs(int argc, char* argv[])

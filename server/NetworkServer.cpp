@@ -40,174 +40,164 @@ NetworkServer::~NetworkServer(void)
 
 void NetworkServer::listIPAddresses()
 {
-	TCHAR mybuffer[1024];
-	mybuffer[0] = _T('\0');
-	hostent* localHost;
-	int j = 0;
-	localHost = gethostbyname("localhost");
-	for (int i = 0; localHost->h_addr_list[i] != 0; ++i) {
-		struct in_addr addr;
-		memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
-		// assign our local host to the designated ip address
-		if (mybuffer[0] == _T('\0'))
-			sprintf_s(mybuffer, "%s", inet_ntoa(addr));
-		else
-			strcat_s(mybuffer, inet_ntoa(addr));
-		j = j + 1;
-		if (j > 10)
-			break;
+	std::vector<std::string> ipAddresses;
+	collectIPAddresses("localhost", ipAddresses);
+	collectIPAddresses("", ipAddresses);
+
+	std::ostringstream oss;
+	for (const auto& ip : ipAddresses)
+	{
+		oss << ip << "\r\n";
 	}
 
-	localHost = gethostbyname("");
-	for (int i = 0; localHost->h_addr_list[i] != 0; ++i) {
+	MessageBox(h_MySEQServer ? h_MySEQServer : NULL, oss.str().c_str(), "MySEQ Open Server: Local IP Addresses", MB_OK | MB_TOPMOST | MB_ICONINFORMATION);
+}
+
+void NetworkServer::collectIPAddresses(const char* hostname, std::vector<std::string>& ipAddresses)
+{
+	hostent* localHost = gethostbyname(hostname);
+	if (localHost == nullptr) return;  // Handle the error case where gethostbyname fails
+
+	for (int i = 0; localHost->h_addr_list[i] != 0; ++i)
+	{
 		struct in_addr addr;
 		memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
-		if (mybuffer[0] == _T('\0')) {
-			sprintf_s(mybuffer, "%s", inet_ntoa(addr));
-		}
-		else {
-			strcat_s(mybuffer, "\r\n");
-			strcat_s(mybuffer, inet_ntoa(addr));
-		}
-		j = j + 1;
-		if (j > 10)
+		ipAddresses.push_back(inet_ntoa(addr));
+		if (ipAddresses.size() > 10)
 			break;
 	}
-	MessageBox(h_MySEQServer ? h_MySEQServer : NULL, (LPCSTR)&mybuffer, "MySEQ Open Server: Local IP Addresses", MB_OK | MB_TOPMOST | MB_ICONINFORMATION);
+}
+
+void NetworkServer::logListeningAddresses()
+{
+	hostent* localHost = gethostbyname("localhost");
+	logAddresses(localHost, "MySEQServer: Listening on ");
+
+	in_addr current_host;
+	current_host.S_un.S_addr = NULL;
+
+	localHost = gethostbyname("");
+	current_host = getBestNonLocalhostAddress(localHost);
+
+	if (current_host.S_un.S_addr != NULL)
+	{
+		std::cout << "MySEQServer: Listening on " << inet_ntoa(current_host) << ":" << port << std::endl;
+	}
+}
+in_addr NetworkServer::getBestNonLocalhostAddress(hostent* localHost)
+{
+	in_addr bestAddr;
+	bestAddr.S_un.S_addr = NULL;
+
+	for (int i = 0; localHost->h_addr_list[i] != 0; ++i)
+	{
+		struct in_addr addr;
+		memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
+
+		if (addr.s_net != 0 && shouldUpdateBestAddress(bestAddr, addr))
+		{
+			bestAddr = addr;
+		}
+	}
+
+	return bestAddr;
+}
+
+bool NetworkServer::shouldUpdateBestAddress(const in_addr& currentAddr, const in_addr& newAddr)
+{
+	if (currentAddr.S_un.S_addr == NULL)
+	{
+		return true;
+	}
+
+	bool isNewPrivate = (newAddr.s_net == 192 && newAddr.s_host == 168) || newAddr.s_net == 10 ||
+		(newAddr.s_net == 177 && newAddr.s_host >= 16 && newAddr.s_host <= 31);
+
+	bool isCurrentNonPrivate = (currentAddr.s_net != 192 || currentAddr.s_host != 168) &&
+		(currentAddr.s_net != 10) && (currentAddr.s_net != 176);
+
+	if (isNewPrivate && isCurrentNonPrivate)
+	{
+		return true;
+	}
+
+	if (newAddr.s_net == currentAddr.s_net && newAddr.s_host == currentAddr.s_host)
+	{
+		return (newAddr.s_lh < currentAddr.s_lh) ||
+			(newAddr.s_lh == currentAddr.s_lh && newAddr.s_impno <= currentAddr.s_impno);
+	}
+
+	return false;
 }
 
 bool NetworkServer::openListenerSocket(bool service)
 {
 	WSADATA wsa;
-
 	if (WSAStartup(MAKEWORD(1, 1), &wsa) != 0)
 	{
 		MessageBox(NULL, "Error: NetworkServer: Failed to initialize Winsock.", "Failed to initialize Winsock", 0);
 		return false;
 	}
-	// Attempt to get a socket
+
 	sockListener = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockListener == INVALID_SOCKET)
 	{
 		MessageBox(NULL, "Error: NetworkServer: Error creating listener socket.", "Failed to create listener socket.", 0);
+		WSACleanup();
 		return false;
 	}
 
-	// Fill out the sockaddr structure with typical values
-	memset(&sockAddr, 0, sockAddrSize);
+	memset(&sockAddr, 0, sizeof(sockAddr));
 	psockAddrIn->sin_family = AF_INET;
-
 	psockAddrIn->sin_addr.s_addr = INADDR_ANY;
-
-	// Attempt to bind the listener socket
 	psockAddrIn->sin_port = htons(port);
 
-	if (bind(sockListener, (struct sockaddr*)&sockAddr, sockAddrSize) == SOCKET_ERROR)
+	if (bind(sockListener, (struct sockaddr*)&sockAddr, sizeof(sockAddr)) == SOCKET_ERROR)
 	{
-		cout << "MySEQServer: Failed binding to port: " << port << endl;
-		std::string str("Failed binding to port: ");
-		std::stringstream strm;
-		strm << dec << port;
-		str.append(strm.str());
-		str.append("\r\nCheck for a suitable port or currently running MySEQ Server.\r\nExiting.");
-		MessageBox(NULL, str.c_str(), "WindSock Error: Failed binding to port.", MB_OK | MB_TOPMOST | MB_ICONERROR);
+		std::ostringstream oss;
+		oss << "Failed binding to port: " << port << "\nCheck for a suitable port or currently running MySEQ Server.\nExiting.";
+		MessageBox(NULL, oss.str().c_str(), "Winsock Error: Failed binding to port.", MB_OK | MB_TOPMOST | MB_ICONERROR);
+		closesocket(sockListener);
+		WSACleanup();
 		return false;
 	}
 
-	// Setup the backlog
-	if (service) {
-		if (listen(sockListener, 10) == SOCKET_ERROR)
-		{
-			MessageBox(NULL, "Error: NetworkServer: Listen request failed.", "Listen request failed", 0);
-			return false;
-		}
+	if (listen(sockListener, 10) == SOCKET_ERROR)
+	{
+		MessageBox(NULL, "Error: NetworkServer: Listen request failed.", "Listen request failed", 0);
+		closesocket(sockListener);
+		WSACleanup();
+		return false;
 	}
-	else {
-		// Setup the backlog
-		if (listen(sockListener, 10) == SOCKET_ERROR)
-		{
-			MessageBox(NULL, "Error: NetworkServer: Listen request failed.", "Listen request failed", 0);
-			return false;
-		}
-		//Switch to Non-Blocking mode
+
+	if (!service)
+	{
 		WSAAsyncSelect(sockListener, hwnd, 1045, FD_READ | FD_CONNECT | FD_CLOSE | FD_ACCEPT);
-
-		TCHAR active_address[128]{};
-		hostent* localHost;
-
-		localHost = gethostbyname("localhost");
-		for (int i = 0; localHost->h_addr_list[i] != 0; ++i) {
-			struct in_addr addr;
-			memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
-			// assign our local host to the designated ip address
-			sprintf_s(active_address, "%s", inet_ntoa(addr));
-			cout << "MySEQServer: Listening on " << inet_ntoa(addr) << ":" << dec << port << endl;
-		}
-
-		// use this to store the current non-localhost address being used
-		in_addr current_host;
-		current_host.S_un.S_addr = NULL;
-
-		localHost = gethostbyname("");
-		for (int i = 0; localHost->h_addr_list[i] != 0; ++i) {
-			struct in_addr addr;
-			memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
-			if (addr.s_net == 0) {
-			}
-			else if (addr.s_net == 127) {
-			}
-			else if (addr.s_net == 169 && addr.s_host == 254) {
-			}
-			else if (addr.s_net == 192 && addr.s_host == 0) {
-			}
-			else if (addr.s_net == 198 && addr.s_host == 51 && addr.s_lh == 100) {
-			}
-			else if (addr.s_net == 203 && addr.s_host == 0 && addr.s_lh == 113) {
-			}
-			else if (addr.s_net == 192 && addr.s_host == 88 && addr.s_lh == 99) {
-			}
-			else if (addr.s_net == 198 && (addr.s_host == 18 || addr.s_lh == 19)) {
-			}
-			else if (addr.s_net >= 224 && addr.s_net <= 240) {
-			}
-			else {
-				if (current_host.S_un.S_addr == NULL) {
-					memcpy(&current_host, localHost->h_addr_list[i], sizeof(struct in_addr));
-					sprintf_s(active_address, "%s", inet_ntoa(addr));
-				}
-				else {
-					// we have a value in current host
-					// do some handling for lan addresses
-					if ((addr.s_net == 192 && addr.s_host == 168) || addr.s_net == 10 || (addr.s_net == 177 && addr.s_host >= 16 && addr.s_host <= 31)) {
-						// we have what looks like a local lan addres
-						// 192.168.xx.xx or 10.xx.xx.xx or 176.16.xx.xx to 176.31.xx.xx
-						if ((current_host.s_net != 192 || current_host.s_host != 168) && (current_host.s_net != 10) && (current_host.s_net != 176)) {
-							// our current address does not look like a lan address, so set it.
-							memcpy(&current_host, localHost->h_addr_list[i], sizeof(struct in_addr));
-							//cout << "We have a new lan address." << endl;
-						}
-					}
-					// now update for better (lower) addresses on the same net/host range
-					if (addr.s_net == current_host.s_net && addr.s_host == current_host.s_host && ((addr.s_lh < current_host.s_lh) || (addr.s_lh <= current_host.s_lh && addr.s_impno <= current_host.s_impno))) {
-						memcpy(&current_host, localHost->h_addr_list[i], sizeof(struct in_addr));
-						//cout << "We have an updated better address." << endl;
-					}
-				}
-				sprintf_s(active_address, "%s", inet_ntoa(current_host));
-			}
-			cout << "MySEQServer: Listening on " << inet_ntoa(addr) << ":" << dec << port << endl;
-		}
-
-		// Set the port in the gui
-		if (h_MySEQServer != NULL) {
-			char buffer[65];
-			_itoa_s(port, buffer, 65, 10);
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_PORT, (LPCSTR)&buffer);
-			// Set the best ip address in the gui
-			SetDlgItemText(h_MySEQServer, IDC_TEXT_PRIMARY, (LPCSTR)&active_address);
-		}
+		logListeningAddresses();
 	}
+
 	return true;
+}
+
+void NetworkServer::logAddresses(hostent* localHost, const std::string& prefix)
+{
+	for (int i = 0; localHost->h_addr_list[i] != 0; ++i)
+	{
+		struct in_addr addr;
+		memcpy(&addr, localHost->h_addr_list[i], sizeof(struct in_addr));
+		std::cout << prefix << inet_ntoa(addr) << ":" << port << std::endl;
+	}
+}
+
+void NetworkServer::updateGUIWithPortAndIP(const std::string& ipAddress)
+{
+	if (h_MySEQServer != NULL)
+	{
+		char buffer[65];
+		_itoa_s(port, buffer, 10);
+		SetDlgItemText(h_MySEQServer, IDC_TEXT_PORT, buffer);
+		SetDlgItemText(h_MySEQServer, IDC_TEXT_PRIMARY, ipAddress.c_str());
+	}
 }
 
 void NetworkServer::openClientSocket()
@@ -362,12 +352,10 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 		while (true)
 		{
 			if (mr_intf->getCurrentPID() == (DWORD)clientRequest) {
-				zoneName = "StartUp";
-				SetDlgItemText(h_MySEQServer, IDC_TEXT_ZONE, _T(""));
-				SetDlgItemText(h_MySEQServer, IDC_TEXT_NAME, _T(""));
+				resetUI();
 				break;
 			}
-			if (!mr_intf->openNextProcess("eqgame"), false)
+			if (!mr_intf->openNextProcess("eqgame", false))
 				break;
 		}
 		if (mr_intf->getCurrentPID() != (DWORD)clientRequest)
@@ -378,9 +366,7 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 			{
 				if (originalPID != mr_intf->getCurrentPID())
 				{
-					zoneName = "StartUp";
-					SetDlgItemText(h_MySEQServer, IDC_TEXT_ZONE, _T(""));
-					SetDlgItemText(h_MySEQServer, IDC_TEXT_NAME, _T(""));
+					resetUI();
 				}
 			}
 		}
@@ -730,4 +716,10 @@ bool NetworkServer::processReceivedData(MemReaderInterface* mr_intf)
 		numSpawns = numItems = 0;
 	}
 	return false;
+}
+
+void NetworkServer::resetUI() {
+	zoneName = "StartUp";
+	SetDlgItemText(h_MySEQServer, IDC_TEXT_ZONE, _T(""));
+	SetDlgItemText(h_MySEQServer, IDC_TEXT_NAME, _T(""));
 }

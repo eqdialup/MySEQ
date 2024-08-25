@@ -63,22 +63,12 @@ class MemReader : public MemReaderInterface
 {
 private:
 	string	originalFilename;
-
-	//HANDLE 	currentEQProcessHandle;
-
-	//DWORD	currentEQProcessID;
-
-	//DWORD	currentEQProcessBaseAddress;
-
 	UINT	readCount;
-
 	bool openProcess(string filename, bool first, bool debug);
 
 protected:
-	HANDLE 	currentEQProcessHandle;
-
 	DWORD	currentEQProcessID;
-
+	HANDLE 	currentEQProcessHandle;
 	QWORD	currentEQProcessBaseAddress;
 
 public:

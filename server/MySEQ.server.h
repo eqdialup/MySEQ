@@ -61,3 +61,14 @@ void Restore();
 void InitNotifyIconData();
 
 void ToggleStartMinimized();
+
+void HandleColorStatic(HWND hDlg, WPARAM wParam, LPARAM lParam);
+void HandleCommand(HWND hDlg, WPARAM wParam);
+void HandleTrayIcon(HWND hDlg, WPARAM wParam, LPARAM lParam);
+void MinimizeWindow(HWND hDlg);
+void ShowPopupMenu(HWND hDlg);
+void RestoreWindow(HWND hDlg);
+
+bool CheckAndSetEQPath(const TCHAR* basePath, const TCHAR* subDir, TCHAR* eqFilePath, size_t pathSize, TCHAR* eqFileName, size_t fileNameSize, TCHAR* eqExeName, size_t exeNameSize);
+void SetInitialDirectory(TCHAR* eqFilePath, size_t pathSize, TCHAR* eqExeName, OPENFILENAME& ofn);
+void SetEQFileName(HWND hDlg, TCHAR* eqExeName, TCHAR* eqFileName);

@@ -22,7 +22,7 @@
 #include <iphlpapi.h>
 #include <winsvc.h>
 #include "time.h"
-#include <shellAPI.h>
+#include <shellapi.h>
 #include <process.h>
 #include <iostream>
 #include <commdlg.h>
@@ -31,6 +31,8 @@
 #include <Psapi.h>
 #include <fstream>
 #include <minwindef.h>
+#include <stdexcept>
+#include <sstream>
 
 
 // reference additional headers your program requires here

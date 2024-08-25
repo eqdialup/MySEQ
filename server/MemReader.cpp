@@ -157,11 +157,6 @@ bool MemReader::openProcess(string filename, bool first, bool debug)
 
 					if (pe32.th32ProcessID == currentEQProcessID)
 						okToAttach = true;
-
-					//	currentEQProcessHandle = OpenProcess(PROCESS_VM_READ, false, currentEQProcessID);
-
-					//	currentEQProcessBaseAddress = GetModuleBaseAddress( pe32.th32ProcessID, pe32.szExeFile);
-
 					continue;
 				}
 
@@ -327,6 +322,39 @@ string MemReader::extractString2(QWORD offset)
 }
 
 bool MemReader::extractToBuffer(QWORD offset, char* buffer, UINT size) {
+	const int nSizeUpperBound = size;
+	BYTE* lpAddressToReadFrom = (BYTE*)offset;
+	MEMORY_BASIC_INFORMATION memInfo;
+	ZeroMemory(&memInfo, sizeof(memInfo));
+
+	if (VirtualQueryEx(currentEQProcessHandle, lpAddressToReadFrom, &memInfo, sizeof(memInfo))) {
+		int nBytesIntoRegion = (int)(lpAddressToReadFrom - (BYTE*)memInfo.BaseAddress);
+		int nBytesAwayFromEnd = (int)(memInfo.RegionSize - nBytesIntoRegion);
+		int ActualNumberOfBytesToRead = min(nSizeUpperBound, nBytesAwayFromEnd);
+		if (ActualNumberOfBytesToRead < (int)size)
+			size = ActualNumberOfBytesToRead;
+	}
+
+	bool rtn = (ReadProcessMemory(currentEQProcessHandle, (void*)offset, (void*)buffer, size, NULL) != 0);
+	DWORD hmm = GetLastError();
+
+	if (!rtn && hmm) {
+		char* szError = nullptr;
+
+		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL, hmm, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&szError, 0, NULL);
+
+		// Automatically manage the allocated buffer
+		std::unique_ptr<char, decltype(&LocalFree)> errorMsg(szError, LocalFree);
+
+		// You can use errorMsg.get() to access the error message if needed
+		Sleep(0);
+	}
+
+	return rtn;
+}
+
+/*bool MemReader::extractToBuffer(QWORD offset, char* buffer, UINT size) {
 	//better check if we can actually read this much memory... -eqmule 12/31 2014
 	//Basically if we ask ReadProcessMemory to read <size> bytes but the
 	//region we read from is smaller than <size> we end up in a scenario where we dont get ANY
@@ -370,7 +398,7 @@ bool MemReader::extractToBuffer(QWORD offset, char* buffer, UINT size) {
 	}
 
 	return rtn;
-}
+}*/
 
 float MemReader::extractFloat(QWORD offset)
 {

@@ -22,177 +22,130 @@
 #include "IniReader.h"
 #include "resource.h"
 
-  // Macro to assist in decoding escape sequence
-#define IS_HEX_CHAR( st ) ((st >= _T('0')) && (st <= _T('9'))) || ((st >= _T('a')) && (st <= _T('f'))) || (( st >= _T('A')) && (st <= _T('F')))
 
-IniReader::IniReader()
-{
-	StartMinimized = false;
+  // Macro to assist in decoding escape sequences
+#define IS_HEX_CHAR(st) ((st >= _T('0') && st <= _T('9')) || (st >= _T('a') && st <= _T('f')) || (st >= _T('A') && st <= _T('F')))
+
+IniReader::IniReader() : StartMinimized(false) {}
+
+IniReader::~IniReader() {}
+
+std::string IniReader::GetPatchDate() const {
+    return patchDate;
 }
 
-IniReader::~IniReader(void) {}
+void IniReader::openFile(const std::string& _filename) {
+    filename = _filename;
+    patchDate = readStringEntry("File Info", "PatchDate");
 
-string IniReader::GetPatchDate()
-{
-	return patchDate;
+    if (patchDate.empty()) {
+        MessageBox(NULL, "Error: Invalid INI file", "Error Loading INI file", 0);
+        std::ostringstream strm;
+        strm << "Error: IniReader: Invalid INI file " << filename;
+        throw std::runtime_error(strm.str());
+    }
+    else {
+        std::cout << "IniReader: Reading INI file" << std::endl;
+        std::cout << "IniFile: " << filename << std::endl;
+        std::cout << "Patch Date: " << patchDate << std::endl;
+    }
 }
 
-void IniReader::openFile(string _filename)
-{
-	filename = _filename;
+void IniReader::openConfigFile(const std::string& _filename) {
+    configfilename = _filename;
 
-	patchDate = readStringEntry("File Info", "PatchDate");
+    if (GetPrivateProfileInt("Server", "StartMinimized", 0, configfilename.c_str()) > 0) {
+        SetStartMinimized(true);
+    }
 
-	if (patchDate == "")
-	{
-		MessageBox(NULL, "Error: Invalid INI file", "Error Loading INI file", 0);
-		ostrstream strm;
-		strm << "Error: IniReader: Invalid INI file " << filename << ends; \
-			throw Exception(EXCLEV_ERROR, strm.str());
-	}
-	else
-	{
-		cout << "IniReader: Reading INI file" << endl;
-		cout << "IniFile: " << filename << endl;
-		cout << "Patch Date: " << patchDate << endl;
-	}
+    std::cout << "IniReader: Reading Config INI file" << std::endl;
+    std::cout << "ConfigIniFile: " << configfilename << std::endl;
 }
 
-void IniReader::openConfigFile(string _filename)
-{
-	configfilename = _filename;
+std::string IniReader::readStringEntry(const std::string& section, const std::string& entry, bool config) {
+    std::string result;
+    std::string file = config ? configfilename : filename;
 
-	UINT rtn = 0;
+    if (GetPrivateProfileString(section.c_str(), entry.c_str(), "", buffer, sizeof(buffer), file.c_str()) > 0) {
+        result = buffer;
+    }
 
-	rtn = GetPrivateProfileInt("Server", "StartMinimized", 0, configfilename.c_str());
-
-	if (rtn > 0)
-		SetStartMinimized(true);
-
-	cout << "IniReader: Reading Config INI file" << endl;
-	cout << "ConfigIniFile: " << filename << endl;
+    return result;
 }
 
-string IniReader::readStringEntry(string section, string entry, bool config)
-{
-	string rtn("");
+std::string IniReader::readEscapeStrings(const std::string& section, const std::string& entry) {
+    TCHAR newbuff[1024];
+    std::string result;
 
-	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), buffer, sizeof(buffer), config ? configfilename.c_str() : filename.c_str()) > 0)
-	{
-		rtn = buffer;
-	}
-	else
-	{
-		return "";
-	}
+    if (GetPrivateProfileString(section.c_str(), entry.c_str(), "", newbuff, sizeof(newbuff), configfilename.c_str()) > 0) {
+        std::string in(newbuff);
+        std::string out;
+        bool inescape = false;
+        bool inhex = false;
+        int digits = 0;
 
-	return rtn;
+        for (size_t i = 0; i < in.length(); ++i) {
+            if (inescape) {
+                if (in[i] == 'x') {
+                    inhex = true;
+                    inescape = false;
+                    digits = 1;
+                }
+                else {
+                    inescape = false;
+                }
+            }
+            else if (inhex) {
+                if (IS_HEX_CHAR(in[i])) {
+                    if (digits++ == 2) {
+                        char hexStr[5] = { '0', 'x', in[i - 1], in[i], '\0' };
+                        int value = strtol(hexStr, NULL, 16);
+                        out += static_cast<char>(value);
+                        inhex = false;
+                    }
+                }
+                else {
+                    inhex = false;
+                }
+            }
+            else if (in[i] == '\\') {
+                inescape = true;
+            }
+            else {
+                out += in[i];
+            }
+        }
+        result = out;
+    }
+
+    return result;
 }
 
-string IniReader::readEscapeStrings(string section, string entry)
-{
-	string rtn("");
+QWORD IniReader::readIntegerEntry(const std::string& section, const std::string& entry, bool config) {
+    QWORD result = 0;
+    std::string file = config ? configfilename : filename;
 
-	TCHAR newbuff[1024];
+    if (GetPrivateProfileString(section.c_str(), entry.c_str(), "", buffer, sizeof(buffer), file.c_str()) > 0) {
+        if (buffer[0] == '0') {
+            result = strtoull(buffer, nullptr, 16);
+        }
+        else {
+            result = std::stoull(buffer);
+        }
+    }
 
-	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), newbuff, sizeof(newbuff), configfilename.c_str()) > 0)
-	{
-		bool inescape = false;
-		bool inhex = false;
-		int digits = 0;
-		int p = 0;
-		string in = newbuff;
-		string out("");
-		size_t j = in.length();
-
-		for (size_t i = 0; i < in.length(); i++)
-		{
-			if (inescape == true) {
-				if (_T(in.at(i)) == _T('x'))
-				{
-					inhex = true;
-					inescape = false;
-					digits = 1;
-				}
-				else
-				{
-					// Bad escape sequence, so reset.  Should always start with \x
-					inescape = false;
-				}
-			}
-			else if (inhex == true)
-			{
-				if (IS_HEX_CHAR(_T(in.at(i))))
-				{
-					// add a check to make sure they are hex digits, ie 0-9, a-f
-					if (digits++ == 2)
-					{
-						char buff[16];
-						buff[0] = '0';
-						buff[1] = 'x';
-						buff[2] = in[i - 1];
-						buff[3] = in[i];
-						buff[4] = '\0';
-						int value = strtol(buff, NULL, 16);
-						out += char(value);
-						//buffer[p] = value;
-						//p++;
-						inhex = false;
-					}
-				}
-				else
-				{
-					// Bad hex character, so let's not try to convert it
-					inhex = false;
-				}
-			}
-			else if (_T(in.at(i)) == _T('\\'))
-			{
-				inescape = true;
-			}
-			else
-			{
-				inescape = false;
-			}
-		}
-
-		rtn = out;
-	}
-
-	return rtn;
+    return result;
 }
 
-QWORD IniReader::readIntegerEntry(string section, string entry, bool config)
-{
-	QWORD rtn = 0;
-	_TCHAR buffer[255];
-
-	if (GetPrivateProfileString(section.c_str(), entry.c_str(), TEXT(""), buffer, sizeof(buffer), config ? configfilename.c_str() : filename.c_str()) > 0)
-	{
-		// See if number is hex (prefixed with 0x) or decimal (no prefix)
-		if (buffer[0] == '0')
-			rtn = strtoull(buffer, NULL, 16);
-		else
-			rtn = (QWORD)atoi(buffer);
-	}
-
-	return rtn;
+bool IniReader::writeStringEntry(const std::string& section, const std::string& entry, const std::string& value, bool config) {
+    std::string file = config ? configfilename : filename;
+    return WritePrivateProfileString(section.c_str(), entry.c_str(), value.c_str(), file.c_str()) > 0;
 }
 
-bool IniReader::writeStringEntry(string section, string entry, string value, bool config)
-{
-	if (WritePrivateProfileString(section.c_str(), entry.c_str(), value.c_str(), config ? configfilename.c_str() : filename.c_str()) > 0)
-		return true;
-	else
-		return false;
-}
+void IniReader::ToggleStartMinimized() {
+    bool minimized = !GetStartMinimized();
+    SetStartMinimized(minimized);
 
-void IniReader::ToggleStartMinimized()
-{
-	SetStartMinimized(GetStartMinimized() == false);
-
-	if (GetStartMinimized())
-		WritePrivateProfileString("Server", "StartMinimized", TEXT("1"), configfilename.c_str());
-	else
-		WritePrivateProfileString("Server", "StartMinimized", TEXT("0"), configfilename.c_str());
+    std::string value = minimized ? "1" : "0";
+    WritePrivateProfileString("Server", "StartMinimized", value.c_str(), configfilename.c_str());
 }

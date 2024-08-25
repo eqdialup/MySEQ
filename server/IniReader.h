@@ -22,61 +22,60 @@
 
 #include "Common.h"
 
+
+  // Typedef for a 64-bit unsigned integer
 typedef uint64_t QWORD;
 
-class IniReaderInterface
-{
+// Interface for IniReader to allow flexibility and extendability
+class IniReaderInterface {
 public:
-	virtual void openFile(string filename) = 0;
+    virtual ~IniReaderInterface() = default;
 
-	virtual void openConfigFile(string filename) = 0;
-
-	virtual string readStringEntry(string section, string entry, bool config = false) = 0;
-
-	virtual QWORD readIntegerEntry(string section, string entry, bool config = false) = 0;
-
-	virtual bool writeStringEntry(string section, string entry, string value, bool config = false) = 0;
-
-	virtual string readEscapeStrings(string section, string entry) = 0;
+    // Pure virtual functions to be implemented by derived classes
+    virtual void openFile(const std::string& filename) = 0;
+    virtual void openConfigFile(const std::string& filename) = 0;
+    virtual std::string readStringEntry(const std::string& section, const std::string& entry, bool config = false) = 0;
+    virtual QWORD readIntegerEntry(const std::string& section, const std::string& entry, bool config = false) = 0;
+    virtual bool writeStringEntry(const std::string& section, const std::string& entry, const std::string& value, bool config = false) = 0;
+    virtual std::string readEscapeStrings(const std::string& section, const std::string& entry) = 0;
 };
 
-class IniReader : public IniReaderInterface
-{
+// IniReader class that implements the IniReaderInterface
+class IniReader : public IniReaderInterface {
 public:
-	IniReader();
+    // Constructor and Destructor
+    IniReader();
+    ~IniReader();
 
-	~IniReader(void);
+    // Public functions for file operations and data retrieval
+    void openFile(const std::string& filename) override;
+    void openConfigFile(const std::string& filename) override;
+    std::string readStringEntry(const std::string& section, const std::string& entry, bool config = false) override;
+    std::string readEscapeStrings(const std::string& section, const std::string& entry) override;
+    QWORD readIntegerEntry(const std::string& section, const std::string& entry, bool config = false) override;
+    bool writeStringEntry(const std::string& section, const std::string& entry, const std::string& value, bool config = false) override;
+
+    // Getter for PatchDate
+    std::string GetPatchDate() const;
+
+    // Functions to manage the StartMinimized state
+    bool GetStartMinimized() const { return StartMinimized; }
+    void ToggleStartMinimized();
+
+    // Patch date from the INI file
+    std::string patchDate;
 
 private:
-	string filename;
+    // Private functions and member variables
+    void SetStartMinimized(bool value) { StartMinimized = value; }
 
-	string configfilename;
+    // File paths for the INI files
+    std::string filename;
+    std::string configfilename;
 
-	_TCHAR buffer[255]{};
+    // Buffer for reading string entries
+    _TCHAR buffer[255]{};
 
-	bool StartMinimized;
-
-public:
-	void openFile(string filename);
-
-	void openConfigFile(string filename);
-
-	string readStringEntry(string section, string entry, bool config = false);
-
-	string readEscapeStrings(string section, string entry);
-
-	QWORD readIntegerEntry(string section, string entry, bool config = false);
-
-	bool writeStringEntry(string section, string entry, string value, bool config = false);
-
-	string GetPatchDate();
-
-	string patchDate;
-
-	bool GetStartMinimized() { return StartMinimized; }
-
-	void ToggleStartMinimized();
-
-private:
-	void SetStartMinimized(bool value) { StartMinimized = value; }
+    // State for whether the application should start minimized
+    bool StartMinimized;
 };

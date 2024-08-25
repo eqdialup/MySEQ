@@ -29,10 +29,9 @@
 #include <sstream>
 #include <algorithm>
 #include <math.h>
-#include <tlhelp32.h>
-#include <winsock2.h>
-
-
+#include <TlHelp32.h>
+#include <WinSock2.h>
+#include <cstdint>
 
 using namespace std;
 

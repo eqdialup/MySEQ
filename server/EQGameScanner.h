@@ -30,7 +30,6 @@ public:
 	EQGameScanner();
 	~EQGameScanner();
 
-public:
 	bool executableExists() const;
 
 	void setExe(TCHAR* str);
@@ -45,8 +44,10 @@ public:
 
 private:
 	bool compareData(PBYTE data, PBYTE byteMask, PCHAR charMask);
+	void updateFileInfoSection(std::ostringstream& outputStream, IniReaderInterface* ir_intf, bool write_out);
+	DWORD findAndProcessOffset(HWND hDlg, const std::string& section, const std::string& entry, IniReaderInterface* ir_intf, NetworkServerInterface* net_intf, std::ostringstream& outputStream, bool write_out);
+	void handleMatchResult(HWND hDlg, DWORD matchAddr, NetworkServerInterface* net_intf, int offsetType, const std::string& offsetName, IniReaderInterface* ir_intf, std::ostringstream& outputStream, bool write_out, bool& reload);
 
-private:
 	std::string executablePath;
 };
 

@@ -35,11 +35,81 @@ public:
 };
 
 class NetworkServer : public NetworkServerInterface
-
 {
 public:
 
 	enum offset_types { OT_zonename, OT_spawnlist, OT_self, OT_target, OT_ground, OT_world, OT_max };
+
+	// Bit flags (in clientRequest) determining what data the client is requesting. See client's Structures.cs.
+	enum inc_packet_types : int
+	{
+		IPT_zone = 0x01,
+		IPT_self = 0x02,
+		IPT_target = 0x04,
+		IPT_spawns = 0x08,
+		IPT_ground = 0x10,
+		IPT_getproc = 0x20,
+		IPT_setproc = 0x40,
+		IPT_world = 0x80
+	};
+
+	// The type of element we are sending back to client. Lives in the 'flags' field of the outgoing packets.
+	enum out_packet_types : int
+	{
+		OPT_spawns = 0x00,
+		OPT_target = 0x01,
+		OPT_zone = 0x04,
+		OPT_ground = 0x05,
+		OPT_process = 0x06,
+		OPT_world = 0x08,
+		OPT_self = 0xFD
+	};
+
+	HWND hwnd;
+	HWND h_MySEQServer;
+	NetworkServer();
+
+	~NetworkServer(void);
+
+	void listIPAddresses();
+
+	void collectIPAddresses(const char* hostname, std::vector<std::string>& ipAddresses);
+
+	void logAddresses(hostent* localHost, const std::string& prefix);
+
+	void logListeningAddresses();
+
+	in_addr getBestNonLocalhostAddress(hostent* localHost);
+
+	bool shouldUpdateBestAddress(const in_addr& currentAddr, const in_addr& newAddr);
+	
+	bool openListenerSocket(bool service = false);
+
+	void updateGUIWithPortAndIP(const std::string& ipAddress);
+
+	void closeListenerSocket();
+
+	void openClientSocket();
+
+	void closeClientSocket();
+
+	void setOffset(offset_types ot, QWORD value);
+
+	void init(IniReaderInterface* ir_intf);
+
+	void enterReceiveLoop(MemReaderInterface* mr_intf);
+
+	bool processReceivedData(MemReaderInterface* mr_intf);
+
+	void resetUI();
+
+	bool handleProcessChange(DWORD requestedPID);
+
+	bool requestContains(inc_packet_types pt);
+
+	string getCharName(MemReaderInterface* mr_intf);
+
+	UINT current_offset(int type);
 
 private:
 
@@ -75,78 +145,4 @@ private:
 
 	World worldParser;
 
-public:
-
-	// Bit flags (in clientRequest) determining what data the client is requesting. See client's Structures.cs.
-
-	enum inc_packet_types : int
-
-	{
-		IPT_zone = 0x01,
-
-		IPT_self = 0x02,
-
-		IPT_target = 0x04,
-
-		IPT_spawns = 0x08,
-
-		IPT_ground = 0x10,
-
-		IPT_getproc = 0x20,
-
-		IPT_setproc = 0x40,
-
-		IPT_world = 0x80
-	};
-
-	// The type of element we are sending back to client. Lives in the 'flags' field of the outgoing packets.
-
-	enum out_packet_types : int
-
-	{
-		OPT_spawns = 0x00,
-
-		OPT_target = 0x01,
-
-		OPT_zone = 0x04,
-
-		OPT_ground = 0x05,
-
-		OPT_process = 0x06,
-
-		OPT_world = 0x08,
-
-		OPT_self = 0xFD
-	};
-
-public:
-	HWND hwnd;
-	HWND h_MySEQServer;
-	NetworkServer();
-
-	~NetworkServer(void);
-
-	void listIPAddresses();
-
-	bool openListenerSocket(bool service = false);
-
-	void closeListenerSocket();
-
-	void openClientSocket();
-
-	void closeClientSocket();
-
-	void setOffset(offset_types ot, QWORD value);
-
-	void init(IniReaderInterface* ir_intf);
-
-	void enterReceiveLoop(MemReaderInterface* mr_intf);
-
-	bool processReceivedData(MemReaderInterface* mr_intf);
-
-	bool requestContains(inc_packet_types pt);
-
-	string getCharName(MemReaderInterface* mr_intf);
-
-	UINT current_offset(int type);
 };

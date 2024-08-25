@@ -85,51 +85,46 @@ DWORD EQGameScanner::findEQPointerOffset(DWORD startAddress, std::size_t blockSi
 		return NULL;
 
 	int typelen = 0;
-
 	typelen = (int)std::string(charMask).find_last_of("t") - (int)std::string(charMask).find_first_of("t") + 1;
 
 	if (typelen < 1)
 		typelen = 4;
 
 	// Setup our temporary storage variables
-	PBYTE buffer = new BYTE[blockSize];
+	std::vector<BYTE> buffer(blockSize, 0); // Using vector for automatic memory management
 	DWORD matchAddr = NULL;
 
-	// I like clean memory.
-	memset(buffer, 0, blockSize);
-
 	// Move get pointer to the start of the block we want to search
-	// Then attempt to read blockSize to the buffer
 	file.seekg(startAddress, std::ios::beg);
-	file.read((char*)buffer, blockSize);
+	file.read(reinterpret_cast<char*>(buffer.data()), blockSize);
 
 	// Search for a position that fits our masks in memory.
-	// Thanks to dom1n1k for the piece of code this is based off of.
 	for (DWORD i = 0; i < blockSize; ++i)
 	{
-		if (compareData(buffer + i, byteMask, charMask))
+		if (compareData(buffer.data() + i, byteMask, charMask))
 		{
 			DWORD checkRet;
 			matchAddr = i;
 			if (typelen == 1) {
-				BYTE chechbyteRet = *reinterpret_cast<PBYTE>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
-				checkRet = (DWORD)chechbyteRet;
+				BYTE chechbyteRet = *reinterpret_cast<PBYTE>(buffer.data() + matchAddr + std::string(charMask).find_first_of("t"));
+				checkRet = static_cast<DWORD>(chechbyteRet);
 			}
 			else if (typelen == 2) {
-				WORD checkwordRet = *reinterpret_cast<PWORD>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
-				checkRet = (DWORD)checkwordRet;
+				WORD checkwordRet = *reinterpret_cast<PWORD>(buffer.data() + matchAddr + std::string(charMask).find_first_of("t"));
+				checkRet = static_cast<DWORD>(checkwordRet);
 			}
 			else {
-				checkRet = *reinterpret_cast<PDWORD>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
+				checkRet = *reinterpret_cast<PDWORD>(buffer.data() + matchAddr + std::string(charMask).find_first_of("t"));
 			}
-
-			//DWORD checkRet = *reinterpret_cast<PDWORD>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
 			if (checkRet < 536870912)
 				break;
 			else
 				matchAddr = NULL;
 		}
 	}
+
+	// Close the file before returning
+	file.close();
 
 	// If we didn't find a match, return NULL
 	if (matchAddr == NULL)
@@ -139,45 +134,51 @@ DWORD EQGameScanner::findEQPointerOffset(DWORD startAddress, std::size_t blockSi
 
 	// Find where our target address we're searching for is stored, and return its value.
 	if (typelen == 1) {
-		BYTE cRet = *reinterpret_cast<PBYTE>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
-		nRet = (DWORD)cRet;
+		BYTE cRet = *reinterpret_cast<PBYTE>(buffer.data() + matchAddr + std::string(charMask).find_first_of("t"));
+		nRet = static_cast<DWORD>(cRet);
 	}
 	else if (typelen == 2) {
-		WORD wRet = *reinterpret_cast<PWORD>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
-		nRet = (DWORD)wRet;
+		WORD wRet = *reinterpret_cast<PWORD>(buffer.data() + matchAddr + std::string(charMask).find_first_of("t"));
+		nRet = static_cast<DWORD>(wRet);
 	}
 	else {
-		nRet = *reinterpret_cast<PDWORD>(buffer + matchAddr + std::string(charMask).find_first_of("t"));
+		nRet = *reinterpret_cast<PDWORD>(buffer.data() + matchAddr + std::string(charMask).find_first_of("t"));
 	}
-
-	delete[] buffer;
 
 	return nRet;
 }
+
 
 DWORD EQGameScanner::findEQStructureOffset(DWORD startAddress, std::size_t blockSize, const PBYTE byteMask, const PCHAR charMask, const QWORD baseEQPointerAddress)
 {
 	DWORD nRet = 0;
 
-	if (strlen(charMask) == 0)
+	std::string maskStr = charMask;
+
+	if (maskStr.empty()) {
 		return nRet;
+	}
 
-	// Create a new, editable, copy of byteMask.
-	PBYTE newByteMask = new BYTE[strlen(charMask)];
-	memcpy(newByteMask, byteMask, strlen(charMask));
+	// Create a new, editable copy of byteMask using std::vector for automatic memory management
+	std::vector<BYTE> newByteMask(maskStr.size());
+	memcpy(newByteMask.data(), byteMask, maskStr.size());
 
-	// Replace the EQPointer in our byteMask with the EQPointer given as an argument.
-	// The location of the EQPointer is denoted by the letter o in our character mask.
-	// Currently we require and always assume that the EQPointer is 4 bytes.
-	PQWORD valueToChange = reinterpret_cast<PQWORD>(newByteMask + std::string(reinterpret_cast<const PCHAR>(charMask)).find_first_of("o"));
-	*valueToChange = baseEQPointerAddress;
+	// Find the position of 'o' in the character mask
+	size_t pointerPos = maskStr.find_first_of('o');
+	if (pointerPos == std::string::npos || pointerPos + sizeof(QWORD) > newByteMask.size()) {
+		// Invalid mask or pointer out of bounds, return 0
+		return nRet;
+	}
+
+	// Replace the EQPointer in our byteMask with the EQPointer given as an argument
+	*reinterpret_cast<QWORD*>(newByteMask.data() + pointerPos) = baseEQPointerAddress;
 
 	// Use the updated byteMask to locate the EQStructureOffset
-	nRet = findEQPointerOffset(startAddress, blockSize, newByteMask, charMask);
-	delete[] newByteMask;
+	nRet = findEQPointerOffset(startAddress, blockSize, newByteMask.data(), charMask);
 
 	return nRet;
 }
+
 
 // Thanks to dom1n1k for the piece of code this is based off of.
 bool EQGameScanner::compareData(PBYTE data, PBYTE byteMask, PCHAR charMask)
@@ -199,306 +200,96 @@ bool EQGameScanner::ScanExecutable(HWND hDlg, IniReaderInterface* ir_intf, Netwo
 	}
 
 	bool reload = false;
-
-	// We'll use this for comparisons
-	DWORD matchAddr = NULL;
-
-	std::ostringstream findResults;
 	std::ostringstream outputStream;
+	std::ostringstream findResults;
 
-	WIN32_FILE_ATTRIBUTE_DATA FileData = { 0 };
-	if (GetFileAttributesEx(executablePath.c_str(), GetFileExInfoStandard, &FileData)) {
-		TCHAR szFileDate[255];
-		FILETIME ftLastMod = FileData.ftLastWriteTime;
-		SYSTEMTIME st;
-		FileTimeToSystemTime(&ftLastMod, &st);
-		GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &st, NULL, szFileDate, 255);
-		string::size_type index = executablePath.find_last_of("\\/");
-		string myfilename = executablePath.substr(index + 1, executablePath.size()).c_str();
-		//findResults << myfilename.c_str() << " Modified=" << szFileDate << "\r\n";
-		if (write_out)
-			ir_intf->writeStringEntry("File Info", "PatchDate", szFileDate);
-		outputStream << "[File Info]\r\n";
-		outputStream << "PatchDate=" << szFileDate << "\r\n\r\n";
-		outputStream << "[Port]\r\n";
-		UINT ini_port = (UINT)ir_intf->readIntegerEntry("Port", "Port");
-		outputStream << "Port=" << ini_port << "\r\n\r\n";
-	}
+	// Update the File Info section
+	updateFileInfoSection(outputStream, ir_intf, write_out);
 
-	outputStream << "[Memory Offsets]" << "\r\n";
+	// Process each memory offset
+	std::vector<std::pair<std::string, int>> offsets = {
+		{"ZoneAddr", NetworkServer::OT_zonename},
+		{"SpawnHeaderAddr", NetworkServer::OT_spawnlist},
+		{"CharInfo", NetworkServer::OT_self},
+		{"ItemsAddr", NetworkServer::OT_ground},
+		{"TargetAddr", NetworkServer::OT_target},
+		{"WorldAddr", NetworkServer::OT_world}
+	};
 
-	// ZoneAddr Neighborhood: 0x4800
-	QWORD mystart;
-	string mypattern;
-	string mymask;
-	QWORD mystart2 = ir_intf->readIntegerEntry("ZoneAddr", "Start", true);
-
-	mystart = (QWORD)ir_intf->readIntegerEntry("ZoneAddr", "Start", true);
-	mypattern = ir_intf->readEscapeStrings("ZoneAddr", "Pattern");
-	mymask = ir_intf->readStringEntry("ZoneAddr", "Mask", true);
-
-	matchAddr = findEQPointerOffset(mystart, 0x100000, (PBYTE)mypattern.c_str(), (PCHAR)mymask.c_str());
-
-	outputStream << "ZoneAddr=0x" << std::hex << matchAddr;
-
-	if (matchAddr != NULL) {
-		if (matchAddr == net_intf->current_offset((int)NetworkServer::OT_zonename))
-		{
-			outputStream << " # Match\r\n";
-		}
-		else
-		{
-			if (write_out) {
-				std::string strout("0x");
-				std::stringstream strm;
-				strm << std::hex << matchAddr;
-				strout.append(strm.str());
-
-				if (ir_intf->writeStringEntry("Memory Offsets", "ZoneAddr", strout.c_str()))
-				{
-					reload = true;
-					outputStream << " # Written to ini file\r\n";
-				}
-				else
-				{
-					outputStream << " # Found - Write failed\r\n";
-				}
-			}
-			else {
-				outputStream << " # Does not match ini file.\r\n";
-				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
-			}
-		}
-	}
-	else
+	for (const auto& offset : offsets)
 	{
-		outputStream << " #Not Found\r\n";
+		DWORD matchAddr = findAndProcessOffset(hDlg, offset.first, "Start", ir_intf, net_intf, outputStream, write_out);
+		handleMatchResult(hDlg, matchAddr, net_intf, offset.second, offset.first, ir_intf, outputStream, write_out, reload);
 	}
 
-	mystart = (DWORD)ir_intf->readIntegerEntry("SpawnHeaderAddr", "Start", true);
-	mypattern = ir_intf->readEscapeStrings("SpawnHeaderAddr", "Pattern");
-	mymask = ir_intf->readStringEntry("SpawnHeaderAddr", "Mask", true);
-
-	// SpawnHeaderAddr Neighborhood: 0x4500
-	matchAddr = findEQPointerOffset(mystart, 0x100000, (PBYTE)mypattern.c_str(), (PCHAR)mymask.c_str());
-
-	outputStream << "SpawnHeaderAddr=0x" << std::hex << matchAddr;
-
-	if (matchAddr != NULL) {
-		if (matchAddr == net_intf->current_offset((int)NetworkServer::OT_spawnlist))
-		{
-			outputStream << " # Match\r\n";
-		}
-		else
-		{
-			if (write_out) {
-				std::string strout("0x");
-				std::stringstream strm;
-				strm << std::hex << matchAddr;
-				strout.append(strm.str());
-
-				if (ir_intf->writeStringEntry("Memory Offsets", "SpawnHeaderAddr", strout.c_str()))
-				{
-					reload = true;
-					outputStream << " # Written to ini file\r\n";
-				}
-
-				else
-				{
-					outputStream << " # Found - Write failed\r\n";
-				}
-			}
-			else {
-				outputStream << " # Does not match ini file.\r\n";
-				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
-			}
-		}
-	}
-	else
-	{
-		outputStream << " #Not Found\r\n";
-	}
-
-	mystart = (DWORD)ir_intf->readIntegerEntry("CharInfo", "Start", true);
-	mypattern = ir_intf->readEscapeStrings("CharInfo", "Pattern");
-	mymask = ir_intf->readStringEntry("CharInfo", "Mask", true);
-
-	// CharInfo
-	matchAddr = findEQPointerOffset(mystart, 0x100000, (PBYTE)mypattern.c_str(), (PCHAR)mymask.c_str());
-	outputStream << "CharInfo=0x" << std::hex << matchAddr;
-
-	if (matchAddr != NULL) {
-		if (matchAddr == net_intf->current_offset((int)NetworkServer::OT_self))
-		{
-			outputStream << " # Match\r\n";
-		}
-		else
-		{
-			if (write_out) {
-				std::string strout("0x");
-				std::stringstream strm;
-				strm << std::hex << matchAddr;
-				strout.append(strm.str());
-
-				if (ir_intf->writeStringEntry("Memory Offsets", "CharInfo", strout.c_str()))
-				{
-					reload = true;
-					outputStream << " # Written to ini file\r\n";
-				}
-
-				else
-				{
-					outputStream << " # Found - Write failed\r\n";
-				}
-			}
-			else
-			{
-				outputStream << " # Does not match ini file.\r\n";
-				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
-			}
-		}
-	}
-	else
-	{
-		outputStream << " #Not Found\r\n";
-	}
-
-	mystart = (DWORD)ir_intf->readIntegerEntry("ItemsAddr", "Start", true);
-	mypattern = ir_intf->readEscapeStrings("ItemsAddr", "Pattern");
-	mymask = ir_intf->readStringEntry("ItemsAddr", "Mask", true);
-
-	// ItemsAddr Neighborhood: 0x4b00
-	matchAddr = findEQPointerOffset(mystart, 0x100000, (PBYTE)mypattern.c_str(), (PCHAR)mymask.c_str());
-	outputStream << "ItemsAddr=0x" << std::hex << matchAddr;
-
-	if (matchAddr != NULL) {
-		if (matchAddr == net_intf->current_offset((int)NetworkServer::OT_ground))
-		{
-			outputStream << " # Match\r\n";
-		}
-		else
-		{
-			if (write_out) {
-				std::string strout("0x");
-				std::stringstream strm;
-				strm << std::hex << matchAddr;
-				strout.append(strm.str());
-
-				if (ir_intf->writeStringEntry("Memory Offsets", "ItemsAddr", strout.c_str()))
-				{
-					reload = true;
-					outputStream << " # Written to ini file\r\n";
-				}
-
-				else
-				{
-					outputStream << " # Found - Write failed\r\n";
-				}
-			}
-			else
-			{
-				outputStream << " # Does not match ini file.\r\n";
-				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
-			}
-		}
-	}
-	else
-	{
-		outputStream << " #Not Found\r\n";
-	}
-
-	mystart = (DWORD)ir_intf->readIntegerEntry("TargetAddr", "Start", true);
-	mypattern = ir_intf->readEscapeStrings("TargetAddr", "Pattern");
-	mymask = ir_intf->readStringEntry("TargetAddr", "Mask", true);
-
-	// TargetAddr Neighboorhood: 0x6300
-	matchAddr = findEQPointerOffset(mystart, 0x100000, (PBYTE)mypattern.c_str(), (PCHAR)mymask.c_str());
-	outputStream << "TargetAddr=0x" << std::hex << matchAddr;
-
-	if (matchAddr != NULL) {
-		if (matchAddr == net_intf->current_offset((int)NetworkServer::OT_target))
-		{
-			outputStream << " # Match\r\n";
-		}
-		else
-		{
-			if (write_out) {
-				std::string strout("0x");
-				std::stringstream strm;
-				strm << std::hex << matchAddr;
-				strout.append(strm.str());
-
-				if (ir_intf->writeStringEntry("Memory Offsets", "TargetAddr", strout.c_str()))
-				{
-					reload = true;
-					outputStream << " # Written to ini file\r\n";
-				}
-				else
-				{
-					outputStream << " # Found - Write failed\r\n";
-				}
-			}
-			else
-			{
-				outputStream << " # Does not match ini file.\r\n";
-				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
-			}
-		}
-	}
-	else
-	{
-		outputStream << " #Not Found\r\n";
-	}
-
-	mystart = (DWORD)ir_intf->readIntegerEntry("WorldAddr", "Start", true);
-	mypattern = ir_intf->readEscapeStrings("WorldAddr", "Pattern");
-	mymask = ir_intf->readStringEntry("WorldAddr", "Mask", true);
-
-	// WorldAddr Neighboorhood: 0x6300
-	matchAddr = findEQPointerOffset(mystart, 0x100000, (PBYTE)mypattern.c_str(), (PCHAR)mymask.c_str());
-	outputStream << "WorldAddr=0x" << std::hex << matchAddr;
-
-	if (matchAddr != NULL) {
-		if (matchAddr == net_intf->current_offset((int)NetworkServer::OT_world))
-		{
-			outputStream << " # Match\r\n";
-		}
-		else
-		{
-			if (write_out) {
-				std::string strout("0x");
-				std::stringstream strm;
-				strm << std::hex << matchAddr;
-				strout.append(strm.str());
-
-				if (ir_intf->writeStringEntry("Memory Offsets", "WorldAddr", strout.c_str()))
-				{
-					reload = true;
-					outputStream << " # Written to ini file\r\n";
-				}
-				else
-				{
-					outputStream << " # Found - Write failed\r\n";
-				}
-			}
-			else
-			{
-				outputStream << " # Does not match ini file.\r\n";
-				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
-			}
-		}
-	}
-	else
-	{
-		outputStream << " #Not Found\r\n";
-	}
-
-	//findResults << "\r\n";
-
-	std::string v = findResults.str() + outputStream.str();
-	SetDlgItemText(hDlg, IDC_EDIT2, v.c_str());
+	// Update the dialog with the results
+	std::string resultText = findResults.str() + outputStream.str();
+	SetDlgItemText(hDlg, IDC_EDIT2, resultText.c_str());
 
 	return reload;
+}
+
+void EQGameScanner::updateFileInfoSection(std::ostringstream& outputStream, IniReaderInterface* ir_intf, bool write_out) {
+	// Initialize file attributes and retrieve the last write time
+	WIN32_FILE_ATTRIBUTE_DATA fileData;
+	if (!GetFileAttributesEx(executablePath.c_str(), GetFileExInfoStandard, &fileData)) {
+		return; // Early return if file attributes can't be retrieved
+	}
+	SYSTEMTIME st;
+	FileTimeToSystemTime(&fileData.ftLastWriteTime, &st);
+	TCHAR szFileDate[16]; // A smaller buffer size is sufficient
+	GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &st, nullptr, szFileDate, sizeof(szFileDate) / sizeof(szFileDate[0]));
+
+	// Write the date to the INI file if necessary
+	if (write_out) {
+		ir_intf->writeStringEntry("File Info", "PatchDate", szFileDate);
+	}
+	outputStream << "[File Info]\r\n"
+		<< "PatchDate=" << szFileDate << "\r\n\r\n"
+		<< "[Port]\r\n"
+		<< "Port=" << ir_intf->readIntegerEntry("Port", "Port") << "\r\n\r\n"
+		<< "[Memory Offsets]\r\n";
+}
+
+
+DWORD EQGameScanner::findAndProcessOffset(HWND hDlg, const std::string& section, const std::string& entry, IniReaderInterface* ir_intf, NetworkServerInterface* net_intf, std::ostringstream& outputStream, bool write_out)
+{
+	QWORD mystart = ir_intf->readIntegerEntry(section.c_str(), entry.c_str(), true);
+	std::string mypattern = ir_intf->readEscapeStrings(section.c_str(), "Pattern");
+	std::string mymask = ir_intf->readStringEntry(section.c_str(), "Mask", true);
+
+	DWORD matchAddr = findEQPointerOffset(mystart, 0x100000, (PBYTE)mypattern.c_str(), (PCHAR)mymask.c_str());
+	outputStream << section << "=0x" << std::hex << matchAddr;
+	return matchAddr;
+}
+
+void EQGameScanner::handleMatchResult(HWND hDlg, DWORD matchAddr, NetworkServerInterface* net_intf, int offsetType, const std::string& offsetName, IniReaderInterface* ir_intf, std::ostringstream& outputStream, bool write_out, bool& reload)
+{
+	if (matchAddr != NULL) {
+		if (matchAddr == net_intf->current_offset(offsetType)) {
+			outputStream << " # Match\r\n";
+		}
+		else {
+			if (write_out) {
+				std::stringstream strm;
+				strm << "0x" << std::hex << matchAddr;
+				if (ir_intf->writeStringEntry("Memory Offsets", offsetName.c_str(), strm.str().c_str())) {
+					reload = true;
+					outputStream << " # Written to ini file\r\n";
+				}
+				else {
+					outputStream << " # Found - Write failed\r\n";
+				}
+			}
+			else {
+				outputStream << " # Does not match ini file.\r\n";
+				EnableWindow(GetDlgItem(hDlg, IDC_BUTTON2), TRUE);
+			}
+		}
+	}
+	else {
+		outputStream << " # Not Found\r\n";
+	}
 }
 
 void EQGameScanner::ScanSecondary(HWND hDlg, IniReaderInterface* ir_intf, NetworkServerInterface* net_intf)
