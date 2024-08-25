@@ -345,3 +345,6 @@ healthchecksdb
 /client/utils
 /client/UIFiles
 /client/Structures
+/server/MySEQ.server.vcxproj.filters
+/server/App.ico
+/.gitignore
