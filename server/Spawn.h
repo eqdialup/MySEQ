@@ -66,65 +66,28 @@ public:
 
 	enum offset_types {
 		OT_name, OT_lastname, OT_x, OT_y, OT_z, OT_speed, OT_heading,
-
 		OT_id, OT_owner, OT_race, OT_class, OT_type, OT_level, OT_hidden,
-
-		OT_primary, OT_offhand,
-
-		OT_prev, OT_next, OT_max
+		OT_primary, OT_offhand, OT_prev, OT_next, OT_max
 	};
 
 	UINT largestOffset;
 
 	char* rawBuffer{};
 
-	/*
-
-	BYTES_TO_STRING(NameOffset, s, send->Name, 30);
-
-	BYTES_TO_FLOAT(YOffset, s, send->Y);
-
-	BYTES_TO_FLOAT(XOffset, s, send->X);
-
-	BYTES_TO_FLOAT(ZOffset, s, send->Z);
-
-	BYTES_TO_FLOAT(HeadingOffset, s, send->Heading);
-
-	BYTES_TO_FLOAT(SpeedOffset, s, send->SpeedRun);
-
-	BYTES_TO_INT(SpawnIDOffset, s, send->SpawnID);
-
-	BYTES_TO_BYTE(TypeOffset, s, send->Type);
-
-	BYTES_TO_BYTE(ClassOffset, s, send->Class);
-
-	BYTES_TO_INT(RaceOffset, s, send->Race);
-
-	BYTES_TO_BYTE(LevelOffset, s, send->Level);
-
-	BYTES_TO_BYTE(HideOffset, s, send->Hide);
-
-	BYTES_TO_STRING(LastnameOffset, s, send->Lastname, 22);
-
-	*/
-
 	netBuffer_t tempNetBuffer{};
 
 	vector<netBuffer_t> spawnList;
+	UINT offsets[OT_max]{};
 
-	//string name, lastname;
+	string ptrNames[OT_max];
 
-	//float x,y,z;
-
-	//float speed, heading;
-
-	//UINT id, race;
-
-	//BYTE _class, type, level, hidden;
+	Spawn(void);
 
 private:
 
 	UINT pSpawnZero{};
+
+	bool race8{};
 
 	string extractRawString(offset_types ot) { return string(&rawBuffer[offsets[ot]]); }
 
@@ -142,17 +105,11 @@ public:
 
 	BYTE extractRawByte(offset_types ot) { return *((BYTE*)&rawBuffer[offsets[ot]]); }
 
-	UINT offsets[OT_max]{};
-
-	string ptrNames[OT_max];
-
-	Spawn(void);
-
-	void setOffset(offset_types ot, UINT value, string ptrName);
+	void setOffset(offset_types ot, UINT value, const string& ptrName);
 
 	void init(IniReaderInterface* ir_intf);
 
-	void packNetBufferStrings(UINT flags, string firstname, string lastname);
+	void packNetBufferStrings(UINT flags, const string& firstname, const string& lastname);
 
 	void packNetBufferRaw(UINT flags, QWORD _this);
 
@@ -176,9 +133,7 @@ public:
 
 	/* convert other structures into spawn structures for shipping across the network */
 
-	void packNetBufferFrom(Item item);
+	void packNetBufferFrom(const Item& item);
 
-	void packNetBufferWorld(World world);
-private:
-	bool race8{};
+	void packNetBufferWorld(const World& world);
 };

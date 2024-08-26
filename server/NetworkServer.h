@@ -30,7 +30,6 @@
 class NetworkServerInterface
 {
 public:
-
 	virtual UINT current_offset(int type) = 0;
 };
 
@@ -101,9 +100,31 @@ public:
 
 	bool processReceivedData(MemReaderInterface* mr_intf);
 
-	void resetUI();
+	bool handleSetProcRequest();
 
-	bool handleProcessChange(DWORD requestedPID);
+	void handleZoneRequest(MemReaderInterface* mr_intf);
+
+	void handleWorldRequest(MemReaderInterface* mr_intf);
+
+	void handleGroundRequest(MemReaderInterface* mr_intf);
+
+	void handleTargetRequest(MemReaderInterface* mr_intf);
+
+	void handleSpawnsRequest(MemReaderInterface* mr_intf);
+
+	void updateGUI(QWORD& pTemp, MemReaderInterface* mr_intf, int& maxLoop);
+
+	void handleSelfRequest(MemReaderInterface* mr_intf);
+
+	void handleGetProcRequest();
+
+	bool handleProcessChange(MemReaderInterface* mr_intf);
+
+	bool switchToProcess(MemReaderInterface* mr_intf, DWORD clientRequest, DWORD originalPID);
+
+	void handleRequests(MemReaderInterface* mr_intf);
+
+	void resetUI();
 
 	bool requestContains(inc_packet_types pt);
 

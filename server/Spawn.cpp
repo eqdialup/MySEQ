@@ -19,7 +19,6 @@
   ==============================================================================*/
 
 #include "stdafx.h"
-
 #include "Spawn.h"
 
 Spawn::Spawn(void)
@@ -34,16 +33,13 @@ Spawn::Spawn(void)
 	largestOffset = 0;
 }
 
-void Spawn::setOffset(offset_types ot, UINT value, string ptrName)
-
+void Spawn::setOffset(offset_types ot, UINT value, const string& ptrName)
 {
 	offsets[ot] = value;
-
 	ptrNames[ot] = ptrName;
 }
 
 void Spawn::init(IniReaderInterface* ir_intf)
-
 {
 	if (ir_intf->readIntegerEntry("SpawnInfo Offsets", "EightBitRace") == 0)
 		race8 = false;
@@ -51,99 +47,59 @@ void Spawn::init(IniReaderInterface* ir_intf)
 		race8 = true;
 
 	setOffset(OT_name, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "NameOffset"), "First Name");
-
 	setOffset(OT_lastname, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "LastNameOffset"), "Last Name");
-
 	setOffset(OT_x, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "XOffset"), "X");
-
 	setOffset(OT_y, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "YOffset"), "Y");
-
 	setOffset(OT_z, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "ZOffset"), "Z");
-
 	setOffset(OT_speed, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "SpeedOffset"), "Speed");
-
 	setOffset(OT_heading, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "HeadingOffset"), "Heading");
-
 	setOffset(OT_prev, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "PrevOffset"), "Previous");
-
 	setOffset(OT_next, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "NextOffset"), "Next");
-
 	setOffset(OT_type, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "TypeOffset"), "Type");
-
 	setOffset(OT_level, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "LevelOffset"), "Level");
-
 	setOffset(OT_hidden, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "HideOffset"), "Hidden");
-
 	setOffset(OT_class, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "ClassOffset"), "Class");
-
 	setOffset(OT_id, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "SpawnIDOffset"), "Id");
-
 	setOffset(OT_owner, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "OwnerIDOffset"), "OwnerID");
-
 	setOffset(OT_race, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "RaceOffset"), "Race");
-
 	setOffset(OT_primary, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "PrimaryOffset"), "Primary");
-
 	setOffset(OT_offhand, (UINT)ir_intf->readIntegerEntry("SpawnInfo Offsets", "OffhandOffset"), "Offhand");
-
 	// Determine how many bytes we should read for each spawn
-
 	largestOffset = 0;
-
 	for (int i = 0; i < OT_max; i++)
-
 	{
 		if (offsets[i] > largestOffset)
-
 			largestOffset = offsets[i];
 	}
 
 	largestOffset += 30;
-
 	// The raw buffer is what where we dump raw data from the EQ process into
-
 	rawBuffer = new char[largestOffset];
-
 	cout << "Spawn: Spawn Offsets read in." << endl;
 }
 
 /* the rest of the net buffer can be filled in directly, but this makes
-
    it easier to pack in the string information */
 
-void Spawn::packNetBufferStrings(UINT flags, string firstName, string lastName)
-
+void Spawn::packNetBufferStrings(UINT flags, const string& firstName, const string& lastName)
 {
 	memset(tempNetBuffer.name, 0, 30);
-
 	memset(tempNetBuffer.lastName, 0, 22);
-
 	firstName._Copy_s(tempNetBuffer.name, 30, 30);
-
 	lastName._Copy_s(tempNetBuffer.lastName, 22, 22);
-
 	tempNetBuffer.flags = flags;
 }
 
 void Spawn::packNetBufferRaw(UINT flags, QWORD _this)
-
 {
 	packNetBufferStrings(flags, extractRawString(OT_name), extractRawString(OT_lastname));
-
 	tempNetBuffer.x = extractRawFloat(OT_x);
-
 	tempNetBuffer.y = extractRawFloat(OT_y);
-
 	tempNetBuffer.z = extractRawFloat(OT_z);
-
 	tempNetBuffer.heading = extractRawFloat(OT_heading);
-
 	tempNetBuffer.speed = extractRawFloat(OT_speed);
-
 	// When the packet is for process id's use this
-
 	// otherwise use the real id.
-
 	if (flags == 0x06) {
 		tempNetBuffer.id = (UINT)_this;
 	}
@@ -152,7 +108,6 @@ void Spawn::packNetBufferRaw(UINT flags, QWORD _this)
 	}
 
 	tempNetBuffer.type = extractRawByte(OT_type);
-
 	tempNetBuffer._class = extractRawByte(OT_class);
 
 	if (race8 == true) {
@@ -175,39 +130,26 @@ void Spawn::packNetBufferRaw(UINT flags, QWORD _this)
 }
 
 void Spawn::packNetBufferEmpty(UINT flags, QWORD _this)
-
 {
 	packNetBufferStrings(flags, "", "");
-
 	tempNetBuffer.id = 99999;
 }
 
-void Spawn::packNetBufferFrom(Item item)
-
+void Spawn::packNetBufferFrom(const Item& item)
 {
 	packNetBufferStrings(item.tempItemBuffer.flags, item.tempItemBuffer.name, "");
-
 	tempNetBuffer.x = item.tempItemBuffer.x;
-
 	tempNetBuffer.y = item.tempItemBuffer.y;
-
 	tempNetBuffer.z = item.tempItemBuffer.z;
-
 	tempNetBuffer.id = item.tempItemBuffer.id;
 }
 
-void Spawn::packNetBufferWorld(World world)
-
+void Spawn::packNetBufferWorld(const World& world)
 {
 	packNetBufferStrings(world.tempWorldBuffer.flags, "", "");
-
 	tempNetBuffer.type = world.tempWorldBuffer.hour;
-
 	tempNetBuffer._class = world.tempWorldBuffer.minute;
-
 	tempNetBuffer.level = world.tempWorldBuffer.day;
-
 	tempNetBuffer.hidden = world.tempWorldBuffer.month;
-
 	tempNetBuffer.race = world.tempWorldBuffer.year;
 }

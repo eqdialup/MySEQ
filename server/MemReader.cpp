@@ -71,7 +71,8 @@ HANDLE MemReader::getCurrentHandle()
 void MemReader::enableDebugPrivileges()
 {
 	// Allows this process to peek into other another processes memory space.
-	TOKEN_PRIVILEGES TP, OldTP;
+	TOKEN_PRIVILEGES TP;
+	TOKEN_PRIVILEGES OldTP;
 
 	LUID ALUID;
 
@@ -95,7 +96,7 @@ void MemReader::enableDebugPrivileges()
 }
 
 /* Find the first process to match the given filename */
-bool MemReader::openFirstProcess(string filename, bool debug)
+bool MemReader::openFirstProcess(const string& filename, bool debug)
 {
 	currentEQProcessHandle = NULL;
 
@@ -107,7 +108,7 @@ bool MemReader::openFirstProcess(string filename, bool debug)
 }
 
 /* Find the next process to match the given filename */
-bool MemReader::openNextProcess(string filename, bool debug)
+bool MemReader::openNextProcess(const string& filename, bool debug)
 {
 	return openProcess(filename, false, debug);
 }
@@ -291,15 +292,10 @@ QWORD MemReader::extractRAWPointer(QWORD offset)
 string MemReader::extractString(QWORD offset)
 {
 	string rtn("");
-
 	char buffer[50];
-
 	memset(buffer, 0, 50);
-
 	ReadProcessMemory(currentEQProcessHandle, (void*)offset, (void*)buffer, 30, NULL);
-
 	buffer[50 - 1] = 0;
-
 	return (string)buffer;
 }
 
@@ -308,13 +304,9 @@ string MemReader::extractString2(QWORD offset)
 	// This one is for extracting a string that must begin with an alphanumeric
 	// Zones always should begin with an alpha numeric
 	string rtn("");
-
 	char buffer[50];
-
 	memset(buffer, 0, 50);
-
 	ReadProcessMemory(currentEQProcessHandle, (void*)offset, (void*)buffer, 30, NULL);
-
 	if (isalnum(buffer[0]))
 		rtn = buffer;
 
@@ -353,52 +345,6 @@ bool MemReader::extractToBuffer(QWORD offset, char* buffer, UINT size) {
 
 	return rtn;
 }
-
-/*bool MemReader::extractToBuffer(QWORD offset, char* buffer, UINT size) {
-	//better check if we can actually read this much memory... -eqmule 12/31 2014
-	//Basically if we ask ReadProcessMemory to read <size> bytes but the
-	//region we read from is smaller than <size> we end up in a scenario where we dont get ANY
-	//data read at all... tis fixes the bug where mobs wont show up on map for example...
-	//it also explains why client will work on one machine but not on another...
-	const int nSizeUpperBound = size;
-
-	BYTE* lpAddressToReadFrom = (BYTE*)offset;
-
-	MEMORY_BASIC_INFORMATION memInfo;
-
-	ZeroMemory(&memInfo, sizeof(MEMORY_BASIC_INFORMATION));
-
-	if (int vret = (int)VirtualQueryEx(currentEQProcessHandle, lpAddressToReadFrom, &memInfo, sizeof(MEMORY_BASIC_INFORMATION))) {
-		int nBytesIntoRegion = (int)(lpAddressToReadFrom - (BYTE*)memInfo.BaseAddress);
-		int nBytesAwayFromEnd = (int)(memInfo.RegionSize - nBytesIntoRegion);
-		int ActualNumberOfBytesToRead = min(nSizeUpperBound, nBytesAwayFromEnd);
-		if (ActualNumberOfBytesToRead < (int)size)
-			size = ActualNumberOfBytesToRead;
-	}
-
-	bool rtn = false;
-
-	rtn = (ReadProcessMemory(currentEQProcessHandle, (void*)offset, (void*)buffer, size, NULL) != 0);
-	DWORD hmm = GetLastError();
-
-	if (rtn == false && hmm) {
-		char* szError = 0;
-
-		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL,
-			hmm,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			(LPTSTR)&szError,
-			0,
-			NULL);
-
-		Sleep(0);
-		LocalFree(szError);
-	}
-
-	return rtn;
-}*/
 
 float MemReader::extractFloat(QWORD offset)
 {

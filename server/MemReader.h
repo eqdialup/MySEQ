@@ -32,9 +32,9 @@ class MemReaderInterface
 public:
 	virtual bool isValid() = 0;
 
-	virtual bool openFirstProcess(string filename, bool debug = false) = 0;
+	virtual bool openFirstProcess(const string& filename, bool debug = false) = 0;
 
-	virtual bool openNextProcess(string filename, bool debug = false) = 0;
+	virtual bool openNextProcess(const string& filename, bool debug = false) = 0;
 
 	virtual QWORD extractPointer(QWORD offset) = 0;
 
@@ -80,9 +80,9 @@ public:
 
 	void enableDebugPrivileges();
 
-	bool openFirstProcess(string filename, bool debug = false);
+	bool openFirstProcess(const string& filename, bool debug = false);
 
-	bool openNextProcess(string filename, bool debug = false);
+	bool openNextProcess(const string& filename, bool debug = false);
 
 	void closeProcess();
 
@@ -109,8 +109,6 @@ public:
 	BYTE extractBYTE(QWORD offset);
 
 	UINT extractUINT(QWORD offset);
-
-	bool AdjustPrivileges();
 
 	QWORD MemReader::GetModuleBaseAddress(DWORD iProcId, TCHAR* DLLName);
 };
