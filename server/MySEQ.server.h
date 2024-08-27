@@ -72,3 +72,13 @@ void RestoreWindow(HWND hDlg);
 bool CheckAndSetEQPath(const TCHAR* basePath, const TCHAR* subDir, TCHAR* eqFilePath, size_t pathSize, TCHAR* eqFileName, size_t fileNameSize, TCHAR* eqExeName, size_t exeNameSize);
 void SetInitialDirectory(TCHAR* eqFilePath, size_t pathSize, TCHAR* eqExeName, OPENFILENAME& ofn);
 void SetEQFileName(HWND hDlg, TCHAR* eqExeName, TCHAR* eqFileName);
+
+bool InstallAndNotify();
+bool UninstallAndNotify();
+void startService();
+const char* INSTALLER_TITLE = "MySEQ Open Service Installer";
+const char*  INSTALL_ERROR_MSG = "Error Installing MySEQ Open Services";
+const char* INSTALL_SUCCESS_MSG = "MySEQ Open Services Installed Successfully";
+const char*  UNINSTALLER_TITLE = "MySEQ Open Service Uninstaller";
+const char*  UNINSTALL_ERROR_MSG = "Error Uninstalling MySEQ Open Services";
+const char* UNINSTALL_SUCCESS_MSG = "MySEQ Open Services Uninstalled Successfully";

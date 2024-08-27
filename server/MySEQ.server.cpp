@@ -342,31 +342,19 @@ int APIENTRY _tWinMain(_In_   HINSTANCE hInstance,
 		if (arg == "-i")
 		{
 			DeleteService();
-
-			if (InstallService())
-				MessageBox(NULL, "MySEQ Open Services Installed Sucessfully", "MySEQ Open Service Installer", 0);
-			else
-				MessageBox(NULL, "Error Installing MySEQ Open Services", "MySEQ Open Service Installer", 0);
-
+			InstallAndNotify();
 			return 0;
 		}
 
 		if (arg == "-d")
 		{
-			if (DeleteService())
-				MessageBox(NULL, "MySEQ Open Services UnInstalled Sucessfully", "MySEQ Open Service Uninstaller", 0);
-			else
-				MessageBox(NULL, "Error UnInstalling MySEQ Open Services", "MySEQ Open Service Uninstaller", 0);
-
+			UninstallAndNotify();
 			return 0;
 		}
 
 		if (arg == "-k")
 		{
-			SERVICE_TABLE_ENTRY DispatchTable[] = { {"MySEQServer",ServiceMain},{NULL,NULL} };
-
-			StartServiceCtrlDispatcher(DispatchTable);
-
+			startService();
 			return 0;
 		}
 	}
@@ -404,24 +392,17 @@ int APIENTRY _tWinMain(_In_   HINSTANCE hInstance,
 		return 0;
 	}
 
-	if (debug_mode) {
-		cout << "========================" << endl <<
-			" MySEQ Server Debug Mode" << endl <<
-			"========================" << endl << endl;
-	}
-	else if (!services) {
+	if (!services) {
 		cout << "========================" << endl <<
 			"  MySEQServer v3.0.0.0  " << endl <<
 			"========================" << endl << endl <<
 			"This software is covered under the GNU Public License (GPL)" << endl <<
-			"Copyright MySEQ Project 2003-2022" << endl << endl;
+			"Copyright MySEQ Project 2003-2024" << endl << endl;
 	}
 
 	// Debug priviledges allow us to peek inside the EQ process.
 	memReader.enableDebugPrivileges();
-
 	iniReader.openFile(iniFile);
-
 	iniReader.openConfigFile(configIniFile);
 
 	netServer.hwnd = h_Main;
@@ -454,6 +435,9 @@ int APIENTRY _tWinMain(_In_   HINSTANCE hInstance,
 
 	// debug runs the debug console in a new thread
 	if (debug_mode) {
+		cout << "========================" << endl <<
+			" MySEQ Server Debug Mode" << endl <<
+			"========================" << endl << endl;
 		memReader.openFirstProcess("eqgame");
 		_beginthread(DoDebugLoop, 0, NULL);
 	}
@@ -462,11 +446,9 @@ int APIENTRY _tWinMain(_In_   HINSTANCE hInstance,
 	// Main message loop:
 	while (running) {
 		GetMessage(&msg, NULL, 0, 0);
-		if (h_MySEQServer) {
-			if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg) && !IsDialogMessage(h_MySEQServer, &msg)) {
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
+		if (h_MySEQServer && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg) && !IsDialogMessage(h_MySEQServer, &msg)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
 	}
 
@@ -479,13 +461,50 @@ int APIENTRY _tWinMain(_In_   HINSTANCE hInstance,
 		WSACleanup();
 	}
 
-	if (h_MySEQServer) {
-		if (!IsWindowVisible(h_MySEQServer)) {
-			Shell_NotifyIcon(NIM_DELETE, &g_notifyIconData);
-		}
+	if (h_MySEQServer && !IsWindowVisible(h_MySEQServer)) {
+		Shell_NotifyIcon(NIM_DELETE, &g_notifyIconData);
 	}
-
 	return (int)msg.wParam;
+}
+
+void ShowMessage(const char* message, const char* title)
+{
+	MessageBox(NULL, message, title, 0);
+}
+
+bool InstallAndNotify()
+{
+	DeleteService();
+	if (InstallService())
+	{
+		ShowMessage(INSTALL_SUCCESS_MSG, INSTALLER_TITLE);
+		return true;
+	}
+	else
+	{
+		ShowMessage(INSTALL_ERROR_MSG, INSTALLER_TITLE);
+		return false;
+	}
+}
+
+bool UninstallAndNotify()
+{
+	if (DeleteService())
+	{
+		ShowMessage(UNINSTALL_SUCCESS_MSG, UNINSTALLER_TITLE);
+		return true;
+	}
+	else
+	{
+		ShowMessage(UNINSTALL_ERROR_MSG, UNINSTALLER_TITLE);
+		return false;
+	}
+}
+
+void startService()
+{
+	SERVICE_TABLE_ENTRY DispatchTable[] = { { "MySEQServer", ServiceMain}, {NULL, NULL} };
+	StartServiceCtrlDispatcher(DispatchTable);
 }
 
 //
@@ -995,58 +1014,31 @@ bool FindNotepadPath(TCHAR(&notePad)[MAX_PATH]) {
 	std::cout << "Notepad.exe not found in default directories";
 	return false;  // Return false if Notepad.exe is not found
 }
-
+// EQGameScanner Window dialogs
 INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	TCHAR basePath[_MAX_PATH];
+	TCHAR szChkFile[_MAX_PATH];
 	switch (message)
 	{
 	case WM_INITDIALOG:
 	{
 		// attempt to set initial eqgame.exe values
-		if (eqFileName[0] == _T('\0')) {
-			TCHAR basePath[_MAX_PATH];
-			TCHAR szChkFile[_MAX_PATH];
-			TCHAR szPath[_MAX_PATH];
-			if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROGRAM_FILES, NULL, 0, basePath))) {
-				strcpy_s(szPath, basePath);
-				strcat_s(szPath, "\\sony\\everquest");
-				if (_access(szPath, 0) == 0) {
-					strcpy_s(szChkFile, szPath);
-					strcat_s(szChkFile, "\\eqgame.exe");
-					if (_access(szPath, 0) == 0) {
-						strcpy_s(eqFileName, szChkFile);
-					}
-				}
-				if (eqFileName[0] == _T('\0')) {
-					// attempt 2
-					strcpy_s(szPath, basePath);
-					strcat_s(szPath, "\\soe\\everquest");
-					if (_access(szPath, 0) == 0) {
-						strcpy_s(szChkFile, szPath);
-						strcat_s(szChkFile, "\\eqgame.exe");
-						if (_access(szPath, 0) == 0) {
-							strcpy_s(eqFileName, szChkFile);
-						}
-					}
-				}
-				if (eqFileName[0] == _T('\0')) {
-					// attempt 2
-					strcpy_s(szPath, basePath);
-					strcat_s(szPath, "\\everquest");
-					if (_access(szPath, 0) == 0) {
-						strcpy_s(szChkFile, szPath);
-						strcat_s(szChkFile, "\\eqgame.exe");
-						if (_access(szPath, 0) == 0) {
-							strcpy_s(eqFileName, szChkFile);
-						}
-					}
+		if (eqFileName[0] == _T('\0') && SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROGRAM_FILES, NULL, 0, basePath))) {
+			if (!CheckAndSetEQPath(basePath, _T("\\Sony Online Entertainment\\Installed Games\\EverQuest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
+				!CheckAndSetEQPath(basePath, _T("\\sony\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
+				!CheckAndSetEQPath(basePath, _T("\\soe\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
+				!CheckAndSetEQPath(basePath, _T("\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH)) {
+				GetCurrentDirectory(_MAX_PATH, eqFilePath);
+				_stprintf_s(szChkFile, _T("%s\\eqgame.exe"), eqFilePath);
+				if (_access(szChkFile, 0) == 0) {
+					_tcscpy_s(eqFileName, _MAX_PATH, szChkFile);
+					_tcscpy_s(eqExeName, _MAX_PATH, _T("eqgame.exe"));
 				}
 			}
 		}
-
 		if (eqFileName[0] != _T('\0'))
 			SetDlgItemText(hDlg, IDC_EQFILENAME, eqFileName);
-
 		return TRUE;
 	}
 	break;
@@ -1088,24 +1080,18 @@ INT_PTR CALLBACK OffsetDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 			ofn.lpstrFilter = "EverQuest Executable (eqgame.exe)\0eqgame.exe\0All Files (*.*)\0*.*\0";
 			ofn.nMaxFile = _MAX_PATH;
 
-			TCHAR basePath[_MAX_PATH];
-			TCHAR szChkFile[_MAX_PATH];
-
-			if (eqExeName[0] == _T('\0')) {
-				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROGRAM_FILES, NULL, 0, basePath))) {
-					// Check default directories for EQ
-					if (!CheckAndSetEQPath(basePath, _T("\\Sony Online Entertainment\\Installed Games\\EverQuest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
-						!CheckAndSetEQPath(basePath, _T("\\sony\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
-						!CheckAndSetEQPath(basePath, _T("\\soe\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
-						!CheckAndSetEQPath(basePath, _T("\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH)) {
-
-						GetCurrentDirectory(_MAX_PATH, eqFilePath);
-						ofn.lpstrInitialDir = eqFilePath;
-						_stprintf_s(szChkFile, _T("%s\\eqgame.exe"), eqFilePath);
-						if (_access(szChkFile, 0) == 0) {
-							_tcscpy_s(eqFileName, _MAX_PATH, szChkFile);
-							_tcscpy_s(eqExeName, _MAX_PATH, _T("eqgame.exe"));
-						}
+			if (eqExeName[0] == _T('\0') && SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PROGRAM_FILES, NULL, 0, basePath))) {
+				// Check default directories for EQ
+				if (!CheckAndSetEQPath(basePath, _T("\\Sony Online Entertainment\\Installed Games\\EverQuest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
+					!CheckAndSetEQPath(basePath, _T("\\sony\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
+					!CheckAndSetEQPath(basePath, _T("\\soe\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH) &&
+					!CheckAndSetEQPath(basePath, _T("\\everquest"), eqFilePath, _MAX_PATH, eqFileName, _MAX_PATH, eqExeName, _MAX_PATH)) {
+					GetCurrentDirectory(_MAX_PATH, eqFilePath);
+					ofn.lpstrInitialDir = eqFilePath;
+					_stprintf_s(szChkFile, _T("%s\\eqgame.exe"), eqFilePath);
+					if (_access(szChkFile, 0) == 0) {
+						_tcscpy_s(eqFileName, _MAX_PATH, szChkFile);
+						_tcscpy_s(eqExeName, _MAX_PATH, _T("eqgame.exe"));
 					}
 				}
 			}
@@ -1159,17 +1145,14 @@ void SetEQFileName(HWND hDlg, TCHAR* eqExeName, TCHAR* eqFileName) {
 void GetPatchdate()
 {
 	// update patch date in GUI
-	LPCSTR patchdate;
-	patchdate = iniReader.patchDate.c_str();
+	LPCSTR patchdate = iniReader.patchDate.c_str();
 	SetDlgItemText(h_MySEQServer, IDC_TEXT_PATCH, patchdate);
 }
 
 void ReadArgs(int argc, char* argv[])
 {
 	string arg;
-
 	if (argc > 1)
-
 		arg = argv[1];
 
 	debug_mode = (arg == "debug");
@@ -1194,7 +1177,6 @@ void ReadArgs(int argc, char* argv[])
 			GetCurrentDirectory(_MAX_PATH, iniFile);
 
 			strcat_s(iniFile, "\\");
-
 			strcat_s(iniFile, argv[2]);
 		}
 		GetCurrentDirectory(_MAX_PATH, configIniFile);
