@@ -22,8 +22,8 @@ namespace myseq
         public void SetComponents(EQMap map)
         {
             // Reset the Mob Timers for the New Zone
-            map.EnterMap += new EQMap.EnterMapHandler(EnterMap);
-            map.ExitMap += new EQMap.ExitMapHandler(ExitMap);
+            map.EnterMap += EnterMap;
+            map.ExitMap += ExitMap;
         }
 
         public Hashtable GetRespawned() => mobsTimer2;

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using myseq.Properties;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using myseq.Properties;
 
 namespace Structures
 
@@ -10,89 +10,89 @@ namespace Structures
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public class Spawninfo
     {
-        public string Name {get; set; } = "";
-        public string Lastname {get; set; } = "";
-         public int SpawnID {get; set; }
+        public string Name { get; set; } = "";
+        public string Lastname { get; set; } = "";
+        public int SpawnID { get; set; }
 
-        public int OwnerID {get; set; }
+        public int OwnerID { get; set; }
 
-        public float X {get; set; }
+        public float X { get; set; }
 
-        public float Y {get; set; }
+        public float Y { get; set; }
 
-        public float Z {get; set; }
+        public float Z { get; set; }
 
-        public byte Class {get; set; }
+        public byte Class { get; set; }
 
-        public byte Level {get; set; }
-        public int Race {get; set; }
+        public byte Level { get; set; }
+        public int Race { get; set; }
 
-        public byte Type {get; set; }
+        public byte Type { get; set; }
 
-        public float Heading {get; set; }
+        public float Heading { get; set; }
 
-        public float SpeedRun {get; set; }
+        public float SpeedRun { get; set; }
 
-        public int Primary {get; set; }
-        public int Offhand {get; set; }
-        public string PrimaryName {get; set; }
-        public string OffhandName {get; set; }
+        public int Primary { get; set; }
+        public int Offhand { get; set; }
+        public string PrimaryName { get; set; }
+        public string OffhandName { get; set; }
 
-        public int Guild {get; set; }
+        //public int Guild { get; set; }
 
-        public byte Hide {get; set; }
+        public byte Hide { get; set; }
 
-        public int gone {get; set; }
+        public bool ShouldBeDeleted { get; set; }
 
-        public int refresh {get; set; }
+        public int refresh { get; set; }
 
-        public PacketType flags {get; set; }
+        public PacketType flags { get; set; }
 
-        public bool isHunt {get; set; }
+        public bool isHunt { get; set; }
 
-        public bool isCaution {get; set; }
+        public bool isCaution { get; set; }
 
-        public bool isDanger {get; set; }
+        public bool isDanger { get; set; }
 
-        public bool isAlert {get; set; }
+        public bool isAlert { get; set; }
 
-        public bool isPet {get; set; }
+        public bool isPet { get; set; }
 
-        public bool isMerc {get; set; }
+        public bool isMerc { get; set; }
 
-        public bool isCorpse {get; set; }
+        public bool isCorpse { get; set; }
 
-        public bool isMount {get; set; }
+        public bool isMount { get; set; }
 
-        public bool isFamiliar {get; set; }
+        public bool isFamiliar { get; set; }
 
-        public bool isLDONObject {get; private set; }
+        public bool isLDONObject { get; private set; }
 
-        public bool isEventController {get; private set; }
+        public bool isEventController { get; private set; }
 
-        public bool isLookup {get; set; }
+        public bool isLookup { get; set; }
 
-        public string lookupNumber {get; set; } = "";
+        public string lookupNumber { get; set; } = "";
 
-        public bool hidden {get; set; }
+        public bool hidden { get; set; }
 
-        public bool filtered {get; set; }
+        public bool filtered { get; set; }
 
-        public ListViewItem listitem {get; set; }
+        public ListViewItem listitem { get; set; }
 
-        public bool m_isPlayer {get; set; }
+        public bool m_isPlayer { get; set; }
 
-        public bool m_isMyCorpse {get; set; }
+        public bool m_isMyCorpse { get; set; }
 
-        public bool delFromList {get; set; }
+        public bool delFromList { get; set; }
 
-        public bool proxAlert {get; set; }
+        public bool proxAlert { get; set; }
 
-        public bool alertMob {get; set; }
+        public bool alertMob { get; set; }
 
-        public string SpawnLoc {get; set; } = "";
+        public string SpawnLoc { get; set; } = "";
 
-        public string ZoneSpawnLoc {get; set; } = "";
+        public string ZoneSpawnLoc { get; set; } = "";
 
         public bool IsPlayer => m_isPlayer;
 
@@ -107,12 +107,13 @@ namespace Structures
             }
             return false;
         }
+
         public bool IsSpawnController(Spawninfo si)
         {
-            if ((si.Race == 127) && si.Name.IndexOf("_") == 0) // Invisible Man Race
+            if ((si.Race == 127) && si.Name.StartsWith("_")) // Invisible Man Race
             {
                 si.isEventController = true;
-                
+
                 if (!Settings.Default.ShowInvis)
                 {
                     si.hidden = true;
@@ -124,16 +125,16 @@ namespace Structures
 
         private string BytesToString(byte[] b, int start, int maxlen)
         {
-            var i = 0;
+            var length = 0;
 
             // look for a null
 
-            while (i < maxlen && b[start + i] != '\0')
+            while (length < maxlen && b[start + length] != '\0')
             {
-                i++;
+                length++;
             }
 
-            return Encoding.ASCII.GetString(b, start, i);
+            return Encoding.ASCII.GetString(b, start, length);
         }
 
         public void Frombytes(byte[] b, int offset)
@@ -171,6 +172,12 @@ namespace Structures
         }
 
         public float SpawnDistance(Spawninfo si, Spawninfo gamerInfo)
-        => (float)Math.Sqrt(((si.X - gamerInfo.X) * (si.X - gamerInfo.X)) + ((si.Y - gamerInfo.Y) * (si.Y - gamerInfo.Y)) + ((si.Z - gamerInfo.Z) * (si.Z - gamerInfo.Z)));
+        {
+            float deltaX = si.X - gamerInfo.X;
+            float deltaY = si.Y - gamerInfo.Y;
+            float deltaZ = si.Z - gamerInfo.Z;
+
+            return (float)Math.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+        }
     }
 }

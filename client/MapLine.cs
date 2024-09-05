@@ -5,6 +5,7 @@ using System.Drawing;
 using Structures;
 using System.Globalization;
 using System;
+using System.Collections.Generic;
 
 namespace myseq
 {
@@ -21,6 +22,7 @@ namespace myseq
     {
         public int X { get; set; }
         public int Y { get; set; }
+
         public MobTrailPoint(Spawninfo sp)
         {
             X = (int)sp.X;
@@ -30,105 +32,96 @@ namespace myseq
 
     public class MapText
     {
-        public string label {get; set; } = "";
+        public string Label { get; set; } = "";
 
-        public int offset {get; set; }
+        public int Offset { get; set; }
 
-        public SolidBrush color {get; set; }
+        public SolidBrush LineColor { get; private set; }
 
-        public SolidBrush draw_color {get; set; }
+        public SolidBrush Draw_color { get; set; }
 
-        public Pen draw_pen {get; set; }
+        public Pen Draw_pen { get; set; }
 
-        public int x {get; set;}
+        public int X { get; private set; }
 
-        public int y {get; set;}
+        public int Y { get; private set; }
 
-        public int z {get; set;}
+        public int Z { get; private set; }
 
-        public int size {get; set;} = 2;
+        public int Size { get; private set; } = 2;
 
         public MapText(string line)
         {
             IFormatProvider NumFormat = new CultureInfo("en-US");
             var dataRecord = line.Remove(0, 1);
-            var parsedline = dataRecord.Split(",".ToCharArray());
+            var parsedLine = dataRecord.Split(",".ToCharArray());
 
-            if (parsedline.Length >= 7)
+            if (parsedLine.Length >= 7)
             {
-                x = -(int)float.Parse(parsedline[0], NumFormat);
-                y = -(int)float.Parse(parsedline[1], NumFormat);
-                z = (int)float.Parse(parsedline[2], NumFormat);
-                var r = int.Parse(parsedline[3], NumFormat);
-                var g = int.Parse(parsedline[4], NumFormat);
-                var b = int.Parse(parsedline[5], NumFormat);
-                color = new SolidBrush(Color.FromArgb(r, g, b));
-                size = int.Parse(parsedline[6], NumFormat);
-                for (var i = 7; i < parsedline.Length; i++)
-                {
-                    label = parsedline[i];
-                }
+                X = -(int)float.Parse(parsedLine[0], NumFormat);
+                Y = -(int)float.Parse(parsedLine[1], NumFormat);
+                Z = (int)float.Parse(parsedLine[2], NumFormat);
+                InitializeColor(parsedLine[3], parsedLine[4], parsedLine[5]);
+                Size = int.Parse(parsedLine[6], NumFormat);
+                
+                Label = string.Join(",", parsedLine, 7, parsedLine.Length - 7);
             }
             else
             {
                 LogLib.WriteLine("Warning - Label-line has an invalid format and will be ignored.", LogLevel.Warning);
             }
         }
+
+        private void InitializeColor(string r, string g, string b)
+        {
+            try
+            {
+                int red = int.Parse(r);
+                int green = int.Parse(g);
+                int blue = int.Parse(b);
+                LineColor = new SolidBrush(Color.FromArgb(red, green, blue));
+            }
+            catch (Exception ex)
+            {
+                LogLib.WriteLine($"Error initializing color: {ex.Message}", LogLevel.Warning);
+                LineColor = new SolidBrush(Color.Black);  // Default to black on error
+            }
+        }
     }
 
     public class MapLine
     {
-        public int MaxZ {get; set; }
-
-        public int MinZ {get; set; }
-
-        //public string name {get; set; } = "";
-
-        public Pen LineColor {get; set; }
-
-        public Pen Draw_color {get; set; }
-
-        public Pen Fade_color {get; set; }
-
-        public ArrayList APoints {get; set; }
-
-        public PointF[] LinePoints {get; set; }
+        public int MaxZ { get; private set; }
+        public int MinZ { get; private set; }
+        public Pen LineColor { get; private set; }
+        public Pen Draw_color { get; set; }
+        public Pen Fade_color { get; set; }
+        public List<MapPoint> APoints{ get; set; }
+        public PointF[] LinePoints { get; set; }
 
         public MapLine(string line)
         {
-            IFormatProvider NumFormat = new CultureInfo("en-US");
-            MapPoint point1 = new MapPoint();
-            MapPoint point2 = new MapPoint();
-            APoints = new ArrayList();
+            IFormatProvider numFormat = new CultureInfo("en-US");
+            APoints = new List<MapPoint>();
 
-            var parsedLine = line.Remove(0, 1).Split(",".ToCharArray());
+            var parsedLine = line.Remove(0, 1).Split(',');
 
             if (parsedLine.Length == 9)
             {
-                point1.X = -(int)float.Parse(parsedLine[0], NumFormat);
-                point1.Y = -(int)float.Parse(parsedLine[1], NumFormat);
-                point1.Z = (int)float.Parse(parsedLine[2], NumFormat);
-
-                point2.X = -(int)float.Parse(parsedLine[3], NumFormat);
-                point2.Y = -(int)float.Parse(parsedLine[4], NumFormat);
-                point2.Z = -(int)float.Parse(parsedLine[5], NumFormat);
-
-                parsedLine[6] = parsedLine[6].Trim();
-                parsedLine[7] = parsedLine[7].Trim();
-                parsedLine[8] = parsedLine[8].Trim();
-                var R = int.Parse(parsedLine[6].PadRight(4).Substring(0, 3));
-                var G = int.Parse(parsedLine[7].PadRight(4).Substring(0, 3));
-                var B = int.Parse(parsedLine[8].PadRight(4).Substring(0, 3));
-                LineColor = new Pen(new SolidBrush(Color.FromArgb(R, G, B)));
+                MapPoint point1 = ParsePoint(parsedLine, 0, numFormat);
+                MapPoint point2 = ParsePoint(parsedLine, 3, numFormat);
+                LineColor = ParseColor(parsedLine, 6);
 
                 APoints.Add(point1);
                 APoints.Add(point2);
 
-                LinePoints = new PointF[2];
+                LinePoints = new PointF[]
+                {
+                new PointF(point1.X, point1.Y),
+                new PointF(point2.X, point2.Y)
+                };
 
-                LinePoints[0] = new PointF(point1.X, point1.Y);
-
-                LinePoints[1] = new PointF(point2.X, point2.Y);
+                NormalizeZ(); // Normalize Z values during initialization
             }
             else
             {
@@ -136,9 +129,50 @@ namespace myseq
             }
         }
 
+        private MapPoint ParsePoint(string[] parsedLine, int startIndex, IFormatProvider numFormat)
+        {
+            return new MapPoint
+            {
+                X = -(int)float.Parse(parsedLine[startIndex], numFormat),
+                Y = -(int)float.Parse(parsedLine[startIndex + 1], numFormat),
+                Z = (int)float.Parse(parsedLine[startIndex + 2], numFormat)
+            };
+        }
+
+        private Pen ParseColor(string[] parsedLine, int startIndex)
+        {
+            int R = int.Parse(parsedLine[startIndex].Trim());
+            int G = int.Parse(parsedLine[startIndex + 1].Trim());
+            int B = int.Parse(parsedLine[startIndex + 2].Trim());
+
+            return new Pen(new SolidBrush(Color.FromArgb(R, G, B)));
+        }
+
         public MapPoint Point(int index)
         {
             return (MapPoint)APoints[index];
+        }
+
+        // Normalize the Z values for the line
+        private void NormalizeZ()
+        {
+            if (APoints.Count == 0)
+                return;
+
+            MapPoint firstPoint = Point(0);
+            MinZ = MaxZ = firstPoint.Z;
+
+            foreach (MapPoint point in APoints)
+            {
+                if (point.Z < MinZ)
+                {
+                    MinZ = point.Z;
+                }
+                if (point.Z > MaxZ)
+                {
+                    MaxZ = point.Z;
+                }
+            }
         }
     }
 }

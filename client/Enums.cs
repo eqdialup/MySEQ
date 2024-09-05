@@ -26,12 +26,41 @@ namespace Structures
         DefaultMaxLevel = Error // Starting log level
     };
 
+    [Flags]
     public enum DrawOptions
+    {
+        None = 0x00000000,
+        DrawMap = 0x00000001,
+        Readjust = 0x00000002,
+        Player = 0x00000004,
+        SpotLine = 0x00000008,
+        Spawns = 0x00000010,
+        SpawnTrails = 0x00000020,
+        GroundItems = 0x00000040,
+        SpawnTimers = 0x00000080,
+        DirectionLines = 0x00000100,
+        SpawnRings = 0x00000200,
+        GridLines = 0x00000400,
+        ZoneText = 0x00000800,
+
+        // Composite options
+        DrawNormal = DrawMap | Readjust | Player | SpotLine | Spawns | GroundItems |
+                     SpawnTimers | DirectionLines | GridLines | ZoneText,
+
+        DrawLess = DrawNormal & ~(DirectionLines | GroundItems | SpawnTimers | ZoneText),
+
+        DrawEvenLess = DrawLess & ~Readjust,
+
+        DrawAll = 0x0FFFFFFF  // Maximum possible combination
+    }
+
+    /*public enum DrawOptions
     {
         /// <summary>
         /// Maximum savings - all enabled
         /// </summary>
         None = 0x00000000,
+
         DrawMap = 0x00000001,
         Readjust = 0x00000002,
         Player = 0x00000004,
@@ -52,6 +81,7 @@ namespace Structures
                                       - GroundItems
                                       - SpawnTimers
                                       - ZoneText,
+
         ZoneText = 0x00000800,
 
         DrawNormal = DrawMap           // Standard, nice, savings
@@ -64,8 +94,9 @@ namespace Structures
                                       + DirectionLines
                                       + GridLines
                                       + ZoneText,
+
         DrawAll = 0x0fffffff,
-    }
+    }*/
 
     public enum FollowOption
     {
@@ -78,7 +109,6 @@ namespace Structures
     public enum RequestTypes
     {
         None = 0,
-
         //Bit Flags determining what data to send to the client
         ZONE = 0x00000001,
         PLAYER = 0x00000002,

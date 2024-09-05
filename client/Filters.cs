@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace Structures
 {
@@ -34,24 +35,24 @@ namespace Structures
             WieldedItems.Clear();
         }
 
-        public void AddToAlerts(List<string> list, string additem)
+        public void AddToAlerts(List<string> list, string addItem)
         {
-            // only add to list, if not in list already
+            if (list == null || string.IsNullOrWhiteSpace(addItem))
+            {
+                LogLib.WriteLine($"Invalid input. List or item is null/empty.");
+                return;
+            }
             try
             {
-                foreach (var item in list)
+                // Check if the item is already in the list (case-insensitive comparison)
+                if (!list.Contains(addItem, StringComparer.OrdinalIgnoreCase))
                 {
-                    if (string.Compare(item, additem, true) == 0)
-                    {
-                        return;
-                    }
+                    list.Add(addItem);
                 }
-                list.Add(additem);
             }
             catch (Exception ex)
-
             {
-                LogLib.WriteLine($"Error Adding Alert for {additem}: ", ex);
+                LogLib.WriteLine($"Error adding alert for '{addItem}': {ex.Message}", ex);
             }
         }
 
@@ -68,52 +69,51 @@ namespace Structures
 
         private void ReadAlertLines(string zoneName, string filterFile)
         {
-            var type = 0;
-            foreach (var line in File.ReadAllLines(filterFile))
+            var sectionTypes = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+    {
+        { "hunt", 1 },
+        { "caution", 2 },
+        { "danger", 3 },
+        { "alert", 4 },
+        { "email", 5 }, { "locate", 5 },
+        { "primary", 6 }, { "offhand", 6 }
+    };
+
+            int type = 0;
+
+            foreach (var line in File.ReadLines(filterFile))
             {
                 var inp = line.Trim();
-                if (inp.Length > 1)
+                if (string.IsNullOrEmpty(inp) || inp.Length <= 1) continue;
+
+                if (inp.StartsWith("<section name=\"", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (inp.StartsWith("<section name=\"hunt\">", true, null))
+                    type = GetSectionType(inp, sectionTypes);
+                }
+                else if (type > 0 && type < 7)
+                {
+                    if (inp.StartsWith("</section>", StringComparison.OrdinalIgnoreCase))
                     {
-                        type = 1;
+                        type = 0;
+                        continue;
                     }
-                    else if (inp.StartsWith("<section name=\"caution\">", true, null))
-                    {
-                        type = 2;
-                    }
-                    else if (inp.StartsWith("<section name=\"danger\">", true, null))
-                    {
-                        type = 3;
-                    }
-                    else if (inp.StartsWith("<section name=\"alert\">", true, null))
-                    {
-                        type = 4;
-                    }
-                    else if (inp.StartsWith("<section name=\"email\">", true, null) || inp.StartsWith("<section name=\"locate\">", true, null))
-                    {
-                        type = 5;
-                    }
-                    else if (inp.StartsWith("<section name=\"primary\">", true, null) || inp.StartsWith("<section name=\"offhand\">", true, null))
-                    {
-                        type = 6;
-                    }
-                    else if (type > 0 && type < 7)
-                    {
-                        if (inp.StartsWith("</section>", true, null))
-                        {
-                            type = 0;
-                            continue;
-                        }
 
-                        var inputstring = line.Trim();
-
-                        inputstring = FormatStrings(inp, inputstring);
-
-                        DetermineType(type, inputstring, zoneName);
-                    }
+                    var formattedString = FormatStrings(inp, inp);
+                    DetermineType(type, formattedString, zoneName);
                 }
             }
+        }
+
+        private int GetSectionType(string input, Dictionary<string, int> sectionTypes)
+        {
+            foreach (var entry in sectionTypes)
+            {
+                if (input.StartsWith($"<section name=\"{entry.Key}\"", StringComparison.OrdinalIgnoreCase))
+                {
+                    return entry.Value;
+                }
+            }
+            return 0;
         }
 
         private static string FormatStrings(string inp, string inputstring)
@@ -161,12 +161,15 @@ namespace Structures
                 case 1:
                     AddToAlerts(GlobalHunt, inputstring);
                     break;
+
                 case 2:
                     AddToAlerts(GlobalCaution, inputstring);
                     break;
+
                 case 3:
                     AddToAlerts(GlobalDanger, inputstring);
                     break;
+
                 case 4:
                     AddToAlerts(GlobalAlert, inputstring);
                     break;
@@ -180,18 +183,23 @@ namespace Structures
                 case 1:
                     AddToAlerts(Hunt, inputstring);
                     break;
+
                 case 2:
                     AddToAlerts(Caution, inputstring);
                     break;
+
                 case 3:
                     AddToAlerts(Danger, inputstring);
                     break;
+
                 case 4:
                     AddToAlerts(Alert, inputstring);
                     break;
+
                 case 5:
                     AddToAlerts(EmailAlert, inputstring);
                     break;
+
                 case 6:
                     AddToAlerts(WieldedItems, inputstring);
                     break;
@@ -271,6 +279,7 @@ namespace Structures
                     "<seqfilters>",
                     "    <section name=\"Hunt\">"
                 };
+
         private static void ListFooter(List<string> lines)
         {
             lines.Add("    </section>");
@@ -302,15 +311,31 @@ namespace Structures
 
         public void EditAlertFile(string zoneName)
         {
-            if (!string.IsNullOrEmpty(zoneName))
+            if (string.IsNullOrWhiteSpace(zoneName)) return;
+
+            // Convert zone name to lowercase
+            zoneName = zoneName.Trim().ToLower();
+
+            // Combine zone name with the .xml extension to get the filter file path
+            var filterFile = CombineFilter($"{zoneName}.xml");
+
+            // Create the filter file if it doesn't already exist
+            MakeFilter(filterFile);
+
+            // Open the filter file in Notepad
+            OpenInNotepad(filterFile);
+        }
+
+        private void OpenInNotepad(string filePath)
+        {
+            try
             {
-                zoneName = zoneName.ToLower();
-
-                var filterFile = CombineFilter($"{zoneName}.xml");
-
-                MakeFilter(filterFile);
-
-                Process.Start("notepad.exe", filterFile);
+                Process.Start("notepad.exe", filePath);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., Notepad not found, file path issues)
+                LogLib.WriteLine($"Failed to open file in Notepad: {filePath}", ex);
             }
         }
     }

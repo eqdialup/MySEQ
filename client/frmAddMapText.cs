@@ -43,8 +43,8 @@ namespace myseq
 
             MapText work = new MapText(soe_maptext);
 
-            work.draw_color = work.color;
-            work.draw_pen = new Pen(work.color);
+            work.Draw_color = work.LineColor;
+            work.Draw_pen = new Pen(work.LineColor);
             f1.map.AddMapText(work);
 
             if (DialogResult.Yes == MessageBox.Show($"Do you want to write the label to {mapName}?" +

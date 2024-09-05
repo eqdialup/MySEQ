@@ -8,8 +8,8 @@ namespace myseq
 {
     public class MapPane : DockContent
     {
-        public MapCon mapCon;// {get; set; }
-        private MainForm f1; // Caution: may be null
+        public MapCon mapCon;
+        private MainForm f1;
 
         #region Designer components
         public NumericUpDown offsetx;// {get; set; }
@@ -19,7 +19,6 @@ namespace myseq
         public NumericUpDown filterzneg;// {get; set; }
 
         public NumericUpDown filterzpos;// {get; set; }
-
 
         private readonly System.ComponentModel.Container components;
         # endregion Designer components
@@ -99,27 +98,27 @@ namespace myseq
             ((System.ComponentModel.ISupportInitialize)(this.filterzneg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.filterzpos)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // offsetx
-            // 
+            //
             this.offsetx.Location = new System.Drawing.Point(114, 448);
             this.offsetx.Name = "offsetx";
             this.offsetx.Size = new System.Drawing.Size(58, 20);
             this.offsetx.TabIndex = 3;
             this.offsetx.Visible = false;
             this.offsetx.ValueChanged += new System.EventHandler(this.Offsetx_ValueChanged);
-            // 
+            //
             // offsety
-            // 
+            //
             this.offsety.Location = new System.Drawing.Point(217, 448);
             this.offsety.Name = "offsety";
             this.offsety.Size = new System.Drawing.Size(56, 20);
             this.offsety.TabIndex = 5;
             this.offsety.Visible = false;
             this.offsety.ValueChanged += new System.EventHandler(this.Offsety_ValueChanged);
-            // 
+            //
             // scale
-            // 
+            //
             scale.Location = new System.Drawing.Point(313, 447);
             scale.Maximum = new decimal(new int[] {
             10000,
@@ -158,9 +157,9 @@ namespace myseq
             this.filterzneg.TabIndex = 9;
             this.filterzneg.Visible = false;
             this.filterzneg.ValueChanged += new System.EventHandler(this.Filterzneg_ValueChanged);
-            //// 
+            ////
             // filterzpos
-            // 
+            //
             this.filterzpos.Increment = new decimal(new int[] {
             5,
             0,
@@ -177,9 +176,9 @@ namespace myseq
             this.filterzpos.TabIndex = 11;
             this.filterzpos.Visible = false;
             this.filterzpos.ValueChanged += new System.EventHandler(this.Filterzpos_ValueChanged);
-            // 
+            //
             // mapCon
-            // 
+            //
             this.mapCon.AutoScroll = true;
             this.mapCon.BackColor = SystemColors.ControlLightLight;
             this.mapCon.Location = new System.Drawing.Point(0, 0);
@@ -192,9 +191,9 @@ namespace myseq
             this.mapCon.UpdateSteps = 5;
             this.mapCon.UpdateTicks = 1;
             this.mapCon.MouseEnter += new System.EventHandler(this.MapCon_MouseEnter);
-            // 
+            //
             // MapPane
-            // 
+            //
             this.AutoValidate = AutoValidate.EnablePreventFocusChange;
             this.BackColor = SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(762, 488);
@@ -213,7 +212,6 @@ namespace myseq
             ((System.ComponentModel.ISupportInitialize)(this.filterzpos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion Component Designer generated code
@@ -229,7 +227,6 @@ namespace myseq
             mapCon.ClearPan();
         }
 
- 
         private void MapPane_Resize(object sender, EventArgs e)
         {
             Size s = mapCon.Size;
@@ -245,86 +242,57 @@ namespace myseq
             filterzpos.Top = top;
 
             mapCon.OnResize();
-            mapCon?.Invalidate();
+            mapCon.Invalidate();
         }
 
         public void ZoomIn()
         {
-            var current_val = scale.Value;
-            if (current_val < 100)
-            {
-                current_val += 10;
-                if (current_val > 100)
-                {
-                    current_val = 100;
-                }
-            }
-            else if (current_val < 200)
-            {
-                current_val += 25;
-                if (current_val > 200)
-                {
-                    current_val = 200;
-                }
-            }
-            else if (current_val < 300)
-            {
-                current_val += 25;
-                if (current_val > 300)
-                {
-                    current_val = 300;
-                }
-            }
-            else if (current_val < 500)
-            {
-                current_val += 50;
-                if (current_val > 500)
-                {
-                    current_val = 500;
-                }
-            }
-            else
-            {
-                current_val += 100;
-            }
+            // Determine increment step based on current zoom value
+            int increment = GetZoomIncrement((int)scale.Value, isZoomingIn: true);
 
-            if (current_val >= scale.Minimum && current_val <= scale.Maximum)
+            // Update the current value and ensure it does not exceed the maximum
+            var newValue = Math.Min(scale.Value + increment, scale.Maximum);
+
+            // Update scale value
+            if (newValue >= scale.Minimum && newValue <= scale.Maximum)
             {
-                scale.Value = current_val;
+                scale.Value = newValue;
             }
         }
 
         public void ZoomOut()
         {
-            var current_val = scale.Value;
-            if (current_val <= 100)
+            // Determine decrement step based on current zoom value
+            int decrement = GetZoomIncrement((int)scale.Value, isZoomingIn: false);
+
+            // Update the current value and ensure it does not go below the minimum
+            var newValue = Math.Max(scale.Value - decrement, scale.Minimum);
+
+            // Update scale value
+            if (newValue >= scale.Minimum && newValue <= scale.Maximum)
             {
-                current_val = current_val.subhundred();
+                scale.Value = newValue;
             }
-            else if (current_val <= 200)
+        }
+
+        // Helper method to determine zoom increment/decrement
+        private int GetZoomIncrement(int currentValue, bool isZoomingIn)
+        {
+            if (isZoomingIn)
             {
-                current_val = current_val.Twohundred();
-            }
-            else if (current_val <= 300)
-            {
-                current_val = current_val.Threehundred();
-            }
-            else if (current_val <= 400)
-            {
-                current_val = current_val.Fourhundred();
-            }
-            else if (current_val <= 500)
-            {
-                current_val = current_val.FiveHundred();
+                if (currentValue < 100) return 10;
+                if (currentValue < 200) return 25;
+                if (currentValue < 300) return 25;
+                if (currentValue < 500) return 50;
+                return 100;
             }
             else
             {
-                current_val -= 100;
-            }
-
-            if (current_val >= scale.Minimum && current_val <= scale.Maximum)
-            {
-                scale.Value = current_val;
+                if (currentValue <= 100) return 10; // Or define custom behavior if needed
+                if (currentValue <= 200) return 25;
+                if (currentValue <= 300) return 25;
+                if (currentValue <= 400) return 50;
+                return 100;
             }
         }
 
@@ -378,103 +346,64 @@ namespace myseq
         }
 
         #region KeyPress
+
         public void MapCon_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Dictionary<char, Action> KeyInstructions = new Dictionary<char, Action>()
-                {
-                    {'1', OneKey },
-                    {'2', TwoKey },
-                    {'3', ThreeKey},
-                    {'4', FourKey},
-                    {'5', Cor5Key},
-                    {'c', Cor5Key},
-                    {'6', SixKey},
-                    {'7', SevenKey},
-                    {'8', EightKey},
-                    {'9', NineKey},
-                    {'+', PlusKey},
-                    {'-', MinusKey}
-                };
-            if (!KeyInstructions.ContainsKey(e.KeyChar)) return;
-            KeyInstructions[char.ToLower(e.KeyChar)]();
-            mapCon.ReAdjust();
+            // Dictionary to map key presses to actions
+            var keyInstructions = new Dictionary<char, Action>
+    {
+        {'1', () => MoveOffset(-50, 50)},
+        {'2', () => MoveOffset(0, 50)},
+        {'3', () => MoveOffset(50, 50)},
+        {'4', () => MoveOffset(-50, 0)},
+        {'5', ResetOffset},
+        {'6', () => MoveOffset(50, 0)},
+        {'7', () => MoveOffset(-50, -50)},
+        {'8', () => MoveOffset(0, -50)},
+        {'9', () => MoveOffset(50, -50)},
+        {'+', IncreaseScale},
+        {'-', DecreaseScale},
+        {'c', ResetOffset}
+    };
+
+            char keyChar = char.ToLower(e.KeyChar);
+
+            if (keyInstructions.TryGetValue(keyChar, out var action))
+            {
+                action();
+                mapCon.ReAdjust();
+            }
         }
 
-        private void OneKey()
+        private void MoveOffset(int xChange, int yChange)
         {
-            offsety.Value += 50;
-
-            offsetx.Value -= 50;
+            offsetx.Value += xChange;
+            offsety.Value += yChange;
         }
 
-        private void TwoKey()
-        {
-            offsety.Value += 50;
-        }
-
-        private void ThreeKey()
-        {
-            offsety.Value += 50;
-
-            offsetx.Value += 50;
-        }
-
-        private void SixKey()
-        {
-            offsetx.Value += 50;
-        }
-
-        private void NineKey()
-        {
-            offsety.Value -= 50;
-
-            offsetx.Value += 50;
-        }
-
-        private void EightKey()
-        {
-            offsety.Value -= 50;
-        }
-
-        private void SevenKey()
-        {
-            offsetx.Value -= 50;
-
-            offsety.Value -= 50;
-        }
-
-        private void FourKey()
-        {
-            offsetx.Value -= 50;
-        }
-
-        private void Cor5Key()
+        private void ResetOffset()
         {
             offsetx.Value = 0;
-
             offsety.Value = 0;
         }
 
-        private void MinusKey()
+        private void IncreaseScale()
+        {
+            mapCon.scale += 0.2f;
+            scale.Value = (decimal)(mapCon.scale * 100);
+            Invalidate();
+        }
+
+        private void DecreaseScale()
         {
             if (mapCon.scale - 0.2 >= 0.1)
             {
                 mapCon.scale -= 0.2f;
-
                 scale.Value = (decimal)(mapCon.scale * 100);
+                Invalidate();
             }
-
-            Invalidate();
         }
 
-        private void PlusKey()
-        {
-            mapCon.scale += 0.2f;
-
-            scale.Value = (decimal)(mapCon.scale * 100);
-
-            Invalidate();
-        }
-        #endregion
+        #endregion KeyPress
     }
 }

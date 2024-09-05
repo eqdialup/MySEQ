@@ -1,91 +1,103 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Structures;
 
 namespace myseq
 {
-    public interface IMarkLookup
+public interface IMarkLookup
+{
+    void MarkLookups(string name, ref bool filterMob);
+}
+
+public class MarkLookup : IMarkLookup
+{
+    private EQData eq;
+    
+    // A list to hold search terms and their corresponding filters.
+    private List<LookupEntry> lookups;
+
+    public MarkLookup()
     {
-        void MarkLookups(string name, ref bool filterMob);
+        // Initialize with 5 entries for ranks 1-5
+        lookups = Enumerable.Range(1, 5).Select(rank => new LookupEntry(rank.ToString())).ToList();
     }
 
-    public class MarkLookup : IMarkLookup
+    public void SetComponents(EQData eq)
     {
-        private EQData eq;
-        private string search0 = "";
-        private string search1 = "";
-        private string search2 = "";
-        private string search3 = "";
-        private string search4 = "";
+        this.eq = eq;
+    }
 
-        private bool filter0;
-        private bool filter1;
-        private bool filter2;
-        private bool filter3;
-        private bool filter4;
-
-        public void SetComponents(EQData eq)
+    public void MarkLookups(string name, ref bool filterMob)
+    {
+        // Update lookup entries with the current name and filter
+        foreach (var entry in lookups)
         {
-            this.eq = eq;
+            entry.UpdateLookup(name, ref filterMob);
         }
 
-        public void MarkLookups(string name, ref bool filterMob)
+        // Process each mob in the EQData
+        foreach (Spawninfo sp in eq.GetMobsReadonly().Values)
         {
-            GetCheckNameLength(name, filterMob, ref search0, ref filter0, "1");
-            GetCheckNameLength(name, filterMob, ref search1, ref filter1, "2");
-            GetCheckNameLength(name, filterMob, ref search2, ref filter2, "3");
-            GetCheckNameLength(name, filterMob, ref search3, ref filter3, "4");
-            GetCheckNameLength(name, filterMob, ref search4, ref filter4, "5");
-
-            foreach (Spawninfo sp in eq.GetMobsReadonly().Values)
+            sp.isLookup = false;
+            sp.lookupNumber = "";
+            
+            foreach (var entry in lookups)
             {
-                sp.isLookup = false;
-                sp.lookupNumber = "";
-                GetSubLookup(sp, search0, filter0, "1");
-                GetSubLookup(sp, search1, filter1, "2");
-                GetSubLookup(sp, search2, filter2, "3");
-                GetSubLookup(sp, search3, filter3, "4");
-                GetSubLookup(sp, search4, filter4, "5");
+                entry.ApplyLookup(sp);
+            }
+        }
+    }
+
+    // Class to encapsulate search and filter logic for each rank
+    private class LookupEntry
+    {
+        public string Rank { get; }
+        private string search;
+        private bool filter;
+
+        public LookupEntry(string rank)
+        {
+            Rank = rank;
+            search = "";
+            filter = false;
+        }
+
+        public void UpdateLookup(string name, ref bool filterMob)
+        {
+            if (name.StartsWith(Rank + ":"))
+            {
+                if (name.Length > Rank.Length + 1)
+                {
+                    search = name.Substring(Rank.Length + 1);
+                    filter = filterMob;
+                }
+                else
+                {
+                    search = "";
+                    filter = false;
+                }
             }
         }
 
-        private void GetCheckNameLength(string name, bool filterMob, ref string search, ref bool filter, string rank)
-        {
-            if (name.Substring(0, 2) == rank)
-            {
-                CheckNameLength(name, ref search, filterMob, ref filter);
-            }
-        }
-
-        private void GetSubLookup(Spawninfo sp, string search, bool filter, string rank)
+        public void ApplyLookup(Spawninfo sp)
         {
             if (search.Length > 1)
             {
-                SubLookup(sp, search, filter, rank);
+                SubLookup(sp, search, filter, Rank);
             }
         }
 
-        private void CheckNameLength(string name, ref string search, bool filterMob, ref bool filter)
-        {
-            if (name.Length > 2)
-            {
-                search = name.Substring(2);
-                filter = filterMob;
-            }
-            else
-            {
-                search = "";
-                filter = false;
-            }
-        }
-
-        private void SubLookup(Spawninfo sp, string search, bool filter, string ln)
+        private static void SubLookup(Spawninfo sp, string search, bool filter, string ln)
         {
             var levelCheck = false;
-            if (search.Length > 2 && string.Equals(search.Substring(0, 2), "L:", StringComparison.OrdinalIgnoreCase))
+
+            if (search.StartsWith("L:", StringComparison.OrdinalIgnoreCase))
             {
                 int.TryParse(search.Substring(2), out var searchLevel);
-                levelCheck = LevelCheck(sp, levelCheck, searchLevel);
+                levelCheck = LevelCheck(sp, searchLevel);
             }
+
             if (levelCheck || search.GetRegex().Match(sp.Name).Success)
             {
                 sp.isLookup = true;
@@ -95,19 +107,16 @@ namespace myseq
             }
         }
 
-        private static bool LevelCheck(Spawninfo sp, bool levelCheck, int searchLevel)
+        private static bool LevelCheck(Spawninfo sp, int searchLevel)
         {
-            if (searchLevel != 0 && (sp.Level == searchLevel))
-            {
-                levelCheck = true;
-            }
-
-            return levelCheck;
+            return searchLevel != 0 && sp.Level == searchLevel;
         }
 
         private static void FilterHidden(Spawninfo sp, bool filter)
         {
-            if (filter) { sp.hidden = true; }
+            if (filter) sp.hidden = true;
         }
     }
+}
+
 }

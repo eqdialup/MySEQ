@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -14,6 +15,12 @@ namespace myseq
 
     public class EQData : FileOps
     {
+        public interface IRemovableItem
+        {
+            bool ShouldBeDeleted { get; set; }
+            ListViewItem Listitem { get; set; }
+        }
+
         private static readonly Spawninfo sPAWNINFO = new Spawninfo();
 
         public readonly SpawnColors spawnColor = new SpawnColors();
@@ -23,11 +30,13 @@ namespace myseq
 
         // Map details
         public string Longname { get; set; } = "";
+
         public string Shortname { get; set; } = "";
 
         //// Map data
         // Max + Min map coordinates - define the bounds of the zone
         public float MinmapX { get; set; } = -1000;
+
         public float MaxMapX { get; set; } = 1000;
         public float MinMapY { get; set; } = -1000;
         public float MaxMapY { get; set; } = 1000;
@@ -41,15 +50,14 @@ namespace myseq
 
         private int EQSelectedID;
         public float SpawnX { get; set; } = -1;
-
         public float SpawnY { get; set; } = -1;
-
         public int selectedID { get; set; } = 99999;
 
-        public DateTime gametime { get; private set; } = new DateTime();
+        public DateTime Gametime { get; private set; } = new DateTime();
 
         // Mobs / UI Lists
         private List<ListViewItem> NewSpawns { get; } = new List<ListViewItem>();
+
         private List<ListViewItem> NewGroundItems { get; } = new List<ListViewItem>();
 
         // Items List by ID and Description loaded from file
@@ -68,7 +76,7 @@ namespace myseq
         private string[] Races;
         public string GConBaseName { get; set; } = "";
 
-        private const int ditchGone = 2;
+        //private const int ditchGone = 2;
 
         public Hashtable GetMobsReadonly() => mobsHashTable;
 
@@ -90,7 +98,6 @@ namespace myseq
                 selectedID = sp == null ? 99999 : sp.SpawnID;
 
                 SpawnX = st.X;
-
                 SpawnY = st.Y;
 
                 return true;
@@ -114,11 +121,7 @@ namespace myseq
                     gi.Listitem.Selected = true;
                 }
 
-                selectedID = 99999;
-
-                SpawnX = gi.X;
-
-                SpawnY = gi.Y;
+                SetGroundID(gi);
 
                 return true;
             }
@@ -126,6 +129,15 @@ namespace myseq
             {
                 return false;
             }
+        }
+
+        private void SetGroundID(GroundItem gi)
+        {
+            selectedID = 99999;
+
+            SpawnX = gi.X;
+
+            SpawnY = gi.Y;
         }
 
         public bool SelectMob(float x, float y, float delta)
@@ -143,9 +155,7 @@ namespace myseq
 
                 selectedID = sp.SpawnID;
 
-                SpawnX = -1.0f;
-
-                SpawnY = -1.0f;
+                DefaultSpawnLoc();
 
                 return true;
             }
@@ -187,6 +197,7 @@ namespace myseq
             }
             return null;
         }
+
         private bool CheckXY(Spawninfo sp, float x, float y, float delta)
         {
             var dely = sp.Y < y + delta && sp.Y > y - delta;
@@ -396,122 +407,97 @@ namespace myseq
         {
             foreach (MapPoint mapPoint in mapLine.APoints)
             {
-                if (mapPoint.X > MaxMapX)
-                {
-                    MaxMapX = mapPoint.X;
-                }
-                else if (mapPoint.X < MinmapX)
-                {
-                    MinmapX = mapPoint.X;
-                }
+                MaxMapX = Math.Max(MaxMapX, mapPoint.X);
+                MinmapX = Math.Min(MinmapX, mapPoint.X);
 
-                if (mapPoint.Y > MaxMapY)
-                {
-                    MaxMapY = mapPoint.Y;
-                }
-                else if (mapPoint.Y < MinMapY)
-                {
-                    MinMapY = mapPoint.Y;
-                }
+                MaxMapY = Math.Max(MaxMapY, mapPoint.Y);
+                MinMapY = Math.Min(MinMapY, mapPoint.Y);
 
-                if (mapPoint.Z > MaxMapZ)
-                {
-                    MaxMapZ = mapPoint.Z;
-                }
-                else if (mapPoint.Z < minMapZ)
-                {
-                    minMapZ = mapPoint.Z;
-                }
+                MaxMapZ = Math.Max(MaxMapZ, mapPoint.Z);
+                minMapZ = Math.Min(minMapZ, mapPoint.Z);
             }
         }
 
         public void CheckMobs(ListViewPanel SpawnList, ListViewPanel GroundItemList)
         {
-            ArrayList deletedItems = new ArrayList();
+            var deletedGroundItems = new List<GroundItem>();
+            var deletedSpawns = new List<Spawninfo>();
+            var delListItems = new List<Spawninfo>();
 
-            ArrayList delListItems = new ArrayList();
-
-            // Increment the remove timers on all the ground spawns
-
-            foreach (GroundItem sp in itemcollection)
-            {
-                if (sp.Gone >= ditchGone)
-                {
-                    deletedItems.Add(sp);
-                }
-                else
-                {
-                    sp.Gone++;
-                }
-            }
-
-            // Remove any that have been marked for deletion
-            if (deletedItems.Count > 0)
-            {
-                if (Zoning || deletedItems.Count > 2)
-                {
-                    GroundItemList.listView.BeginUpdate();
-                }
-
-                foreach (GroundItem gi in deletedItems)
-                {
-                    GroundItemList.listView.Items.Remove(gi.Listitem);
-
-                    gi.Listitem = null;
-
-                    itemcollection.Remove(gi);
-                }
-
-                if (Zoning || deletedItems.Count > 2)
-                {
-                    GroundItemList.listView.EndUpdate();
-                }
-            }
-            deletedItems.Clear();
+            ProcessGroundItems(itemcollection, deletedGroundItems);
 
             foreach (Spawninfo sp in mobsHashTable.Values)
             {
                 if (sp.delFromList)
                 {
                     sp.delFromList = false;
-
                     delListItems.Add(sp);
                 }
-                else if (sp.gone >= ditchGone)
+                else if (sp.ShouldBeDeleted)
                 {
-                    deletedItems.Add(sp);
+                    deletedSpawns.Add(sp);
                 }
                 else
                 {
-                    sp.gone++;
+                    sp.ShouldBeDeleted = true;
                 }
             }
 
-            if (deletedItems.Count > 5 || delListItems.Count > 2)
+            // Remove any that have been marked for deletion
+            bool updateGroundList = Zoning || deletedGroundItems.Count > 2;
+            bool updateSpawnList = deletedSpawns.Count > 5 || delListItems.Count > 2;
+
+            if (updateGroundList)
+            {
+                GroundItemList.listView.BeginUpdate();
+                RemoveGroundItems(GroundItemList, deletedGroundItems);
+                GroundItemList.listView.EndUpdate();
+            }
+
+            if (updateSpawnList)
             {
                 SpawnList.listView.BeginUpdate();
-
-                RemoveDeadEntries(SpawnList, deletedItems, delListItems);
-
+                RemoveDeadEntries(SpawnList, deletedSpawns, delListItems);
                 SpawnList.listView.EndUpdate();
-                delListItems.Clear();
-
-                deletedItems.Clear();
             }
         }
 
-        private void RemoveDeadEntries(ListViewPanel SpawnList, ArrayList deletedItems, ArrayList delListItems)
+        private void ProcessGroundItems(List<GroundItem> collection, List<GroundItem> deletedItems)
         {
-            foreach (Spawninfo sp in deletedItems)
+            foreach (var item in collection)
+            {
+                if (item.ShouldBeDeleted)
+                {
+                    deletedItems.Add(item);
+                }
+                else
+                {
+                    item.ShouldBeDeleted = true;
+                }
+            }
+        }
+
+        private void RemoveGroundItems(ListViewPanel listViewPanel, List<GroundItem> items)
+        {
+            foreach (var item in items)
+            {
+                listViewPanel.listView.Items.Remove(item.Listitem);
+                item.Listitem = null;
+                itemcollection.Remove(item);
+            }
+        }
+
+        private void RemoveDeadEntries(ListViewPanel SpawnList, List<Spawninfo> deletedItems, List<Spawninfo> delListItems)
+        {
+            foreach (var sp in deletedItems)
             {
                 SpawnList.listView.Items.Remove(sp.listitem);
-
                 sp.listitem = null;
 
-                mobsHashTable.Remove(sp.SpawnID);
+                mobsHashTable.Remove(sp.SpawnID); // Assuming mobsHashTable uses SpawnID as the key
             }
 
-            foreach (Spawninfo sp in delListItems)
+            foreach (var sp in delListItems)
             {
                 SpawnList.listView.Items.Remove(sp.listitem);
             }
@@ -521,41 +507,36 @@ namespace myseq
         {
             try
             {
-                var found = false;
-                foreach (GroundItem gi in itemcollection)
+                var existingItem = itemcollection
+                   .FirstOrDefault(gi => gi.Name == si.Name && gi.X == si.X && gi.Y == si.Y && gi.Z == si.Z);
+
+                if (existingItem != null)
                 {
-                    if (gi.Name == si.Name && gi.X == si.X && gi.Y == si.Y && gi.Z == si.Z)
-                    {
-                        found = true;
-                        gi.Gone = 0;
-                        break;
-                    }
+                    // If the item exists, reset the 'Gone' property
+                    existingItem.ShouldBeDeleted = false;
                 }
-
-                if (!found)
+                else
                 {
-                    GroundItem gi = new GroundItem(si);
-                    gi.Desc = GetItemDescription(gi.Name);
-
-                    CheckGrounditemForAlerts(gi, gi.Desc.ToLower());
-                    ListViewItem item1 = new ListViewItem(gi.Desc);
-
-                    item1.SubItems.Add(si.Name);
-
-                    item1.SubItems.Add(DateTime.Now.ToLongTimeString());
-
-                    item1.SubItems.Add(si.X.ToString("#.000"));
-
-                    item1.SubItems.Add(si.Y.ToString("#.000"));
-
-                    item1.SubItems.Add(si.Z.ToString("#.000"));
-
-                    gi.Listitem = item1;
-
-                    itemcollection.Add(gi);
-
+                    var newItem = new GroundItem(si)
+                    {
+                        Desc = GetItemDescription(si.Name)
+                    };
+                    CheckGrounditemForAlerts(newItem, newItem.Desc.ToLower());
+                    var listItem = new ListViewItem(newItem.Desc)
+                    {
+                        SubItems =
+                        {
+                            si.Name,
+                            DateTime.Now.ToLongTimeString(),
+                            si.X.ToString("#.000"),
+                            si.Y.ToString("#.000"),
+                            si.Z.ToString("#.000")
+                        }
+                    };
+                    newItem.Listitem = listItem;
+                    itemcollection.Add(newItem);
                     // Add it to the ground item list
-                    NewGroundItems.Add(item1);
+                    NewGroundItems.Add(listItem);
                 }
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItems(): ", ex); }
@@ -583,9 +564,7 @@ namespace myseq
                 {
                     EQSelectedID = selectedID = si.SpawnID;
 
-                    SpawnX = -1.0f;
-
-                    SpawnY = -1.0f;
+                    DefaultSpawnLoc();
 
                     foreach (Spawninfo sp in mobsHashTable.Values)
                     {
@@ -606,14 +585,17 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessTarget(): ", ex); }
         }
 
-        public void ProcessWorld(Spawninfo si) => gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0);
-        /*  yy/mm/dd/hh/min
-         * gameYear = si.Race
-         * gameMonth = si.Hide
-         * gameDay = si.Levelafk
-         * gameHour = si.Type - 1
-         * gameMin = si.Class
-        */
+        public void ProcessWorld(Spawninfo si)
+        {
+            /*  yy/mm/dd/hh/min
+            gameYear = si.Race
+            gameMonth = si.Hide
+            gameDay = si.Levelafk
+            gameHour = si.Type - 1
+            gameMin = si.Class
+           */
+            Gametime = new DateTime(si.Race, si.Hide, si.Level, si.Type - 1, si.Class, 0);
+        }
 
         public void ProcessSpawns(Spawninfo si, bool update_hidden)
         {
@@ -632,7 +614,7 @@ namespace myseq
 
                     Spawninfo mob = (Spawninfo)mobsHashTable[si.SpawnID];
 
-                    mob.gone = 0;
+                    mob.ShouldBeDeleted = false;
 
                     if (update_hidden)
                     {
@@ -1030,63 +1012,37 @@ namespace myseq
             {
                 if (mob.IsPlayer)
                 {
-                    // My Corpse
-
-                    if (mob.IsMyCorpse)
-                    {
-                        si.hidden = !Settings.Default.ShowMyCorpse;
-                    }
-                    else
-                    {
-                        // Other Players Corpses
-
-                        si.hidden = !Settings.Default.ShowPCCorpses;
-                    }
+                    // My Corpse or Other Players' Corpses
+                    si.hidden = mob.IsMyCorpse
+                                ? !Settings.Default.ShowMyCorpse
+                                : !Settings.Default.ShowPCCorpses;
                 }
                 else
                 {
+                    // Non-player Corpses
                     si.hidden = !Settings.Default.ShowCorpses;
                 }
             }
             else if (mob.IsPlayer)
             {
+                // Player Spawns
                 si.hidden = !Settings.Default.ShowPlayers;
             }
             else
             {
-                // non-corpse, non-player spawn (aka NPC)
-
-                if (!Settings.Default.ShowNPCs) // hides all NPCs
-                {
-                    si.hidden = true;
-                }
-                else
-                {
-                    si.hidden = false;
-
-                    if (si.isEventController && !Settings.Default.ShowInvis) // Invis Men
-                    {
-                        si.hidden = true;
-                    }
-                    else if (mob.isMount && !Settings.Default.ShowMounts) // Mounts
-                    {
-                        si.hidden = true;
-                    }
-                    else if (mob.isPet && !Settings.Default.ShowPets) // Pets
-                    {
-                        si.hidden = true;
-                    }
-                    else if (mob.isFamiliar && !Settings.Default.ShowFamiliars) // Familiars
-                    {
-                        si.hidden = true;
-                    }
-                }
+                // Non-corpse, Non-player spawn (e.g., NPC)
+                si.hidden = !Settings.Default.ShowNPCs // Hide all NPCs
+                            || (si.isEventController && !Settings.Default.ShowInvis) // Invis Men
+                            || (mob.isMount && !Settings.Default.ShowMounts) // Mounts
+                            || (mob.isPet && !Settings.Default.ShowPets) // Pets
+                            || (mob.isFamiliar && !Settings.Default.ShowFamiliars); // Familiars
             }
 
             if (si.hidden && !mob.hidden)
             {
                 mob.delFromList = true;
             }
+
             mob.hidden = si.hidden;
         }
 
@@ -1168,7 +1124,7 @@ namespace myseq
 
             listView.ForeColor = GetSpawnListColors(si);
 
-            si.gone = 0;
+            si.ShouldBeDeleted = false;
 
             si.refresh = new Random().Next(0, 10);
 
@@ -1255,38 +1211,27 @@ namespace myseq
         {
             var dt = DateTime.Now;
 
-            var filename = $"{Longname} - {dt.Month}-{dt.Day}-{dt.Year}-{dt.Hour}.txt";
+            var filename = $"{Longname} - {dt:MM-dd-yyyy-HH}.txt";
 
-            StreamWriter sw = new StreamWriter(filename, false);
-
-            sw.Write("Name\t\tLevel\t Class\t\tRace\tLastname\t\tType\tInvis\tRun\tSpeed\tSpawnID\tX\tY\tZ\tHeading");
-
-            foreach (Spawninfo si in mobsHashTable.Values)
+            // Use 'using' statement to ensure the StreamWriter is properly disposed of
+            using (var sw = new StreamWriter(filename, false))
             {
-                sw.WriteLine("{0}\t\t{1}\t\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}",
-                             si.Name,
-                             si.Level,
-                             GetClass(si.Class),
-                             GetRace(si.Race),
-                             si.Lastname,
-                             si.Type.GetSpawnType(),
-                             si.Hide.GetHideStatus(),
-                             si.SpeedRun,
-                             si.SpawnID,
-                             si.Y,
-                             si.X,
-                             si.Z,
-                             CalcRealHeading(si));
-            }
+                // Write header line
+                sw.WriteLine("Name\t\tLevel\tClass\t\tRace\tLastname\t\tType\tInvis\tSpawnID\tX\tY\tZ");
 
-            sw.Close();
+                // Iterate over mobs and write their details to the file
+                foreach (Spawninfo spawn in mobsHashTable.Values)
+                {
+                    var line = $"{spawn.Name}\t\t{spawn.Level}\t\t{GetClass(spawn.Class)}\t{GetRace(spawn.Race)}\t{spawn.Lastname}\t{spawn.Type.GetSpawnType()}\t{spawn.Hide.GetHideStatus()}\t{spawn.SpawnID}\t{spawn.Y}\t{spawn.X}\t{spawn.Z}";
+                    sw.WriteLine(line);
+                }
+            }
         }
 
         public void SetSelectedID(int id)
         {
             selectedID = id;
-            SpawnX = -1.0f;
-            SpawnY = -1.0f;
+            DefaultSpawnLoc();
         }
 
         public void SetSelectedTimer(float x, float y)
@@ -1311,11 +1256,7 @@ namespace myseq
 
             if (gi != null)
             {
-                selectedID = 99999;
-
-                SpawnX = gi.X;
-
-                SpawnY = gi.Y;
+                SetGroundID(gi);
             }
         }
 
@@ -1413,70 +1354,62 @@ namespace myseq
         {
             try
             {
-                gamerInfo.SpawnID = si.SpawnID;
-
-                gamerInfo.Name = si.Name;
-                f1.SetCharSelection(gamerInfo.Name);
-                f1.SetTitle();
-
-                gamerInfo.Lastname = si.Lastname;
-
-                gamerInfo.X = si.X;
-                gamerInfo.Y = si.Y;
-
-                //if (Settings.Default.FollowOption == FollowOption.Player)
-                //{
-                //    f1.ReAdjust();
-                //}
-
-                gamerInfo.Z = si.Z;
-
-                gamerInfo.Heading = si.Heading;
-
-                gamerInfo.Hide = si.Hide;
-
-                gamerInfo.SpeedRun = si.SpeedRun;
-                gconLevel = Settings.Default.LevelOverride;
-                if (gamerInfo.Level != si.Level)
-                {
-                    if (GConBaseName.Length > 1)
-                    {
-                        if (si.Level > gamerInfo.Level)
-                        {
-                            gconLevel += si.Level - gamerInfo.Level;
-                        }
-                        else
-                        {
-                            gconLevel -= gamerInfo.Level - si.Level;
-                        }
-                        if (gconLevel > 120)
-                        {
-                            gconLevel = 120;
-                        }
-
-                        if (gconLevel < 1)
-                        {
-                            gconLevel = -1;
-                        }
-
-                        gLastconLevel = gconLevel;
-                        Settings.Default.LevelOverride = gconLevel;
-                    }
-                    gamerInfo.Level = si.Level;
-                    spawnColor.FillConColors(gamerInfo);
-
-                    // update mob list con colors
-
-                    UpdateMobListColors();
-                }
-                if (gLastconLevel != gconLevel)
-                {
-                    gLastconLevel = gconLevel;
-                    spawnColor.FillConColors(gamerInfo);
-                    UpdateMobListColors();
-                }
+                UpdateGamerInfo(si, f1);
+                AdjustConLevel(si);
+                UpdateConColorsIfNeeded();
             }
-            catch (Exception ex) { LogLib.WriteLine("Error in ProcessPlayer(): ", ex); }
+            catch (Exception ex)
+            {
+                LogLib.WriteLine("Error in ProcessGamer(): ", ex);
+            }
+        }
+
+        private void UpdateGamerInfo(Spawninfo si, MainForm f1)
+        {
+            gamerInfo.SpawnID = si.SpawnID;
+            gamerInfo.Name = si.Name;
+            f1.SetCharSelection(gamerInfo.Name);
+            f1.SetTitle();
+
+            gamerInfo.Lastname = si.Lastname;
+            gamerInfo.X = si.X;
+            gamerInfo.Y = si.Y;
+            gamerInfo.Z = si.Z;
+            gamerInfo.Heading = si.Heading;
+            gamerInfo.Hide = si.Hide;
+            gamerInfo.SpeedRun = si.SpeedRun;
+        }
+
+        private void AdjustConLevel(Spawninfo si)
+        {
+            if (gamerInfo.Level != si.Level && GConBaseName.Length > 1)
+            {
+                gconLevel = Settings.Default.LevelOverride;
+                int levelDifference = si.Level - gamerInfo.Level;
+                gconLevel = MathClamp(gconLevel + levelDifference, 1, 125);
+
+                Settings.Default.LevelOverride = gconLevel;
+                gamerInfo.Level = si.Level;
+                spawnColor.FillConColors(gamerInfo);
+                UpdateMobListColors();
+            }
+        }
+
+        private int MathClamp(int value, int min, int max)  // in lieu of having C# 8.0 code...
+        {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }
+
+        private void UpdateConColorsIfNeeded()
+        {
+            if (gLastconLevel != gconLevel)
+            {
+                gLastconLevel = gconLevel;
+                spawnColor.FillConColors(gamerInfo);
+                UpdateMobListColors();
+            }
         }
 
         #endregion ProcessGamer
@@ -1501,8 +1434,7 @@ namespace myseq
                 {
                     SetSelectedID(sp.SpawnID);
 
-                    SpawnX = -1.0f;
-                    SpawnY = -1.0f;
+                    DefaultSpawnLoc();
                 }
                 else
                 {
@@ -1522,6 +1454,12 @@ namespace myseq
             {
                 SelectGroundItem(x, y, delta);
             }
+        }
+
+        public void DefaultSpawnLoc()
+        {
+            SpawnX = -1.0f;
+            SpawnY = -1.0f;
         }
 
         private bool AffixStars = true;
@@ -1739,8 +1677,8 @@ namespace myseq
                 }
                 foreach (MapText maptxt in texts)
                 {
-                    maptxt.draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(new SolidBrush(Color.Black)) : GetDistinctColor(maptxt.color);
-                    maptxt.draw_pen = new Pen(maptxt.draw_color.Color);
+                    maptxt.Draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(new SolidBrush(Color.Black)) : GetDistinctColor(maptxt.LineColor);
+                    maptxt.Draw_pen = new Pen(maptxt.Draw_color.Color);
                 }
             }
         }

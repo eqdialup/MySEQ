@@ -1,14 +1,15 @@
-﻿using System;
+﻿using myseq.Properties;
+using Structures;
+using System;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using myseq.Properties;
-using Structures;
 
 namespace myseq
 {
     public partial class OptionsForm : Form
     {
         private readonly FormMethods formMethod = new FormMethods();
+
         public OptionsForm()
         {
             InitializeComponent();
@@ -196,6 +197,7 @@ namespace myseq
         }
 
         #region ClickResponders
+
         private void CmdCommand_Click(object sender, EventArgs e)
         {
             if (chkSaveOnExit.Checked)
@@ -265,13 +267,13 @@ namespace myseq
         private void CmdCfgDirBrowse_Click(object sender, EventArgs e)
         {
             txtCfgDir.Text = formMethod.FolderBrowser("Config Directory", Settings.Default.CfgDir);
-            if (!string.IsNullOrEmpty(txtCfgDir.Text))Settings.Default.CfgDir = txtCfgDir.Text;
+            if (!string.IsNullOrEmpty(txtCfgDir.Text)) Settings.Default.CfgDir = txtCfgDir.Text;
         }
 
         private void CmdFilterDirBrowse_Click(object sender, EventArgs e)
         {
             txtFilterDir.Text = formMethod.FolderBrowser("Filter Directory", Settings.Default.FilterDir);
-            if (!string.IsNullOrEmpty(txtFilterDir.Text))Settings.Default.FilterDir = txtFilterDir.Text;
+            if (!string.IsNullOrEmpty(txtFilterDir.Text)) Settings.Default.FilterDir = txtFilterDir.Text;
         }
 
         private void CmdLogDir_Click(object sender, EventArgs e)
@@ -308,20 +310,33 @@ namespace myseq
             }
         }
 
+        #endregion ClickResponders
+
+        #region Changing User Settings
+
         private void CmbAlertSound_SelectionChangeCommitted(object sender, EventArgs e) => Settings.Default.AlertSound = cmbAlertSound.SelectedItem.ToString();
+
+        private void CmbHatchPattern_SelectionChangeCommitted(object sender, EventArgs e) => Settings.Default.HatchIndex = cmbHatch.SelectedItem.ToString();
 
         private void SpnSpawnSize_ValueChanged(object sender, EventArgs e) => Settings.Default.SpawnDrawSize = (int)spnSpawnSize.Value;
 
+        private void SpnLogLevel_ValueChanged(object sender, EventArgs e) => Settings.Default.MaxLogLevel = (LogLevel)spnLogLevel.Value;
+
         private void PvpLevels_ValueChanged(object sender, EventArgs e) => Settings.Default.PVPLevels = (int)pvpLevels.Value;
 
-        private void spnRangeCircle_ValueChanged(object sender, EventArgs e) => Settings.Default.RangeCircle = (int)spnRangeCircle.Value;
+        private void MinAlertLevel_ValueChanged(object sender, EventArgs e) => Settings.Default.MinAlertLevel = (int)numMinAlertLevel.Value;
+
+        private void SpnRangeCircle_ValueChanged(object sender, EventArgs e) => Settings.Default.RangeCircle = (int)spnRangeCircle.Value;
+
+        private void SpnUpdateDelay_ValueChanged(object sender, EventArgs e) => Settings.Default.UpdateDelay = (int)spnUpdateDelay.Value;
+
+        private void SpnFadedLines_ValueChanged(object sender, EventArgs e) => Settings.Default.FadedLines = (int)FadedLines.Value;
 
         private void ChkShowZoneName_CheckedChanged(object sender, EventArgs e) => Settings.Default.ShowZoneName = chkShowZoneName.Checked;
 
         private void ChkShowCharName_CheckedChanged(object sender, EventArgs e) => Settings.Default.ShowCharName = chkShowZoneName.Checked;
 
         private void ChkSaveOnExit_CheckedChanged(object sender, EventArgs e) => Settings.Default.SaveOnExit = chkSaveOnExit.Checked;
-        #endregion
 
         private void ChkPrefixAlerts_CheckedChanged(object sender, EventArgs e) => Settings.Default.PrefixStars = chkPrefixAlerts.Checked;
 
@@ -335,6 +350,66 @@ namespace myseq
 
         private void OptCautionBeep_CheckedChanged(object sender, EventArgs e) => Settings.Default.BeepOnCaution = optCautionBeep.Checked;
 
+        private void OptDangerBeep_CheckedChanged(object sender, EventArgs e) => Settings.Default.BeepOnDanger = optDangerBeep.Checked;
+
         private void ChkAlertMatchFull_CheckedChanged(object sender, EventArgs e) => Settings.Default.MatchFullTextA = chkAlertMatchFull.Checked;
+
+        #region MapOptions
+
+        private void ChkZoneNames_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.ZoneText;
+
+        private void CheckMap_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.DrawMap;
+
+        private void CheckPlayer_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.Player;
+
+        private void DrawGround_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.GroundItems;
+
+        private void AdjustMap_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.Readjust;
+
+        private void CheckSpawns_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.Spawns;
+
+        private void DrawTrails_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.SpawnTrails;
+
+        private void HighlightMerch_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.SpawnRings;
+
+        private void DrawGrid_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.GridLines;
+
+        private void SpawnTimers_CheckChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.SpawnTimers;
+
+        private void DirectionLine_CheckChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.DirectionLines;
+
+        private void LineToPoint_CheckChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.SpotLine;
+
+        #endregion MapOptions
+
+        private void Ip_Address1_Changed(object sender, EventArgs e) => Settings.Default.IPAddress1 = txtIPAddress1.Text;
+
+        private void Ip_Address2_Changed(object sender, EventArgs e) => Settings.Default.IPAddress2 = txtIPAddress2.Text;
+
+        private void Ip_Address3_Changed(object sender, EventArgs e) => Settings.Default.IPAddress3 = txtIPAddress3.Text;
+
+        private void Ip_Address4_Changed(object sender, EventArgs e) => Settings.Default.IPAddress4 = txtIPAddress4.Text;
+
+        private void Ip_Address5_Changed(object sender, EventArgs e) => Settings.Default.IPAddress5 = txtIPAddress5.Text;
+
+        private void Port_Changed(object sender, EventArgs e)
+        {
+            //int.TryParse(txtPortNo.Text, out int port);
+            Settings.Default.Port = int.Parse(txtPortNo.Text); //port;
+        }
+
+        private void DangerPrefix_Changed(object sender, EventArgs e) => Settings.Default.DangerPrefix = txtDangerPrefix.Text;
+
+        private void CautionPrefix_Changed(object sender, EventArgs e) => Settings.Default.CautionPrefix = txtCautionPrefix.Text;
+
+        private void HuntPrefix_Changed(object sender, EventArgs e) => Settings.Default.HuntPrefix = txtHuntPrefix.Text;
+
+        private void WindowName_Changed(object sender, EventArgs e) => Settings.Default.IPAddress2 = txtWindowName.Text;
+
+        private void AlertPrefix_Changed(object sender, EventArgs e) => Settings.Default.AlertPrefix = txtAlertPrefix.Text;
+
+        private void OverrideLevel_Changed(object sender, EventArgs e) => Settings.Default.LevelOverride = (int)spnOverrideLevel.Value;
+
+        #endregion Changing User Settings
     }
 }

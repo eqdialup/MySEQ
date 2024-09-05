@@ -221,6 +221,7 @@ namespace myseq
             // 
             // grpDanger
             // 
+            #region danger
             this.grpDanger.Controls.Add(this.optDangerPlay);
             this.grpDanger.Controls.Add(this.optDangerSpeak);
             this.grpDanger.Controls.Add(this.optDangerBeep);
@@ -285,6 +286,7 @@ namespace myseq
             this.txtDangerPrefix.Size = new System.Drawing.Size(32, 20);
             this.txtDangerPrefix.TabIndex = 13;
             this.txtDangerPrefix.Text = "[D]";
+            this.txtDangerPrefix.TextChanged += new System.EventHandler(this.DangerPrefix_Changed);
             // 
             // lblDangerPrefix
             // 
@@ -304,9 +306,13 @@ namespace myseq
             this.chkDangerMatchFull.Size = new System.Drawing.Size(104, 24);
             this.chkDangerMatchFull.TabIndex = 14;
             this.chkDangerMatchFull.Text = "Match Full Text";
+            this.chkDangerMatchFull.CheckedChanged += new System.EventHandler(this.OptDangerBeep_CheckedChanged);
+            #endregion
             // 
             // grpAlert
-            // 
+            //
+            #region grpAlert
+
             this.grpAlert.Controls.Add(this.optAlertPlay);
             this.grpAlert.Controls.Add(this.optAlertSpeak);
             this.grpAlert.Controls.Add(this.optAlertBeep);
@@ -371,6 +377,7 @@ namespace myseq
             this.txtAlertPrefix.Size = new System.Drawing.Size(32, 20);
             this.txtAlertPrefix.TabIndex = 22;
             this.txtAlertPrefix.Text = "[R]";
+            this.txtAlertPrefix.TextChanged += new System.EventHandler(this.AlertPrefix_Changed);
             // 
             // lblAlertPrefix
             // 
@@ -391,8 +398,9 @@ namespace myseq
             this.chkAlertMatchFull.TabIndex = 23;
             this.chkAlertMatchFull.Text = "Match Full Text";
             this.chkAlertMatchFull.CheckedChanged += new System.EventHandler(this.ChkAlertMatchFull_CheckedChanged);
+            #endregion
             // 
-            // grpCaution
+            #region grpCaution
             // 
             this.grpCaution.Controls.Add(this.optCautionPlay);
             this.grpCaution.Controls.Add(this.optCautionSpeak);
@@ -419,7 +427,7 @@ namespace myseq
             // 
             // optCautionSpeak
             // 
-            this.optCautionSpeak.Location = new System.Drawing.Point(168, 38);
+            this.optCautionSpeak.Location = new System.Drawing.Point(166, 35);
             this.optCautionSpeak.Name = "optCautionSpeak";
             this.optCautionSpeak.Size = new System.Drawing.Size(72, 16);
             this.optCautionSpeak.TabIndex = 17;
@@ -459,6 +467,7 @@ namespace myseq
             this.txtCautionPrefix.Size = new System.Drawing.Size(32, 20);
             this.txtCautionPrefix.TabIndex = 13;
             this.txtCautionPrefix.Text = "[C]";
+            this.txtCautionPrefix.TextChanged += new System.EventHandler(this.CautionPrefix_Changed);
             // 
             // lblCautionPrefix
             // 
@@ -479,8 +488,9 @@ namespace myseq
             this.chkCautionMatchFull.TabIndex = 14;
             this.chkCautionMatchFull.Text = "Match Full Text";
             this.chkCautionMatchFull.CheckedChanged += new System.EventHandler(this.ChkCautionMatchFull_CheckedChanged);
+            #endregion
             // 
-            // grpHunt
+            #region grpHunt
             // 
             this.grpHunt.Controls.Add(this.optHuntPlay);
             this.grpHunt.Controls.Add(this.optHuntSpeak);
@@ -546,6 +556,7 @@ namespace myseq
             this.txtHuntPrefix.Size = new System.Drawing.Size(32, 20);
             this.txtHuntPrefix.TabIndex = 4;
             this.txtHuntPrefix.Text = "[H]";
+            this.txtHuntPrefix.TextChanged += new System.EventHandler(this.HuntPrefix_Changed);
             // 
             // lblHuntPrefix
             // 
@@ -566,6 +577,7 @@ namespace myseq
             this.chkHuntMatchFull.TabIndex = 5;
             this.chkHuntMatchFull.Text = "Match Full Text";
             this.chkHuntMatchFull.CheckedChanged += new System.EventHandler(this.ChkHuntMatchFull_CheckedChanged);
+            #endregion
             // 
             // lblFadedLines
             // 
@@ -624,7 +636,7 @@ namespace myseq
             this.cmbHatch.Size = new System.Drawing.Size(133, 21);
             this.cmbHatch.TabIndex = 53;
             this.cmbHatch.Tag = "";
-            this.cmbHatch.SelectionChangeCommitted += new System.EventHandler(this.CmbAlertSound_SelectionChangeCommitted);
+            this.cmbHatch.SelectionChangeCommitted += new System.EventHandler(this.CmbHatchPattern_SelectionChangeCommitted);
             // 
             // label4
             // 
@@ -669,7 +681,7 @@ namespace myseq
             0,
             0,
             0});
-            this.spnRangeCircle.ValueChanged += new System.EventHandler(this.spnRangeCircle_ValueChanged);
+            this.spnRangeCircle.ValueChanged += new System.EventHandler(this.SpnRangeCircle_ValueChanged);
             // 
             // numMinAlertLevel
             // 
@@ -692,6 +704,7 @@ namespace myseq
             0,
             0,
             0});
+            this.numMinAlertLevel.ValueChanged += new System.EventHandler(this.MinAlertLevel_ValueChanged);
             // 
             // label1
             // 
@@ -729,6 +742,7 @@ namespace myseq
             this.chkMap.Size = new System.Drawing.Size(94, 20);
             this.chkMap.TabIndex = 30;
             this.chkMap.Text = "Draw Map";
+            this.chkMap.CheckedChanged += new System.EventHandler(this.CheckMap_CheckedChanged);
             // 
             // chkPlayer
             // 
@@ -737,6 +751,7 @@ namespace myseq
             this.chkPlayer.Size = new System.Drawing.Size(94, 20);
             this.chkPlayer.TabIndex = 50;
             this.chkPlayer.Text = "Draw Player";
+            this.chkPlayer.CheckedChanged += new System.EventHandler(this.CheckPlayer_CheckedChanged);
             // 
             // chkSpawns
             // 
@@ -745,6 +760,7 @@ namespace myseq
             this.chkSpawns.Size = new System.Drawing.Size(94, 20);
             this.chkSpawns.TabIndex = 43;
             this.chkSpawns.Text = "Draw Spawns";
+            this.chkSpawns.CheckedChanged += new System.EventHandler(this.CheckSpawns_CheckedChanged);
             // 
             // chkAddjust
             // 
@@ -753,6 +769,7 @@ namespace myseq
             this.chkAddjust.Size = new System.Drawing.Size(121, 20);
             this.chkAddjust.TabIndex = 29;
             this.chkAddjust.Text = "Readjust Map";
+            this.chkAddjust.CheckedChanged += new System.EventHandler(this.AdjustMap_CheckedChanged);
             // 
             // chkGround
             // 
@@ -761,6 +778,7 @@ namespace myseq
             this.chkGround.Size = new System.Drawing.Size(111, 20);
             this.chkGround.TabIndex = 51;
             this.chkGround.Text = "Ground Spawns";
+            this.chkGround.CheckedChanged += new System.EventHandler(this.DrawGround_CheckedChanged);
             // 
             // chkTrails
             // 
@@ -769,6 +787,7 @@ namespace myseq
             this.chkTrails.Size = new System.Drawing.Size(130, 20);
             this.chkTrails.TabIndex = 45;
             this.chkTrails.Text = "Spawn Trails";
+            this.chkTrails.CheckedChanged += new System.EventHandler(this.DrawTrails_CheckedChanged);
             // 
             // chkHighlight
             // 
@@ -777,6 +796,7 @@ namespace myseq
             this.chkHighlight.Size = new System.Drawing.Size(130, 20);
             this.chkHighlight.TabIndex = 49;
             this.chkHighlight.Text = "Highlight Merchants";
+            this.chkHighlight.CheckedChanged += new System.EventHandler(this.HighlightMerch_CheckedChanged);
             // 
             // chkGrid
             // 
@@ -785,6 +805,7 @@ namespace myseq
             this.chkGrid.Size = new System.Drawing.Size(130, 20);
             this.chkGrid.TabIndex = 37;
             this.chkGrid.Text = "Show Gridlines";
+            this.chkGrid.CheckedChanged += new System.EventHandler(this.DrawGrid_CheckedChanged);
             // 
             // chkTimers
             // 
@@ -793,6 +814,7 @@ namespace myseq
             this.chkTimers.Size = new System.Drawing.Size(116, 20);
             this.chkTimers.TabIndex = 47;
             this.chkTimers.Text = "Spawn Timers";
+            this.chkTimers.CheckedChanged += new System.EventHandler(this.SpawnTimers_CheckChanged);
             // 
             // chkText
             // 
@@ -801,6 +823,7 @@ namespace myseq
             this.chkText.Size = new System.Drawing.Size(130, 20);
             this.chkText.TabIndex = 41;
             this.chkText.Text = "Show Zone Text";
+            this.chkText.CheckedChanged += new System.EventHandler(this.ChkZoneNames_CheckedChanged);
             // 
             // chkDirection
             // 
@@ -809,6 +832,7 @@ namespace myseq
             this.chkDirection.Size = new System.Drawing.Size(109, 20);
             this.chkDirection.TabIndex = 46;
             this.chkDirection.Text = "Heading Lines";
+            this.chkDirection.CheckedChanged += new System.EventHandler(this.DirectionLine_CheckChanged);
             // 
             // chkLineToPoint
             // 
@@ -817,6 +841,7 @@ namespace myseq
             this.chkLineToPoint.Size = new System.Drawing.Size(130, 20);
             this.chkLineToPoint.TabIndex = 42;
             this.chkLineToPoint.Text = "Draw Line to Point";
+            this.chkLineToPoint.CheckedChanged += new System.EventHandler(this.LineToPoint_CheckChanged);
             // 
             // lblSpawnSize
             // 
@@ -888,6 +913,7 @@ namespace myseq
             this.txtIPAddress5.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress5.TabIndex = 10;
             this.txtIPAddress5.Text = global::myseq.Properties.Settings.Default.IPAddress5;
+            this.txtIPAddress5.TextChanged += new System.EventHandler(this.Ip_Address5_Changed);
             // 
             // lblIPAddress5
             // 
@@ -905,6 +931,7 @@ namespace myseq
             this.txtIPAddress4.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress4.TabIndex = 8;
             this.txtIPAddress4.Text = global::myseq.Properties.Settings.Default.IPAddress4;
+            this.txtIPAddress4.TextChanged += new System.EventHandler(this.Ip_Address4_Changed);
             // 
             // lblIPAddress4
             // 
@@ -922,6 +949,7 @@ namespace myseq
             this.txtIPAddress3.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress3.TabIndex = 6;
             this.txtIPAddress3.Text = global::myseq.Properties.Settings.Default.IPAddress3;
+            this.txtIPAddress3.TextChanged += new System.EventHandler(this.Ip_Address3_Changed);
             // 
             // lblIPAddress3
             // 
@@ -939,6 +967,7 @@ namespace myseq
             this.txtIPAddress2.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress2.TabIndex = 4;
             this.txtIPAddress2.Text = global::myseq.Properties.Settings.Default.IPAddress2;
+            this.txtIPAddress2.TextChanged += new System.EventHandler(this.Ip_Address2_Changed);
             // 
             // lblIPAddress2
             // 
@@ -955,6 +984,7 @@ namespace myseq
             this.txtPortNo.Size = new System.Drawing.Size(112, 20);
             this.txtPortNo.TabIndex = 12;
             this.txtPortNo.Text = "5555";
+            this.txtPortNo.TextChanged += new System.EventHandler(this.Port_Changed);
             // 
             // txtIPAddress1
             // 
@@ -964,6 +994,7 @@ namespace myseq
             this.txtIPAddress1.Size = new System.Drawing.Size(112, 20);
             this.txtIPAddress1.TabIndex = 2;
             this.txtIPAddress1.Text = global::myseq.Properties.Settings.Default.IPAddress1;
+            this.txtIPAddress1.TextChanged += new System.EventHandler(this.Ip_Address1_Changed);
             // 
             // lblIPAddress1
             // 
@@ -1057,6 +1088,7 @@ namespace myseq
             this.spnLogLevel.Name = "spnLogLevel";
             this.spnLogLevel.Size = new System.Drawing.Size(64, 20);
             this.spnLogLevel.TabIndex = 21;
+            this.spnLogLevel.ValueChanged += new System.EventHandler(this.SpnLogLevel_ValueChanged);
             // 
             // chkShowZoneName
             // 
@@ -1074,7 +1106,7 @@ namespace myseq
             // 
             this.spnOverrideLevel.Location = new System.Drawing.Point(192, 208);
             this.spnOverrideLevel.Maximum = new decimal(new int[] {
-            120,
+            130,
             0,
             0,
             0});
@@ -1091,6 +1123,7 @@ namespace myseq
             0,
             0,
             0});
+            this.spnOverrideLevel.ValueChanged += new System.EventHandler(this.OverrideLevel_Changed);
             // 
             // spnUpdateDelay
             // 
@@ -1113,6 +1146,7 @@ namespace myseq
             0,
             0,
             0});
+            this.spnUpdateDelay.ValueChanged += new System.EventHandler(this.SpnUpdateDelay_ValueChanged);
             // 
             // txtWindowName
             // 
@@ -1120,6 +1154,7 @@ namespace myseq
             this.txtWindowName.Name = "txtWindowName";
             this.txtWindowName.Size = new System.Drawing.Size(248, 20);
             this.txtWindowName.TabIndex = 23;
+            this.txtWindowName.TextChanged += new System.EventHandler(this.WindowName_Changed);
             // 
             // chkSaveOnExit
             // 
@@ -1163,6 +1198,7 @@ namespace myseq
             0,
             0,
             0});
+            this.FadedLines.ValueChanged += new System.EventHandler(this.SpnFadedLines_ValueChanged);
             // 
             // pvpLevels
             // 

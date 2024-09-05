@@ -59,7 +59,7 @@ namespace myseq
             return current_val;
         }
 
-        public static decimal subhundred(this decimal current_val)
+        public static decimal Subhundred(this decimal current_val)
         {
             current_val -= 10;
             if (current_val < 10)
@@ -105,7 +105,7 @@ namespace myseq
             return validnum;
         }
 
-        public  static string GetLastSlash(this string filename)
+        public static string GetLastSlash(this string filename)
         {
             var lastSlashIndex = filename.LastIndexOf("\\");
 

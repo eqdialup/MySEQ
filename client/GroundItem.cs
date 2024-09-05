@@ -27,7 +27,7 @@ namespace Structures
 
         public ListViewItem Listitem { get; set; }
 
-        public int Gone { get; set; }
+        public bool ShouldBeDeleted { get; set; }
 
         public bool Filtered { get; set; }
 

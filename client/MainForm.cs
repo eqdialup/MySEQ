@@ -1,11 +1,11 @@
-﻿using System;
+﻿using myseq.Properties;
+using Structures;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using myseq.Properties;
-using Structures;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace myseq
@@ -115,7 +115,7 @@ namespace myseq
             }
 
             toolStripVersion.Text = Version;
-            mapCon?.ReAdjust();
+            mapCon.ReAdjust();
 
             timPackets.Interval = Settings.Default.UpdateDelay;
 
@@ -125,7 +125,7 @@ namespace myseq
             // This is for processing timers, do it once per second.
             timProcessTimers.Interval = 1000;
 
-            mapCon?.SetUpdateSteps();
+            mapCon.SetUpdateSteps();
 
             Text = BaseTitle;
 
@@ -534,7 +534,7 @@ namespace myseq
                 Settings.Default.WindowsSize = Size;
             }
             Settings.Default.WindowState = WindowState;
-//            ReAdjust();
+            //            ReAdjust();
         }
 
         private void TimPackets_Tick(object sender, EventArgs e)
@@ -581,70 +581,54 @@ namespace myseq
 
         public void ShowCharsInList(Spawninfo si, ProcessInfo PI)
         {
-            var EqualProcessID = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
+            var equalProcessID = (comm.CurrentProcess != null) && (comm.CurrentProcess.ProcessID == PI.ProcessID);
 
-            if (comm.ColProcesses.Count == 1)
+            // Array of menu items for easy access
+            var menuItems = new[]
             {
-                ShowCharInList(si, mnuChar1, mnuChar2, "Char 2", EqualProcessID);
+                mnuChar1, mnuChar2, mnuChar3, mnuChar4, mnuChar5,
+                mnuChar6, mnuChar7, mnuChar8, mnuChar9, mnuChar10,
+                mnuChar11, mnuChar12
+            };
+
+            // Set the number of collected processes
+            int count = comm.ColProcesses.Count;
+
+            // Ensure we do not go out of bounds
+            if (count > 12) count = 12;
+
+            // Loop through menu items based on the number of collected processes
+            for (int i = 0; i < count; i++)
+            {
+                var currentItem = menuItems[i];
+                var nextItem = i + 1 < menuItems.Length ? menuItems[i + 1] : null;
+                var charLabel = $"Char {i + 2}";
+
+                ShowCharInList(si, currentItem, nextItem, charLabel, equalProcessID);
             }
-            if (comm.ColProcesses.Count == 2)
+
+            // Special case for the 12th character, which does not have a "next" item
+            if (count == 12)
             {
-                ShowCharInList(si, mnuChar2, mnuChar3, "Char 3", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 3)
-            {
-                ShowCharInList(si, mnuChar3, mnuChar4, "Char 4", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 4)
-            {
-                ShowCharInList(si, mnuChar4, mnuChar5, "Char 5", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 5)
-            {
-                ShowCharInList(si, mnuChar5, mnuChar6, "Char 6", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 6)
-            {
-                ShowCharInList(si, mnuChar6, mnuChar7, "Char 7", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 7)
-            {
-                ShowCharInList(si, mnuChar7, mnuChar8, "Char 8", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 8)
-            {
-                ShowCharInList(si, mnuChar8, mnuChar9, "Char 9", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 9)
-            {
-                ShowCharInList(si, mnuChar9, mnuChar10, "Char 10", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 10)
-            {
-                ShowCharInList(si, mnuChar10, mnuChar11, "Char 11", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 11)
-            {
-                ShowCharInList(si, mnuChar11, mnuChar12, "Char 12", EqualProcessID);
-            }
-            if (comm.ColProcesses.Count == 12)
-            {
-                mnuChar12.Text = si.Name;
-                mnuChar12.Visible = true;
-                mnuChar12.Checked = EqualProcessID;
+                menuItems[11].Text = si.Name;
+                menuItems[11].Visible = true;
+                menuItems[11].Checked = equalProcessID;
             }
         }
 
-        private void ShowCharInList(Spawninfo si, ToolStripMenuItem CharThis, ToolStripMenuItem CharNext, string char2, bool EqualProcessID)
+        private void ShowCharInList(Spawninfo si, ToolStripMenuItem charThis, ToolStripMenuItem charNext, string charLabel, bool equalProcessID)
         {
-            CharThis.Text = si.Name;
-            CharThis.Visible = true;
+            charThis.Text = si.Name;
+            charThis.Visible = true;
 
-            CharNext.Visible = false;
-            CharNext.Text = char2;
-            CharNext.Checked = false;
+            if (charNext != null)
+            {
+                charNext.Visible = false;
+                charNext.Text = charLabel;
+                charNext.Checked = false;
+            }
 
-            CharThis.Checked = EqualProcessID;
+            charThis.Checked = equalProcessID;
         }
 
         #region ProccessMap
@@ -721,29 +705,25 @@ namespace myseq
 
         private void LoadDepthFilter()
         {
-            var ConfigFile = FileOps.CombineCfgDir("config.ini");
-            var strIniValue = new IniFile(ConfigFile).ReadValue("Zones", curZone, "");
+            var configFile = FileOps.CombineCfgDir("config.ini");
 
-            if (File.Exists(ConfigFile))
+            if (!File.Exists(configFile))
             {
-                if (strIniValue.Length > 0)
-                {
-                    if ((strIniValue == "0" && Settings.Default.DepthFilter) ||
-                    (strIniValue == "1" && !Settings.Default.DepthFilter))
-                    {
-                        ToggleDepthFilter();
-                    }
-                }
-                else
-                {
-                    // We dont currently have a setting for this zone, so set to off
-                    ToggleDepth();
-                }
-            }
-            else
-            {
-                // We dont currently have a setting file, so set depth filter to off
+                // No config file exists, so toggle depth filter off
                 ToggleDepth();
+                return;
+            }
+
+            var strIniValue = new IniFile(configFile).ReadValue("Zones", curZone, "");
+            if (strIniValue.Length == 0)
+            {
+                // No setting for this zone, so toggle depth filter off
+                ToggleDepth();
+            }
+            else if ((strIniValue == "0" && Settings.Default.DepthFilter) ||
+                     (strIniValue == "1" && !Settings.Default.DepthFilter))
+            {
+                ToggleDepthFilter();
             }
         }
 
@@ -772,22 +752,22 @@ namespace myseq
         private bool NotZoningShowLayers(bool foundmap, string fullmap)
         {
             eq.Zoning = false;
-            if (map.Loadmap($"{fullmap}.txt"))
+            if (map.LoadMap($"{fullmap}.txt"))
             {
                 foundmap = true;
             }
 
-            if (Settings.Default.ShowLayer1 && map.Loadmap($"{fullmap}_1.txt"))
+            if (Settings.Default.ShowLayer1 && map.LoadMap($"{fullmap}_1.txt"))
             {
                 foundmap = true;
             }
 
-            if (Settings.Default.ShowLayer2 && map.Loadmap($"{fullmap}_2.txt"))
+            if (Settings.Default.ShowLayer2 && map.LoadMap($"{fullmap}_2.txt"))
             {
                 foundmap = true;
             }
 
-            if (Settings.Default.ShowLayer3 && map.Loadmap($"{fullmap}_3.txt"))
+            if (Settings.Default.ShowLayer3 && map.LoadMap($"{fullmap}_3.txt"))
             {
                 foundmap = true;
             }
@@ -926,6 +906,7 @@ namespace myseq
 
             eq.mobsTimers.ResetTimers();
         }
+
         private void MnuSaveMobs_Click(object sender, EventArgs e)
         {
             eq.SaveMobs();
@@ -994,27 +975,21 @@ namespace myseq
         }
 
         private void ServerSelection()
-
         {
-            mnuIPAddress1.Text = Settings.Default.IPAddress1;
+            var ipAddresses = new[]
+            {
+        (mnuIPAddress1, Settings.Default.IPAddress1),
+        (mnuIPAddress2, Settings.Default.IPAddress2),
+        (mnuIPAddress3, Settings.Default.IPAddress3),
+        (mnuIPAddress4, Settings.Default.IPAddress4),
+        (mnuIPAddress5, Settings.Default.IPAddress5)
+    };
 
-            mnuIPAddress2.Text = Settings.Default.IPAddress2;
-
-            mnuIPAddress3.Text = Settings.Default.IPAddress3;
-
-            mnuIPAddress4.Text = Settings.Default.IPAddress4;
-
-            mnuIPAddress5.Text = Settings.Default.IPAddress5;
-
-            mnuIPAddress1.Enabled = mnuIPAddress1.Visible = Convert.ToBoolean(mnuIPAddress1.Text.Length);
-
-            mnuIPAddress2.Enabled = mnuIPAddress2.Visible = Convert.ToBoolean(mnuIPAddress2.Text.Length);
-
-            mnuIPAddress3.Enabled = mnuIPAddress3.Visible = Convert.ToBoolean(mnuIPAddress3.Text.Length);
-
-            mnuIPAddress4.Enabled = mnuIPAddress4.Visible = Convert.ToBoolean(mnuIPAddress4.Text.Length);
-
-            mnuIPAddress5.Enabled = mnuIPAddress5.Visible = Convert.ToBoolean(mnuIPAddress5.Text.Length);
+            foreach (var (menuItem, ipAddress) in ipAddresses)
+            {
+                menuItem.Text = ipAddress;
+                menuItem.Enabled = menuItem.Visible = !string.IsNullOrEmpty(ipAddress);
+            }
         }
 
         private void MnuRefreshSpawnList_Click(object sender, EventArgs e)
@@ -1025,7 +1000,8 @@ namespace myseq
         private void MnuDepthFilter_Click(object sender, EventArgs e)
         {
             ToggleDepthFilter();
-            if ((curZone.Length == 0) || string.Equals(curZone, "CLZ", StringComparison.OrdinalIgnoreCase) || string.Equals(curZone, "DEFAULT", StringComparison.OrdinalIgnoreCase))
+
+            if (string.IsNullOrEmpty(curZone) || string.Equals(curZone, "CLZ", StringComparison.OrdinalIgnoreCase) || string.Equals(curZone, "DEFAULT", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -1033,39 +1009,34 @@ namespace myseq
             try
             {
                 // Save depth filter settings to file
-                IniFile ConIni = new IniFile("DepthConfig.ini");
-                if (Settings.Default.DepthFilter)
-                {
-                    ConIni.WriteValue("Zones", curZone, "1");
-                }
-                else
-                {
-                    ConIni.WriteValue("Zones", curZone, "0");
-                }
+                var depthValue = Settings.Default.DepthFilter ? "1" : "0";
+                var conIni = new IniFile("DepthConfig.ini");
+                conIni.WriteValue("Zones", curZone, depthValue);
             }
-            catch (Exception ex) { LogLib.WriteLine("Error writing depth filter setting to ini file: ", ex); }
+            catch (Exception ex)
+            {
+                LogLib.WriteLine("Error writing depth filter setting to ini file: ", ex);
+            }
         }
 
         private void ToggleDepthFilter()
         {
-            mnuDepthFilter.Checked = !mnuDepthFilter.Checked;
-            mnuDepthFilter2.Checked = mnuDepthFilter.Checked;
+            var isChecked = !Settings.Default.DepthFilter;
+            Settings.Default.DepthFilter = isChecked;
+            mnuDepthFilter.Checked = mnuDepthFilter2.Checked = isChecked;
 
-            Settings.Default.DepthFilter = mnuDepthFilter.Checked;
+            toolStripDepthFilterButton.Checked = isChecked;
+            toolStripZNegUp.Enabled = isChecked;
+            toolStripZNeg.Enabled = isChecked;
+            toolStripZNegDown.Enabled = isChecked;
+            toolStripZPosDown.Enabled = isChecked;
+            toolStripZOffsetLabel.Enabled = isChecked;
+            toolStripZPosUp.Enabled = isChecked;
+            toolStripZPos.Enabled = isChecked;
+            toolStripZPosLabel.Enabled = isChecked;
+            toolStripResetDepthFilter.Enabled = isChecked;
 
-            // update the toolbar settings
-            toolStripDepthFilterButton.Checked = Settings.Default.DepthFilter;
-            toolStripZNegUp.Enabled = Settings.Default.DepthFilter;
-            toolStripZNeg.Enabled = Settings.Default.DepthFilter;
-            toolStripZNegDown.Enabled = Settings.Default.DepthFilter;
-            toolStripZPosDown.Enabled = Settings.Default.DepthFilter;
-            toolStripZOffsetLabel.Enabled = Settings.Default.DepthFilter;
-            toolStripZPosUp.Enabled = Settings.Default.DepthFilter;
-            toolStripZPos.Enabled = Settings.Default.DepthFilter;
-            toolStripZPosLabel.Enabled = Settings.Default.DepthFilter;
-            toolStripResetDepthFilter.Enabled = Settings.Default.DepthFilter;
-
-            toolStripDepthFilterButton.Image = Settings.Default.DepthFilter ? Resources.ExpandSpaceHS : Resources.ShrinkSpaceHS;
+            toolStripDepthFilterButton.Image = isChecked ? Resources.ExpandSpaceHS : Resources.ShrinkSpaceHS;
         }
 
         private void MnuDynamicAlpha_Click(object sender, EventArgs e)
@@ -1156,56 +1127,54 @@ namespace myseq
             }
         }
 
-        private void SetFollowOption(FollowOption NewFollowOption)
+        private void SetFollowOption(FollowOption newFollowOption)
         {
-            Settings.Default.FollowOption = NewFollowOption;
+            Settings.Default.FollowOption = newFollowOption;
 
-            Dictionary<string, Action> FollowOpts = new Dictionary<string, Action>()
-                {
-                    {"None", FollowNone },
-                    {"Player", FollowPlayer },
-                    {"Target", FollowTarget }
-                };
-            FollowOpts[NewFollowOption.ToString()]();
+            UpdateFollowUI(newFollowOption);
         }
 
-        private void FollowTarget()
+        private void UpdateFollowUI(FollowOption followOption)
         {
-            toolStripCoPStatus.Text = "CoT";
+            // Set the toolstrip text based on the follow option
+            if (followOption == FollowOption.None)
+            {
+                toolStripCoPStatus.Text = "NoF";
+            }
+            else if (followOption == FollowOption.Player)
+            {
+                toolStripCoPStatus.Text = "CoP";
+            }
+            else if (followOption == FollowOption.Target)
+            {
+                toolStripCoPStatus.Text = "CoT";
+            }
+
+            // Reset map pane offsets
             mapPane.offsetx.Value = 0;
             mapPane.offsety.Value = 0;
 
-            mnuFollowTarget.Image = Resources.BlackX;
-            mnuFollowTarget2.Image = Resources.BlackX;
-            mnuFollowPlayer.Image = null;
-            mnuFollowPlayer2.Image = null;
-            mnuFollowNone.Image = null;
-            mnuFollowNone2.Image = null;
+            // Update menu images based on the selected option
+            UpdateMenuImages(
+                followOption == FollowOption.Target ? Resources.BlackX : null,
+                followOption == FollowOption.Player ? Resources.BlackX : null,
+                followOption == FollowOption.None ? Resources.BlackX : null
+            );
         }
 
-        private void FollowPlayer()
+        private void UpdateMenuImages(Image targetImage, Image playerImage, Image noneImage)
         {
-            toolStripCoPStatus.Text = "CoP";
-            mapPane.offsetx.Value = 0;
-            mapPane.offsety.Value = 0;
+            // Follow Target
+            mnuFollowTarget.Image = targetImage;
+            mnuFollowTarget2.Image = targetImage;
 
-            mnuFollowTarget.Image = null;
-            mnuFollowTarget2.Image = null;
-            mnuFollowPlayer.Image = Resources.BlackX;
-            mnuFollowPlayer2.Image = Resources.BlackX;
-            mnuFollowNone.Image = null;
-            mnuFollowNone2.Image = null;
-        }
+            // Follow Player
+            mnuFollowPlayer.Image = playerImage;
+            mnuFollowPlayer2.Image = playerImage;
 
-        private void FollowNone()
-        {
-            toolStripCoPStatus.Text = "NoF";
-            mnuFollowTarget.Image = null;
-            mnuFollowTarget2.Image = null;
-            mnuFollowPlayer.Image = null;
-            mnuFollowPlayer2.Image = null;
-            mnuFollowNone.Image = Resources.BlackX;
-            mnuFollowNone2.Image = Resources.BlackX;
+            // Follow None
+            mnuFollowNone.Image = noneImage;
+            mnuFollowNone2.Image = noneImage;
         }
 
         private void MnuFollowNone_Click(object sender, EventArgs e) => SetFollowOption(FollowOption.None);
@@ -1698,9 +1667,7 @@ namespace myseq
 
             SpawnTimerList.listView.EndUpdate();
 
-            eq.SpawnX = -1.0f;
-
-            eq.SpawnY = -1.0f;
+            eq.DefaultSpawnLoc();
 
             ClearMap();
         }
@@ -1760,8 +1727,8 @@ namespace myseq
 
             if (dlgBox.ShowDialog() == DialogResult.OK && dlgBox.dlgTextBox.Length > 0)
             {
-                SpawnList.mobname = dlgBox.dlgTextBox;
-                SpawnTimerList.mobname = dlgBox.dlgTextBox;
+                SpawnList.Mobname = dlgBox.dlgTextBox;
+                SpawnTimerList.Mobname = dlgBox.dlgTextBox;
                 return true;
             }
             else
@@ -2567,6 +2534,7 @@ namespace myseq
         {
             BoxClick(toolStripLookupBox);
         }
+
         private void BoxClick(ToolStripTextBox box)
         {
             if (box.Text == "Mob Search")
@@ -2575,6 +2543,7 @@ namespace myseq
                 box.ForeColor = SystemColors.WindowText;
             }
         }
+
         private void ToolStripLookupBox1_Click(object sender, EventArgs e)
         {
             BoxClick(toolStripLookupBox1);
@@ -2732,7 +2701,6 @@ namespace myseq
         public void MapConInvalidate()
         {
             mapCon?.Invalidate();
-            }
-
+        }
     }
 }

@@ -1,10 +1,10 @@
+using myseq.Properties;
+using Structures;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using myseq.Properties;
-using Structures;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace myseq
@@ -64,13 +64,14 @@ namespace myseq
 
         private ToolStripSeparator mnuSep3;
 
-        public string mobname { get; set; } = "";
-
-        private string smoblevel = "1";
+        public string Mobname { get; set; } = "";
 
         private int moblevel = 1;
 
+        //private int moblevel = 1;
+
         private readonly int ListType;
+        private int lastSortedColumn = -1;
 
         // if 0, it's the SpawnList, 1 SpawnTimerList, 2 GroundItemList
 
@@ -116,7 +117,6 @@ namespace myseq
                 ColumnsAdd("Kill Time", Settings.Default.c10w, HorizontalAlignment.Left);
                 ColumnsAdd("Next Spawn", Settings.Default.c10w, HorizontalAlignment.Left);
             }
-
             else if (listType == 2)     // Add Columns to Ground Items window
             {
                 ColumnsAdd("Description", Settings.Default.c1w, HorizontalAlignment.Left);
@@ -223,26 +223,26 @@ namespace myseq
             mnuSearchAllakhazam = new ToolStripMenuItem();
             mnuContext.SuspendLayout();
             SuspendLayout();
-            // 
+            //
             // txtSpawnList
-            // 
+            //
             txtSpawnList.Location = new Point(48, 0);
             txtSpawnList.Name = "txtSpawnList";
             txtSpawnList.Size = new Size(152, 20);
             txtSpawnList.TabIndex = 1;
             txtSpawnList.TextChanged += (TxtSpawnList_TextChanged);
-            // 
+            //
             // SearchBoxReset
-            // 
+            //
             SearchBoxReset.Location = new Point(0, 0);
             SearchBoxReset.Name = "SearchBoxReset";
             SearchBoxReset.Size = new Size(48, 20);
             SearchBoxReset.TabIndex = 0;
             SearchBoxReset.Text = "Reset";
             SearchBoxReset.Click += (SearchboxReset_Click);
-            // 
+            //
             // listView
-            // 
+            //
             listView.AllowColumnReorder = true;
             listView.ContextMenuStrip = mnuContext;
             listView.FullRowSelect = true;
@@ -261,9 +261,9 @@ namespace myseq
             listView.SelectedIndexChanged += new EventHandler(ListView_SelectedIndexChanged);
             listView.VisibleChanged += new EventHandler(ListView_VisibleChanged);
             listView.MouseEnter += new EventHandler(ListView_MouseEnter);
-            // 
+            //
             // mnuContext
-            // 
+            //
             mnuContext.Items.AddRange(new ToolStripItem[] {
             mnuAddZoneFilter,
             mnuStickyTimer,
@@ -287,23 +287,23 @@ namespace myseq
             mnuContext.Name = "mnuContext";
             mnuContext.Size = new Size(297, 326);
             mnuContext.Opened += new EventHandler(MnuContext_Opened);
-            // 
+            //
             // mnuAddZoneFilter
-            // 
+            //
             mnuAddZoneFilter.Font = new Font("Tahoma", 8.25F, FontStyle.Bold);
             mnuAddZoneFilter.Name = "mnuAddZoneFilter";
             mnuAddZoneFilter.Size = new Size(296, 22);
             mnuAddZoneFilter.Text = "\'mob name placeholder\'";
-            // 
+            //
             // mnuStickyTimer
-            // 
+            //
             mnuStickyTimer.Name = "mnuStickyTimer";
             mnuStickyTimer.Size = new Size(296, 22);
             mnuStickyTimer.Text = "Sticky Timer";
             mnuStickyTimer.Click += new EventHandler(MnuStickyTimer_Click);
-            // 
+            //
             // toolStriConcolor
-            // 
+            //
             toolStriConcolor.CheckOnClick = true;
             toolStriConcolor.Font = new Font("Tahoma", 8.400001F, FontStyle.Bold);
             toolStriConcolor.Image = Resources.BlackX;
@@ -313,47 +313,47 @@ namespace myseq
             toolStriConcolor.Size = new Size(296, 22);
             toolStriConcolor.Text = "Base Concolor on this Spawn";
             toolStriConcolor.Click += new EventHandler(ToolStriConcolor_Click);
-            // 
+            //
             // mnuSep3
-            // 
+            //
             mnuSep3.Name = "mnuSep3";
             mnuSep3.Size = new Size(293, 6);
-            // 
+            //
             // mnuAddZoneHuntFilter
-            // 
+            //
             mnuAddZoneHuntFilter.Name = "mnuAddZoneHuntFilter";
             mnuAddZoneHuntFilter.Size = new Size(296, 22);
             mnuAddZoneHuntFilter.Text = "Add Zone Hunt Alert Filter";
             mnuAddZoneHuntFilter.Click += new EventHandler(MnuAddZoneHuntFilter_Click);
-            // 
+            //
             // mnuAddZoneCautionFilter
-            // 
+            //
             mnuAddZoneCautionFilter.Name = "mnuAddZoneCautionFilter";
             mnuAddZoneCautionFilter.Size = new Size(296, 22);
             mnuAddZoneCautionFilter.Text = "Add Zone Caution Alert Filter";
             mnuAddZoneCautionFilter.Click += new EventHandler(MnuAddZoneCautionFilter_Click);
-            // 
+            //
             // mnuAddZoneDangerFilter
-            // 
+            //
             mnuAddZoneDangerFilter.Name = "mnuAddZoneDangerFilter";
             mnuAddZoneDangerFilter.Size = new Size(296, 22);
             mnuAddZoneDangerFilter.Text = "Add Zone Danger Alert Filter";
             mnuAddZoneDangerFilter.Click += new EventHandler(MnuAddZoneDangerFilter_Click);
-            // 
+            //
             // mnuAddZoneRareFilter
-            // 
+            //
             mnuAddZoneRareFilter.Name = "mnuAddZoneRareFilter";
             mnuAddZoneRareFilter.Size = new Size(296, 22);
             mnuAddZoneRareFilter.Text = "Add Zone Rare Alert Filter";
             mnuAddZoneRareFilter.Click += new EventHandler(MnuAddZoneAlertFilter_Click);
-            // 
+            //
             // mnuSep4
-            // 
+            //
             mnuSep4.Name = "mnuSep4";
             mnuSep4.Size = new Size(293, 6);
-            // 
+            //
             // mnuAddGlobalFilter
-            // 
+            //
             mnuAddGlobalFilter.DropDownItems.AddRange(new ToolStripItem[] {
             mnuAddHuntFilter,
             mnuAddCautionFilter,
@@ -362,95 +362,95 @@ namespace myseq
             mnuAddGlobalFilter.Name = "mnuAddGlobalFilter";
             mnuAddGlobalFilter.Size = new Size(296, 22);
             mnuAddGlobalFilter.Text = "Add \'\' &Global Alert Filter";
-            // 
+            //
             // mnuAddHuntFilter
-            // 
+            //
             mnuAddHuntFilter.Name = "mnuAddHuntFilter";
             mnuAddHuntFilter.Size = new Size(180, 22);
             mnuAddHuntFilter.Text = "Hunt";
             mnuAddHuntFilter.Click += new EventHandler(MnuAddHuntFilter_Click);
-            // 
+            //
             // mnuAddCautionFilter
-            // 
+            //
             mnuAddCautionFilter.Name = "mnuAddCautionFilter";
             mnuAddCautionFilter.Size = new Size(180, 22);
             mnuAddCautionFilter.Text = "Caution";
             mnuAddCautionFilter.Click += new EventHandler(MnuAddCautionFilter_Click);
-            // 
+            //
             // mnuAddDangerFilter
-            // 
+            //
             mnuAddDangerFilter.Name = "mnuAddDangerFilter";
             mnuAddDangerFilter.Size = new Size(180, 22);
             mnuAddDangerFilter.Text = "Danger";
             mnuAddDangerFilter.Click += new EventHandler(MnuAddDangerFilter_Click);
-            // 
+            //
             // mnuAddAlertFilter
-            // 
+            //
             mnuAddAlertFilter.Name = "mnuAddAlertFilter";
             mnuAddAlertFilter.Size = new Size(180, 22);
             mnuAddAlertFilter.Text = "Rare";
             mnuAddAlertFilter.Click += new EventHandler(MnuAddAlertFilter_Click);
-            // 
+            //
             // mnuSep1
-            // 
+            //
             mnuSep1.Name = "mnuSep1";
             mnuSep1.Size = new Size(293, 6);
-            // 
+            //
             // mnuEditGlobalFilters
-            // 
+            //
             mnuEditGlobalFilters.Name = "mnuEditGlobalFilters";
             mnuEditGlobalFilters.Size = new Size(296, 22);
             mnuEditGlobalFilters.Text = "Edit Global &Alert Filters";
             mnuEditGlobalFilters.Click += new EventHandler(MnuEditGlobalFilters_Click);
-            // 
+            //
             // mnuEditZoneFilters
-            // 
+            //
             mnuEditZoneFilters.Name = "mnuEditZoneFilters";
             mnuEditZoneFilters.Size = new Size(296, 22);
             mnuEditZoneFilters.Text = "Edit Z&one Alert Filters";
             mnuEditZoneFilters.Click += new EventHandler(MnuEditZoneFilters_Click);
-            // 
+            //
             // mnuSep2
-            // 
+            //
             mnuSep2.Name = "mnuSep2";
             mnuSep2.Size = new Size(293, 6);
-            // 
+            //
             // mnuReloadZoneFilters
-            // 
+            //
             mnuReloadZoneFilters.Image = ((Image)(resources.GetObject("mnuReloadZoneFilters.Image")));
             mnuReloadZoneFilters.Name = "mnuReloadZoneFilters";
             mnuReloadZoneFilters.Size = new Size(296, 22);
             mnuReloadZoneFilters.Text = "&Reload Alert Filters";
             mnuReloadZoneFilters.Click += new EventHandler(MnuReloadFilters_Click);
-            // 
+            //
             // mnuSep5
-            // 
+            //
             mnuSep5.Name = "mnuSep5";
             mnuSep5.Size = new Size(293, 6);
-            // 
+            //
             // addMapLabelToolStripMenuItem
-            // 
+            //
             addMapLabelToolStripMenuItem.Name = "addMapLabelToolStripMenuItem";
             addMapLabelToolStripMenuItem.Size = new Size(296, 22);
             addMapLabelToolStripMenuItem.Text = "Add Map Label";
             addMapLabelToolStripMenuItem.Click += new EventHandler(AddMapLabelToolStripMenuItem_Click);
-            // 
+            //
             // mnuSep6
-            // 
+            //
             mnuSep6.Name = "mnuSep6";
             mnuSep6.Size = new Size(293, 6);
-            // 
+            //
             // mnuSearchAllakhazam
-            // 
+            //
             mnuSearchAllakhazam.Image = ((Image)(resources.GetObject("mnuSearchAllakhazam.Image")));
             mnuSearchAllakhazam.ImageTransparentColor = Color.Magenta;
             mnuSearchAllakhazam.Name = "mnuSearchAllakhazam";
             mnuSearchAllakhazam.Size = new Size(296, 22);
             mnuSearchAllakhazam.Text = "Search Allakhazam";
             mnuSearchAllakhazam.Click += new EventHandler(MnuSearchAllakhazam_Click);
-            // 
+            //
             // ListViewPanel
-            // 
+            //
             BackColor = SystemColors.Window;
             ClientSize = new Size(200, 191);
             Controls.Add(listView);
@@ -463,14 +463,13 @@ namespace myseq
             mnuContext.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion Component Designer generated code
 
         private void MnuContext_Opened(object sender, EventArgs e)
         {
-            mobname = "";
+            Mobname = "";
 
             ListView.SelectedIndexCollection sel = listView.SelectedIndices;
             mnuStickyTimer.Visible = ListType == 1;
@@ -486,18 +485,18 @@ namespace myseq
                 }
                 else
                 {
-                    mobname = listView.Items[sel[0]].SubItems[0].Text;
+                    Mobname = listView.Items[sel[0]].SubItems[0].Text;
                 }
             }
 
-            if ((sel.Count > 0) && (mobname.Length > 0))
+            if ((sel.Count > 0) && (Mobname.Length > 0))
 
             {
-                mnuAddGlobalFilter.Text = $"Add '{mobname}' &Global Alert Filter";
+                mnuAddGlobalFilter.Text = $"Add '{Mobname}' &Global Alert Filter";
 
-                mnuAddZoneFilter.Text = $"'{mobname}'";
+                mnuAddZoneFilter.Text = $"'{Mobname}'";
 
-                toolStriConcolor.Text = $"Base Concolor on '{mobname}' ({smoblevel})";
+                toolStriConcolor.Text = $"Base Concolor on '{Mobname}' ({moblevel})";
                 mnuAddZoneFilter.Visible = true;
 
                 mnuSep3.Visible = true;
@@ -593,28 +592,32 @@ namespace myseq
 
         private void ListType0(ListView.SelectedIndexCollection sel)
         {
-            mobname = listView.Items[sel[0]].SubItems[17].Text.FilterMobName();
-            mobname = mobname.Replace("_", " ");
-            mobname = mobname.Trim();
+            Mobname = listView.Items[sel[0]].SubItems[17].Text.FilterMobName();
+            Mobname = Mobname.Replace("_", " ");
+            Mobname = Mobname.Trim();
             //smoblevel = "";
             MobLevel(sel);
         }
 
         private void MobLevel(ListView.SelectedIndexCollection sel)
         {
-            smoblevel = listView.Items[sel[0]].SubItems[1].Text;
-            if (smoblevel.Length > 0 && int.TryParse(smoblevel, out var Num))
+            var smoblevelText = listView.Items[sel[0]].SubItems[1].Text;
+            if (int.TryParse(smoblevelText, out var Num))
             {
                 moblevel = Num;
+            }
+            else
+            {
+                moblevel = 1;  // Default value or handle error accordingly
             }
         }
 
         private void ListType1(ListView.SelectedIndexCollection sel)
         {
-            smoblevel = "";
+            moblevel = 1;
             MobLevel(sel);
-            mobname = listView.Items[sel[0]].SubItems[0].Text.FixMobNameMatch();
-            mobname = mobname.Trim();
+            Mobname = listView.Items[sel[0]].SubItems[0].Text.FixMobNameMatch();
+            Mobname = Mobname.Trim();
         }
 
         private void StickyTimer(Spawntimer st)
@@ -625,8 +628,8 @@ namespace myseq
                 var bname = name.TrimName();
                 if (bname.RegexMatch())
                 {
-                    mobname = bname;
-                    mnuAddZoneFilter.Text = $"'{mobname}'";
+                    Mobname = bname;
+                    mnuAddZoneFilter.Text = $"'{Mobname}'";
                     f1.alertX = st.X;
                     f1.alertY = st.Y;
                     f1.alertZ = st.Z;
@@ -680,9 +683,24 @@ namespace myseq
 
         private void ListView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            curDescend = !curDescend;
-            SortOrder sort_order = curDescend ? SortOrder.Ascending : SortOrder.Descending;
-            listView.ListViewItemSorter = new ListViewComparer(e.Column, sort_order);
+            // Toggle sort order if the same column is clicked, otherwise reset to ascending.
+            if (e.Column == lastSortedColumn)
+            {
+                curDescend = !curDescend;
+            }
+            else
+            {
+                curDescend = false;  // Default to ascending when a new column is clicked.
+            }
+
+            lastSortedColumn = e.Column;
+            SortOrder sortOrder = curDescend ? SortOrder.Ascending : SortOrder.Descending;
+            // Ensure listView is not null.
+            if (listView != null)
+            {
+                listView.ListViewItemSorter = new ListViewComparer(e.Column, sortOrder);
+                listView.Sort();  // Trigger the sorting immediately.
+            }
         }
 
         private void ListView_SelectedIndexChanged(object sender, EventArgs e)
@@ -722,7 +740,7 @@ namespace myseq
 
         private void AddFilter(List<string> fltr, string zone)
         {
-            filters.AddToAlerts(fltr, mobname);
+            filters.AddToAlerts(fltr, Mobname);
 
             filters.WriteAlertFile(zone);
 
@@ -731,7 +749,7 @@ namespace myseq
 
         private void MnuAddHuntFilter_Click(object sender, EventArgs e)
         {
-            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Hunt list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Hunt list:", Mobname))
             {
                 AddFilter(Filters.GlobalHunt, "global");
             }
@@ -739,7 +757,7 @@ namespace myseq
 
         private void MnuAddCautionFilter_Click(object sender, EventArgs e)
         {
-            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Caution list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Caution list:", Mobname))
             {
                 AddFilter(Filters.GlobalCaution, "global");
             }
@@ -748,7 +766,7 @@ namespace myseq
         private void MnuAddDangerFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Danger list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Danger list:", Mobname))
             {
                 AddFilter(Filters.GlobalDanger, "global");
             }
@@ -757,7 +775,7 @@ namespace myseq
         private void MnuAddAlertFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Rare list:", mobname))
+            if (f1.DialogBox("Add to Global Alert Filters", "Add name to Rare list:", Mobname))
             {
                 AddFilter(Filters.GlobalAlert, "global");
             }
@@ -766,7 +784,7 @@ namespace myseq
         private void MnuAddZoneHuntFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.DialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", mobname))
+            if (f1.DialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", Mobname))
             {
                 AddFilter(Filters.Hunt, f1.curZone);
             }
@@ -775,7 +793,7 @@ namespace myseq
         private void MnuAddZoneCautionFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.DialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", mobname))
+            if (f1.DialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", Mobname))
             {
                 AddFilter(Filters.Caution, f1.curZone);
             }
@@ -784,7 +802,7 @@ namespace myseq
         private void MnuAddZoneDangerFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.DialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", mobname))
+            if (f1.DialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", Mobname))
             {
                 AddFilter(Filters.Danger, f1.curZone);
             }
@@ -793,7 +811,7 @@ namespace myseq
         private void MnuAddZoneAlertFilter_Click(object sender, EventArgs e)
 
         {
-            if (f1.DialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", mobname))
+            if (f1.DialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", Mobname))
             {
                 AddFilter(Filters.Alert, f1.curZone);
             }
@@ -809,14 +827,14 @@ namespace myseq
 
         private void MnuSearchAllakhazam_Click(object sender, EventArgs e)
         {
-            mobname.StartSearch();
+            Mobname.StartSearch();
         }
 
         private void AddMapLabelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (mobname.Length > 0)
+            if (Mobname.Length > 0)
             {
-                f1.AddMapText(mobname);
+                f1.AddMapText(Mobname);
             }
         }
 
@@ -849,7 +867,7 @@ namespace myseq
         private void ToolStriConcolor_Click(object sender, EventArgs e)
         {
             Settings.Default.LevelOverride = moblevel;
-            eq.GConBaseName = mobname;
+            eq.GConBaseName = Mobname;
         }
     }
 }

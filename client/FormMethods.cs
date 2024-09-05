@@ -1,9 +1,9 @@
-﻿using System;
+﻿using myseq.Properties;
+using Structures;
+using System;
 using System.IO;
 using System.Media;
 using System.Windows.Forms;
-using myseq.Properties;
-using Structures;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace myseq
@@ -22,59 +22,47 @@ namespace myseq
 
         public static void SwitchOnSoundSettings()
         {
-            if (Settings.Default.AlertSound == "Asterisk")
+            switch (Settings.Default.AlertSound)
             {
-                SystemSounds.Asterisk.Play();
-            }
-            else if (Settings.Default.AlertSound == "Beep")
-            {
-                SystemSounds.Beep.Play();
-            }
-            else if (Settings.Default.AlertSound == "Exclamation")
-            {
-                SystemSounds.Exclamation.Play();
-            }
-            else if (Settings.Default.AlertSound == "Hand")
-            {
-                SystemSounds.Hand.Play();
-            }
-            else if (Settings.Default.AlertSound == "Question")
-            {
-                SystemSounds.Question.Play();
+                case "Asterisk":
+                    SystemSounds.Asterisk.Play();
+                    break;
+                case "Beep":
+                    SystemSounds.Beep.Play();
+                    break;
+                case "Exclamation":
+                    SystemSounds.Exclamation.Play();
+                    break;
+                case "Hand":
+                    SystemSounds.Hand.Play();
+                    break;
+                case "Question":
+                    SystemSounds.Question.Play();
+                    break;
             }
         }
 
-        public void ToolStripLevelCheck(string Str, MainForm f1)
+        public void ToolStripLevelCheck(string input, MainForm f1)
         {
-            var validnum = true;
-            if (!string.IsNullOrEmpty(Str))
-            {
-                var isNum = int.TryParse(Str, out var Num);
+            if (string.IsNullOrEmpty(input))
+                return;
 
-                if (isNum && (Num < 1 || Num > 120))
-                {
-                    validnum = false;
-                }
-                else if (Str != "Auto" && !isNum)
-                {
-                    validnum = false;
-                }
-                else if (Str == "Auto")
-                {
-                    validnum = true;
-                    Settings.Default.LevelOverride = -1;
-                    f1.toolStripLevel.Text = "Auto";
-                }
-                else
-                {
-                    f1.toolStripLevel.Text = Num.ToString();
-                    Settings.Default.LevelOverride = Num;
-                }
+            if (input.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+            {
+                // Set to Auto
+                Settings.Default.LevelOverride = -1;
+                f1.toolStripLevel.Text = "Auto";
             }
-
-            if (!validnum)
+            else if (int.TryParse(input, out int level) && level >= 1 && level <= 125)
             {
-                MessageBox.Show("Enter a number between 1-115 or Auto");
+                // Set to a valid level
+                Settings.Default.LevelOverride = level;
+                f1.toolStripLevel.Text = level.ToString();
+            }
+            else
+            {
+                // Show invalid input message
+                MessageBox.Show("Enter a number between 1-125 or 'Auto'.");
             }
         }
 
@@ -174,7 +162,7 @@ namespace myseq
 
                 var filename = openFileDialog.FileName;
 
-                f1.map.Loadmap(filename);
+                f1.map.LoadMap(filename);
 
                 filename = filename.GetLastSlash();
 
@@ -192,25 +180,5 @@ namespace myseq
                 f1.curZone = filename.ToUpper();
             }
         }
-
-        //public static void LookupBoxMatch(Spawninfo si, MainForm f1)
-        //{
-        //    si.isLookup = false;
-        //    BoxMatch(f1.toolStripLookupBox, si);
-        //    BoxMatch(f1.toolStripLookupBox1, si);
-        //    BoxMatch(f1.toolStripLookupBox2, si);
-        //    BoxMatch(f1.toolStripLookupBox3, si);
-        //    BoxMatch(f1.toolStripLookupBox4, si);
-        //}
-
-        //private static void BoxMatch(ToolStripTextBox boxtext, Spawninfo si)
-        //{
-        //    if (boxtext.Text.Length > 1
-        //        && boxtext.Text != "Mob Search"
-        //        && boxtext.Text.GetRegex().Match(si.Name).Success)
-        //    {
-        //        si.isLookup = true;
-        //    }
-        //}
     }
 }
