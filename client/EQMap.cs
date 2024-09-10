@@ -35,7 +35,7 @@ namespace myseq
             ExitMap?.Invoke(this);
             mapCon?.ResetInfoWindow();
             eq?.DefaultSpawnLoc();
-            eq.selectedID = 99999;
+            eq.SelectedID = 99999;
         }
 
         protected void OnEnterMap()
@@ -159,7 +159,7 @@ namespace myseq
 
         private void ResetMap()
         {
-            eq.mobsTimers.ResetTimers();
+            eq.MobsTimers.ResetTimers();
             OnExitMap();
             trails.Clear();
             ClearMapStructures();

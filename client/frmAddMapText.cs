@@ -53,7 +53,7 @@ namespace myseq
             {
                 try
                 {
-                    File.AppendAllText(f1.mapnameWithLabels, soe_maptext);
+                    File.AppendAllText(f1.MapnameWithLabels, soe_maptext);
                 }
                 catch (Exception ex)
                 {

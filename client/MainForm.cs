@@ -20,9 +20,9 @@ namespace myseq
         public ListViewPanel SpawnTimerList = new ListViewPanel(1);
         public ListViewPanel GroundItemList = new ListViewPanel(2);
 
-        public string curZone { get; set; } = "map_pane";
+        public string CurZone { get; set; } = "map_panel";
 
-        public string mapnameWithLabels { get; set; } = "";
+        public string MapnameWithLabels { get; set; } = "";
 
         private string currentIPAddress = "";
         private MarkLookup mark = new MarkLookup();
@@ -45,11 +45,11 @@ namespace myseq
         public float alertZ = 0.0f;
 
         private bool bIsRunning;
-        private bool bFilter0;
         private bool bFilter1;
         private bool bFilter2;
         private bool bFilter3;
         private bool bFilter4;
+        private bool bFilter5;
         private readonly FormMethods formMethod = new FormMethods();
 
         public MainForm()
@@ -105,7 +105,7 @@ namespace myseq
             GroundItemList.SetComponents(eq, filters, this);
 
             map.SetComponents(mapCon, eq);
-            eq.mobsTimers.SetComponents(map);
+            eq.MobsTimers.SetComponents(map);
             formMethod.LoadPositionsFromConfigFile(this);
 
             if (Settings.Default.AlwaysOnTop)
@@ -180,9 +180,9 @@ namespace myseq
         {
             comm.ProcessClear();
 
-            if (eq.gamerInfo != null)
+            if (eq.GamerInfo != null)
             {
-                eq.gamerInfo.Name = "";
+                eq.GamerInfo.Name = "";
             }
 
             if (mnuIPAddress1.Checked)
@@ -283,7 +283,7 @@ namespace myseq
 
             if (Settings.Default.ShowCharName)
             {
-                Text += $" - {eq.gamerInfo.Name}";
+                Text += $" - {eq.GamerInfo.Name}";
             }
         }
 
@@ -559,9 +559,9 @@ namespace myseq
 
             //eq.CheckMobs(SpawnList, GroundItemList);
 
-            if (eq.mobsTimers.mobsTimer2.Count > 0)
+            if (eq.MobsTimers.mobsTimer2.Count > 0)
             {
-                eq.mobsTimers.UpdateList(SpawnTimerList);
+                eq.MobsTimers.UpdateList(SpawnTimerList);
             }
 
             if (!bIsRunning && mapCon != null)
@@ -635,7 +635,7 @@ namespace myseq
 
         public void ProcessMap(Spawninfo si)
         {
-            mapnameWithLabels = "";
+            MapnameWithLabels = "";
 
             try
             {
@@ -644,7 +644,7 @@ namespace myseq
                 LogLib.WriteLine($"Using Short Zone Name: ({mapname})");
                 toolStripShortName.Text = mapname.ToUpper();
 
-                curZone = mapname.ToUpper();
+                CurZone = mapname.ToUpper();
 
                 CheckZoneFile();
 
@@ -679,14 +679,14 @@ namespace myseq
 
         private void FindMapNotZoning(Spawninfo si)
         {
-            if (curZone.Length > 0 && curZone != "CLZ" && curZone != "DEFAULT")
+            if (CurZone.Length > 0 && CurZone != "CLZ" && CurZone != "DEFAULT")
             {
                 // Try loading depth filter settings from file
                 LoadDepthFilter();
             }
 
             var foundmap = false;
-            if (curZone.Length == 0 || curZone == "CLZ" || curZone == "DEFAULT")
+            if (CurZone.Length == 0 || CurZone == "CLZ" || CurZone == "DEFAULT")
 
             {
                 foundmap = ZoningOrCharLoading();
@@ -714,7 +714,7 @@ namespace myseq
                 return;
             }
 
-            var strIniValue = new IniFile(configFile).ReadValue("Zones", curZone, "");
+            var strIniValue = new IniFile(configFile).ReadValue("Zones", CurZone, "");
             if (strIniValue.Length == 0)
             {
                 // No setting for this zone, so toggle depth filter off
@@ -741,11 +741,11 @@ namespace myseq
 
             if (File.Exists(ZonesFile))
             {
-                mapPane.TabText = string.IsNullOrEmpty(curZone) ? "map_pane" : new IniFile(ZonesFile).ReadValue("Zones", curZone, curZone.ToLower());
+                mapPane.TabText = string.IsNullOrEmpty(CurZone) ? "map_pane" : new IniFile(ZonesFile).ReadValue("Zones", CurZone, CurZone.ToLower());
             }
             else
             {
-                mapPane.TabText = curZone.Length > 0 ? curZone.ToLower() : "map_pane";
+                mapPane.TabText = CurZone.Length > 0 ? CurZone.ToLower() : "map_pane";
             }
         }
 
@@ -775,7 +775,7 @@ namespace myseq
             // use _3.txt file for map labels
             if (foundmap)
             {
-                mapnameWithLabels = $"{fullmap}_3.txt";
+                MapnameWithLabels = $"{fullmap}_3.txt";
             }
 
             SetTitle();
@@ -798,7 +798,7 @@ namespace myseq
 
             foundmap = true;
 
-            mapnameWithLabels = "";
+            MapnameWithLabels = "";
             return foundmap;
         }
 
@@ -860,13 +860,13 @@ namespace myseq
                 mnuMobName.Visible = true;
                 // dont add email alerts for ground items
                 //                addZoneEmailAlertFilterToolStripMenuItem.Enabled = notground;
-                mnuAddMapLabel.Enabled = mapnameWithLabels.Length > 0;
+                mnuAddMapLabel.Enabled = MapnameWithLabels.Length > 0;
             }
             else
             {
                 // Set the default context menu, since we don't have a proper name to work with
                 ContextMenuStrip = mnuContext;
-                addMapTextToolStripMenuItem.Enabled = eq.Longname.Length > 0 && eq.gamerInfo?.Name.Length > 0;
+                addMapTextToolStripMenuItem.Enabled = eq.Longname.Length > 0 && eq.GamerInfo?.Name.Length > 0;
                 mnuShowMenuBar.Visible = !Settings.Default.ShowMenuBar;
             }
         }
@@ -874,7 +874,7 @@ namespace myseq
         private void MnuOpenMap_Click(object sender, EventArgs e)
         {
             formMethod.MnuOpenMap(this);
-            eq.Shortname = curZone;
+            eq.Shortname = CurZone;
             eq.Longname = eq.Shortname;
 
             eq.CalcExtents(map.Lines);
@@ -892,9 +892,9 @@ namespace myseq
             SpawnTimerList.listView.BeginUpdate();
             GroundItemList.listView.BeginUpdate();
 
-            if (eq.mobsTimers.mobsTimer2.Count > 0)
+            if (eq.MobsTimers.mobsTimer2.Count > 0)
             {
-                foreach (Spawntimer st in eq.mobsTimers.mobsTimer2.Values)
+                foreach (Spawntimer st in eq.MobsTimers.mobsTimer2.Values)
                 {
                     st.ItmSpawnTimerList = null;
                 }
@@ -904,7 +904,7 @@ namespace myseq
             SpawnTimerList.listView.EndUpdate();
             GroundItemList.listView.EndUpdate();
 
-            eq.mobsTimers.ResetTimers();
+            eq.MobsTimers.ResetTimers();
         }
 
         private void MnuSaveMobs_Click(object sender, EventArgs e)
@@ -1001,7 +1001,7 @@ namespace myseq
         {
             ToggleDepthFilter();
 
-            if (string.IsNullOrEmpty(curZone) || string.Equals(curZone, "CLZ", StringComparison.OrdinalIgnoreCase) || string.Equals(curZone, "DEFAULT", StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(CurZone) || string.Equals(CurZone, "CLZ", StringComparison.OrdinalIgnoreCase) || string.Equals(CurZone, "DEFAULT", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -1011,7 +1011,7 @@ namespace myseq
                 // Save depth filter settings to file
                 var depthValue = Settings.Default.DepthFilter ? "1" : "0";
                 var conIni = new IniFile("DepthConfig.ini");
-                conIni.WriteValue("Zones", curZone, depthValue);
+                conIni.WriteValue("Zones", CurZone, depthValue);
             }
             catch (Exception ex)
             {
@@ -1207,7 +1207,7 @@ namespace myseq
             }
         }
 
-        private void MnuAddEditAlerts_Click(object sender, EventArgs e) => filters.EditAlertFile(curZone);
+        private void MnuAddEditAlerts_Click(object sender, EventArgs e) => filters.EditAlertFile(CurZone);
 
         private void MnuSpawnListFont_Click(object sender, EventArgs e)
 
@@ -1618,7 +1618,7 @@ namespace myseq
         {
             filters.ClearLists();
 
-            filters.LoadAlerts(curZone);
+            filters.LoadAlerts(CurZone);
 
             timDelayAlerts.Start();
 
@@ -1629,11 +1629,11 @@ namespace myseq
         {
             DisablePlayAlerts();
 
-            eq.mobsTimers.ResetTimers();
+            eq.MobsTimers.ResetTimers();
 
             ClearMap();
 
-            eq.mobsTimers.LoadTimers();
+            eq.MobsTimers.LoadTimers();
         }
 
         private void ResetMapPens()
@@ -1659,7 +1659,7 @@ namespace myseq
         {
             // Clear Saved Spawn Timers
 
-            eq.mobsTimers.ClearSavedTimers();
+            eq.MobsTimers.ClearSavedTimers();
 
             SpawnTimerList.listView.BeginUpdate();
 
@@ -1692,9 +1692,9 @@ namespace myseq
                 mapName = "Add to Map: "
             };
 
-            if (mapnameWithLabels.Length > 4 && mapnameWithLabels.EndsWith(".txt"))
+            if (MapnameWithLabels.Length > 4 && MapnameWithLabels.EndsWith(".txt"))
             {
-                mapBox.mapName += mapnameWithLabels.GetLastSlash();
+                mapBox.mapName += MapnameWithLabels.GetLastSlash();
             }
             else
             {
@@ -1819,7 +1819,7 @@ namespace myseq
             Settings.Default.SoDCon = true;
             Settings.Default.SoFCon = false;
             Settings.Default.DefaultCon = false;
-            spawnColors.FillConColors(eq.gamerInfo);
+            spawnColors.FillConColors(eq.GamerInfo);
             eq.UpdateMobListColors();
         }
 
@@ -1831,7 +1831,7 @@ namespace myseq
             Settings.Default.SoDCon = false;
             Settings.Default.SoFCon = false;
             Settings.Default.DefaultCon = true;
-            spawnColors.FillConColors(eq.gamerInfo);
+            spawnColors.FillConColors(eq.GamerInfo);
             eq.UpdateMobListColors();
         }
 
@@ -1843,7 +1843,7 @@ namespace myseq
             Settings.Default.SoDCon = false;
             Settings.Default.SoFCon = true;
             Settings.Default.DefaultCon = false;
-            spawnColors.FillConColors(eq.gamerInfo);
+            spawnColors.FillConColors(eq.GamerInfo);
             eq.UpdateMobListColors();
         }
 
@@ -2072,7 +2072,7 @@ namespace myseq
         {
             filters.AddToAlerts(filter, mob);
 
-            filters.WriteAlertFile(curZone);
+            filters.WriteAlertFile(CurZone);
 
             ReloadAlertFiles();
         }
@@ -2291,28 +2291,35 @@ namespace myseq
 
         private void ToolStripScale_Leave(object sender, EventArgs e) => CheckValidNum(toolStripScale.Text.Trim());
 
-        private void CheckValidNum(string Str)
+        private void CheckValidNum(string input)
         {
-            var validnum = false;
-            if (!string.IsNullOrEmpty(Str))
+            if (string.IsNullOrWhiteSpace(input))
             {
-                Str = Str.Replace("%", "");
-                var isNum = decimal.TryParse(Str, out var Num);
-                if (Num < MapPane.scale.Minimum)
-                { Num = MapPane.scale.Minimum; }
-
-                if (isNum && Num >= MapPane.scale.Minimum && Num <= MapPane.scale.Maximum)
-                {
-                    validnum = mapPane.MapPaneScale(Num);
-                }
+                ShowInvalidInputMessage();
+                return;
             }
 
-            if (!validnum)
+            input = input.Replace("%", "");
+
+            if (!decimal.TryParse(input, out var num))
+                {
+                ShowInvalidInputMessage();
+                return;
+                }
+
+            num = Math.Max(num, MapPane.scale.Minimum); // Ensure minimum value
+
+            if (num > MapPane.scale.Maximum || !mapPane.MapPaneScale(num))
+            {
+                ShowInvalidInputMessage();
+            }
+        }
+
+        private void ShowInvalidInputMessage()
             {
                 toolStripScale.Text = $"{MapPane.scale.Value / 100:0%}";
                 MessageBox.Show($"Enter a number between {MapPane.scale.Minimum} and {MapPane.scale.Maximum}", "Invalid Value Entered.");
             }
-        }
 
         private void ToolStripScale_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -2330,11 +2337,11 @@ namespace myseq
         private void AddMapTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // add map text, to where the player is currently located
-            if (eq.Longname.Length > 0 && eq.gamerInfo?.Name.Length > 0)
+            if (eq.Longname.Length > 0 && eq.GamerInfo?.Name.Length > 0)
             {
-                alertX = eq.gamerInfo.X;
-                alertY = eq.gamerInfo.Y;
-                alertZ = eq.gamerInfo.Z;
+                alertX = eq.GamerInfo.X;
+                alertY = eq.GamerInfo.Y;
+                alertZ = eq.GamerInfo.Z;
                 AddMapText("");
             }
         }
@@ -2397,98 +2404,90 @@ namespace myseq
 
         private void ToolStripResetLookup_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox, "0", bFilter0);
+            BoxReset(toolStripLookupBox, "1", bFilter1);
         }
 
         private void ToolStripResetLookup1_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox1, "1", bFilter1);
+            BoxReset(toolStripLookupBox1, "2", bFilter2);
         }
 
         private void ToolStripResetLookup2_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox2, "2", bFilter2);
+            BoxReset(toolStripLookupBox2, "3", bFilter3);
         }
 
         private void ToolStripResetLookup3_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox3, "3", bFilter3);
+            BoxReset(toolStripLookupBox3, "4", bFilter4);
         }
 
         private void ToolStripResetLookup4_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox4, "4", bFilter4);
-        }
-
-        private void BoxReset(ToolStripTextBox box, string rank, bool filter)
-        {
-            box.Text = "";
-            box.Focus();
-            mark.MarkLookups($"{rank}:", ref filter);
+            BoxReset(toolStripLookupBox4, "5", bFilter5);
         }
 
         private void ToolStripCheckLookup_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup, toolStripLookupBox, "1", ref bFilter0);
+            BoxCheckChanged(toolStripCheckLookup, toolStripLookupBox, "1", ref bFilter1);
         }
 
         private void ToolStripCheckLookup1_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup1, toolStripLookupBox1, "2", ref bFilter1);
+            BoxCheckChanged(toolStripCheckLookup1, toolStripLookupBox1, "2", ref bFilter2);
         }
 
         private void ToolStripCheckLookup2_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup2, toolStripLookupBox2, "3", ref bFilter2);
+            BoxCheckChanged(toolStripCheckLookup2, toolStripLookupBox2, "3", ref bFilter3);
         }
 
         private void ToolStripCheckLookup3_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup3, toolStripLookupBox3, "4", ref bFilter3);
+            BoxCheckChanged(toolStripCheckLookup3, toolStripLookupBox3, "4", ref bFilter4);
         }
 
         private void ToolStripCheckLookup4_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup4, toolStripLookupBox4, "5", ref bFilter4);
+            BoxCheckChanged(toolStripCheckLookup4, toolStripLookupBox4, "5", ref bFilter5);
         }
 
         private void ToolStripTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox, "1", ref bFilter0);
+            BoxKeyPress(e, toolStripLookupBox, "1", ref bFilter1);
         }
 
         private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox1, "2", ref bFilter1);
+            BoxKeyPress(e, toolStripLookupBox1, "2", ref bFilter2);
         }
 
         private void ToolStripTextBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox2, "3", ref bFilter2);
+            BoxKeyPress(e, toolStripLookupBox2, "3", ref bFilter3);
         }
 
         private void ToolStripTextBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox3, "4", ref bFilter3);
+            BoxKeyPress(e, toolStripLookupBox3, "4", ref bFilter4);
         }
 
         private void ToolStripTextBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox4, "5", ref bFilter4);
+            BoxKeyPress(e, toolStripLookupBox4, "5", ref bFilter5);
         }
 
-        private void BoxCheckChanged(ToolStripButton button, ToolStripTextBox box, string rank, ref bool filter)
+        private void BoxReset(ToolStripTextBox box, string rank, bool filter)
         {
-            if (button.Checked)
-            {
-                button.Text = "L";
-                filter = false;
+            box.Text = string.Empty;
+            box.Focus();
+            mark.MarkLookups($"{rank}:", filter);
             }
-            else
+
+        private void BoxCheckChanged(ToolStripButton button, ToolStripTextBox box, string rank, ref bool filter)
             {
-                button.Text = "F";
-                filter = true;
-            }
+            filter = !button.Checked;
+            button.Text = filter ? "F" : "L";
             NewTextMarkup(box, rank, ref filter);
         }
 
@@ -2496,7 +2495,7 @@ namespace myseq
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                if (box.Text.Length > 0)
+                if (!string.IsNullOrEmpty(box.Text))
                 {
                     NewTextMarkup(box, rank, ref filter);
                     mapCon?.Focus();
@@ -2504,30 +2503,29 @@ namespace myseq
                 else
                 {
                     // text is blank, enter was pressed, but leave focus here
-                    mark.MarkLookups($"{rank}:", ref filter);
+                    mark.MarkLookups($"{rank}:", filter);
                 }
-
                 e.Handled = true;
             }
         }
 
         private void LeaveBox(ToolStripTextBox box, string rank, ref bool filter)
         {
-            if (box.Text.Length > 0 && box.Text != "Mob Search")
-            {
-                NewTextMarkup(box, rank, ref filter);
-            }
-            else
+           if (string.IsNullOrEmpty(box.Text) || box.Text == "Mob Search")
             {
                 box.ForeColor = SystemColors.GrayText;
                 box.Text = "Mob Search";
+            }
+            else
+            {
+                NewTextMarkup(box, rank, ref filter);
             }
         }
 
         private void NewTextMarkup(ToolStripTextBox box, string rank, ref bool filter)
         {
-            var new_text = box.Text.Replace(" ", "_");
-            mark.MarkLookups($"{rank}:{new_text}", ref filter);
+            var sanitizedText = box.Text.Replace(" ", "_");
+            mark.MarkLookups($"{rank}:{sanitizedText}", filter);
         }
 
         private void ToolStripLookupBox_Click(object sender, EventArgs e)
@@ -2566,27 +2564,27 @@ namespace myseq
 
         private void ToolStripLookupBox_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox, "0", ref bFilter0);
+            LeaveBox(toolStripLookupBox, "0", ref bFilter1);
         }
 
         private void ToolStripLookupBox1_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox1, "1", ref bFilter1);
+            LeaveBox(toolStripLookupBox1, "1", ref bFilter2);
         }
 
         private void ToolStripLookupBox2_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox2, "2", ref bFilter2);
+            LeaveBox(toolStripLookupBox2, "2", ref bFilter3);
         }
 
         private void ToolStripLookupBox3_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox3, "3", ref bFilter3);
+            LeaveBox(toolStripLookupBox3, "3", ref bFilter4);
         }
 
         private void ToolStripLookupBox4_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox4, "4", ref bFilter4);
+            LeaveBox(toolStripLookupBox4, "4", ref bFilter5);
         }
 
         #endregion lookupbox

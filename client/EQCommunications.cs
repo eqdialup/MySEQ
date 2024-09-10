@@ -40,8 +40,6 @@ namespace Structures
         private readonly MainForm f1;
 
         public int NewProcessID { get; set; }
-//        public string curZone { get; set; }
-//        public string mapnameWithLabels { get; set; }
 
         public void UpdateHidden()
         {

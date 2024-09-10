@@ -25,7 +25,7 @@ namespace myseq
 
         private readonly System.ComponentModel.Container components;
 
-        public Label MobInfoLabel { get; set; }
+        public Label MobInfoLabel;
 
         private Font drawFont = Settings.Default.MapLabel;
         private Font drawFont1 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 0.9f, Settings.Default.MapLabel.Style);
@@ -362,7 +362,7 @@ namespace myseq
 
             if (eq != null)
             {
-                SelectPoint?.Invoke(eq.gamerInfo, x, y);
+                SelectPoint?.Invoke(eq.GamerInfo, x, y);
             }
         }
 
@@ -465,9 +465,9 @@ namespace myseq
 
         private float MouseDistance(float mousex, float mousey)
         {
-            return (float)Math.Sqrt(((mousey - eq.gamerInfo.Y) * (mousey - eq.gamerInfo.Y)) +
+            return (float)Math.Sqrt(((mousey - eq.GamerInfo.Y) * (mousey - eq.GamerInfo.Y)) +
 
-                ((mousex - eq.gamerInfo.X) * (mousex - eq.gamerInfo.X)));
+                ((mousex - eq.GamerInfo.X) * (mousex - eq.GamerInfo.X)));
         }
 
         private void MouseMapLoc(MouseEventArgs e, out float mousex, out float mousey)
@@ -483,7 +483,7 @@ namespace myseq
             float delta = 5.0f / Ratio;
 
             // Try to find a mob first
-            Spawninfo sp = eq.FindMobNoPetNoPlayerNoCorpse(mousex, mousey, delta);
+            Spawninfo sp = eq.FindMob(mousex, mousey, delta, true, true, true);
             if (sp?.Name.Length > 0)
             {
                 f1.alertAddmobname = ProcessMobName(sp.Name);
@@ -510,7 +510,7 @@ namespace myseq
                     else
                     {
                         // Fallback to finding a general mob
-                        sp = eq.FindMobNoPetNoPlayer(mousex, mousey, delta);
+                        sp = eq.FindMob(mousex, mousey, delta, true, true);
                         if (sp?.Name.Length > 0)
                         {
                             f1.alertAddmobname = ProcessMobName(sp.Name);
@@ -664,7 +664,7 @@ namespace myseq
             MouseMapLoc(e, out var mousex, out var mousey);
             var delta = 5.0f / Ratio;
 
-            Spawninfo sp = eq.FindMobNoPet(mousex, mousey, delta) ?? eq.FindMob(mousex, mousey, delta);
+            Spawninfo sp = eq.FindMob(mousex, mousey, delta, true) ?? eq.FindMob(mousex, mousey, delta);
 
             bool found;
             if (sp == null)
@@ -689,7 +689,7 @@ namespace myseq
 
             if (!found)
             {
-                Spawntimer st = eq.mobsTimers.Find(delta, mousex, mousey);
+                Spawntimer st = eq.MobsTimers.Find(delta, mousex, mousey);
                 found = ToolTipSpawnTimer(st, found);
             }
 
@@ -785,8 +785,8 @@ namespace myseq
             }
             else if (Settings.Default.FollowOption == FollowOption.Player)
             {
-                mapCenter.X = eq.gamerInfo.X;
-                mapCenter.Y = eq.gamerInfo.Y;
+                mapCenter.X = eq.GamerInfo.X;
+                mapCenter.Y = eq.GamerInfo.Y;
             }
             else if (Settings.Default.FollowOption == FollowOption.Target)
             {
@@ -1088,29 +1088,29 @@ namespace myseq
 
         private void InfoSetColor(Spawninfo si)
         {
-            if (si.Level < (con.GreyRange + eq.gamerInfo.Level))
+            if (si.Level < (con.GreyRange + eq.GamerInfo.Level))
             {
                 MobInfoLabel.BackColor = Color.LightGray;
             }
-            else if (si.Level < (con.GreenRange + eq.gamerInfo.Level))
+            else if (si.Level < (con.GreenRange + eq.GamerInfo.Level))
             {
                 MobInfoLabel.BackColor = Color.PaleGreen;
             }
-            else if (si.Level < (con.CyanRange + eq.gamerInfo.Level))
+            else if (si.Level < (con.CyanRange + eq.GamerInfo.Level))
             {
                 MobInfoLabel.BackColor = Color.PowderBlue;
             }
-            else if (si.Level < eq.gamerInfo.Level)
+            else if (si.Level < eq.GamerInfo.Level)
             {
                 MobInfoLabel.BackColor = Color.DeepSkyBlue;
             }
-            else if (si.Level == eq.gamerInfo.Level)
+            else if (si.Level == eq.GamerInfo.Level)
             {
                 MobInfoLabel.BackColor = Color.White;
             }
             else
             {
-                MobInfoLabel.BackColor = si.Level <= eq.gamerInfo.Level + con.YellowRange ? Color.Yellow : Color.Red;
+                MobInfoLabel.BackColor = si.Level <= eq.GamerInfo.Level + con.YellowRange ? Color.Yellow : Color.Red;
             }
 
             if (si.isEventController)
@@ -1245,9 +1245,9 @@ namespace myseq
 
         private float SpawnDistance(Spawninfo si)
         {
-            var dx = si.X - eq.gamerInfo.X;
-            var dy = si.Y - eq.gamerInfo.Y;
-            var dz = si.Z - eq.gamerInfo.Z;
+            var dx = si.X - eq.GamerInfo.X;
+            var dy = si.Y - eq.GamerInfo.Y;
+            var dz = si.Z - eq.GamerInfo.Z;
 
             return (float)Math.Sqrt(dx * dx + dy * dy + dz * dz);
         }
@@ -1411,11 +1411,11 @@ namespace myseq
 
                         // Used to help reduce the number of calls to improve speed
 
-                        var pX = eq.gamerInfo.X;
+                        var pX = eq.GamerInfo.X;
 
-                        var pY = eq.gamerInfo.Y;
+                        var pY = eq.GamerInfo.Y;
 
-                        var pZ = eq.gamerInfo.Z;
+                        var pZ = eq.GamerInfo.Z;
 
                         PointF playerF = new PointF
                         {
@@ -1515,7 +1515,7 @@ namespace myseq
 
                 var DrawDirection = (DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None;
                 var colorRangeCircle = Settings.Default.AlertInsideRangeCircle;
-                if ((eq.selectedID == 99999) && (eq.SpawnX == -1))
+                if ((eq.SelectedID == 99999) && (eq.SpawnX == -1))
                 {
                     MobInfoLabel.Text = MobInfo(null, true, true);
                 }
@@ -1530,7 +1530,7 @@ namespace myseq
                     //                gName = eq.GuildNumToString(sp.Guild);
                     // Draw Line from Gamer to the Selected Spawn
 
-                    if (eq.selectedID == sp.SpawnID)
+                    if (eq.SelectedID == sp.SpawnID)
                     {
                         LineGamerToSelected(player.X, player.Y, sp, x, y);
                     }
@@ -1681,7 +1681,7 @@ namespace myseq
 
                     if (Settings.Default.ShowPVP)
                     {
-                        if ((Math.Abs(eq.gamerInfo.Level - sp.Level) <= Settings.Default.PVPLevels) || (Settings.Default.PVPLevels == -1))
+                        if ((Math.Abs(eq.GamerInfo.Level - sp.Level) <= Settings.Default.PVPLevels) || (Settings.Default.PVPLevels == -1))
                         {
                             DrawPVP(sp, x, y);
                         }
@@ -1885,7 +1885,7 @@ namespace myseq
                 return;
             }
             int minLevel = Settings.Default.MinAlertLevel == -1
-        ? eq.gamerInfo.Level + con.GreyRange
+        ? eq.GamerInfo.Level + con.GreyRange
         : Settings.Default.MinAlertLevel;
 
             if (sp.Level < minLevel)
@@ -1898,7 +1898,7 @@ namespace myseq
 
             if (minlevel == -1)
             {
-                _ = eq.gamerInfo.Level + con.GreyRange;
+                _ = eq.GamerInfo.Level + con.GreyRange;
             }
 
             float range = Settings.Default.RangeCircle;
@@ -2134,8 +2134,8 @@ namespace myseq
 
         private void MinMaxFilter(out float minZ, out float maxZ)
         {
-            minZ = eq.gamerInfo.Z - filterneg;
-            maxZ = eq.gamerInfo.Z + filterpos;
+            minZ = eq.GamerInfo.Z - filterneg;
+            maxZ = eq.GamerInfo.Z + filterpos;
         }
 
         public void DrawMap(DrawOptions DrawOpts)
@@ -2272,7 +2272,7 @@ namespace myseq
         {
             try
             {
-                var xHead = (int)eq.gamerInfo.Heading;
+                var xHead = (int)eq.GamerInfo.Heading;
 
                 // Draw Range Circle
 
@@ -2306,7 +2306,7 @@ namespace myseq
 
                 // Draw Player  (only if we actually have a player)
 
-                if (eq.gamerInfo.SpawnID != 0)
+                if (eq.GamerInfo.SpawnID != 0)
 
                 {
                     // Draw Player Heading Line
@@ -2314,9 +2314,9 @@ namespace myseq
                     if ((DrawOpts & DrawOptions.DirectionLines) != DrawOptions.None && xHead >= 0 && xHead < 512)
 
                     {
-                        var y1 = -(xCos[xHead] * (eq.gamerInfo.SpeedRun * Ratio * 100));
+                        var y1 = -(xCos[xHead] * (eq.GamerInfo.SpeedRun * Ratio * 100));
 
-                        var x1 = -(xSin[xHead] * (eq.gamerInfo.SpeedRun * Ratio * 100));
+                        var x1 = -(xSin[xHead] * (eq.GamerInfo.SpeedRun * Ratio * 100));
 
                         DrawLine(new Pen(new SolidBrush(Color.White)), gamer.X, gamer.Y, gamer.X + x1, gamer.Y + y1);
                     }
@@ -2400,7 +2400,7 @@ namespace myseq
 
                     Pen pen = new Pen(new SolidBrush(Color.LightGray));
 
-                    foreach (Spawntimer st in eq.mobsTimers.GetRespawned().Values)
+                    foreach (Spawntimer st in eq.MobsTimers.GetRespawned().Values)
                     {
                         if (st.zone == eq.Shortname)
                         {
@@ -2507,8 +2507,8 @@ namespace myseq
 
         private void GetGamerPoint()
         {
-            gamerPos.X = CalcScreenCoordX(eq.gamerInfo.X);
-            gamerPos.Y = CalcScreenCoordY(eq.gamerInfo.Y);
+            gamerPos.X = CalcScreenCoordX(eq.GamerInfo.X);
+            gamerPos.Y = CalcScreenCoordY(eq.GamerInfo.Y);
         }
 
         #endregion DrawSpawnTimers
@@ -2560,7 +2560,7 @@ namespace myseq
 
         private void DrawYellowLine(float x, float y, GroundItem gi)
         {
-            if (eq.SpawnX == gi.X && eq.SpawnY == gi.Y && eq.selectedID == 99999)
+            if (eq.SpawnX == gi.X && eq.SpawnY == gi.Y && eq.SelectedID == 99999)
             {
                 GetGamerPoint();
 

@@ -1,6 +1,5 @@
 ﻿// Class Files
 
-using System.Collections;
 using System.Drawing;
 using Structures;
 using System.Globalization;
@@ -12,9 +11,7 @@ namespace myseq
     public struct MapPoint
     {
         public int X { get; set; }
-
         public int Y { get; set; }
-
         public int Z { get; set; }
     }
 

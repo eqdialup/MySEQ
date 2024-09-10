@@ -158,7 +158,7 @@ namespace myseq
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                f1.mapnameWithLabels = "";
+                f1.MapnameWithLabels = "";
 
                 var filename = openFileDialog.FileName;
 
@@ -177,7 +177,7 @@ namespace myseq
 
                 f1.mapPane.TabText = filename.ToLower();
 
-                f1.curZone = filename.ToUpper();
+                f1.CurZone = filename.ToUpper();
             }
         }
     }

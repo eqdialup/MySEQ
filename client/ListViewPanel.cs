@@ -786,7 +786,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Zone Hunt Alert Filters", "Add name to Hunt list:", Mobname))
             {
-                AddFilter(Filters.Hunt, f1.curZone);
+                AddFilter(Filters.Hunt, f1.CurZone);
             }
         }
 
@@ -795,7 +795,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Zone Caution Alert Filters", "Add name to Caution list:", Mobname))
             {
-                AddFilter(Filters.Caution, f1.curZone);
+                AddFilter(Filters.Caution, f1.CurZone);
             }
         }
 
@@ -804,7 +804,7 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Zone Danger Alert Filters", "Add name to Danger list:", Mobname))
             {
-                AddFilter(Filters.Danger, f1.curZone);
+                AddFilter(Filters.Danger, f1.CurZone);
             }
         }
 
@@ -813,13 +813,13 @@ namespace myseq
         {
             if (f1.DialogBox("Add to Zone Rare Alert Filters", "Add name to Rare list:", Mobname))
             {
-                AddFilter(Filters.Alert, f1.curZone);
+                AddFilter(Filters.Alert, f1.CurZone);
             }
         }
 
         private void MnuEditGlobalFilters_Click(object sender, EventArgs e) => filters.EditAlertFile("global");
 
-        private void MnuEditZoneFilters_Click(object sender, EventArgs e) => filters.EditAlertFile(f1.curZone);
+        private void MnuEditZoneFilters_Click(object sender, EventArgs e) => filters.EditAlertFile(f1.CurZone);
 
         private void MnuReloadFilters_Click(object sender, EventArgs e) =>
             //filters.ClearLists();
