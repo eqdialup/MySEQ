@@ -530,9 +530,9 @@ namespace myseq
             foreach (var item in GroundSpawn)
             {
                 if (item.ID.Equals(lookupid))
-            {
-                return item.Name;
-            }
+                {
+                    return item.Name;
+                }
             }
             return ActorDef;
         }
@@ -1248,7 +1248,7 @@ namespace myseq
             for (int i = 0; i < GroundSpawn.Count; i++)
             {
                 if (GroundSpawn[i].ID == num)
-            {
+                {
                     return GroundSpawn[i].Name;
                 }
             }
