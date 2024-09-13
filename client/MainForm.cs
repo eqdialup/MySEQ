@@ -151,7 +151,6 @@ namespace myseq
             toolStripStartStop.Image = Resources.PlayHS;
 
             bIsRunning = false;
-
             toolStripServerAddress.Text = "";
         }
 
@@ -877,13 +876,14 @@ namespace myseq
             eq.Shortname = CurZone;
             eq.Longname = eq.Shortname;
 
-            eq.CalcExtents(map.Lines);
+            mapCon.CalcExtents(map.Lines);
         }
 
         private void ClearMap()
         {
             eq.Clear();
             map.trails.Clear();
+            map.Lines.Clear();
             SpawnList.listView.Items.Clear();
             SpawnTimerList.listView.Items.Clear();
             GroundItemList.listView.Items.Clear();
@@ -2293,33 +2293,30 @@ namespace myseq
 
         private void CheckValidNum(string input)
         {
-            if (string.IsNullOrWhiteSpace(input))
+            if (TryParseValidNumber(input, out var num))
             {
-                ShowInvalidInputMessage();
+                MapPane.scale.Value = num;
                 return;
             }
+            ShowInvalidInputMessage();
+        }
 
+        private bool TryParseValidNumber(string input, out decimal num)
+        {
             input = input.Replace("%", "");
-
-            if (!decimal.TryParse(input, out var num))
-                {
-                ShowInvalidInputMessage();
-                return;
-                }
-
-            num = Math.Max(num, MapPane.scale.Minimum); // Ensure minimum value
-
-            if (num > MapPane.scale.Maximum || !mapPane.MapPaneScale(num))
+            if (decimal.TryParse(input, out num))
             {
-                ShowInvalidInputMessage();
+                num = Math.Max(num, MapPane.scale.Minimum); // Ensure minimum value
+                return num <= MapPane.scale.Maximum;
             }
+            return false;
         }
 
         private void ShowInvalidInputMessage()
-            {
-                toolStripScale.Text = $"{MapPane.scale.Value / 100:0%}";
-                MessageBox.Show($"Enter a number between {MapPane.scale.Minimum} and {MapPane.scale.Maximum}", "Invalid Value Entered.");
-            }
+        {
+            toolStripScale.Text = $"{MapPane.scale.Value / 100:0%}";
+            MessageBox.Show($"Enter a number between 10 and 10000", "Invalid Value Entered.");
+        }
 
         private void ToolStripScale_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -2482,10 +2479,10 @@ namespace myseq
             box.Text = string.Empty;
             box.Focus();
             mark.MarkLookups($"{rank}:", filter);
-            }
+        }
 
         private void BoxCheckChanged(ToolStripButton button, ToolStripTextBox box, string rank, ref bool filter)
-            {
+        {
             filter = !button.Checked;
             button.Text = filter ? "F" : "L";
             NewTextMarkup(box, rank, ref filter);
@@ -2511,7 +2508,7 @@ namespace myseq
 
         private void LeaveBox(ToolStripTextBox box, string rank, ref bool filter)
         {
-           if (string.IsNullOrEmpty(box.Text) || box.Text == "Mob Search")
+            if (string.IsNullOrEmpty(box.Text) || box.Text == "Mob Search")
             {
                 box.ForeColor = SystemColors.GrayText;
                 box.Text = "Mob Search";

@@ -14,11 +14,5 @@ namespace myseq
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         internal static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
-
-        [DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
-        internal static extern bool Beep(uint freq, uint dur);
-
-        [DllImport("winmm.dll")]
-        internal static extern long PlaySound(string lpszName, System.IntPtr hModule, System.IntPtr dwFlags);
     }
 }

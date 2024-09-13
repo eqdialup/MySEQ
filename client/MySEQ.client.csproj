@@ -263,7 +263,6 @@
     </Compile>
     <Compile Include="RegexHelper.cs" />
     <Compile Include="SafeNativeMethods.cs" />
-    <Compile Include="SAudio.cs" />
     <Compile Include="SmtpSettings.cs" />
     <Compile Include="Spawninfo.cs" />
     <Compile Include="Spawntimer.cs" />

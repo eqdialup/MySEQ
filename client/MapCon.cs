@@ -3,6 +3,7 @@
 using myseq.Properties;
 using Structures;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -25,7 +26,7 @@ namespace myseq
 
         private readonly System.ComponentModel.Container components;
 
-        public Label MobInfoLabel;
+        private Label MobInfoLabel;
 
         private Font drawFont = Settings.Default.MapLabel;
         private Font drawFont1 = new Font(Settings.Default.MapLabel.Name, Settings.Default.MapLabel.Size * 0.9f, Settings.Default.MapLabel.Style);
@@ -48,12 +49,6 @@ namespace myseq
         private float m_dragStartPanY;
 
         private bool canShowTooltip = true;
-
-        //private Color gridColor;
-
-        //private Color gridLabelColor;
-
-        //private SolidBrush gridBrush;
 
         private int skittle;
 
@@ -83,11 +78,12 @@ namespace myseq
 
         private float SelectSizeOffset = 4.5f;
 
-        private float LookupRingSize = 7.0f;
-
-        //        private float LookupRingOffset = 3.5f;
-
         public float scale = 1.0f;
+
+        public float MinmapX { get; set; } = -1000;
+        public float MaxMapX { get; set; } = 1000;
+        public float MinMapY { get; set; } = -1000;
+        public float MaxMapY { get; set; } = 1000;
 
         private int filterpos;
 
@@ -118,7 +114,7 @@ namespace myseq
 
         private SpawnColors con;
 
-        private DateTime LastTTtime;
+        //private DateTime LastTTtime;
 
         private int fpsCount;
 
@@ -242,8 +238,10 @@ namespace myseq
             lblGameClock = new Label();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
-            tooltipTimer = new System.Windows.Forms.Timer();
-            tooltipTimer.Interval = 250; // 250 milliseconds = 0.25 seconds
+            tooltipTimer = new System.Windows.Forms.Timer
+            {
+                Interval = 250 // 250 milliseconds = 0.25 seconds
+            };
             tooltipTimer.Tick += TooltipTimer_Tick;
             tooltipTimer.Start();
 
@@ -286,7 +284,7 @@ namespace myseq
             | AnchorStyles.Right;
             lblGameClock.BackColor = Color.BlueViolet;
             lblGameClock.BorderStyle = BorderStyle.FixedSingle;
-            lblGameClock.Font = Settings.Default.TargetInfoFont;// new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold);
+            lblGameClock.Font = Settings.Default.TargetInfoFont;/// new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold);
             lblGameClock.ForeColor = Color.White;
             lblGameClock.Location = new Point(0, 0);
             lblGameClock.Margin = new Padding(0);
@@ -674,7 +672,6 @@ namespace myseq
             else
             {
                 found = true;
-                LastTTtime = DateTime.Now;
                 toolTip.SetToolTip(this, MobInfo(sp, false, false));
                 toolTip.AutomaticDelay = 0;
                 toolTip.Active = true;
@@ -722,7 +719,7 @@ namespace myseq
 
                 toolTip.Active = true;
 
-                LastTTtime = DateTime.Now;
+                //LastTTtime = DateTime.Now;
 
                 found = true;
             }
@@ -741,7 +738,6 @@ namespace myseq
                     toolTip.AutomaticDelay = 0;
                     toolTip.Active = true;
                 }
-                LastTTtime = DateTime.Now;
                 found = true;
             }
 
@@ -757,9 +753,9 @@ namespace myseq
 
         public void ReAdjust()
         {
-            var mapWidth = Math.Abs(eq.MaxMapX - eq.MinmapX);
+            var mapWidth = Math.Abs(MaxMapX - MinmapX);
 
-            var mapHeight = Math.Abs(eq.MaxMapY - eq.MinMapY);
+            var mapHeight = Math.Abs(MaxMapY - MinMapY);
 
             var ScreenWidth = Width - 30;
 
@@ -780,8 +776,8 @@ namespace myseq
             // Calculate the Map Center
             if (Settings.Default.FollowOption == FollowOption.None)
             {
-                mapCenter.X = eq.MinmapX + (mapWidth / 2);
-                mapCenter.Y = eq.MinMapY + (mapHeight / 2);
+                mapCenter.X = MinmapX + (mapWidth / 2);
+                mapCenter.Y = MinMapY + (mapHeight / 2);
             }
             else if (Settings.Default.FollowOption == FollowOption.Player)
             {
@@ -835,7 +831,7 @@ namespace myseq
                 if (mapWidth <= ScreenMapWidth)
                 {
                     // If map fits in window set center to center of map
-                    mapCenter.X = eq.MinmapX + (mapWidth / 2);
+                    mapCenter.X = MinmapX + (mapWidth / 2);
                 }
                 else
                 {
@@ -844,10 +840,9 @@ namespace myseq
                 }
 
                 if (mapHeight <= ScreenMapHeight)
-
                 {
                     // If map fits in window set center to center of map
-                    mapCenter.Y = eq.MinMapY + (mapHeight / 2);
+                    mapCenter.Y = MinMapY + (mapHeight / 2);
                 }
                 else
                 {
@@ -860,13 +855,13 @@ namespace myseq
 
         private void ReposCenter(float ScreenMinX, float ScreenMaxX)
         {
-            if (ScreenMinX < eq.MinmapX)
+            if (ScreenMinX < MinmapX)
             {
-                mapCenter.X += eq.MinmapX - ScreenMinX;
+                mapCenter.X += MinmapX - ScreenMinX;
             }
-            else if (ScreenMaxX > eq.MaxMapX)
+            else if (ScreenMaxX > MaxMapX)
             {
-                mapCenter.X -= ScreenMaxX - eq.MaxMapX;
+                mapCenter.X -= ScreenMaxX - MaxMapX;
             }
         }
 
@@ -882,6 +877,35 @@ namespace myseq
         //m_ratio = (ScreenWidth/MapWidth) * zoom (Calculated ahead of time in ReAdjust)
 
         //return m_panOffsetX + m_screenCenterX - ((mapCoordinateX - m_mapCenterX) * m_ratio);
+
+        private MapExtents mapExtents = new MapExtents();  // Instance for managing map extents
+
+        public void CalcExtents(List<MapLine> lines)
+        {
+            mapExtents.Reset();
+
+            if (!string.IsNullOrEmpty(eq.Longname) && lines.Count > 0)
+            {
+                foreach (MapLine mapLine in lines)
+                {
+                    ExtendMapLines(mapLine);
+                }
+            }
+            else
+            {
+                // Set default bounds if no lines are provided
+                mapExtents = new MapExtents(-1000, 1000, -1000, 1000, -1000, 1000);
+            }
+        }
+
+        private void ExtendMapLines(MapLine mapLine)
+        {
+            foreach (MapPoint mapPoint in mapLine.APoints)
+            {
+                mapExtents.Update(mapPoint.X, mapPoint.Y, mapPoint.Z);
+            }
+        }
+
         public float CalcScreenCoordY(float mapCoordinateY) => adjustment.Y - (mapCoordinateY * Ratio);
 
         private float ScreenToMapCoordX(float screenCoordX) => mapCenter.X + ((screenCenter.X - screenCoordX) / Ratio);
@@ -1257,11 +1281,6 @@ namespace myseq
             int height_adder = 20;
             if (f1 == null) { return ""; }
 
-            //if (st.NextSpawnDT != DateTime.MinValue)
-            //{
-            //    TimeSpan Diff = st.NextSpawnDT.Subtract(DateTime.Now);
-            //}
-
             string Timerinfo = AppendSpawnInfo(st, ref height_adder);
 
             MobInfoLabel.BackColor = Color.White;
@@ -1423,8 +1442,6 @@ namespace myseq
                             Y = CalcScreenCoordY(pY)
                         };
 
-                        //var realhead = eq.CalcRealHeading(eq.gamerInfo);
-
                         var dx = ((PanOffsetX + screenCenter.X) / -Ratio) - mapCenter.X;
 
                         var dy = ((PanOffsetY + screenCenter.Y) / -Ratio) - mapCenter.Y;
@@ -1545,10 +1562,6 @@ namespace myseq
 
                     // Draw All Other Spawns
 
-                    //if (sp.SpawnID == eq.gamerInfo.SpawnID)
-                    //{
-                    //    return;
-                    //}
                     if (sp.flags == 0 && sp.Name.Length > 0)
                     {
                         if (curTarget == sp.Name)
@@ -1926,7 +1939,7 @@ namespace myseq
             if (IsWithinDepthFilter(sp.Z, minZ, maxZ) && IsWithinRange(pX, pY, sp.X, sp.Y, range))
             {
                 sp.proxAlert = true;
-                FormMethods.SwitchOnSoundSettings();
+                new FormMethods().SwitchOnSoundSettings();
             }
         }
 
@@ -2017,25 +2030,18 @@ namespace myseq
         private void DrawRings(float x, float y, Spawninfo sp)
         {
             //            string gName = eq.GuildNumToString(sp.Guild);
-            if (sp.isLookup && (!sp.isCorpse || Settings.Default.CorpseAlerts))
+            if (!sp.isLookup || (sp.isCorpse && !Settings.Default.CorpseAlerts))
             {
-                LookupRingSize = SpawnPlusSize + (skittle / (float)UpdateSteps * SelectSize);
-                var x1 = x - (LookupRingSize / 2.0f);
-                var y1 = y - (LookupRingSize / 2.0f);
+                return;
+            }
 
-                DrawEllipse(new Pen(new SolidBrush(Color.White)), x1, y1, LookupRingSize, LookupRingSize);
+            float lookupRingSize = SpawnPlusSize + (skittle / (float)UpdateSteps * SelectSize);
+            DrawEllipse(new Pen(new SolidBrush(Color.White)), x - lookupRingSize / 2.0f, y - lookupRingSize / 2.0f, lookupRingSize, lookupRingSize);
 
-                if (Settings.Default.ShowLookupText)
-                {
-                    if (Settings.Default.ShowLookupNumber)
-                    {
-                        DrawSpawnNames(textBrush, sp.lookupNumber, sp.X, sp.Y);//, gName);
-                    }
-                    else
-                    {
-                        DrawSpawnNames(textBrush, sp.Name, sp.X, sp.Y);//, gName);
-                    }
-                }
+            if (Settings.Default.ShowLookupText)
+            {
+                string displayName = Settings.Default.ShowLookupNumber ? sp.lookupNumber : sp.Name;
+                DrawSpawnNames(textBrush, displayName, sp.X, sp.Y);
             }
         }
 
@@ -2169,8 +2175,8 @@ namespace myseq
 
         private void DrawHorizontalGridLines(int gridInterval, Pen gridPen, Brush gridBrush)
         {
-            int startX = (int)(eq.MinmapX / gridInterval) - 1;
-            int endX = (int)(eq.MaxMapX / gridInterval) + 1;
+            int startX = (int)(MinmapX / gridInterval) - 1;
+            int endX = (int)(MaxMapX / gridInterval) + 1;
 
             for (int gx = startX; gx < endX; gx++)
             {
@@ -2185,28 +2191,27 @@ namespace myseq
 
         private void DrawVerticalGridLines(int gridInterval, Pen gridPen, Brush gridBrush)
         {
-            int startY = (int)(eq.MinMapY / gridInterval) - 1;
-            int endY = (int)(eq.MaxMapY / gridInterval) + 1;
+            int startY = (int)(MinMapY / gridInterval) - 1;
+            int endY = (int)(MaxMapY / gridInterval) + 1;
 
             for (int gy = startY; gy < endY; gy++)
             {
                 int label = gy * gridInterval;
+                string labelStr = label.ToString();  // Cache the label string
                 float sy = (float)Math.Round(CalcScreenCoordY(label), 0);
 
+                // Draw the grid line
                 DrawLine(gridPen, 0, sy, Width, sy);
 
-                DrawLabel(label.ToString(), gridBrush, Width - (MeasureStringWidth(label.ToString()) + 5), sy);
+                // Measure label once and use it for both positioning and drawing
+                float labelWidth = bkgBuffer.Graphics.MeasureString(labelStr, drawFont).Width;
+                DrawLabel(labelStr, gridBrush, Width - (labelWidth + 5), sy);
             }
         }
 
         private void DrawLabel(string text, Brush brush, float x, float y)
         {
             bkgBuffer.Graphics.DrawString(text, drawFont, brush, x, y);
-        }
-
-        private float MeasureStringWidth(string text)
-        {
-            return bkgBuffer.Graphics.MeasureString(text, drawFont).Width;
         }
 
         private void DepthfilterText()
@@ -2422,7 +2427,7 @@ namespace myseq
 
                                 if (Settings.Default.SpawnCountdown && (checkTimer > 0) && (checkTimer < 120))
                                 {
-                                    DrawSpawnNames(textBrush, checkTimer.ToString(), st.X, st.Y);//, "");
+                                    DrawSpawnNames(textBrush, checkTimer.ToString(), st.X, st.Y);
                                 }
                             }
 
@@ -2538,9 +2543,6 @@ namespace myseq
                         gi.Filtered = false;
                         PointF giPoint = new PointF(x, y);
                         DrawBigX(yellowPen, giPoint, PlusSzOZ);
-                        //                        DrawLine(yellowPen, x - PlusSzOZ, y - PlusSzOZ, x + PlusSzOZ, y + PlusSzOZ);
-
-                        //                        DrawLine(yellowPen, x - PlusSzOZ, y + PlusSzOZ, x + PlusSzOZ, y - PlusSzOZ);
                     }
                     else
                     {
@@ -2664,7 +2666,7 @@ namespace myseq
             else
             {
                 MapPane.scale.Value = 100M;
-                scale = 1.0f;
+                SetScale_1();
                 ClearPan();
             }
 
@@ -2678,22 +2680,10 @@ namespace myseq
             Invalidate();
         }
 
-        private void SetScale(float ratio)
-        {
-            scale = ratio > 0.0f ? Ratio / ratio : 1.0f;
-
-            if (scale < 0.1f)
-            {
-                scale = 1.0f;
-            }
-
-            MapPane.scale.Value = (decimal)(Math.Round(scale, 1) * 100);
-        }
-
         private void GetRatioAndSetScale()
         {
-            var mapWidth = Math.Abs(eq.MaxMapX - eq.MinmapX);
-            var mapHeight = Math.Abs(eq.MaxMapY - eq.MinMapY);
+            var mapWidth = Math.Abs(MaxMapX - MinmapX);
+            var mapHeight = Math.Abs(MaxMapY - MinMapY);
 
             var screenWidth = Width - 30;  // 2 * 15
             var screenHeight = Height - 30; // 2 * 15
@@ -2703,6 +2693,19 @@ namespace myseq
             SetScale(ratio);
         }
 
+        private void SetScale(float ratio)
+        {
+            scale = ratio > 0.0f ? Ratio / ratio : 1.0f;
+
+            if (scale < 0.1f)
+            {
+                SetScale_1();
+            }
+
+            MapPane.scale.Value = (decimal)(Math.Round(scale, 1) * 100);
+        }
+
+        public void SetScale_1() => scale = 1.0f;
         private void VerifyTextExtents(DrawOptions DrawOpts)
         {
             float xlabel = 0;
@@ -2724,22 +2727,22 @@ namespace myseq
 
                 GetTextSize(t);
 
-                if ((t.X - ((tf.Width + xlabel) * factor)) < eq.MinmapX)
+                if ((t.X - ((tf.Width + xlabel) * factor)) < MinmapX)
                 {
-                    eq.MinmapX = t.X - ((tf.Width + xlabel) / Ratio);
+                    MinmapX = t.X - ((tf.Width + xlabel) / Ratio);
                 }
-                else if (t.X > eq.MaxMapX)
+                else if (t.X > MaxMapX)
                 {
-                    eq.MaxMapX = t.X;
+                    MaxMapX = t.X;
                 }
 
-                if ((t.Y + (t.Offset * factor)) > eq.MaxMapY)
+                if ((t.Y + (t.Offset * factor)) > MaxMapY)
                 {
-                    eq.MaxMapY = t.Y + (t.Offset * factor);
+                    MaxMapY = t.Y + (t.Offset * factor);
                 }
-                else if ((t.Y - ((tf.Height + ylabel) * factor)) < eq.MinMapY)
+                else if ((t.Y - ((tf.Height + ylabel) * factor)) < MinMapY)
                 {
-                    eq.MinMapY = t.Y - ((tf.Height + ylabel) * factor);
+                    MinMapY = t.Y - ((tf.Height + ylabel) * factor);
                 }
             }
 

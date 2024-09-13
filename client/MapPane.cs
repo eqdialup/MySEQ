@@ -12,13 +12,13 @@ namespace myseq
         private MainForm f1;
 
         #region Designer components
-        public NumericUpDown offsetx;// {get; set; }
+        public NumericUpDown offsetx;
 
-        public NumericUpDown offsety;// {get; set; }
+        public NumericUpDown offsety;
         public static NumericUpDown scale;
-        public NumericUpDown filterzneg;// {get; set; }
+        public NumericUpDown filterzneg;
 
-        public NumericUpDown filterzpos;// {get; set; }
+        public NumericUpDown filterzpos;
 
         private readonly System.ComponentModel.Container components;
         # endregion Designer components
@@ -219,7 +219,7 @@ namespace myseq
         public void MapReset()
         {
             scale.Value = 100M;
-            mapCon.scale = 1.0f;
+            mapCon.SetScale_1();
             offsetx.Value = 0;
             offsety.Value = 0;
             filterzneg.Value = 75;
@@ -247,28 +247,26 @@ namespace myseq
 
         public void ZoomIn()
         {
-            // Determine increment step based on current zoom value
-            int increment = GetZoomIncrement((int)scale.Value, isZoomingIn: true);
-
-            // Update the current value and ensure it does not exceed the maximum
-            var newValue = Math.Min(scale.Value + increment, scale.Maximum);
-
-            // Update scale value
-            if (newValue >= scale.Minimum && newValue <= scale.Maximum)
-            {
-                scale.Value = newValue;
-            }
+            AdjustZoom(isZoomingIn: true);
         }
 
         public void ZoomOut()
         {
-            // Determine decrement step based on current zoom value
-            int decrement = GetZoomIncrement((int)scale.Value, isZoomingIn: false);
+            AdjustZoom(isZoomingIn: false);
+        }
 
-            // Update the current value and ensure it does not go below the minimum
-            var newValue = Math.Max(scale.Value - decrement, scale.Minimum);
+        // Consolidated logic for zooming in/out
+        private void AdjustZoom(bool isZoomingIn)
+        {
+            // Get the zoom increment based on the current scale value
+            int step = GetZoomIncrement((int)scale.Value, isZoomingIn);
 
-            // Update scale value
+            // Calculate new value, ensuring it remains within bounds
+            var newValue = isZoomingIn
+                ? Math.Min(scale.Value + step, scale.Maximum)
+                : Math.Max(scale.Value - step, scale.Minimum);
+
+            // Set new scale value
             if (newValue >= scale.Minimum && newValue <= scale.Maximum)
             {
                 scale.Value = newValue;
@@ -278,22 +276,11 @@ namespace myseq
         // Helper method to determine zoom increment/decrement
         private int GetZoomIncrement(int currentValue, bool isZoomingIn)
         {
-            if (isZoomingIn)
-            {
-                if (currentValue < 100) return 10;
-                if (currentValue < 200) return 25;
-                if (currentValue < 300) return 25;
-                if (currentValue < 500) return 50;
-                return 100;
-            }
-            else
-            {
-                if (currentValue <= 100) return 10; // Or define custom behavior if needed
-                if (currentValue <= 200) return 25;
-                if (currentValue <= 300) return 25;
-                if (currentValue <= 400) return 50;
-                return 100;
-            }
+            if (currentValue < 100) return 10;
+            if (currentValue < 200) return 25;
+            if (currentValue < 300) return 25;
+            if (currentValue < 500) return 50;
+            return 100;
         }
 
         private void Offsetx_ValueChanged(object sender, EventArgs e)
@@ -339,12 +326,6 @@ namespace myseq
             f1.FocusMouse();
         }
 
-        public bool MapPaneScale(decimal Num)
-        {
-            scale.Value = Num;
-            return true;
-        }
-
         #region KeyPress
 
         public void MapCon_KeyPress(object sender, KeyPressEventArgs e)
@@ -387,21 +368,30 @@ namespace myseq
             offsety.Value = 0;
         }
 
+        private const float ScaleIncrement = 0.2f;
+        private const float MinScale = 0.1f;
+
+        private void AdjustScale(float increment)
+        {
+            float newScale = mapCon.scale + increment;
+
+            // Ensure the new scale doesn't go below the minimum threshold
+            if (newScale >= MinScale)
+            {
+                mapCon.scale = newScale;
+                scale.Value = (decimal)(mapCon.scale * 100);
+                Invalidate();
+            }
+        }
+
         private void IncreaseScale()
         {
-            mapCon.scale += 0.2f;
-            scale.Value = (decimal)(mapCon.scale * 100);
-            Invalidate();
+            AdjustScale(ScaleIncrement);
         }
 
         private void DecreaseScale()
         {
-            if (mapCon.scale - 0.2 >= 0.1)
-            {
-                mapCon.scale -= 0.2f;
-                scale.Value = (decimal)(mapCon.scale * 100);
-                Invalidate();
-            }
+            AdjustScale(-ScaleIncrement);
         }
 
         #endregion KeyPress

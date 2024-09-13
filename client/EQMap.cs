@@ -15,6 +15,7 @@ namespace myseq
     public class EQMap
     {
         private MapCon mapCon;
+        private MapLine mapLine;
         public EQData eq;
 
         public MobTrails trails = new MobTrails();
@@ -61,9 +62,12 @@ namespace myseq
 
         internal void ClearMapStructures()
         {
-            Lines.Clear();
-            Texts.Clear();
-            eq.CalcExtents(Lines);
+            mapLine?.APoints.Clear();
+            mapLines?.Clear();
+            mapTexts?.Clear();
+            Lines?.Clear();
+            Texts?.Clear();
+            mapCon.CalcExtents(Lines);
         }
 
         public bool LoadMap(string filename)
@@ -114,7 +118,7 @@ namespace myseq
                 return false;
             }
 
-            LogLib.WriteLine($"Loading Zone Map (LoY): {filename}");
+            LogLib.WriteLine($"Loading Zone Map (LoY): {filename}", LogLevel.Debug);
 
             int numTexts = 0;
             int numLines = 0;
@@ -167,6 +171,7 @@ namespace myseq
 
         public void LoadDummyMap()
         {
+            LogLib.WriteLine($"Loading Dummy Map", LogLevel.Debug);
             OnExitMap();
             trails.Clear();
             ClearMapStructures();
@@ -178,7 +183,9 @@ namespace myseq
         internal void OptimizeMap()
         {
             if (Lines == null) return;
+            
             List<MapLine> linesToRemove = new List<MapLine>();
+            linesToRemove?.Clear();
             MapLine lastline = null;
             FindVoidLines(linesToRemove, lastline);
             RemoveLines(linesToRemove);

@@ -13,13 +13,13 @@ namespace Structures
 
         public float Z { get; set; }
 
-        public bool IsHunt { get; set; }
+        public bool IsHunt;
 
-        public bool IsCaution { get; set; }
+        public bool IsCaution;
 
-        public bool IsDanger { get; set; }
+        public bool IsDanger;
 
-        public bool IsAlert { get; set; }
+        public bool IsAlert;
 
         public string Name { get; set; }
 

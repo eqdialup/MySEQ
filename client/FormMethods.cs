@@ -20,22 +20,26 @@ namespace myseq
             return folderBrowser.ShowDialog() == DialogResult.OK ? folderBrowser.SelectedPath : null;
         }
 
-        public static void SwitchOnSoundSettings()
+        public void SwitchOnSoundSettings()
         {
             switch (Settings.Default.AlertSound)
             {
                 case "Asterisk":
                     SystemSounds.Asterisk.Play();
                     break;
+
                 case "Beep":
                     SystemSounds.Beep.Play();
                     break;
+
                 case "Exclamation":
                     SystemSounds.Exclamation.Play();
                     break;
+
                 case "Hand":
                     SystemSounds.Hand.Play();
                     break;
+
                 case "Question":
                     SystemSounds.Question.Play();
                     break;
@@ -44,26 +48,28 @@ namespace myseq
 
         public void ToolStripLevelCheck(string input, MainForm f1)
         {
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrWhiteSpace(input))
                 return;
-
+            input = input.Trim();
             if (input.Equals("Auto", StringComparison.OrdinalIgnoreCase))
             {
-                // Set to Auto
-                Settings.Default.LevelOverride = -1;
-                f1.toolStripLevel.Text = "Auto";
+                SetLevelOverride(-1, "Auto", f1);
+                return;
             }
-            else if (int.TryParse(input, out int level) && level >= 1 && level <= 125)
+            if (int.TryParse(input, out int level) && level >= 1 && level <= 125)
             {
-                // Set to a valid level
-                Settings.Default.LevelOverride = level;
-                f1.toolStripLevel.Text = level.ToString();
+                SetLevelOverride(level, level.ToString(), f1);
             }
             else
             {
-                // Show invalid input message
-                MessageBox.Show("Enter a number between 1-125 or 'Auto'.");
+                MessageBox.Show("Please enter a valid number between 1-125 or 'Auto'.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void SetLevelOverride(int levelOverride, string displayText, MainForm f1)
+        {
+            Settings.Default.LevelOverride = levelOverride;
+            f1.toolStripLevel.Text = displayText;
         }
 
         public void LoadPositionsFromConfigFile(MainForm f1)
@@ -152,32 +158,39 @@ namespace myseq
 
         internal void MnuOpenMap(MainForm f1)
         {
-            openFileDialog.InitialDirectory = Settings.Default.MapDir;
-
-            openFileDialog.Filter = "Map Files (*.txt)|*.txt|All Files (*.*)|*.*";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                f1.MapnameWithLabels = "";
+                openFileDialog.InitialDirectory = Settings.Default.MapDir;
+                openFileDialog.Filter = "Map Files (*.txt)|*.txt|All Files (*.*)|*.*";
 
-                var filename = openFileDialog.FileName;
-
-                f1.map.LoadMap(filename);
-
-                filename = filename.GetLastSlash();
-
-                filename = filename.Substring(0, filename.Length - 4);
-
-                if (filename.EndsWith("_1"))
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    filename = filename.Substring(0, filename.Length - 2);
+                    f1.MapnameWithLabels = "";
+
+                    var filePath = openFileDialog.FileName;
+                    var fileName = Path.GetFileNameWithoutExtension(filePath);
+
+                    if (fileName.EndsWith("_1"))
+                    {
+                        fileName = fileName.Substring(0, fileName.Length - 2); // Remove '_1' from file name
+                    }
+
+                    // Load the map file
+                    if (!f1.map.LoadMap(filePath))
+                    {
+                        MessageBox.Show("Failed to load map file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Update UI elements
+                    f1.toolStripShortName.Text = fileName.ToUpper();
+                    f1.mapPane.TabText = fileName.ToLower();
+                    f1.CurZone = fileName.ToUpper();
                 }
-
-                f1.toolStripShortName.Text = filename.ToUpper();
-
-                f1.mapPane.TabText = filename.ToLower();
-
-                f1.CurZone = filename.ToUpper();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while opening the map: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

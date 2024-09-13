@@ -2,6 +2,9 @@
 using Structures;
 using System;
 using System.Drawing.Drawing2D;
+using System.IO;
+using System.Media;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace myseq
@@ -9,10 +12,17 @@ namespace myseq
     public partial class OptionsForm : Form
     {
         private readonly FormMethods formMethod = new FormMethods();
+        private string selectedCautionWav;
+        private readonly string[] buttonTexts = { "None", "Beep", "Speech", "Play wav" };
+        private int currentIndex = 0;
 
         public OptionsForm()
         {
             InitializeComponent();
+            SetCautionTextFromSettings();
+            SetHuntTextFromSettings();
+            SetAlertTextFromSettings();
+            SetDangerTextFromSettings();
             SetOptions(this);
         }
 
@@ -79,57 +89,25 @@ namespace myseq
 
             options.chkHuntMatchFull.Checked = Settings.Default.MatchFullTextH;  //hunt
 
-            options.optHuntNone.Checked = Settings.Default.NoneOnHunt;
-
-            options.optHuntBeep.Checked = Settings.Default.BeepOnHunt;
-
-            options.optHuntSpeak.Checked = Settings.Default.TalkOnHunt;
-
-            options.optHuntPlay.Checked = Settings.Default.PlayOnHunt;
-
-            options.txtHuntAudioFile.Text = Settings.Default.HuntAudioFile;
+            options.HuntAudioFileBox.Text = Settings.Default.HuntAudioFile;
 
             options.txtCautionPrefix.Text = Settings.Default.CautionPrefix;
 
             options.chkCautionMatchFull.Checked = Settings.Default.MatchFullTextC;  //Caution
 
-            options.optCautionNone.Checked = Settings.Default.NoneOnCaution;
-
-            options.optCautionBeep.Checked = Settings.Default.BeepOnCaution;
-
-            options.optCautionSpeak.Checked = Settings.Default.TalkOnCaution;
-
-            options.optCautionPlay.Checked = Settings.Default.PlayOnCaution;
-
-            options.txtCautionAudioFile.Text = Settings.Default.CautionAudioFile;
+            options.CautionAudioFileBox.Text = Settings.Default.CautionAudioFile;
 
             options.txtDangerPrefix.Text = Settings.Default.DangerPrefix;
 
             options.chkDangerMatchFull.Checked = Settings.Default.MatchFullTextD;  //danger
 
-            options.optDangerNone.Checked = Settings.Default.NoneOnDanger;
-
-            options.optDangerBeep.Checked = Settings.Default.BeepOnDanger;
-
-            options.optDangerSpeak.Checked = Settings.Default.TalkOnDanger;
-
-            options.optDangerPlay.Checked = Settings.Default.PlayOnDanger;
-
-            options.txtDangerAudioFile.Text = Settings.Default.DangerAudioFile;
+            options.DangerAudioFileBox.Text = Settings.Default.DangerAudioFile;
 
             options.txtAlertPrefix.Text = Settings.Default.AlertPrefix;
 
             options.chkAlertMatchFull.Checked = Settings.Default.MatchFullTextA;  //Rare
 
-            options.optAlertNone.Checked = Settings.Default.NoneOnAlert;
-
-            options.optAlertBeep.Checked = Settings.Default.BeepOnAlert;
-
-            options.optAlertSpeak.Checked = Settings.Default.TalkOnAlert;
-
-            options.optAlertPlay.Checked = Settings.Default.PlayOnAlert;
-
-            options.txtAlertAudioFile.Text = Settings.Default.AlertAudioFile;
+            options.AlertAudioFileBox.Text = Settings.Default.AlertAudioFile;
 
             options.spnRangeCircle.Value = Settings.Default.RangeCircle;
 
@@ -348,37 +326,83 @@ namespace myseq
 
         private void ChkCautionMatchFull_CheckedChanged(object sender, EventArgs e) => Settings.Default.MatchFullTextC = chkCautionMatchFull.Checked;
 
-        private void OptCautionBeep_CheckedChanged(object sender, EventArgs e) => Settings.Default.BeepOnCaution = optCautionBeep.Checked;
-
-        private void OptDangerBeep_CheckedChanged(object sender, EventArgs e) => Settings.Default.BeepOnDanger = optDangerBeep.Checked;
+        private void OptDangerBeep_CheckedChanged(object sender, EventArgs e) => Settings.Default.MatchFullTextD = chkDangerMatchFull.Checked;
 
         private void ChkAlertMatchFull_CheckedChanged(object sender, EventArgs e) => Settings.Default.MatchFullTextA = chkAlertMatchFull.Checked;
 
         #region MapOptions
 
-        private void ChkZoneNames_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.ZoneText;
+        private void ToggleDrawOption(CheckBox checkBox, DrawOptions option)
+        {
+            if (checkBox.Checked)
+            {
+                Settings.Default.DrawOptions |= option;  // Set the flag
+            }
+            else
+            {
+                Settings.Default.DrawOptions &= ~option;  // Clear the flag
+            }
+        }
 
-        private void CheckMap_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.DrawMap;
+        private void ChkZoneNames_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.ZoneText);
+        }
 
-        private void CheckPlayer_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.Player;
+        private void CheckMap_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.DrawMap);
+        }
 
-        private void DrawGround_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.GroundItems;
+        private void CheckPlayer_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.Player);
+        }
 
-        private void AdjustMap_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.Readjust;
+        private void DrawGround_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.GroundItems);
+        }
 
-        private void CheckSpawns_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.Spawns;
+        private void AdjustMap_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.Readjust);
+        }
 
-        private void DrawTrails_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.SpawnTrails;
+        private void CheckSpawns_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.Spawns);
+        }
 
-        private void HighlightMerch_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.SpawnRings;
+        private void DrawTrails_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.SpawnTrails);
+        }
 
-        private void DrawGrid_CheckedChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.GridLines;
+        private void HighlightMerch_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.SpawnRings);
+        }
 
-        private void SpawnTimers_CheckChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.SpawnTimers;
+        private void DrawGrid_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.GridLines);
+        }
 
-        private void DirectionLine_CheckChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.DirectionLines;
+        private void SpawnTimers_CheckChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.SpawnTimers);
+        }
 
-        private void LineToPoint_CheckChanged(object sender, EventArgs e) => Settings.Default.DrawOptions ^= DrawOptions.SpotLine;
+        private void DirectionLine_CheckChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.DirectionLines);
+        }
+
+        private void LineToPoint_CheckChanged(object sender, EventArgs e)
+        {
+            ToggleDrawOption(sender as CheckBox, DrawOptions.SpotLine);
+        }
 
         #endregion MapOptions
 
@@ -394,8 +418,7 @@ namespace myseq
 
         private void Port_Changed(object sender, EventArgs e)
         {
-            //int.TryParse(txtPortNo.Text, out int port);
-            Settings.Default.Port = int.Parse(txtPortNo.Text); //port;
+            Settings.Default.Port = int.Parse(txtPortNo.Text);
         }
 
         private void DangerPrefix_Changed(object sender, EventArgs e) => Settings.Default.DangerPrefix = txtDangerPrefix.Text;
@@ -411,5 +434,317 @@ namespace myseq
         private void OverrideLevel_Changed(object sender, EventArgs e) => Settings.Default.LevelOverride = (int)spnOverrideLevel.Value;
 
         #endregion Changing User Settings
+
+        #region CautionAlerts
+
+        private void CautionCycleButton_Click(object sender, EventArgs e)
+        {
+            CautionCycleButton.Text = $"Will alert as: {buttonTexts[currentIndex]}";
+            UpdateCautionSettings(buttonTexts[currentIndex]); // Update settings when button text changes
+            currentIndex = (currentIndex + 1) % buttonTexts.Length; // Cycle through the array
+        }
+
+        private void UpdateCautionSettings(string currentText)
+        {
+            // Reset all settings to false
+            Settings.Default.NoneOnCaution = false;
+            Settings.Default.BeepOnCaution = false;
+            Settings.Default.TalkOnCaution = false;
+            Settings.Default.PlayOnCaution = false;
+
+            // Enable the relevant setting
+            switch (currentText)
+            {
+                case "None":
+                    Settings.Default.NoneOnCaution = true;
+                    break;
+
+                case "Beep":
+                    Settings.Default.BeepOnCaution = true;
+                    break;
+
+                case "Speech":
+                    Settings.Default.TalkOnCaution = true;
+                    break;
+
+                case "Play wav":
+                    Settings.Default.PlayOnCaution = true;
+                    break;
+            }
+
+            Settings.Default.Save(); // Save the settings if necessary
+        }
+
+        private void SetCautionTextFromSettings()
+        {
+            if (Settings.Default.NoneOnCaution)
+                currentIndex = 0;
+            else if (Settings.Default.BeepOnCaution)
+                currentIndex = 1;
+            else if (Settings.Default.TalkOnCaution)
+                currentIndex = 2;
+            else if (Settings.Default.PlayOnCaution)
+                currentIndex = 3;
+
+            CautionCycleButton.Text = buttonTexts[currentIndex]; // Set the initial button text
+        }
+
+        private void CautionTest_Click(object sender, EventArgs e)
+        {
+            if (Settings.Default.BeepOnCaution)
+            {
+                Console.Beep(300, 250);
+            }
+            else if (Settings.Default.TalkOnCaution)
+            {
+                var talker = new Talker($"Caution Testing!");
+                Task.Run(() => talker.SpeakText());
+            }
+            else if (Settings.Default.PlayOnCaution)
+            {
+                if (!string.IsNullOrEmpty(Settings.Default.CautionAudioFile) && File.Exists(Settings.Default.CautionAudioFile))
+                {
+                    using (SoundPlayer player = new SoundPlayer(selectedCautionWav))
+                    {
+                        player.Play(); // Play the WAV file asynchronously
+                    }
+                }
+            }
+        }
+
+        private void CautionAudioFile_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "WAV files (*.wav)|*.wav";
+                openFileDialog.Title = "Select a WAV file";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Store the selected file path
+                    selectedCautionWav = openFileDialog.FileName;
+                    // Display the file path in a label or textbox
+                    CautionAudioFileBox.Text = selectedCautionWav;
+                }
+            }
+        }
+
+        #endregion CautionAlerts
+
+        #region HuntAlerts
+
+        private void HuntCycleButton_Click(object sender, EventArgs e)
+        {
+            HuntCycleButton.Text = $"Will alert as: {buttonTexts[currentIndex]}";
+            UpdateHuntSettings(buttonTexts[currentIndex]); // Update settings when button text changes
+            currentIndex = (currentIndex + 1) % buttonTexts.Length; // Cycle through the array
+        }
+
+        private void UpdateHuntSettings(string currentText)
+        {
+            // Reset all settings to false
+            Settings.Default.NoneOnHunt = false;
+            Settings.Default.BeepOnHunt = false;
+            Settings.Default.TalkOnHunt = false;
+            Settings.Default.PlayOnHunt = false;
+
+            // Enable the relevant setting
+            switch (currentText)
+            {
+                case "None":
+                    Settings.Default.NoneOnHunt = true;
+                    break;
+
+                case "Beep":
+                    Settings.Default.BeepOnHunt = true;
+                    break;
+
+                case "Speech":
+                    Settings.Default.TalkOnHunt = true;
+                    break;
+
+                case "Play wav":
+                    Settings.Default.PlayOnHunt = true;
+                    break;
+            }
+
+            Settings.Default.Save(); // Save the settings if necessary
+        }
+
+        private void SetHuntTextFromSettings()
+        {
+            if (Settings.Default.NoneOnHunt)
+                currentIndex = 0;
+            else if (Settings.Default.BeepOnHunt)
+                currentIndex = 1;
+            else if (Settings.Default.TalkOnHunt)
+                currentIndex = 2;
+            else if (Settings.Default.PlayOnHunt)
+                currentIndex = 3;
+            HuntCycleButton.Text = buttonTexts[currentIndex]; // Set the initial button text
+        }
+
+        private void HuntAudioFile_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "WAV files (*.wav)|*.wav";
+                openFileDialog.Title = "Select a WAV file";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Store the selected file path
+                    Settings.Default.HuntAudioFile = openFileDialog.FileName;
+                    // Display the file path in a label or textbox
+                    HuntAudioFileBox.Text = Settings.Default.HuntAudioFile;
+                }
+            }
+        }
+
+        #endregion HuntAlerts
+
+        #region Rarealerts
+
+        private void RareCycleButton_Click(object sender, EventArgs e)
+        {
+            RareCycleButton.Text = $"Will alert as: {buttonTexts[currentIndex]}";
+            UpdateRareSettings(buttonTexts[currentIndex]); // Update settings when button text changes
+            currentIndex = (currentIndex + 1) % buttonTexts.Length; // Cycle through the array
+        }
+
+        private void UpdateRareSettings(string currentText)
+        {
+            // Reset all settings to false
+            Settings.Default.NoneOnAlert = false;
+            Settings.Default.BeepOnAlert = false;
+            Settings.Default.TalkOnAlert = false;
+            Settings.Default.PlayOnAlert = false;
+
+            // Enable the relevant setting
+            switch (currentText)
+            {
+                case "None":
+                    Settings.Default.NoneOnAlert = true;
+                    break;
+
+                case "Beep":
+                    Settings.Default.BeepOnAlert = true;
+                    break;
+
+                case "Speech":
+                    Settings.Default.TalkOnAlert = true;
+                    break;
+
+                case "Play wav":
+                    Settings.Default.PlayOnAlert = true;
+                    break;
+            }
+
+            Settings.Default.Save(); // Save the settings if necessary
+        }
+
+        private void SetAlertTextFromSettings()
+        {
+            if (Settings.Default.NoneOnAlert)
+                currentIndex = 0;
+            else if (Settings.Default.BeepOnAlert)
+                currentIndex = 1;
+            else if (Settings.Default.TalkOnAlert)
+                currentIndex = 2;
+            else if (Settings.Default.PlayOnAlert)
+                currentIndex = 3;
+            RareCycleButton.Text = buttonTexts[currentIndex]; // Set the initial button text
+        }
+
+        private void AlertAudioFile_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "WAV files (*.wav)|*.wav";
+                openFileDialog.Title = "Select a WAV file";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Store the selected file path
+                    Settings.Default.AlertAudioFile = openFileDialog.FileName;
+                    // Display the file path in a label or textbox
+                    HuntAudioFileBox.Text = Settings.Default.AlertAudioFile;
+                }
+            }
+        }
+
+        #endregion Rarealerts
+
+        #region DangerAlerts
+
+        private void DangerCycleButton_Click(object sender, EventArgs e)
+        {
+            DangerCycleButton.Text = $"Will alert as: {buttonTexts[currentIndex]}";
+            UpdateDangerSettings(buttonTexts[currentIndex]); // Update settings when button text changes
+            currentIndex = (currentIndex + 1) % buttonTexts.Length; // Cycle through the array
+        }
+
+        private void UpdateDangerSettings(string currentText)
+        {
+            // Reset all settings to false
+            Settings.Default.NoneOnDanger = false;
+            Settings.Default.BeepOnDanger = false;
+            Settings.Default.TalkOnDanger = false;
+            Settings.Default.PlayOnDanger = false;
+
+            // Enable the relevant setting
+            switch (currentText)
+            {
+                case "None":
+                    Settings.Default.NoneOnDanger = true;
+                    break;
+
+                case "Beep":
+                    Settings.Default.BeepOnDanger = true;
+                    break;
+
+                case "Speech":
+                    Settings.Default.TalkOnDanger = true;
+                    break;
+
+                case "Play wav":
+                    Settings.Default.PlayOnDanger = true;
+                    break;
+            }
+
+            Settings.Default.Save(); // Save the settings if necessary
+        }
+
+        private void SetDangerTextFromSettings()
+        {
+            if (Settings.Default.NoneOnDanger)
+                currentIndex = 0;
+            else if (Settings.Default.BeepOnDanger)
+                currentIndex = 1;
+            else if (Settings.Default.TalkOnDanger)
+                currentIndex = 2;
+            else if (Settings.Default.PlayOnDanger)
+                currentIndex = 3;
+            DangerCycleButton.Text = buttonTexts[currentIndex]; // Set the initial button text
+        }
+
+        private void DangerAudioFile_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "WAV files (*.wav)|*.wav";
+                openFileDialog.Title = "Select a WAV file";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Store the selected file path
+                    Settings.Default.DangerAudioFile = openFileDialog.FileName;
+                    // Display the file path in a label or textbox
+                    DangerAudioFileBox.Text = Settings.Default.DangerAudioFile;
+                }
+            }
+        }
+
+        #endregion DangerAlerts
     }
 }

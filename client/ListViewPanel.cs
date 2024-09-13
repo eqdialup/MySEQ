@@ -25,16 +25,9 @@ namespace myseq
 
         public ListView listView;
 
-        //private ContextMenuStrip mnuContext;
         private IContainer components;
 
         private ToolStripMenuItem mnuAddGlobalFilter;
-
-        //private ToolStripMenuItem mnuAddHuntFilter;
-
-        //private ToolStripMenuItem mnuAddCautionFilter;
-
-        //private ToolStripMenuItem mnuAddAlertFilter;
 
         private ToolStripMenuItem mnuAddZoneFilter;
 
@@ -49,8 +42,6 @@ namespace myseq
         private ToolStripMenuItem mnuEditGlobalFilters;
 
         private ToolStripMenuItem mnuEditZoneFilters;
-
-        //private ToolStripMenuItem mnuAddDangerFilter;
 
         private ToolStripMenuItem mnuReloadZoneFilters;
 
@@ -822,7 +813,6 @@ namespace myseq
         private void MnuEditZoneFilters_Click(object sender, EventArgs e) => filters.EditAlertFile(f1.CurZone);
 
         private void MnuReloadFilters_Click(object sender, EventArgs e) =>
-            //filters.ClearLists();
             f1.ReloadAlertFiles();
 
         private void MnuSearchAllakhazam_Click(object sender, EventArgs e)

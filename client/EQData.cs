@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading;
+using System.Media;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace myseq
@@ -30,21 +31,9 @@ namespace myseq
 
         // Map details
         public string Longname { get; set; } = "";
-
         public string Shortname { get; set; } = "";
 
-        //// Map data
-        // Max + Min map coordinates - define the bounds of the zone
-        public float MinmapX { get; set; } = -1000;
-
-        public float MaxMapX { get; set; } = 1000;
-        public float MinMapY { get; set; } = -1000;
-        public float MaxMapY { get; set; } = 1000;
-        public float MinMapZ { get; set; } = -1000;
-        public float MaxMapZ { get; set; } = 1000;
-
         private List<GroundItem> itemcollection = new List<GroundItem>();          // Hold the items that are on the ground
-
         private Hashtable mobsHashTable = new Hashtable();             // Holds the details of the mobs in the current zone.
         public MobsTimers MobsTimers { get; } = new MobsTimers();               // Manages the timers
 
@@ -353,51 +342,7 @@ namespace myseq
         //        : guildDef;
         //}
 
-        public void CalcExtents(List<MapLine> lines)
-        {
-            if (Longname != "" && lines.Count > 0)
-            {
-                MaxMapX = MinmapX = lines[0].Point(0).X;
-
-                MaxMapY = MinMapY = lines[0].Point(0).Y;
-
-                MaxMapZ = MinMapZ = lines[0].Point(0).Z;
-
-                foreach (MapLine mapLine in lines)
-                {
-                    ExtendMapLines(mapLine);
-                }
-            }
-            else
-            {
-                MinmapX = -1000;
-
-                MaxMapX = 1000;
-
-                MinMapY = -1000;
-
-                MaxMapY = 1000;
-
-                MinMapZ = -1000;
-
-                MaxMapZ = 1000;
-            }
-        }
-
-        private void ExtendMapLines(MapLine mapLine)
-        {
-            foreach (MapPoint mapPoint in mapLine.APoints)
-            {
-                MaxMapX = Math.Max(MaxMapX, mapPoint.X);
-                MinmapX = Math.Min(MinmapX, mapPoint.X);
-
-                MaxMapY = Math.Max(MaxMapY, mapPoint.Y);
-                MinMapY = Math.Min(MinMapY, mapPoint.Y);
-
-                MaxMapZ = Math.Max(MaxMapZ, mapPoint.Z);
-                MinMapZ = Math.Min(MinMapZ, mapPoint.Z);
-            }
-        }
+        private readonly MapExtents mapExtents = new MapExtents();  // Instance for managing map extents
 
         public void CheckMobs(ListViewPanel SpawnList, ListViewPanel GroundItemList)
         {
@@ -530,9 +475,9 @@ namespace myseq
             foreach (var item in GroundSpawn)
             {
                 if (item.ID.Equals(lookupid))
-            {
-                return item.Name;
-            }
+                {
+                    return item.Name;
+                }
             }
             return ActorDef;
         }
@@ -818,24 +763,10 @@ namespace myseq
         {
             if (MapPane.scale.Value == 100M && Settings.Default.AutoExpand)
             {
-                if ((MinmapX > si.X) && (si.X > -20000))
+                // Check and update the map extents based on the Spawninfo coordinates (si.X, si.Y)
+                if (si.X > -20000 && si.X < 20000)
                 {
-                    MinmapX = si.X;
-                }
-
-                if ((MaxMapX < si.X) && (si.X < 20000))
-                {
-                    MaxMapX = si.X;
-                }
-
-                if ((MinMapY > si.Y) && (si.Y > -20000))
-                {
-                    MinMapY = si.Y;
-                }
-
-                if ((MaxMapY < si.Y) && (si.Y < 20000))
-                {
-                    MaxMapY = si.Y;
+                    mapExtents.Update(si.X, si.Y, 0);  // Z-axis isn't relevant here, so pass 0 or any default value
                 }
             }
         }
@@ -942,11 +873,6 @@ namespace myseq
             mob.Z = si.Z;
             mob.listitem.SubItems[15].Text = si.Z.ToString();
 
-            //if (Settings.Default.FollowOption == FollowOption.Target)
-            //{
-            //    f1.ReAdjust();
-            //}
-
             mob.listitem.SubItems[16].Text = si.SpawnDistance(si, GamerInfo).ToString("#.00");
         }
 
@@ -1044,8 +970,6 @@ namespace myseq
             if (!(si.isLDONObject || si.IsPlayer || si.isEventController || si.isFamiliar || si.isMount || (si.isMerc && si.OwnerID != 0)))
             {
                 AssignAlertStatus(si, matchmobname, ref mobnameWithInfo);
-
-                //FormMethods.LookupBoxMatch(si, f1);
             }
 
             PlayAudioMatch(si, mobnameWithInfo);
@@ -1155,21 +1079,17 @@ namespace myseq
 
         private string OwnerFlag(Spawninfo si)
         {
-            if (si.OwnerID > 0)
-            {
-                if (mobsHashTable.ContainsKey(si.OwnerID))
-                {
-                    return ((Spawninfo)mobsHashTable[si.OwnerID]).Name.FixMobName();
-                }
-                else
-                {
-                    return si.OwnerID.ToString();
-                }
-            }
-            else
+            if (si.OwnerID <= 0)
             {
                 return "";
             }
+
+            if (mobsHashTable.ContainsKey(si.OwnerID))
+            {
+                return ((Spawninfo)mobsHashTable[si.OwnerID]).Name.FixMobName();
+            }
+
+            return si.OwnerID.ToString();
         }
 
         public void UpdateMobListColors()
@@ -1191,7 +1111,7 @@ namespace myseq
         public void SaveMobs()
         {
             var dt = DateTime.Now;
-
+         
             var filename = $"{Longname} - {dt:MM-dd-yyyy-HH}.txt";
 
             // Use 'using' statement to ensure the StreamWriter is properly disposed of
@@ -1243,12 +1163,14 @@ namespace myseq
 
         public string GetClass(int num) => ArrayIndextoStr(Classes, num);
 
+        public string GetRace(int num) => num == 2250 ? "Interactive Object" : ArrayIndextoStr(Races, num);
+
         private string ItemNumToString(int num)
         {
             for (int i = 0; i < GroundSpawn.Count; i++)
             {
                 if (GroundSpawn[i].ID == num)
-            {
+                {
                     return GroundSpawn[i].Name;
                 }
             }
@@ -1259,8 +1181,6 @@ namespace myseq
 
         //        public string GuildNumToString(int num) => guildList.ContainsKey(num) ? ((ListItem)guildList[num]).Name : num.ToString();
 
-        public string GetRace(int num) => num == 2250 ? "Interactive Object" : ArrayIndextoStr(Races, num);
-
         public void BeginProcessPacket()
         {
             NewSpawns.Clear();
@@ -1269,36 +1189,35 @@ namespace myseq
 
         public void ProcessSpawnList(ListViewPanel SpawnList)
         {
+            if (NewSpawns.Count == 0) return;
             try
             {
-                if (NewSpawns.Count > 0)
+                if (Zoning)
                 {
-                    if (Zoning)
+                    SpawnList.listView.BeginUpdate();
+                }
+
+                var items = new List<ListViewItem>(NewSpawns.Count);
+                foreach (var spawn in NewSpawns)
+                {
+                    if (spawn != null)
                     {
-                        SpawnList.listView.BeginUpdate();
-                    }
-
-                    ListViewItem[] items = new ListViewItem[NewSpawns.Count];
-
-                    var d = 0;
-
-                    foreach (ListViewItem i in NewSpawns)
-                    {
-                        if (i != null)
-                        {
-                            items[d++] = i;
-                        }
-                    }
-
-                    SpawnList.listView.Items.AddRange(items);
-                    NewSpawns.Clear();
-                    if (Zoning)
-                    {
-                        SpawnList.listView.EndUpdate();
+                        items.Add(spawn);
                     }
                 }
+                if (items.Count > 0)
+                { SpawnList.listView.Items.AddRange(items.ToArray()); }
+                NewSpawns.Clear();
             }
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessSpawnList(): ", ex); }
+            finally
+            {
+                // Always end the update if Zoning was active
+                if (Zoning)
+                {
+                    SpawnList.listView.EndUpdate();
+                }
+            }
         }
 
         public void ProcessGroundItemList(ListViewPanel GroundItemList)
@@ -1443,7 +1362,8 @@ namespace myseq
             SpawnY = -1.0f;
         }
 
-        private bool AffixStars = true;
+        private bool Prefix = true;
+        private bool Affix = true;
         private string HuntPrefix = "";
         private string AlertPrefix = "";
         private string DangerPrefix = "";
@@ -1453,26 +1373,27 @@ namespace myseq
         private bool FullTxtC;
         private bool FullTxtD;
         private bool FullTxtH;
-        private bool Prefix = true;
 
         private static void AudioMatch(string mobname, string TalkDescr, bool TalkOnMatch, bool PlayOnMatch, bool BeepOnMatch, string AudioFile)
         {
             if (TalkOnMatch)
             {
-                ThreadStart threadDelegate = new ThreadStart(new Talker
-                {
-                    SpeakingText = $"{TalkDescr}, {mobname.SearchName()}, is up."
-                }.SpeakText);
-
-                new Thread(threadDelegate).Start();
+                var talker = new Talker($"{TalkDescr}, {mobname.SearchName()}, is up.");
+                Task.Run(() => talker.SpeakText());
             }
             else if (PlayOnMatch)
             {
-                SAudio.Play(AudioFile.Replace("\\", "\\\\"));
+                if (!string.IsNullOrEmpty(AudioFile) && File.Exists(AudioFile))
+                {
+                    using (SoundPlayer player = new SoundPlayer(AudioFile))
+                    {
+                        player.Play(); // Play the WAV file asynchronously
+                    }
+                }
             }
             else if (BeepOnMatch)
             {
-                SafeNativeMethods.Beep(300, 100);
+                Console.Beep(300, 100);
             }
         }
 
@@ -1513,7 +1434,7 @@ namespace myseq
                 mname = $"{prefix} {mname}";
             }
 
-            if (AffixStars)
+            if (Affix)
             {
                 mname += $" {prefix}";
             }
@@ -1567,7 +1488,6 @@ namespace myseq
                 }
             }
         }
-
         private void CheckGrounditemForAlerts(GroundItem gi, string itemname)
         {
             // [hunt]
@@ -1601,7 +1521,7 @@ namespace myseq
 
             Prefix = Settings.Default.PrefixStars;
 
-            AffixStars = Settings.Default.AffixStars;
+            Affix = Settings.Default.AffixStars;
 
             CorpseAlerts = Settings.Default.CorpseAlerts;
 
@@ -1649,18 +1569,17 @@ namespace myseq
 
         public void CalculateMapLinePens(List<MapLine> lines, List<MapText> texts)
         {
-            if (lines != null)
+            if (lines == null) return;
+
+            var alpha = Settings.Default.FadedLines * 255 / 100;
+            foreach (MapLine mapline in lines)
             {
-                var alpha = Settings.Default.FadedLines * 255 / 100;
-                foreach (MapLine mapline in lines)
-                {
-                    SetMaplineColor(alpha, mapline);
-                }
-                foreach (MapText maptxt in texts)
-                {
-                    maptxt.Draw_color = Settings.Default.ForceDistinctText ? GetDistinctColor(new SolidBrush(Color.Black)) : GetDistinctColor(maptxt.LineColor);
-                    maptxt.Draw_pen = new Pen(maptxt.Draw_color.Color);
-                }
+                SetMaplineColor(alpha, mapline);
+            }
+            foreach (MapText maptxt in texts)
+            {
+                maptxt.Draw_color = GetDistinctColor(maptxt.LineColor);
+                maptxt.Draw_pen = new Pen(maptxt.Draw_color.Color);
             }
         }
 
@@ -1678,7 +1597,7 @@ namespace myseq
             }
         }
 
-        public SolidBrush GetDistinctColor(SolidBrush curBrush)
+        private SolidBrush GetDistinctColor(SolidBrush curBrush)
         {
             curBrush.Color = GetDistinctColor(curBrush.Color, Settings.Default.BackColor);
 
@@ -1687,27 +1606,21 @@ namespace myseq
 
         private Color GetDistinctColor(Color foreColor, Color backColor)
         {
-            // make sure the fore + back color can be distinguished.
-
             const int ColorThreshold = 55;
 
             if (GetColorDiff(foreColor, backColor) >= ColorThreshold)
             {
                 return foreColor;
             }
-            else
-            {
-                Color inverseColor = GetInverseColor(foreColor);
 
-                if (GetColorDiff(inverseColor, backColor) > ColorThreshold)
-                {
-                    return inverseColor;
-                }
-                else //' if we have grey rgb(127,127,127) the inverse is the same so return black...
-                {
-                    return Color.Black;
-                }
+            var inverseColor = GetInverseColor(foreColor);
+
+            if (GetColorDiff(inverseColor, backColor) > ColorThreshold)
+            {
+                return inverseColor;
             }
+
+            return Color.Black;
         }
 
         public Pen GetDistinctColor(Pen curPen)
@@ -1718,25 +1631,22 @@ namespace myseq
 
         public Color GetDistinctColor(Color curColor) => GetDistinctColor(curColor, Settings.Default.BackColor);
 
-        private int GetColorDiff(Color foreColor, Color backColor)
+        private int GetColorDiff(Color color1, Color color2)
         {
-            int lTmp;
-            var lColDiff = 0;
+            int diffR = Math.Abs(color1.R - color2.R);
+            int diffG = Math.Abs(color1.G - color2.G);
+            int diffB = Math.Abs(color1.B - color2.B);
 
-            lTmp = Math.Abs(backColor.R - foreColor.R);
-
-            lColDiff = Math.Max(lColDiff, lTmp);
-
-            lTmp = Math.Abs(backColor.G - foreColor.G);
-
-            lColDiff = Math.Max(lColDiff, lTmp);
-
-            lTmp = Math.Abs(backColor.B - foreColor.B);
-
-            return Math.Max(lColDiff, lTmp);
+            return Math.Max(diffR, Math.Max(diffG, diffB));
         }
 
-        private Color GetInverseColor(Color foreColor) => Color.FromArgb((int)(192 - (foreColor.R * 0.75)), (int)(192 - (foreColor.G * 0.75)), (int)(192 - (foreColor.B * 0.75)));
+        private Color GetInverseColor(Color color)
+        {
+            return Color.FromArgb(
+                (int)(192 - color.R * 0.75),
+                (int)(192 - color.G * 0.75),
+                (int)(192 - color.B * 0.75));
+        }
 
         #endregion ColorOperations
     }

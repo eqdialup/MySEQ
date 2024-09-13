@@ -60,7 +60,7 @@ namespace myseq
                 Z = (int)float.Parse(parsedLine[2], NumFormat);
                 InitializeColor(parsedLine[3], parsedLine[4], parsedLine[5]);
                 Size = int.Parse(parsedLine[6], NumFormat);
-                
+
                 Label = string.Join(",", parsedLine, 7, parsedLine.Length - 7);
             }
             else
@@ -93,12 +93,13 @@ namespace myseq
         public Pen LineColor { get; private set; }
         public Pen Draw_color { get; set; }
         public Pen Fade_color { get; set; }
-        public List<MapPoint> APoints{ get; set; }
+        public List<MapPoint> APoints { get; set; }
         public PointF[] LinePoints { get; set; }
 
         public MapLine(string line)
         {
             IFormatProvider numFormat = new CultureInfo("en-US");
+            APoints?.Clear();
             APoints = new List<MapPoint>();
 
             var parsedLine = line.Remove(0, 1).Split(',');
@@ -171,5 +172,48 @@ namespace myseq
                 }
             }
         }
+
+
     }
+
+public class MapExtents
+{
+    public float MinX { get; private set; } = -1000;
+    public float MaxX { get; private set; } = 1000;
+    public float MinY { get; private set; } = -1000;
+    public float MaxY { get; private set; } = 1000;
+    public float MinZ { get; private set; } = -1000;
+    public float MaxZ { get; private set; } = 1000;
+
+    public MapExtents(float minX, float maxX, float minY, float maxY, float minZ, float maxZ)
+    {
+        MinX = minX;
+        MaxX = maxX;
+        MinY = minY;
+        MaxY = maxY;
+        MinZ = minZ;
+        MaxZ = maxZ;
+    }
+
+    public MapExtents()
+    {
+        Reset();
+    }
+
+    public void Reset()
+    {
+        MinX = MinY = MinZ = float.MaxValue;
+        MaxX = MaxY = MaxZ = float.MinValue;
+    }
+
+    public void Update(float x, float y, float z)
+    {
+        MinX = Math.Min(MinX, x);
+        MaxX = Math.Max(MaxX, x);
+        MinY = Math.Min(MinY, y);
+        MaxY = Math.Max(MaxY, y);
+        MinZ = Math.Min(MinZ, z);
+        MaxZ = Math.Max(MaxZ, z);
+    }
+}
 }

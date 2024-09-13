@@ -140,7 +140,5 @@ namespace Structures
         }
 
         public static string StartPath(string folder) => Path.Combine(Application.StartupPath, folder);
-
-        public bool Xor(bool a, bool b) => a ^ b;
     }
 }
