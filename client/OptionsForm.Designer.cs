@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using myseq.Properties;
+using System.Windows.Forms;
 
 namespace myseq
 {
@@ -141,6 +142,7 @@ namespace myseq
             this.cmdCommand = new System.Windows.Forms.Button();
             this.colorOptionPicker = new System.Windows.Forms.ColorDialog();
             this.cmdCancel = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.grpDanger.SuspendLayout();
             this.grpAlert.SuspendLayout();
             this.grpCaution.SuspendLayout();
@@ -212,6 +214,7 @@ namespace myseq
             // 
             // grpDanger
             // 
+            this.grpDanger.Controls.Add(this.label3);
             this.grpDanger.Controls.Add(this.DangerCycleButton);
             this.grpDanger.Controls.Add(this.DangerAudioFileBox);
             this.grpDanger.Controls.Add(this.txtDangerPrefix);
@@ -289,7 +292,7 @@ namespace myseq
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(8, 36);
+            this.label7.Location = new System.Drawing.Point(10, 36);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(80, 13);
             this.label7.TabIndex = 30;
@@ -360,7 +363,7 @@ namespace myseq
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 34);
+            this.label5.Location = new System.Drawing.Point(10, 34);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(80, 13);
             this.label5.TabIndex = 22;
@@ -372,7 +375,6 @@ namespace myseq
             this.CautionCycleButton.Name = "CautionCycleButton";
             this.CautionCycleButton.Size = new System.Drawing.Size(146, 23);
             this.CautionCycleButton.TabIndex = 21;
-            this.CautionCycleButton.Text = $"Will alert as: {buttonTexts[currentIndex]}";
             this.CautionCycleButton.UseVisualStyleBackColor = true;
             this.CautionCycleButton.Click += new System.EventHandler(this.CautionCycleButton_Click);
             // 
@@ -1499,6 +1501,15 @@ namespace myseq
             this.cmdCancel.TabIndex = 2;
             this.cmdCancel.Text = "Cancel";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(10, 34);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(80, 13);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "click to change";
+            // 
             // OptionsForm
             // 
             this.AcceptButton = this.cmdCommand;
@@ -1689,5 +1700,7 @@ namespace myseq
         private TextBox txtWindowName;
 
         #endregion
+
+        private Label label3;
     }
 }

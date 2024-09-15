@@ -65,8 +65,6 @@ namespace myseq
         private string[] Races;
         public string GConBaseName { get; set; } = "";
 
-        //private const int ditchGone = 2;
-
         public Hashtable GetMobsReadonly() => mobsHashTable;
 
         public List<GroundItem> GetItemsReadonly() => itemcollection;

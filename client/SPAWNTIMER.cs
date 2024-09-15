@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using myseq.Properties;
@@ -87,189 +89,174 @@ namespace myseq
         {
             LogLib.WriteLine("Merging spawn timers:", LogLevel.Debug);
 
-            SpawnCount = st.SpawnCount; // usually makes it > 1
+            // Update spawn count and timer
+            SpawnCount = st.SpawnCount;
+            SpawnTimer = st.SpawnTimer;
 
-            SpawnTimer = st.SpawnTimer; // woot!
-
-            if (KillTimeDT == DateTime.MinValue) // woot!
-
+            if (KillTimeDT == DateTime.MinValue)
             {
+                // If no previous kill, set new kill time and next spawn time
                 KillTimeStr = st.KillTimeStr;
-
-                NextSpawnDT = KillTimeDT.Add(new TimeSpan(0, 0, 0, SpawnTimer));
-
+                NextSpawnDT = DateTime.Now.AddSeconds(SpawnTimer);
                 NextSpawnStr = $"{NextSpawnDT.ToLongTimeString()} {NextSpawnDT.ToShortDateString()}";
             }
             else
             {
-                // Enable the timer to start on first kill
-
+                // Otherwise, enable the timer based on the provided spawntimer
                 EnableTimer(st);
             }
 
-            var namecount = 1;
-            StringBuilder builder = new StringBuilder(AllNames);
-            foreach (var name in st.AllNames.Split(','))
-            {
-                var bname = name.TrimName();
-                if (AllNames.IndexOf(bname) < 0 && namecount < 11)
-                {
-                    builder.Append(", ").Append(bname);
-                    namecount++;
-                }
-            }
-            AllNames = builder.ToString();
+            // Merge the names, ensuring no duplicates and limiting the total to 10 names
+            MergeNames(st.AllNames);
 
-            // update last spawn name to be what looks like named mobs
-            foreach (var tname in AllNames.Split(','))
-            {
-                var mname = tname.TrimName();
-                if (mname.RegexMatch())
-                {
-                    LastSpawnName = mname;
-                    break;
-                }
-            }
+            // Update last spawn name to match a named mob (capital letter or #)
+            UpdateLastSpawnName();
 
             listNeedsUpdate = true;
         }
 
-        private void EnableTimer(Spawntimer st)
+        private void MergeNames(string newNames)
         {
-            if (st.SpawnTimer > 10)
+            var nameCount = 1;
+            StringBuilder builder = new StringBuilder(AllNames);
+            var existingNames = new HashSet<string>(AllNames.Split(',').Select(n => n.TrimName()));
 
+            foreach (var name in newNames.Split(',').Select(n => n.TrimName()))
             {
-                TimeSpan Diff = new TimeSpan(0, 0, 0, SpawnTimer);
-
-                if (DateTime.Now.Subtract(Diff) < st.SpawnTimeDT)
-
+                if (!existingNames.Contains(name) && nameCount < 11)
                 {
-                    SpawnTimeDT = st.SpawnTimeDT;
-
-                    SpawnTimeStr = st.SpawnTimeStr;
+                    builder.Append(", ").Append(name);
+                    nameCount++;
                 }
+            }
 
-                if (DateTime.Now.Subtract(Diff) > st.KillTimeDT)
+            AllNames = builder.ToString();
+        }
 
+        private void UpdateLastSpawnName()
+        {
+            foreach (var name in AllNames.Split(',').Select(n => n.TrimName()))
+            {
+                if (name.RegexMatch())
                 {
-                    KillTimeDT = DateTime.MinValue;
-                }
-                else
-                {
-                    KillTimeDT = st.KillTimeDT;
-
-                    KillTimeStr = st.KillTimeStr;
-                }
-
-                if (DateTime.Now > st.NextSpawnDT)
-
-                {
-                    NextSpawnDT = DateTime.MinValue;
-
-                    NextSpawnStr = "";
-                }
-                else
-                {
-                    NextSpawnDT = st.NextSpawnDT;
-
-                    NextSpawnStr = st.NextSpawnStr;
-
-                    KillTimeDT = st.KillTimeDT.Subtract(Diff);
+                    LastSpawnName = name;
+                    break;
                 }
             }
         }
 
-        // When will the mob spawn next? Returns 0 if not available.
-        // TO DO: optimize this, as it is called much more often than the mob is being updated
+        private void EnableTimer(Spawntimer st)
+        {
+            if (st.SpawnTimer <= 10) return;
+
+            TimeSpan diff = new TimeSpan(0, 0, st.SpawnTimer);
+
+            // Check if the spawn time is still valid
+            if (DateTime.Now.Subtract(diff) < st.SpawnTimeDT)
+            {
+                SpawnTimeDT = st.SpawnTimeDT;
+                SpawnTimeStr = st.SpawnTimeStr;
+            }
+
+            // Check if the kill time has expired
+            KillTimeDT = DateTime.Now.Subtract(diff) > st.KillTimeDT ? DateTime.MinValue : st.KillTimeDT;
+            KillTimeStr = KillTimeDT == DateTime.MinValue ? "" : st.KillTimeStr;
+
+            // Check if the next spawn time has passed
+            if (DateTime.Now > st.NextSpawnDT)
+            {
+                NextSpawnDT = DateTime.MinValue;
+                NextSpawnStr = "";
+            }
+            else
+            {
+                NextSpawnDT = st.NextSpawnDT;
+                NextSpawnStr = st.NextSpawnStr;
+                KillTimeDT = st.KillTimeDT.Subtract(diff);
+            }
+        }
 
         public int SecondsUntilSpawn(DateTime now)
         {
-            var checkTimer = 0;
-
-            if (NextSpawnDT != DateTime.MinValue)
-
+            if (NextSpawnDT == DateTime.MinValue)
             {
-                TimeSpan Diff = NextSpawnDT.Subtract(now);
-
-                checkTimer = (Diff.Hours * 3600) + (Diff.Minutes * 60) + Diff.Seconds;
-
-                if (checkTimer <= 0)
-                {
-                    checkTimer = 0;
-                }
+                return 0;
             }
 
-            return checkTimer;
+            TimeSpan diff = NextSpawnDT - now;
+            int checkTimer = (int)diff.TotalSeconds;
+
+            return checkTimer > 0 ? checkTimer : 0;
         }
 
         public string GetDescription()
         {
             var countTimer = GetCountTimer();
-            StringBuilder spawnTimer = StBuilder();
+            var spawnTimer = BuildSpawnDescription();
 
-            spawnTimer.Append("\n")
-            .AppendFormat("Last Spawned At: {0}\n", SpawnTimeStr)
-            .AppendFormat("Last Killed At: {0}\n", KillTimeStr)
-            .AppendFormat("Next Spawn At: {0}\n", NextSpawnStr)
-            .AppendFormat("Spawn Timer: {0} secs\n", SpawnTimer)
-            .AppendFormat("Spawning In: {0}\n", countTimer)
-            .AppendFormat("Spawn Count: {0}\n", SpawnCount)
-            .AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", Y, X, Z);
+            spawnTimer.AppendLine()
+                      .AppendFormat("Last Spawned At: {0}\n", SpawnTimeStr)
+                      .AppendFormat("Last Killed At: {0}\n", KillTimeStr)
+                      .AppendFormat("Next Spawn At: {0}\n", NextSpawnStr)
+                      .AppendFormat("Spawn Timer: {0} secs\n", SpawnTimer)
+                      .AppendFormat("Spawning In: {0}\n", countTimer)
+                      .AppendFormat("Spawn Count: {0}\n", SpawnCount)
+                      .AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", Y, X, Z);
+
             return spawnTimer.ToString();
         }
 
         private string GetCountTimer()
         {
-            var countTimer = "";
+            if (NextSpawnDT == DateTime.MinValue)
+                return string.Empty;
 
-            if (NextSpawnDT != DateTime.MinValue)
-            {
-                TimeSpan Diff = NextSpawnDT.Subtract(DateTime.Now);
-
-                countTimer = $"{Diff.Hours:00}:{Diff.Minutes:00}:{Diff.Seconds:00}";
-            }
-
-            return countTimer;
+            TimeSpan diff = NextSpawnDT.Subtract(DateTime.Now);
+            return $"{diff.Hours:00}:{diff.Minutes:00}:{diff.Seconds:00}";
         }
 
-        private StringBuilder StBuilder()
+        private StringBuilder BuildSpawnDescription()
         {
-            StringBuilder spawnTimer = new StringBuilder();
+            var spawnTimer = new StringBuilder();
 
             spawnTimer.AppendFormat("Spawn Name: {0}\n", LastSpawnName);
 
-            var names_to_add = "Names encountered: ";
             var names = AllNames.Split(',');
-
-            NameCount(spawnTimer, ref names_to_add, names);
-
-            if (names_to_add.Length > 0)
-            {
-                spawnTimer.Append(names_to_add);
-            }
+            AppendNames(spawnTimer, "Names encountered: ", names);
 
             return spawnTimer;
         }
 
-        private static void NameCount(StringBuilder spawnTimer, ref string names_to_add, string[] names)
+        private static void AppendNames(StringBuilder spawnTimer, string namesPrefix, string[] names)
         {
-            StringBuilder builder = new StringBuilder();
+            var currentLine = new StringBuilder(namesPrefix);
+            const int maxLineLength = 45;
+
             foreach (var name in names)
             {
-                var namet = name.TrimName();
+                var trimmedName = name.TrimName();
+                var potentialLength = currentLine.Length + trimmedName.Length + 2; // +2 for ", "
 
-                if ((namet.Length + names_to_add.Length + 2) < 45)
+                if (potentialLength < maxLineLength)
                 {
-                    builder.Append(names_to_add);
-                    builder.Append(", ");
-                    builder.Append(namet);
+                    if (currentLine.Length > namesPrefix.Length)
+                    {
+                        currentLine.Append(", ");
+                    }
+                    currentLine.Append(trimmedName);
                 }
                 else
                 {
-                    spawnTimer.Append(builder.ToString());
-                    spawnTimer.Append("\n");
-                    names_to_add = namet;
+                    spawnTimer.AppendLine(currentLine.ToString());
+                    currentLine.Clear();
+                    currentLine.Append(trimmedName);
                 }
+            }
+
+            // Append remaining names
+            if (currentLine.Length > 0)
+            {
+                spawnTimer.AppendLine(currentLine.ToString());
             }
         }
 
@@ -277,63 +264,59 @@ namespace myseq
 
         public string ReSpawn(string name)
         {
-            var log = "";
+            string log = "";
+
             try
             {
                 SpawnCount++;
-                // if it looks like a named, leave last spawn name alone
-                if (LastSpawnName.Length > 0)
-                {
-                    // See if mob name starts with capital letter or #
-                    if (!LastSpawnName.RegexMatch())
-                    {
-                        LastSpawnName = name;
-                    }
-                }
-                else
+                if (LastSpawnName.Length == 0 || !LastSpawnName.RegexMatch())
                 {
                     LastSpawnName = name;
                 }
-                NextSpawnStr = "";
 
+                NextSpawnStr = "";
                 NextSpawnDT = DateTime.MinValue;
 
+                // Update spawn time
                 SpawnTimeDT = DateTime.Now;
-
                 SpawnTimeStr = $"{SpawnTimeDT.ToLongTimeString()} {SpawnTimeDT.ToShortDateString()}";
 
-                // put name at beginning of list of AllNames
-
-                var newnames = name.TrimName();
-                var namecount = 1;
-                StringBuilder builder = new StringBuilder(AllNames);
-                foreach (var tname in AllNames.Split(','))
-                {
-                    var bname = tname.TrimName();
-                    if (newnames.IndexOf(bname) < 0 && namecount < 8)
-                    {
-                        builder.Append(", ").Append(bname);
-                        namecount++;
-                    }
-                }
-                AllNames = builder.ToString();
-
+                AllNames = UpdateAllNames(name);
                 log = GetRespawnTime(name, log);
             }
-            catch (Exception ex) { LogLib.WriteLine($"Error updating Timer SPAWNTIMER for {name}: ", ex); }
+            catch (Exception ex)
+            {
+                LogLib.WriteLine($"Error updating Timer SPAWNTIMER for {name}: ", ex);
+            }
 
             listNeedsUpdate = true;
-
             return log;
+        }
+
+        private string UpdateAllNames(string name)
+        {
+            var trimmedName = name.TrimName();
+            var nameCount = 1;
+            StringBuilder builder = new StringBuilder(trimmedName);
+
+            foreach (var tname in AllNames.Split(','))
+            {
+                var trimmedTName = tname.TrimName();
+                if (!trimmedName.Contains(trimmedTName) && nameCount < 8)
+                {
+                    builder.Append(", ").Append(trimmedTName);
+                    nameCount++;
+                }
+            }
+
+            return builder.ToString();
         }
 
         private string GetRespawnTime(string name, string log)
         {
             if (KillTimeDT != DateTime.MinValue)
-
             {
                 // This mob has been killed already - now we can calculate the respawn time
-
                 var last_Timer = SpawnTimer;
 
                 TimeSpan Diff = SpawnTimeDT.Subtract(KillTimeDT);
@@ -346,11 +329,8 @@ namespace myseq
 
                     log = $"Setting Timer for Spawn: {SpawnLoc} Name: {name} Count: {SpawnCount} Last Kill Time: {KillTimeStr} Current Spawn Time: {SpawnTimeStr} Timer: {spawnTimer} = {SpawnTimer} secs Old: {last_Timer} secs";
                 }
-
                 // ... and forget about the kill
-
                 KillTimeDT = DateTime.MinValue;
-
                 KillTimeStr = "";
             }
 
@@ -374,24 +354,21 @@ namespace myseq
 
         public ListViewItem GetListItem()
         {
-            var isInList = true;
-
+            // If the ListViewItem does not exist, create and initialize it
             if (ItmSpawnTimerList == null)
             {
                 ItmSpawnTimerList = new ListViewItem(LastSpawnName.FixMobName());
-
-                isInList = false;
-
                 listNeedsUpdate = true;
 
+                // Initialize the ListViewItem with 10 subitems
                 for (var t = 0; t < 10; t++)
                 {
                     ItmSpawnTimerList.SubItems.Add("");
                 }
             }
-
             SpawnTimeRemaining = SecondsUntilSpawn(DateTime.Now);
 
+            // Assign the appropriate color based on remaining time
             if (SpawnTimeRemaining < 1 || SpawnTimeRemaining > 120)
             {
                 ItmSpawnTimerList.ForeColor = Color.Black;
@@ -404,22 +381,17 @@ namespace myseq
             {
                 ItmSpawnTimerList.ForeColor = Color.IndianRed;
             }
+            else if (SpawnTimeRemaining < 90)
+            {
+                ItmSpawnTimerList.ForeColor = Color.Orange;
+            }
             else
             {
-                ItmSpawnTimerList.ForeColor = SpawnTimeRemaining < 90 ? Color.Orange : Color.Goldenrod;
+                ItmSpawnTimerList.ForeColor = Color.Goldenrod;
             }
 
             UpdateList();
-
-            if (!isInList)
-
-            {
-                return ItmSpawnTimerList;
-            }
-            else
-            {
-                return null; // it already is in the list - don't add it again
-            }
+            return ItmSpawnTimerList;
         }
 
         private void UpdateList()
@@ -457,43 +429,43 @@ namespace myseq
             }
         }
 
-        public string ZoneSpawnLoc {get; set; }
+        public string ZoneSpawnLoc { get; set; }
 
-        public string SpawnLoc {get; set; }            // x,y = primary key, set on first spawn
+        public string SpawnLoc { get; set; }            // x,y = primary key, set on first spawn
 
-        public string zone {get; set; }
+        public string zone { get; set; }
 
-        public bool sticky {get; set; }
+        public bool sticky { get; set; }
 
-        public float Y {get; set; }
+        public float Y { get; set; }
 
-        public float X {get; set; }
+        public float X { get; set; }
 
-        public float Z {get; set; }
+        public float Z { get; set; }
 
-        public bool filtered {get; set; }
+        public bool filtered { get; set; }
 
-        public int SpawnCount {get; set; } = 0;          // Updated on true re-spawn
+        public int SpawnCount { get; set; } = 0;          // Updated on true re-spawn
 
         public int SpawnTimeRemaining { get; set; }
 
-        public int SpawnTimer {get; set; }          // Updated on true re-spawn
+        public int SpawnTimer { get; set; }          // Updated on true re-spawn
 
-        public string SpawnTimeStr {get; set; }    // Update on spawn (last spawn time)
+        public string SpawnTimeStr { get; set; }    // Update on spawn (last spawn time)
 
-        public DateTime SpawnTimeDT {get; set; }
+        public DateTime SpawnTimeDT { get; set; }
 
-        public string KillTimeStr {get; set; } = "";     // Updated on each kill, erased on spawn
+        public string KillTimeStr { get; set; } = "";     // Updated on each kill, erased on spawn
 
-        public DateTime KillTimeDT {get; set; } = DateTime.MinValue;
+        public DateTime KillTimeDT { get; set; } = DateTime.MinValue;
 
-        public string NextSpawnStr {get; set; } = "";    // Updated on each kill, erased on spawn
+        public string NextSpawnStr { get; set; } = "";    // Updated on each kill, erased on spawn
 
-        public DateTime NextSpawnDT {get; set; } = DateTime.MinValue;
+        public DateTime NextSpawnDT { get; set; } = DateTime.MinValue;
 
-        public string LastSpawnName {get; set; }   // Updated on each spawn
+        public string LastSpawnName { get; set; }   // Updated on each spawn
 
-        public ListViewItem ItmSpawnTimerList {get; set; }
+        public ListViewItem ItmSpawnTimerList { get; set; }
 
         private bool listNeedsUpdate;
 

@@ -668,7 +668,7 @@ namespace myseq
                     // Store the selected file path
                     Settings.Default.AlertAudioFile = openFileDialog.FileName;
                     // Display the file path in a label or textbox
-                    HuntAudioFileBox.Text = Settings.Default.AlertAudioFile;
+                    AlertAudioFileBox.Text = Settings.Default.AlertAudioFile;
                 }
             }
         }

@@ -185,7 +185,6 @@ namespace myseq
             if (Lines == null) return;
             
             List<MapLine> linesToRemove = new List<MapLine>();
-            linesToRemove?.Clear();
             MapLine lastline = null;
             FindVoidLines(linesToRemove, lastline);
             RemoveLines(linesToRemove);

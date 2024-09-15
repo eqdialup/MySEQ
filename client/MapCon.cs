@@ -114,8 +114,6 @@ namespace myseq
 
         private SpawnColors con;
 
-        //private DateTime LastTTtime;
-
         private int fpsCount;
 
         private TableLayoutPanel tableLayoutPanel1;
@@ -719,8 +717,6 @@ namespace myseq
 
                 toolTip.Active = true;
 
-                //LastTTtime = DateTime.Now;
-
                 found = true;
             }
 
@@ -875,8 +871,6 @@ namespace myseq
         // as changing the plus to a minus...
 
         //m_ratio = (ScreenWidth/MapWidth) * zoom (Calculated ahead of time in ReAdjust)
-
-        //return m_panOffsetX + m_screenCenterX - ((mapCoordinateX - m_mapCenterX) * m_ratio);
 
         private MapExtents mapExtents = new MapExtents();  // Instance for managing map extents
 

@@ -533,7 +533,6 @@ namespace myseq
                 Settings.Default.WindowsSize = Size;
             }
             Settings.Default.WindowState = WindowState;
-            //            ReAdjust();
         }
 
         private void TimPackets_Tick(object sender, EventArgs e)
@@ -553,11 +552,6 @@ namespace myseq
 
         private void TimProcessTimers_Tick(object sender, EventArgs e)
         {
-            // allow processing timers.
-            //eq.ProcessSpawnTimer(this);
-
-            //eq.CheckMobs(SpawnList, GroundItemList);
-
             if (eq.MobsTimers.mobsTimer2.Count > 0)
             {
                 eq.MobsTimers.UpdateList(SpawnTimerList);
@@ -1611,8 +1605,6 @@ namespace myseq
 
             mnuKeepCentered.Checked = mnuKeepCentered2.Checked = Settings.Default.KeepCentered;
         }
-
-        //public void ReAdjust() => mapCon?.ReAdjust();
 
         public void ReloadAlertFiles()
         {

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,9 +9,12 @@ namespace Structures
     public class FileOps
     {
         public static string CombineCfgDir(string file) => Path.Combine(Settings.Default.CfgDir, file);
+
         public static string CombineTimer(string mapName) => Path.Combine(Settings.Default.TimerDir, $"spawns-{mapName}.txt");
-        public static string CombineFilter(string filename ) => Path.Combine(Settings.Default.FilterDir, filename);
-        public static string CombineLog(string filename ) => Path.Combine(Settings.Default.LogDir, filename);
+
+        public static string CombineFilter(string filename) => Path.Combine(Settings.Default.FilterDir, filename);
+
+        public static string CombineLog(string filename) => Path.Combine(Settings.Default.LogDir, filename);
 
         public static void DeleteFile(string timerfile)
         {
@@ -32,19 +35,18 @@ namespace Structures
         public string[] GetStrArrayFromTextFile(string file)
         {
             var filePath = CombineCfgDir(file);
-            List<string> arList = new List<string>();
-            if (File.Exists(filePath))
+
+            // Check if the file exists before processing
+            if (!File.Exists(filePath))
             {
-                foreach (var line in File.ReadAllLines(filePath))
-                {
-                    var ln = line.Trim();
-                    if (ln != null && ln.Substring(0, 1) != "#")
-                    {
-                        arList.Add(ln);
-                    }
-                }
+                return Array.Empty<string>();
             }
-            return arList.ToArray();
+
+            // Read all lines, filter out comments and return the result
+            return File.ReadAllLines(filePath)
+                .Select(line => line.Trim())
+                .Where(trimmedLine => !string.IsNullOrEmpty(trimmedLine) && !trimmedLine.StartsWith("#"))
+                .ToArray();
         }
 
         public void ReadItemList(string file, myseq.EQData eq)

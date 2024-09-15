@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using System.Drawing;
-using myseq.Properties;
+﻿using myseq.Properties;
 using Structures;
+using System.Diagnostics;
+using System.Drawing;
 
 namespace myseq
 {
@@ -15,60 +15,6 @@ namespace myseq
 
         public static bool IsMerc(this string mobName)
         => mobName.IndexOf("'s Merc") >= 1;
-        public static decimal FiveHundred(this decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val < 400)
-            {
-                current_val = 400;
-            }
-
-            return current_val;
-        }
-
-        public static decimal Fourhundred(this decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val < 300)
-            {
-                current_val = 300;
-            }
-
-            return current_val;
-        }
-
-        public static decimal Threehundred(this decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val <= 200)
-            {
-                current_val = 200;
-            }
-
-            return current_val;
-        }
-
-        public static decimal Twohundred(this decimal current_val)
-        {
-            current_val -= 25;
-            if (current_val < 100)
-            {
-                current_val = 100;
-            }
-
-            return current_val;
-        }
-
-        public static decimal Subhundred(this decimal current_val)
-        {
-            current_val -= 10;
-            if (current_val < 10)
-            {
-                current_val = 10;
-            }
-
-            return current_val;
-        }
 
         public static void MakeVisOnWhite(this Spawninfo si)
         {
@@ -85,37 +31,27 @@ namespace myseq
             }
         }
 
-        public static bool ValidateZNum(this string Str)
+        public static bool ValidateZNum(this string str)
         {
-            var validnum = true;
-            if (Str.Length > 0)
+            if (string.IsNullOrEmpty(str))
+                return false;
+            if (str.Length == 1 && str == ".")
+                return true;
+            if (decimal.TryParse(str, out var num))
             {
-                var isNum = decimal.TryParse(Str, out var Num);
-                validnum = false;
-                if (isNum)
-                {
-                    validnum = Num >= 0 && Num <= 3500;
-                }
-                if (Str.Length == 1 && Str == ".")
-                {
-                    validnum = true;
-                }
+                return num >= 0 && num <= 3500;
             }
-
-            return validnum;
+            return false;
         }
 
         public static string GetLastSlash(this string filename)
         {
-            var lastSlashIndex = filename.LastIndexOf("\\");
+            var lastSlashIndex = filename.LastIndexOf('\\');
 
-            if (lastSlashIndex > 0)
-            {
-                filename = filename.Substring(lastSlashIndex + 1);
-            }
-
-            return filename;
+            // If a backslash is found, return the substring after the last slash
+            return lastSlashIndex >= 0 ? filename.Substring(lastSlashIndex + 1) : filename;
         }
+
         public static void StartSearch(this string mobname)
         {
             var searchname = mobname.SearchName();
@@ -124,7 +60,7 @@ namespace myseq
             {
                 var searchURL = string.Format(Settings.Default.SearchString, searchname);
 
-                Process.Start(searchURL);
+                Process.Start(new ProcessStartInfo(searchURL) { UseShellExecute = true });
             }
         }
     }
