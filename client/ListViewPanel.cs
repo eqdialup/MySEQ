@@ -666,7 +666,7 @@ namespace myseq
 
         private void ListView_MouseEnter(object sender, EventArgs e)
         {
-            if (!f1.toolStripScale.Focused && !f1.toolStripZPos.Focused && !f1.toolStripZNeg.Focused && !f1.toolStripLookupBox.Focused)
+            if (!f1.toolStripScale.Focused && !f1.toolStripZPos.Focused && !f1.toolStripZNeg.Focused && !f1.toolStripLookupBox1.Focused)
             {
                 listView.Focus();
             }

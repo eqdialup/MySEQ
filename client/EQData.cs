@@ -16,18 +16,12 @@ namespace myseq
 
     public class EQData : FileOps
     {
-        public interface IRemovableItem
-        {
-            bool ShouldBeDeleted { get; set; }
-            ListViewItem Listitem { get; set; }
-        }
-
-        private static readonly Spawninfo sPAWNINFO = new Spawninfo();
+        private static readonly Spawninfo spawninformation = new Spawninfo();
 
         public readonly SpawnColors spawnColor = new SpawnColors();
 
         // player details
-        public Spawninfo GamerInfo { get; set; } = sPAWNINFO;
+        public Spawninfo GamerInfo { get; set; } = spawninformation;
 
         // Map details
         public string Longname { get; set; } = "";
@@ -161,7 +155,7 @@ namespace myseq
                     continue;
                 }
 
-                if (CheckXY(sp, x, y, delta))
+                if (Math.Abs(sp.X - x) <= delta && Math.Abs(sp.Y - y) <= delta)
                 {
                     return sp;
                 }
@@ -197,11 +191,6 @@ namespace myseq
             }
 
             return false;
-        }
-
-        private bool CheckXY(Spawninfo sp, float x, float y, float delta)
-        {
-            return Math.Abs(sp.X - x) <= delta && Math.Abs(sp.Y - y) <= delta;
         }
 
         private Spawninfo FindMobTimer(string spawnLoc)
@@ -339,8 +328,6 @@ namespace myseq
         //        ? ((ListItem)guildList[int.Parse(tok, new CultureInfo("en-US"))]).Name
         //        : guildDef;
         //}
-
-        private readonly MapExtents mapExtents = new MapExtents();  // Instance for managing map extents
 
         public void CheckMobs(ListViewPanel SpawnList, ListViewPanel GroundItemList)
         {
@@ -664,11 +651,7 @@ namespace myseq
             {
                 if (mob.X != si.X)
                 {
-                    // ensure that map is big enough to show all spawns.
-                    CheckBigMap(si);
-
                     mob.X = si.X;
-
                     mob.Y = si.Y;
                 }
                 else if (mob.Y != si.Y)
@@ -688,7 +671,7 @@ namespace myseq
             {
                 // Players
 
-                si.m_isPlayer = true;
+                si.MyPlayer = true;
 
                 if (!Settings.Default.ShowPlayers)
                 {
@@ -754,18 +737,6 @@ namespace myseq
             else
             {
                 SetListColors(mob);
-            }
-        }
-
-        private void CheckBigMap(Spawninfo si)
-        {
-            if (MapPane.scale.Value == 100M && Settings.Default.AutoExpand)
-            {
-                // Check and update the map extents based on the Spawninfo coordinates (si.X, si.Y)
-                if (si.X > -20000 && si.X < 20000)
-                {
-                    mapExtents.Update(si.X, si.Y, 0);  // Z-axis isn't relevant here, so pass 0 or any default value
-                }
             }
         }
 
@@ -840,7 +811,7 @@ namespace myseq
 
             if ((si.Name.IndexOf("_") == -1) && (si.Name.IndexOf("a ") != 0) && (si.Name.IndexOf("an ") != 0))
             {
-                si.m_isPlayer = true;
+                si.MyPlayer = true;
 
                 if (!Settings.Default.ShowPCCorpses)
                 {
@@ -849,7 +820,7 @@ namespace myseq
 
                 if (si.Name.Length > 0 && CheckMyCorpse(si.Name))
                 {
-                    si.m_isMyCorpse = true;
+                    si.MyCorpse = true;
 
                     si.hidden = !Settings.Default.ShowMyCorpse;
                 }
@@ -1241,8 +1212,6 @@ namespace myseq
             catch (Exception ex) { LogLib.WriteLine("Error in ProcessGroundItemList(): ", ex); }
         }
 
-        public float CalcRealHeading(Spawninfo sp) => sp.Heading >= 0 && sp.Heading < 512 ? sp.Heading / 512 * 360 : 0;
-
         #region ProcessGamer
 
         private int gLastconLevel = -1;
@@ -1565,42 +1534,33 @@ namespace myseq
 
         #region ColorOperations
 
-        public void CalculateMapLinePens(List<MapLine> lines, List<MapText> texts)
+        public void CalculateMapLinePens(List<LineSegment> lines, List<MapLabel> texts)
         {
             if (lines == null) return;
 
-            var alpha = Settings.Default.FadedLines * 255 / 100;
-            foreach (MapLine mapline in lines)
+            foreach (LineSegment mapline in lines)
             {
-                SetMaplineColor(alpha, mapline);
+                SetMaplineColor(mapline);
             }
-            foreach (MapText maptxt in texts)
+            foreach (MapLabel maptxt in texts)
             {
-                maptxt.Draw_color = GetDistinctColor(maptxt.LineColor);
-                maptxt.Draw_pen = new Pen(maptxt.Draw_color.Color);
+                maptxt.TextColor = GetDistinctColor(maptxt.TextColor);
             }
         }
 
-        private void SetMaplineColor(int alpha, MapLine mapline)
+        private void SetMaplineColor(LineSegment mapline)
         {
             if (Settings.Default.ForceDistinct)
             {
-                mapline.Draw_color = GetDistinctColor(new Pen(Color.Black));
-                mapline.Fade_color = new Pen(Color.FromArgb(alpha, mapline.Draw_color.Color));
+                mapline.LineColor = GetDistinctColor(Color.Black);
             }
             else
             {
-                mapline.Draw_color = GetDistinctColor(new Pen(mapline.LineColor.Color));
-                mapline.Fade_color = new Pen(Color.FromArgb(alpha, mapline.Draw_color.Color));
+                mapline.LineColor = GetDistinctColor(mapline.LineColor);
+                ////TODO make alpha filtering.
             }
         }
 
-        private SolidBrush GetDistinctColor(SolidBrush curBrush)
-        {
-            curBrush.Color = GetDistinctColor(curBrush.Color, Settings.Default.BackColor);
-
-            return curBrush;
-        }
 
         private Color GetDistinctColor(Color foreColor, Color backColor)
         {
@@ -1645,7 +1605,6 @@ namespace myseq
                 (int)(192 - color.G * 0.75),
                 (int)(192 - color.B * 0.75));
         }
-
         #endregion ColorOperations
     }
 }

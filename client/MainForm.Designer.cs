@@ -264,9 +264,6 @@ namespace myseq
             this.toolStripResetDepthFilter = new System.Windows.Forms.ToolStripButton();
             this.toolStripOptions = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLookupBox = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripCheckLookup = new System.Windows.Forms.ToolStripButton();
-            this.toolStripResetLookup = new System.Windows.Forms.ToolStripButton();
             this.toolStripLookupBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripCheckLookup1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup1 = new System.Windows.Forms.ToolStripButton();
@@ -279,6 +276,9 @@ namespace myseq
             this.toolStripLookupBox4 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripCheckLookup4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripResetLookup4 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLookupBox5 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripCheckLookup5 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripResetLookup5 = new System.Windows.Forms.ToolStripButton();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -2037,9 +2037,6 @@ namespace myseq
             this.toolStripOptions,
             this.toolStripSeparator19,
             toolStripLabel1,
-            this.toolStripLookupBox,
-            this.toolStripCheckLookup,
-            this.toolStripResetLookup,
             this.toolStripLookupBox1,
             this.toolStripCheckLookup1,
             this.toolStripResetLookup1,
@@ -2051,7 +2048,10 @@ namespace myseq
             this.toolStripResetLookup3,
             this.toolStripLookupBox4,
             this.toolStripCheckLookup4,
-            this.toolStripResetLookup4});
+            this.toolStripResetLookup4,
+            this.toolStripLookupBox5,
+            this.toolStripCheckLookup5,
+            this.toolStripResetLookup5});
             this.toolBarStrip.Location = new System.Drawing.Point(0, 24);
             this.toolBarStrip.Name = "toolBarStrip";
             this.toolBarStrip.Size = new System.Drawing.Size(1309, 25);
@@ -2285,46 +2285,11 @@ namespace myseq
             this.toolStripSeparator19.Name = "toolStripSeparator19";
             this.toolStripSeparator19.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripLookupBox
-            // 
-            this.toolStripLookupBox.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.toolStripLookupBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.toolStripLookupBox.Name = "toolStripLookupBox";
-            this.toolStripLookupBox.Size = new System.Drawing.Size(75, 25);
-            this.toolStripLookupBox.Text = "Mob Search";
-            this.toolStripLookupBox.ToolTipText = "Type in mob name and press Enter.";
-            this.toolStripLookupBox.Leave += new System.EventHandler(this.ToolStripLookupBox_Leave);
-            this.toolStripLookupBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ToolStripTextBox_KeyPress);
-            this.toolStripLookupBox.Click += new System.EventHandler(this.ToolStripLookupBox_Click);
-            // 
-            // toolStripCheckLookup
-            // 
-            this.toolStripCheckLookup.BackColor = System.Drawing.Color.Gray;
-            this.toolStripCheckLookup.Checked = true;
-            this.toolStripCheckLookup.CheckOnClick = true;
-            this.toolStripCheckLookup.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripCheckLookup.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup.Name = "toolStripCheckLookup";
-            this.toolStripCheckLookup.Size = new System.Drawing.Size(23, 22);
-            this.toolStripCheckLookup.Text = "L";
-            this.toolStripCheckLookup.ToolTipText = "Lookup or Filter";
-            this.toolStripCheckLookup.CheckedChanged += new System.EventHandler(this.ToolStripCheckLookup_CheckChanged);
-            // 
-            // toolStripResetLookup
-            // 
-            this.toolStripResetLookup.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripResetLookup.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripResetLookup.Name = "toolStripResetLookup";
-            this.toolStripResetLookup.Size = new System.Drawing.Size(39, 22);
-            this.toolStripResetLookup.Text = "Reset";
-            this.toolStripResetLookup.ToolTipText = "Reset Find Mob Search String";
-            this.toolStripResetLookup.Click += new System.EventHandler(this.ToolStripResetLookup_Click);
-            // 
             // toolStripLookupBox1
             // 
             this.toolStripLookupBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox1.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.toolStripLookupBox1.Name = "toolStripLookupBox1";
+            this.toolStripLookupBox1.Name = "toolStripLookupBox";
             this.toolStripLookupBox1.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox1.Text = "Mob Search";
             this.toolStripLookupBox1.ToolTipText = "Type in mob name and press Enter.";
@@ -2339,7 +2304,7 @@ namespace myseq
             this.toolStripCheckLookup1.CheckOnClick = true;
             this.toolStripCheckLookup1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripCheckLookup1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup1.Name = "toolStripCheckLookup1";
+            this.toolStripCheckLookup1.Name = "toolStripCheckLookup";
             this.toolStripCheckLookup1.Size = new System.Drawing.Size(23, 22);
             this.toolStripCheckLookup1.Text = "L";
             this.toolStripCheckLookup1.ToolTipText = "Lookup or Filter";
@@ -2349,7 +2314,7 @@ namespace myseq
             // 
             this.toolStripResetLookup1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripResetLookup1.Name = "toolStripResetLookup1";
+            this.toolStripResetLookup1.Name = "toolStripResetLookup";
             this.toolStripResetLookup1.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup1.Text = "Reset";
             this.toolStripResetLookup1.ToolTipText = "Reset Find Mob Search String";
@@ -2359,7 +2324,7 @@ namespace myseq
             // 
             this.toolStripLookupBox2.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox2.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.toolStripLookupBox2.Name = "toolStripLookupBox2";
+            this.toolStripLookupBox2.Name = "toolStripLookupBox1";
             this.toolStripLookupBox2.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox2.Text = "Mob Search";
             this.toolStripLookupBox2.ToolTipText = "Type in mob name and press Enter.";
@@ -2374,7 +2339,7 @@ namespace myseq
             this.toolStripCheckLookup2.CheckOnClick = true;
             this.toolStripCheckLookup2.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripCheckLookup2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup2.Name = "toolStripCheckLookup2";
+            this.toolStripCheckLookup2.Name = "toolStripCheckLookup1";
             this.toolStripCheckLookup2.Size = new System.Drawing.Size(23, 22);
             this.toolStripCheckLookup2.Text = "L";
             this.toolStripCheckLookup2.ToolTipText = "Lookup or Filter";
@@ -2384,7 +2349,7 @@ namespace myseq
             // 
             this.toolStripResetLookup2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripResetLookup2.Name = "toolStripResetLookup2";
+            this.toolStripResetLookup2.Name = "toolStripResetLookup1";
             this.toolStripResetLookup2.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup2.Text = "Reset";
             this.toolStripResetLookup2.ToolTipText = "Reset Find Mob Search String";
@@ -2394,7 +2359,7 @@ namespace myseq
             // 
             this.toolStripLookupBox3.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox3.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.toolStripLookupBox3.Name = "toolStripLookupBox3";
+            this.toolStripLookupBox3.Name = "toolStripLookupBox2";
             this.toolStripLookupBox3.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox3.Text = "Mob Search";
             this.toolStripLookupBox3.ToolTipText = "Type in mob name and press Enter.";
@@ -2409,7 +2374,7 @@ namespace myseq
             this.toolStripCheckLookup3.CheckOnClick = true;
             this.toolStripCheckLookup3.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripCheckLookup3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup3.Name = "toolStripCheckLookup3";
+            this.toolStripCheckLookup3.Name = "toolStripCheckLookup2";
             this.toolStripCheckLookup3.Size = new System.Drawing.Size(23, 22);
             this.toolStripCheckLookup3.Text = "L";
             this.toolStripCheckLookup3.ToolTipText = "Lookup or Filter";
@@ -2419,7 +2384,7 @@ namespace myseq
             // 
             this.toolStripResetLookup3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripResetLookup3.Name = "toolStripResetLookup3";
+            this.toolStripResetLookup3.Name = "toolStripResetLookup2";
             this.toolStripResetLookup3.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup3.Text = "Reset";
             this.toolStripResetLookup3.ToolTipText = "Reset Find Mob Search String";
@@ -2429,7 +2394,7 @@ namespace myseq
             // 
             this.toolStripLookupBox4.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripLookupBox4.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.toolStripLookupBox4.Name = "toolStripLookupBox4";
+            this.toolStripLookupBox4.Name = "toolStripLookupBox3";
             this.toolStripLookupBox4.Size = new System.Drawing.Size(75, 25);
             this.toolStripLookupBox4.Text = "Mob Search";
             this.toolStripLookupBox4.ToolTipText = "Type in mob name and press Enter.";
@@ -2444,7 +2409,7 @@ namespace myseq
             this.toolStripCheckLookup4.CheckOnClick = true;
             this.toolStripCheckLookup4.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripCheckLookup4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripCheckLookup4.Name = "toolStripCheckLookup4";
+            this.toolStripCheckLookup4.Name = "toolStripCheckLookup3";
             this.toolStripCheckLookup4.Size = new System.Drawing.Size(23, 22);
             this.toolStripCheckLookup4.Text = "L";
             this.toolStripCheckLookup4.ToolTipText = "Lookup or Filter";
@@ -2454,11 +2419,46 @@ namespace myseq
             // 
             this.toolStripResetLookup4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripResetLookup4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripResetLookup4.Name = "toolStripResetLookup4";
+            this.toolStripResetLookup4.Name = "toolStripResetLookup3";
             this.toolStripResetLookup4.Size = new System.Drawing.Size(39, 22);
             this.toolStripResetLookup4.Text = "Reset";
             this.toolStripResetLookup4.ToolTipText = "Reset Find Mob Search String";
             this.toolStripResetLookup4.Click += new System.EventHandler(this.ToolStripResetLookup4_Click);
+            // 
+            // toolStripLookupBox5
+            // 
+            this.toolStripLookupBox5.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripLookupBox5.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.toolStripLookupBox5.Name = "toolStripLookupBox4";
+            this.toolStripLookupBox5.Size = new System.Drawing.Size(75, 25);
+            this.toolStripLookupBox5.Text = "Mob Search";
+            this.toolStripLookupBox5.ToolTipText = "Type in mob name and press Enter.";
+            this.toolStripLookupBox5.Leave += new System.EventHandler(this.ToolStripLookupBox5_Leave);
+            this.toolStripLookupBox5.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ToolStripTextBox5_KeyPress);
+            this.toolStripLookupBox5.Click += new System.EventHandler(this.ToolStripLookupBox5_Click);
+            // 
+            // toolStripCheckLookup5
+            // 
+            this.toolStripCheckLookup5.BackColor = System.Drawing.Color.Gray;
+            this.toolStripCheckLookup5.Checked = true;
+            this.toolStripCheckLookup5.CheckOnClick = true;
+            this.toolStripCheckLookup5.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripCheckLookup5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripCheckLookup5.Name = "toolStripCheckLookup5";
+            this.toolStripCheckLookup5.Size = new System.Drawing.Size(23, 22);
+            this.toolStripCheckLookup5.Text = "L";
+            this.toolStripCheckLookup5.ToolTipText = "Lookup or Filter";
+            this.toolStripCheckLookup5.CheckedChanged += new System.EventHandler(this.ToolStripCheckLookup5_CheckChanged);
+            // 
+            // toolStripResetLookup5
+            // 
+            this.toolStripResetLookup5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripResetLookup5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripResetLookup5.Name = "toolStripResetLookup5";
+            this.toolStripResetLookup5.Size = new System.Drawing.Size(39, 22);
+            this.toolStripResetLookup5.Text = "Reset";
+            this.toolStripResetLookup5.ToolTipText = "Reset Find Mob Search String";
+            this.toolStripResetLookup5.Click += new System.EventHandler(this.ToolStripResetLookup5_Click);
             // 
             // dockPanel
             // 
@@ -2743,21 +2743,21 @@ namespace myseq
         private ToolStripMenuItem mnuShowLookupText;
         private ToolStripMenuItem mnuShowLookupNumber;
         private ToolStripMenuItem mnuAlwaysOnTop;
-        public ToolStripTextBox toolStripLookupBox;
         public ToolStripTextBox toolStripLookupBox1;
         public ToolStripTextBox toolStripLookupBox2;
         public ToolStripTextBox toolStripLookupBox3;
         public ToolStripTextBox toolStripLookupBox4;
-        private ToolStripButton toolStripResetLookup;
+        public ToolStripTextBox toolStripLookupBox5;
         private ToolStripButton toolStripResetLookup1;
         private ToolStripButton toolStripResetLookup2;
         private ToolStripButton toolStripResetLookup3;
         private ToolStripButton toolStripResetLookup4;
-        private ToolStripButton toolStripCheckLookup;
+        private ToolStripButton toolStripResetLookup5;
         private ToolStripButton toolStripCheckLookup1;
         private ToolStripButton toolStripCheckLookup2;
         private ToolStripButton toolStripCheckLookup3;
         private ToolStripButton toolStripCheckLookup4;
+        private ToolStripButton toolStripCheckLookup5;
         private ToolStripSeparator toolStripSepAddMapLabel;
         private ToolStripMenuItem toolbarsToolStripMenuItem;
         private ToolStripMenuItem mnuViewMenuBar;

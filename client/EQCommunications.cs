@@ -41,9 +41,9 @@ namespace Structures
 
         public int NewProcessID { get; set; }
 
-        public void UpdateHidden()
+        public void UpdateHidden(bool state)
         {
-            update_hidden = true;
+            update_hidden = state;
         }
 
         public EQCommunications(EQData eq, MainForm f1)

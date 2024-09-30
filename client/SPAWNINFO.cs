@@ -80,9 +80,9 @@ namespace Structures
 
         public ListViewItem listitem { get; set; }
 
-        public bool m_isPlayer { get; set; }
+        public bool MyPlayer { get; set; }
 
-        public bool m_isMyCorpse { get; set; }
+        public bool MyCorpse { get; set; }
 
         public bool delFromList { get; set; }
 
@@ -94,9 +94,9 @@ namespace Structures
 
         public string ZoneSpawnLoc { get; set; } = "";
 
-        public bool IsPlayer => m_isPlayer;
+        public bool IsPlayer => MyPlayer;
 
-        public bool IsMyCorpse => m_isMyCorpse;
+        public bool IsMyCorpse => MyCorpse;
 
         public bool IsSpawnLDON(Spawninfo si)
         {
@@ -165,7 +165,7 @@ namespace Structures
 
             if (flags == PacketType.Player)
             {
-                m_isPlayer = true;
+                MyPlayer = true;
             }
 
             //            Guild = BitConverter.ToInt32(b, 100 + offset);

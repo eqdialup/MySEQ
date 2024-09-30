@@ -27,6 +27,7 @@ namespace myseq
         private string currentIPAddress = "";
         private MarkLookup mark = new MarkLookup();
         public MapCon mapCon;
+        private MapData mapData;
 
         public MapPane mapPane = new MapPane();
         public readonly Filters filters = new Filters();
@@ -45,6 +46,7 @@ namespace myseq
         public float alertZ = 0.0f;
 
         private bool bIsRunning;
+
         private bool bFilter1;
         private bool bFilter2;
         private bool bFilter3;
@@ -61,6 +63,7 @@ namespace myseq
 
             eq = new EQData();
             map = new EQMap();
+            mapData = new MapData();
             comm = new EQCommunications(eq, this);
 
             InitializeComponent();
@@ -79,7 +82,7 @@ namespace myseq
             mapPane.CloseButton = false;
             mapPane.TabText = "map_pane";
 
-            mapCon.SetComponents(this, mapPane, eq, map);
+            mapCon.SetComponents(this, mapPane, eq, map, mapData);
             mark.SetComponents(eq);
             mapPane.SetComponents(this);
 
@@ -104,7 +107,7 @@ namespace myseq
             GroundItemList.VisibleChanged += new EventHandler(GroundItemList_VisibleChanged);
             GroundItemList.SetComponents(eq, filters, this);
 
-            map.SetComponents(mapCon, eq);
+            map.SetComponents(mapCon, eq, mapData);
             eq.MobsTimers.SetComponents(map);
             formMethod.LoadPositionsFromConfigFile(this);
 
@@ -540,13 +543,16 @@ namespace myseq
             DrawOpts = Settings.Default.DrawOptions;
             comm.Tick();
             mapCon.Tick();
-            map.trails.CountMobTrails(eq);
+            if (Settings.Default.CollectMobTrails)
+            {
+                map.trails.CountMobTrails(eq);
+            }
         }
 
         private void TimDelayPlay_Tick(object sender, EventArgs e)
         {
             // our alert sound/email delay interval has passed.
-            EnablePlayAlerts();
+            Settings.Default.playAlerts = true;
             timDelayAlerts.Stop();
         }
 
@@ -643,9 +649,7 @@ namespace myseq
 
                 // Turn off collecting mob trails anytime load a new map
 
-                mnuCollectMobTrails.Checked = false;
-
-                Settings.Default.CollectMobTrails = false;
+                mnuCollectMobTrails.Checked = Settings.Default.CollectMobTrails = false;
 
                 // Start Delay for doing spawn alerts.  This stops sounds and emails.
                 timDelayAlerts.Start();
@@ -869,15 +873,13 @@ namespace myseq
             formMethod.MnuOpenMap(this);
             eq.Shortname = CurZone;
             eq.Longname = eq.Shortname;
-
-            mapCon.CalcExtents(map.Lines);
+            mapData.Update();
         }
 
         private void ClearMap()
         {
             eq.Clear();
             map.trails.Clear();
-            map.Lines.Clear();
             SpawnList.listView.Items.Clear();
             SpawnTimerList.listView.Items.Clear();
             GroundItemList.listView.Items.Clear();
@@ -1334,14 +1336,14 @@ namespace myseq
         {
             mnuShowNPCs.Checked = !mnuShowNPCs.Checked;
             Settings.Default.ShowNPCs = mnuShowNPCs.Checked;
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuShowLookupText_Click(object sender, EventArgs e)
         {
             mnuShowLookupText.Checked = !mnuShowLookupText.Checked;
             Settings.Default.ShowLookupText = mnuShowLookupText.Checked;
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuAlwaysOnTop_Click(object sender, EventArgs e)
@@ -1365,7 +1367,7 @@ namespace myseq
             mnuShowLookupNumber.Checked = !mnuShowLookupNumber.Checked;
             Settings.Default.ShowLookupNumber = mnuShowLookupNumber.Checked;
 
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuShowCorpses_Click(object sender, EventArgs e)
@@ -1374,7 +1376,7 @@ namespace myseq
             mnuShowCorpses.Checked = !mnuShowCorpses.Checked;
             Settings.Default.ShowCorpses = mnuShowCorpses.Checked;
 
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuShowPlayers_Click(object sender, EventArgs e)
@@ -1383,7 +1385,7 @@ namespace myseq
             mnuShowPlayers.Checked = !mnuShowPlayers.Checked;
             Settings.Default.ShowPlayers = mnuShowPlayers.Checked;
 
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuShowInvis_Click(object sender, EventArgs e)
@@ -1392,7 +1394,7 @@ namespace myseq
             mnuShowInvis.Checked = !mnuShowInvis.Checked;
             Settings.Default.ShowInvis = mnuShowInvis.Checked;
 
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuShowMounts_Click(object sender, EventArgs e)
@@ -1401,7 +1403,7 @@ namespace myseq
             mnuShowMounts.Checked = !mnuShowMounts.Checked;
             Settings.Default.ShowMounts = mnuShowMounts.Checked;
 
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuShowFamiliars_Click(object sender, EventArgs e)
@@ -1409,7 +1411,7 @@ namespace myseq
             mnuShowFamiliars.Checked = !mnuShowFamiliars.Checked;
             Settings.Default.ShowFamiliars = mnuShowFamiliars.Checked;
 
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuShowPets_Click(object sender, EventArgs e)
@@ -1417,7 +1419,7 @@ namespace myseq
             mnuShowPets.Checked = !mnuShowPets.Checked;
             Settings.Default.ShowPets = mnuShowPets.Checked;
 
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuTargetInfoFont_Click(object sender, EventArgs e)
@@ -1630,7 +1632,7 @@ namespace myseq
 
         private void ResetMapPens()
         {
-            eq.CalculateMapLinePens(map.Lines, map.Texts);
+            eq.CalculateMapLinePens(mapData.LineSegments, mapData.Labels);
             MapConInvalidate();
         }
 
@@ -2004,7 +2006,7 @@ namespace myseq
 
             Settings.Default.ShowPCCorpses = mnuShowPCCorpses.Checked;
 
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuShowMyCorpse_Click(object sender, EventArgs e)
@@ -2013,7 +2015,7 @@ namespace myseq
 
             Settings.Default.ShowMyCorpse = mnuShowMyCorpse.Checked;
 
-            comm.UpdateHidden();
+            comm.UpdateHidden(true);
         }
 
         private void MnuForceDistinctText_Click(object sender, EventArgs e)
@@ -2391,93 +2393,141 @@ namespace myseq
 
         #region lookupbox
 
-        private void ToolStripResetLookup_Click(object sender, EventArgs e)
-        {
-            BoxReset(toolStripLookupBox, "1", bFilter1);
-        }
-
         private void ToolStripResetLookup1_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox1, "2", bFilter2);
+            BoxReset(toolStripLookupBox1, "1");
         }
 
         private void ToolStripResetLookup2_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox2, "3", bFilter3);
+            BoxReset(toolStripLookupBox2, "2");
         }
 
         private void ToolStripResetLookup3_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox3, "4", bFilter4);
+            BoxReset(toolStripLookupBox3, "3");
         }
 
         private void ToolStripResetLookup4_Click(object sender, EventArgs e)
         {
-            BoxReset(toolStripLookupBox4, "5", bFilter5);
+            BoxReset(toolStripLookupBox4, "4");
         }
 
-        private void ToolStripCheckLookup_CheckChanged(object sender, EventArgs e)
+        private void ToolStripResetLookup5_Click(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup, toolStripLookupBox, "1", ref bFilter1);
+            BoxReset(toolStripLookupBox5, "5");
         }
 
         private void ToolStripCheckLookup1_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup1, toolStripLookupBox1, "2", ref bFilter2);
+            if (toolStripCheckLookup1.Checked)
+            {
+                toolStripCheckLookup1.Text = "L";
+                bFilter1 = false;
+            }
+            else
+            {
+                toolStripCheckLookup1.Text = "F";
+                bFilter1 = true;
+            }
+            string new_text = toolStripLookupBox1.Text.Replace(" ", "_");
+            mark.MarkLookups("1:" + new_text, bFilter1);
         }
 
         private void ToolStripCheckLookup2_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup2, toolStripLookupBox2, "3", ref bFilter3);
+            if (toolStripCheckLookup2.Checked)
+            {
+                toolStripCheckLookup2.Text = "L";
+                bFilter5 = false;
+            }
+            else
+            {
+                toolStripCheckLookup2.Text = "F";
+                bFilter5 = true;
+            }
+            string new_text = toolStripLookupBox2.Text.Replace(" ", "_");
+            mark.MarkLookups("2:" + new_text, bFilter2);
         }
 
         private void ToolStripCheckLookup3_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup3, toolStripLookupBox3, "4", ref bFilter4);
+            if (toolStripCheckLookup3.Checked)
+            {
+                toolStripCheckLookup3.Text = "L";
+                bFilter5 = false;
+            }
+            else
+            {
+                toolStripCheckLookup3.Text = "F";
+                bFilter5 = true;
+            }
+            string new_text = toolStripLookupBox5.Text.Replace(" ", "_");
+            mark.MarkLookups("3:" + new_text, bFilter3);
         }
 
         private void ToolStripCheckLookup4_CheckChanged(object sender, EventArgs e)
         {
-            BoxCheckChanged(toolStripCheckLookup4, toolStripLookupBox4, "5", ref bFilter5);
+                        if (toolStripCheckLookup4.Checked)
+            {
+                toolStripCheckLookup4.Text = "L";
+                bFilter5 = false;
+            }
+            else
+            {
+                toolStripCheckLookup4.Text = "F";
+                bFilter5 = true;
+            }
+            string new_text = toolStripLookupBox4.Text.Replace(" ", "_");
+            mark.MarkLookups("4:" + new_text, bFilter4);
         }
 
-        private void ToolStripTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void ToolStripCheckLookup5_CheckChanged(object sender, EventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox, "1", ref bFilter1);
+            if (toolStripCheckLookup5.Checked)
+            {
+                toolStripCheckLookup5.Text = "L";
+                bFilter5 = false;
+            }
+            else
+            {
+                toolStripCheckLookup5.Text = "F";
+                bFilter5 = true;
+            }
+            string new_text = toolStripLookupBox5.Text.Replace(" ", "_");
+            mark.MarkLookups("5:" + new_text, bFilter5);
         }
 
         private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox1, "2", ref bFilter2);
+            BoxKeyPress(e, toolStripLookupBox1, "1", ref bFilter1);
         }
 
         private void ToolStripTextBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox2, "3", ref bFilter3);
+            BoxKeyPress(e, toolStripLookupBox2, "2", ref bFilter2);
         }
 
         private void ToolStripTextBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox3, "4", ref bFilter4);
+            BoxKeyPress(e, toolStripLookupBox3, "3", ref bFilter3);
         }
 
         private void ToolStripTextBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BoxKeyPress(e, toolStripLookupBox4, "5", ref bFilter5);
+            BoxKeyPress(e, toolStripLookupBox4, "4", ref bFilter4);
         }
 
-        private void BoxReset(ToolStripTextBox box, string rank, bool filter)
+        private void ToolStripTextBox5_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            BoxKeyPress(e, toolStripLookupBox5, "5", ref bFilter5);
+        }
+
+        private void BoxReset(ToolStripTextBox box, string rank)
         {
             box.Text = string.Empty;
             box.Focus();
-            mark.MarkLookups($"{rank}:", filter);
-        }
-
-        private void BoxCheckChanged(ToolStripButton button, ToolStripTextBox box, string rank, ref bool filter)
-        {
-            filter = !button.Checked;
-            button.Text = filter ? "F" : "L";
-            NewTextMarkup(box, rank, ref filter);
+            mark.MarkLookups($"{rank}:");
         }
 
         private void BoxKeyPress(KeyPressEventArgs e, ToolStripTextBox box, string rank, ref bool filter)
@@ -2486,7 +2536,8 @@ namespace myseq
             {
                 if (!string.IsNullOrEmpty(box.Text))
                 {
-                    NewTextMarkup(box, rank, ref filter);
+                    var sanitizedText = box.Text.Trim().Replace(" ", "_");
+                    mark.MarkLookups($"{rank}:{sanitizedText}", filter);
                     mapCon?.Focus();
                 }
                 else
@@ -2496,30 +2547,6 @@ namespace myseq
                 }
                 e.Handled = true;
             }
-        }
-
-        private void LeaveBox(ToolStripTextBox box, string rank, ref bool filter)
-        {
-            if (string.IsNullOrEmpty(box.Text) || box.Text == "Mob Search")
-            {
-                box.ForeColor = SystemColors.GrayText;
-                box.Text = "Mob Search";
-            }
-            else
-            {
-                NewTextMarkup(box, rank, ref filter);
-            }
-        }
-
-        private void NewTextMarkup(ToolStripTextBox box, string rank, ref bool filter)
-        {
-            var sanitizedText = box.Text.Replace(" ", "_");
-            mark.MarkLookups($"{rank}:{sanitizedText}", filter);
-        }
-
-        private void ToolStripLookupBox_Click(object sender, EventArgs e)
-        {
-            BoxClick(toolStripLookupBox);
         }
 
         private void BoxClick(ToolStripTextBox box)
@@ -2551,29 +2578,79 @@ namespace myseq
             BoxClick(toolStripLookupBox4);
         }
 
-        private void ToolStripLookupBox_Leave(object sender, EventArgs e)
+        private void ToolStripLookupBox5_Click(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox, "0", ref bFilter1);
+            BoxClick(toolStripLookupBox5);
         }
 
         private void ToolStripLookupBox1_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox1, "1", ref bFilter2);
+            if (string.IsNullOrWhiteSpace(toolStripLookupBox1.Text) || toolStripLookupBox1.Text == "Mob Search")
+            {
+                toolStripLookupBox1.ForeColor = SystemColors.GrayText;
+                toolStripLookupBox1.Text = "Mob Search";
+            }
+            else
+            {
+                var sanitizedText = toolStripLookupBox1.Text.Trim().Replace(" ", "_");
+                mark.MarkLookups($"1:{sanitizedText}", bFilter1);
+            }
         }
 
         private void ToolStripLookupBox2_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox2, "2", ref bFilter3);
+            if (string.IsNullOrWhiteSpace(toolStripLookupBox2.Text) || toolStripLookupBox2.Text == "Mob Search")
+            {
+                toolStripLookupBox2.ForeColor = SystemColors.GrayText;
+                toolStripLookupBox2.Text = "Mob Search";
+            }
+            else
+            {
+                var sanitizedText = toolStripLookupBox2.Text.Trim().Replace(" ", "_");
+                mark.MarkLookups($"2:{sanitizedText}", bFilter2);
+            }
         }
 
         private void ToolStripLookupBox3_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox3, "3", ref bFilter4);
+            if (string.IsNullOrWhiteSpace(toolStripLookupBox3.Text) || toolStripLookupBox3.Text == "Mob Search")
+            {
+                toolStripLookupBox3.ForeColor = SystemColors.GrayText;
+                toolStripLookupBox3.Text = "Mob Search";
+            }
+            else
+            {
+                var sanitizedText = toolStripLookupBox3.Text.Trim().Replace(" ", "_");
+                mark.MarkLookups($"3:{sanitizedText}", bFilter3);
+            }
         }
 
         private void ToolStripLookupBox4_Leave(object sender, EventArgs e)
         {
-            LeaveBox(toolStripLookupBox4, "4", ref bFilter5);
+            if (string.IsNullOrWhiteSpace(toolStripLookupBox4.Text) || toolStripLookupBox4.Text == "Mob Search")
+            {
+                toolStripLookupBox4.ForeColor = SystemColors.GrayText;
+                toolStripLookupBox4.Text = "Mob Search";
+            }
+            else
+            {
+                var sanitizedText = toolStripLookupBox4.Text.Trim().Replace(" ", "_");
+                mark.MarkLookups($"4:{sanitizedText}", bFilter4);
+            }
+        }
+
+        private void ToolStripLookupBox5_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(toolStripLookupBox5.Text) || toolStripLookupBox5.Text == "Mob Search")
+            {
+                toolStripLookupBox5.ForeColor = SystemColors.GrayText;
+                toolStripLookupBox5.Text = "Mob Search";
+            }
+            else
+            {
+                var sanitizedText = toolStripLookupBox5.Text.Trim().Replace(" ", "_");
+                mark.MarkLookups($"5:{sanitizedText}", bFilter5);
+            }
         }
 
         #endregion lookupbox
@@ -2648,8 +2725,6 @@ namespace myseq
                 e.Handled = true;
             }
         }
-
-        private void EnablePlayAlerts() => Settings.Default.playAlerts = true;
 
         private void DisablePlayAlerts() => Settings.Default.playAlerts = false;
 
