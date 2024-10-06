@@ -19,6 +19,16 @@ namespace myseq
             Y = y;
             Z = z;
         }
+
+        public static Point3D Parse(string[] parts, int startIndex)
+        {
+            return new Point3D(
+                float.Parse(parts[startIndex], CultureInfo.InvariantCulture),
+                float.Parse(parts[startIndex + 1], CultureInfo.InvariantCulture),
+                float.Parse(parts[startIndex + 2], CultureInfo.InvariantCulture));
+        }
+
+        public override string ToString() => $"{X};{Y};{Z}";
     }
 
     // Class representing a label or text object

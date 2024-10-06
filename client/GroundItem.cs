@@ -1,5 +1,5 @@
+using myseq;
 using System.Windows.Forms;
-
 
 namespace Structures
 {
@@ -7,11 +7,7 @@ namespace Structures
 
     public class GroundItem
     {
-        public float X { get; set; }
-
-        public float Y { get; set; }
-
-        public float Z { get; set; }
+        public Point3D ItemLocation { get; set; }
 
         public bool IsHunt;
 
@@ -33,9 +29,7 @@ namespace Structures
 
         public GroundItem(Spawninfo si)
         {
-            X = si.X;
-            Y = si.Y;
-            Z = si.Z;
+            ItemLocation = new Point3D(si.X, si.Y, si.Z);
             Name = si.Name;
         }
     }

@@ -640,13 +640,13 @@ namespace myseq
 
                 case GroundItem gi when gi.Name.Length > 0:
                     f1.alertAddmobname = eq.GetItemDescription(gi.Name);
-                    SetAlertCoordinates(gi.X, gi.Y, gi.Z);
+                    SetAlertCoordinates(gi.ItemLocation.X, gi.ItemLocation.X, gi.ItemLocation.Z);
                     f1.SetContextMenu();
                     return true;
 
                 case Spawntimer st:
                     f1.alertAddmobname = GetSpawnTimerName(st);
-                    SetAlertCoordinates(st.X, st.Y, st.Z);
+                    SetAlertCoordinates(st.Location.X, st.Location.Y, st.Location.Z);
                     f1.SetContextMenu();
                     return true;
 
@@ -2427,9 +2427,9 @@ namespace myseq
 
                     foreach (Spawntimer st in eq.MobsTimers.GetRespawned().Values)
                     {
-                        if (st.zone == eq.Shortname)
+                        if (st.Zone == eq.Shortname)
                         {
-                            PointF timerPoint = new PointF((float)Math.Round(CalcScreenCoordX(st.X), 0), (float)Math.Round(CalcScreenCoordY(st.Y), 0));
+                            PointF timerPoint = new PointF((float)Math.Round(CalcScreenCoordX(st.Location.X), 0), (float)Math.Round(CalcScreenCoordY(st.Location.Y), 0));
 
                             var stOffset = PlusSzOZ - 0.5f;
 
@@ -2447,13 +2447,13 @@ namespace myseq
 
                                 if (Settings.Default.SpawnCountdown && (checkTimer > 0) && (checkTimer < 120))
                                 {
-                                    DrawSpawnNames(textBrush, checkTimer.ToString(), st.X, st.Y);
+                                    DrawSpawnNames(textBrush, checkTimer.ToString(), st.Location.X, st.Location.Y);
                                 }
                             }
 
                             // Draw Blue Line to selected spawn location
 
-                            if ((st.X == eq.SpawnX) && (st.Y == eq.SpawnY))
+                            if ((st.Location.X == eq.SpawnX) && (st.Location.Y == eq.SpawnY))
                             {
                                 GetGamerPoint();
 
@@ -2476,19 +2476,19 @@ namespace myseq
         {
             if (Settings.Default.DepthFilter && Settings.Default.FilterSpawnPoints)
             {
-                if ((st.Z > maxZ) || (st.Z < minZ))
+                if ((st.Location.Z > maxZ) || (st.Location.Z < minZ))
                 {
                     canDraw = false;
-                    st.filtered = true;
+                    st.Filtered = true;
                 }
                 else
                 {
-                    st.filtered = false;
+                    st.Filtered = false;
                 }
             }
             else
             {
-                st.filtered = false;
+                st.Filtered = false;
             }
 
             return canDraw;
@@ -2504,7 +2504,7 @@ namespace myseq
 
             grounditemInfo.AppendFormat("ActorDef: {0}\n", gi.Name);
 
-            grounditemInfo.AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", gi.Y, gi.X, gi.Z);
+            grounditemInfo.AppendFormat(gi.ItemLocation.ToString());
 
             MobInfoLabel.BackColor = Color.White;
 
@@ -2578,11 +2578,11 @@ namespace myseq
                 foreach (GroundItem gi in eq.GetItemsReadonly())
 
                 {
-                    x = (float)Math.Round(CalcScreenCoordX(gi.X), 0);
+                    x = (float)Math.Round(CalcScreenCoordX(gi.ItemLocation.X), 0);
 
-                    y = (float)Math.Round(CalcScreenCoordY(gi.Y), 0);
+                    y = (float)Math.Round(CalcScreenCoordY(gi.ItemLocation.Y), 0);
 
-                    if (!GroundItemDepthFilter || IsWithinDepthFilter(gi.Z, pZ))
+                    if (!GroundItemDepthFilter || IsWithinDepthFilter(gi.ItemLocation.Z, pZ))
                     {
                         Pen yellowPen = new Pen(new SolidBrush(Color.Yellow));
                         gi.Filtered = false;
@@ -2607,7 +2607,7 @@ namespace myseq
 
         private void DrawYellowLine(float x, float y, GroundItem gi)
         {
-            if (eq.SpawnX == gi.X && eq.SpawnY == gi.Y && eq.SelectedID == 99999)
+            if (eq.SpawnX == gi.ItemLocation.X && eq.SpawnY == gi.ItemLocation.Y && eq.SelectedID == 99999)
             {
                 GetGamerPoint();
 
@@ -2629,7 +2629,7 @@ namespace myseq
             var height = SpawnPlusSize + 2;
 
             // Draw Yellow Ring around Caution Ground Items
-            if (!GroundItemDepthFilter || IsWithinDepthFilter(gi.Z, pZ))
+            if (!GroundItemDepthFilter || IsWithinDepthFilter(gi.ItemLocation.Z, pZ))
             {
                 if (gi.IsCaution)
                 {

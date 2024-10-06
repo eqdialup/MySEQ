@@ -613,7 +613,7 @@ namespace myseq
 
         private void StickyTimer(Spawntimer st)
         {
-            mnuStickyTimer.Checked = st.sticky;
+            mnuStickyTimer.Checked = st.Sticky;
             foreach (var name in st.AllNames.Split(','))
             {
                 var bname = name.TrimName();
@@ -621,9 +621,9 @@ namespace myseq
                 {
                     Mobname = bname;
                     mnuAddZoneFilter.Text = $"'{Mobname}'";
-                    f1.alertX = st.X;
-                    f1.alertY = st.Y;
-                    f1.alertZ = st.Z;
+                    f1.alertX = st.Location.X;
+                    f1.alertY = st.Location.X;
+                    f1.alertZ = st.Location.X;
                     break;
                 }
             }
@@ -848,8 +848,8 @@ namespace myseq
                 Spawntimer st = eq.FindListViewTimer(listView.Items[sel[0]]);
                 if (st != null)
                 {
-                    mnuStickyTimer.Checked = st.sticky;
-                    st.sticky = !st.sticky;
+                    mnuStickyTimer.Checked = st.Sticky;
+                    st.Sticky = !st.Sticky;
                 }
             }
         }

@@ -1678,34 +1678,14 @@ namespace myseq
 
         public void AddMapText(string textToAdd)
         {
-            var new_text = textToAdd.Replace("#", "");
-            FrmAddMapText mapBox = new FrmAddMapText
-            {
-                txtAdd = new_text.Length > 0 ? new_text : "Enter Text Label",
-                StartPosition = FormStartPosition.CenterParent,
-                mapName = "Add to Map: "
-            };
+            // Create the dialog with the initial text and map name
+            string initialText = string.IsNullOrWhiteSpace(textToAdd) ? "" : textToAdd.Replace("#", "");
+            var mapBox = new FrmAddMapText(initialText, MapnameWithLabels);
 
-            if (MapnameWithLabels.Length > 4 && MapnameWithLabels.EndsWith(".txt"))
-            {
-                mapBox.mapName += MapnameWithLabels.GetLastSlash();
-            }
-            else
-            {
-                // we dont have a good map name
-                return;
-            }
-
+            // Show the form and handle adding text
             if (mapBox.ShowDialog() == DialogResult.OK)
             {
-                // we have a valid addition of text
-                new_text = mapBox.txtAdd.TrimEnd('_', ' ');
-
-                // add it to map now
-                if (new_text.Length > 0)
-                {
-                    mapBox.SOEMapTextAdd(new_text, this);
-                }
+                mapBox.TryAddMapText(this);
             }
         }
 
@@ -2468,7 +2448,7 @@ namespace myseq
 
         private void ToolStripCheckLookup4_CheckChanged(object sender, EventArgs e)
         {
-                        if (toolStripCheckLookup4.Checked)
+            if (toolStripCheckLookup4.Checked)
             {
                 toolStripCheckLookup4.Text = "L";
                 bFilter5 = false;

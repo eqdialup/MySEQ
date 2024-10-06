@@ -1,9 +1,9 @@
+using myseq.Properties;
+using Structures;
 using System;
 using System.Collections;
 using System.IO;
 using System.Windows.Forms;
-using myseq.Properties;
-using Structures;
 
 namespace myseq
 {
@@ -34,10 +34,10 @@ namespace myseq
         {
             foreach (Spawntimer st in mobsTimer2.Values)
             {
-                var stXdelta = (st.X < x + delta) && (st.X > x - delta);
-                var stY_delta = (st.Y < y + delta) && (st.Y > y - delta);
+                var stXdelta = (st.Location.X < x + delta) && (st.Location.X > x - delta);
+                var stY_delta = (st.Location.Y < y + delta) && (st.Location.Y > y - delta);
 
-                if (!st.filtered && stXdelta && stY_delta)
+                if (!st.Filtered && stXdelta && stY_delta)
                 {
                     return st;
                 }
@@ -72,7 +72,7 @@ namespace myseq
 
             foreach (Spawntimer st in mobsTimer2.Values)
             {
-                if (!st.sticky)
+                if (!st.Sticky)
                 {
                     delTimerItems.Add(st);
                 }
@@ -108,14 +108,9 @@ namespace myseq
         public void Spawn(Spawninfo si)
         {
             try
-
             {
-                // ignore players boats boxes corpses and invis man races of level 1
-                // ignore ldon objects, mounts, pets, mercs, and familiars
-                // ignore any mobs where name starts with "_"
-                var various = si.IsPlayer || (si.Race == 141) || (si.Race == 533) || si.Race == 376 || si.Type == 2 || si.Type == 3;
-                var oddtypes = si.isLDONObject || si.isEventController || si.isPet || si.isMerc || si.isFamiliar || si.isMount;
-                if (various || oddtypes || si.Name.IndexOf("_") == 0)
+                // Ignore irrelevant entities
+                if (si.IsPlayer || IsIgnoredMob(si))
                 {
                     return;
                 }
@@ -125,7 +120,7 @@ namespace myseq
 
                 si.SpawnLoc = $"{si.Y:f3},{si.X:f3}";
 
-                si.ZoneSpawnLoc = $"{mapName.ToLower()}{si.Y:f3},{si.X:f3}";
+                si.ZoneSpawnLoc = $"{mapName.ToLower()}{si.SpawnLoc}";
 
                 if (mobsTimer.ContainsKey(si.ZoneSpawnLoc))
                 {
@@ -140,12 +135,18 @@ namespace myseq
             }
             catch (Exception ex) { LogLib.WriteLine($"Error creating new SPAWNTIMER for {si.Name}: ", ex); }
         }
+       private bool IsIgnoredMob(Spawninfo si)
+        {
+            return si.Race == 141 || si.Race == 533 || si.Race == 376 || si.Type == 2 || si.Type == 3 ||
+                   si.isLDONObject || si.isEventController || si.isPet || si.isMerc || si.isFamiliar || 
+                   si.isMount || si.Name.StartsWith("_");
+        }
 
         private void FirstSpawn(Spawninfo si)
         {
             Spawntimer st = new Spawntimer(si, DateTime.Now)
             {
-                zone = mapName
+                Zone = mapName
             };
 
             try
@@ -210,7 +211,6 @@ namespace myseq
         private void AddRespawned(Spawninfo si, Spawntimer st)
         {
             if (st.SpawnCount > 1 && st.SpawnTimer > 10)
-
             {
                 // The mob was known to spawn once, and is now re-spawning for the first
                 // time... so copy it to the other hash
@@ -263,18 +263,16 @@ namespace myseq
         // Also misused to save the spawn list occasionally
         public void UpdateList(ListViewPanel SpawnTimerList)
         {
-            _ = DateTime.Now;
             try
-
             {
                 foreach (Spawntimer st in mobsTimer2.Values)
                 {
-                    ListViewItem itmSpawnTimerList = st.GetListItem();
+                    ListViewItem stItem = st.GetListItem();
 
-                    if (itmSpawnTimerList != null)
+                    if (stItem != null)
                     {
-                        st.ItmSpawnTimerList = itmSpawnTimerList;
-                        SpawnTimerList.listView.Items.Add(itmSpawnTimerList);
+                        st.ItmSpawnTimerList = stItem;
+                        SpawnTimerList.listView.Items.Add(stItem);
                     }
                 }
             }
@@ -288,31 +286,27 @@ namespace myseq
 
         private void SpawnTimerLog(string msg)
         {
-            if (Settings.Default.MaxLogLevel == 0)
+            if (Settings.Default.MaxLogLevel > 0)
             {
-                return;
-            }
-
-            using (FileStream fs = new FileStream(FileOps.CombineLog("SpawnTimer.txt"), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-            using (StreamWriter outLog = new StreamWriter(fs))
-            {
-                outLog.WriteLine($"{DateTime.Now:MM/dd/yyyy HH:mm:ss.ff} - {msg}");
+                LogToFile("SpawnTimer.txt", msg);
             }
         }
 
         private void LogSpawns(string msg)
         {
-            if (!Settings.Default.SaveSpawnLogs || mapName.Length < 3)
+            if (Settings.Default.SaveSpawnLogs && mapName.Length >= 3)
             {
-                return;
+                var logFileName = $"spawns-{DateTime.Now:MM-dd-yyyy}-{mapName}.txt";
+                LogToFile(logFileName, $"[{DateTime.Now:MM/dd/yyyy HH:mm:ss.ff}] {msg}");
             }
+        }
 
-            var logfile = $"spawns-{DateTime.Now:MM-dd-yyyy}-{mapName}.txt";
-
-            using (FileStream fs = new FileStream(FileOps.CombineLog(logfile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-            using (StreamWriter spawnLog = new StreamWriter(fs))
+        private void LogToFile(string fileName, string msg)
+        {
+            using (var fs = new FileStream(FileOps.CombineLog(fileName), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+            using (var outLog = new StreamWriter(fs))
             {
-                spawnLog.WriteLine($"[{DateTime.Now:MM/dd/yyyy HH:mm:ss.ff}] {msg}");
+                outLog.WriteLine(msg);
             }
         }
 
@@ -341,10 +335,10 @@ namespace myseq
             {
                 Spawntimer st = new Spawntimer(line)
                 {
-                    zone = mapName.ToLower()
+                    Zone = mapName.ToLower()
                 };
 
-                st.ZoneSpawnLoc = st.zone + st.SpawnLoc;
+                st.ZoneSpawnLoc = st.Zone + st.SpawnLoc;
 
                 count++;
 
@@ -411,18 +405,21 @@ namespace myseq
         }
 
         // Saves timers to a file for the current map
-
         private void SaveTimers()
         {
-            var timerfile = FileOps.CombineTimer(mapName);
+            var timerFile = FileOps.CombineTimer(mapName);
+
+            // Check if saving timers is enabled and the map name is valid
             if (!Settings.Default.saveSpawnTimers || mapName.Length < 3)
             {
                 return;
             }
+
+            // If void maps, delete the timer file and exit
             if (Voidmaps)
             {
                 MustSave = false;
-                FileOps.DeleteFile(timerfile);
+                FileOps.DeleteFile(timerFile);
                 return;
             }
 
@@ -431,25 +428,28 @@ namespace myseq
                 MustSave = false;
                 LastSaveTime = DateTime.Now;
 
-                if (mobsTimer2.Count != 0)
+                // Only proceed if there are timers to save
+                if (mobsTimer2.Count > 0)
                 {
                     var count = 0;
 
+                    // Count valid spawn timers for the current map
                     foreach (Spawntimer st in mobsTimer2.Values)
                     {
-                        if (st.SpawnTimer > 10 && (string.Compare(st.zone, mapName, true) == 0))
+                        if (st.SpawnTimer > 10 && string.Equals(st.Zone, mapName, StringComparison.OrdinalIgnoreCase))
                         {
                             count++;
                         }
                     }
 
+                    // If there are valid timers, save them to the file
                     if (count > 0)
                     {
-                        using (StreamWriter sw = new StreamWriter(File.Open(timerfile, FileMode.Create)))
+                        using (StreamWriter sw = new StreamWriter(File.Open(timerFile, FileMode.Create)))
                         {
                             foreach (Spawntimer st in mobsTimer2.Values)
                             {
-                                if (st.SpawnTimer > 10 && (string.Compare(st.zone, mapName, true) == 0))
+                                if (st.SpawnTimer > 10 && string.Equals(st.Zone, mapName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     sw.WriteLine(st.GetAsString());
                                 }
@@ -458,7 +458,10 @@ namespace myseq
                     }
                 }
             }
-            catch (Exception ex) { LogLib.WriteLine("Error in SaveTimers():", ex); }
+            catch (Exception ex)
+            {
+                LogLib.WriteLine("Error in SaveTimers():", ex);
+            }
         }
 
         internal bool Voidmaps => mapName == "clz" || mapName == "default" || mapName == "bazaar" || mapName.Contains("guild") || mapName == "poknowledge" || mapName == "nexus";

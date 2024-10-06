@@ -25,6 +25,7 @@ namespace myseq
 
         // Map details
         public string Longname { get; set; } = "";
+
         public string Shortname { get; set; } = "";
 
         private List<GroundItem> itemcollection = new List<GroundItem>();          // Hold the items that are on the ground
@@ -78,8 +79,8 @@ namespace myseq
 
                 SelectedID = sp == null ? 99999 : sp.SpawnID;
 
-                SpawnX = st.X;
-                SpawnY = st.Y;
+                SpawnX = st.Location.X;
+                SpawnY = st.Location.Y;
 
                 return true;
             }
@@ -116,9 +117,9 @@ namespace myseq
         {
             SelectedID = 99999;
 
-            SpawnX = gi.X;
+            SpawnX = gi.ItemLocation.X;
 
-            SpawnY = gi.Y;
+            SpawnY = gi.ItemLocation.Y;
         }
 
         public bool SelectMob(float x, float y, float delta)
@@ -223,7 +224,7 @@ namespace myseq
             // This returns mobsTimer2
             foreach (Spawntimer st in MobsTimers.GetRespawned().Values)
             {
-                if (st.X < x + delta && st.X > x - delta && st.Y < y + delta && st.Y > y - delta)
+                if (st.Location.X < x + delta && st.Location.X > x - delta && st.Location.Y < y + delta && st.Location.Y > y - delta)
                 {
                     return st;
                 }
@@ -239,7 +240,7 @@ namespace myseq
                 {
                     return null;
                 }
-                if (gi.X < x + delta && gi.X > x - delta && gi.Y < y + delta && gi.Y > y - delta)
+                if (gi.ItemLocation.X < x + delta && gi.ItemLocation.X > x - delta && gi.ItemLocation.Y < y + delta && gi.ItemLocation.Y > y - delta)
                 {
                     return gi;
                 }
@@ -255,7 +256,7 @@ namespace myseq
             Races = GetStrArrayFromTextFile("Races.txt");
 
             GroundSpawn.Clear();
-            ReadItemList("GroundItems.ini", this);
+            ReadIniFile("GroundItems.ini", this);
             //guildList.Clear();
 
             //ReadGuildList(FileOps.CombineCfgDir("Guilds.txt"));
@@ -419,7 +420,7 @@ namespace myseq
             try
             {
                 var existingItem = itemcollection
-                   .FirstOrDefault(gi => gi.Name == si.Name && gi.X == si.X && gi.Y == si.Y && gi.Z == si.Z);
+                   .FirstOrDefault(gi => gi.Name == si.Name && gi.ItemLocation.X == si.X && gi.ItemLocation.Y == si.Y && gi.ItemLocation.Z == si.Z);
 
                 if (existingItem != null)
                 {
@@ -957,55 +958,55 @@ namespace myseq
             }
         }
 
-        private ListViewItem AddDetailsToList(Spawninfo si, string mobnameWithInfo)
-        {
-            var listView = new ListViewItem(mobnameWithInfo);
+private ListViewItem AddDetailsToList(Spawninfo si, string mobnameWithInfo)
+{
+    // Create a new ListViewItem with the main text (mob name with info)
+    var listViewItem = new ListViewItem(mobnameWithInfo)
+    {
+        ForeColor = GetSpawnListColors(si) // Set the initial color for the list item
+    };
 
-            listView.SubItems.Add(si.Level.ToString());
+    // Create a list of subitems with formatted values and add them in one go
+    var subItems = new List<string>
+    {
+        si.Level.ToString(),                   // Level
+        GetClass(si.Class),                    // Class
+        si.PrimaryName,                        // Primary weapon name
+        si.OffhandName,                        // Offhand weapon name
+        GetRace(si.Race),                      // Race
+        OwnerFlag(si),                         // Ownership flag
+        si.Lastname,                           // Last name or additional name
+        si.Type.GetSpawnType(),                // Spawn type description
+        si.Hide.GetHideStatus(),               // Hide status (visible, hidden, etc.)
+        si.SpeedRun.ToString(),                // Running speed of the spawn
+        si.SpawnID.ToString(),                 // Spawn ID
+        DateTime.Now.ToLongTimeString(),       // Current time
+        si.X.ToString("#.00"),                 // X coordinate formatted
+        si.Y.ToString("#.00"),                 // Y coordinate formatted
+        si.Z.ToString("#.00"),                 // Z coordinate formatted
+        si.SpawnDistance(si, GamerInfo).ToString("#.00"), // Distance to gamer
+        si.Name.FixMobName()                   // Fixed or adjusted mob name
+                                               // ,GuildNumToString(si.Guild);
+    };
 
-            listView.SubItems.Add(GetClass(si.Class));
+    // Add all the subitems at once to reduce repetitive code
+    listViewItem.SubItems.AddRange(subItems.ToArray());
 
-            listView.SubItems.Add(si.PrimaryName);
-            listView.SubItems.Add(si.OffhandName);
+    // Update Spawninfo state if necessary; otherwise, move this to another method
+    PrepareSpawninfoForList(si, listViewItem);
 
-            listView.SubItems.Add(GetRace(si.Race));
+    return listViewItem;
+}
 
-            listView.SubItems.Add(OwnerFlag(si));
+// Refactored helper method to encapsulate Spawninfo state updates
+private void PrepareSpawninfoForList(Spawninfo si, ListViewItem listViewItem)
+{
+    si.ShouldBeDeleted = false;
+    si.refresh = new Random().Next(0, 10);  // Use a shared Random instance instead of creating a new one
+    si.listitem = listViewItem;
+    SetListColors(si);  // Additional logic to set colors, if needed
+}
 
-            listView.SubItems.Add(si.Lastname);
-
-            listView.SubItems.Add(si.Type.GetSpawnType());
-
-            listView.SubItems.Add(si.Hide.GetHideStatus());
-
-            listView.SubItems.Add(si.SpeedRun.ToString());
-
-            listView.SubItems.Add(si.SpawnID.ToString());
-
-            listView.SubItems.Add(DateTime.Now.ToLongTimeString());
-
-            listView.SubItems.Add(si.X.ToString("#.00"));
-
-            listView.SubItems.Add(si.Y.ToString("#.00"));
-
-            listView.SubItems.Add(si.Z.ToString("#.00"));
-
-            listView.SubItems.Add(si.SpawnDistance(si, GamerInfo).ToString("#.00"));
-
-            //            item1.SubItems.Add(GuildNumToString(si.Guild));
-
-            listView.SubItems.Add(si.Name.FixMobName());
-
-            listView.ForeColor = GetSpawnListColors(si);
-
-            si.ShouldBeDeleted = false;
-
-            si.refresh = new Random().Next(0, 10);
-
-            si.listitem = listView;
-            SetListColors(si);
-            return listView;
-        }
 
         private Color GetSpawnListColors(Spawninfo si)
         {
@@ -1080,7 +1081,7 @@ namespace myseq
         public void SaveMobs()
         {
             var dt = DateTime.Now;
-         
+
             var filename = $"{Longname} - {dt:MM-dd-yyyy-HH}.txt";
 
             // Use 'using' statement to ensure the StreamWriter is properly disposed of
@@ -1114,9 +1115,9 @@ namespace myseq
 
                 SelectedID = sp == null ? 99999 : sp.SpawnID;
 
-                SpawnX = st.X;
+                SpawnX = st.Location.X;
 
-                SpawnY = st.Y;
+                SpawnY = st.Location.Y;
             }
         }
 
@@ -1364,34 +1365,14 @@ namespace myseq
             }
         }
 
-        private bool FindMatches(List<string> filterlist, string mobname, bool MatchFullText)
+        private bool FindMatches(List<string> filterList, string mobName, bool matchFullText)
         {
-            foreach (string str in filterlist)
-            {
-                var matched = false;
-
-                // if "match full text" is ON...
-
-                if (MatchFullText)
-                {
-                    if (string.Compare(mobname, str, true) == 0)
-                    {
-                        matched = true;
-                    }
-                }
-                else if (RegexHelper.IsSubstring(mobname, str))
-                {
-                    matched = true;
-                }
-                // if item has been matched...
-
-                if (matched)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            // If matchFullText is true, use case-insensitive string comparison.
+            // Otherwise, check if any filter item is a substring within mobName.
+            var mobNameLower = mobName.ToLower();
+            return filterList.Any(filter =>
+                matchFullText ? mobNameLower.Equals(filter.ToLower())
+                              : mobNameLower.Contains(filter.ToLower()));
         }
 
         private string PrefixAffixLabel(string mname, string prefix)
@@ -1455,6 +1436,7 @@ namespace myseq
                 }
             }
         }
+
         private void CheckGrounditemForAlerts(GroundItem gi, string itemname)
         {
             // [hunt]
@@ -1561,7 +1543,6 @@ namespace myseq
             }
         }
 
-
         private Color GetDistinctColor(Color foreColor, Color backColor)
         {
             const int ColorThreshold = 55;
@@ -1605,6 +1586,7 @@ namespace myseq
                 (int)(192 - color.G * 0.75),
                 (int)(192 - color.B * 0.75));
         }
+
         #endregion ColorOperations
     }
 }

@@ -1,10 +1,9 @@
-// Class Files
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Structures
 {
@@ -20,6 +19,17 @@ namespace Structures
         public static List<string> GlobalAlert { get; set; } = new List<string>();
         public static List<string> EmailAlert { get; set; } = new List<string>();
         public static List<string> WieldedItems { get; set; } = new List<string>();
+
+        // Class-level dictionary for section types
+        private static readonly Dictionary<string, int> SectionTypes = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+    {
+        { "hunt", 1 },
+        { "caution", 2 },
+        { "danger", 3 },
+        { "alert", 4 },
+        { "email", 5 }, { "locate", 5 },
+        { "primary", 6 }, { "offhand", 6 }
+    };
 
         public void ClearLists()
         {
@@ -69,140 +79,88 @@ namespace Structures
 
         private void ReadAlertLines(string zoneName, string filterFile)
         {
-            var sectionTypes = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
-    {
-        { "hunt", 1 },
-        { "caution", 2 },
-        { "danger", 3 },
-        { "alert", 4 },
-        { "email", 5 }, { "locate", 5 },
-        { "primary", 6 }, { "offhand", 6 }
-    };
-
-            int type = 0;
+            int currentSectionType = 0;
 
             foreach (var line in File.ReadLines(filterFile))
             {
-                var inp = line.Trim();
-                if (string.IsNullOrEmpty(inp) || inp.Length <= 1) continue;
+                var trimmedLine = line.Trim();
 
-                if (inp.StartsWith("<section name=\"", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrWhiteSpace(trimmedLine) || trimmedLine.Length <= 1)
                 {
-                    type = GetSectionType(inp, sectionTypes);
+                    continue; // Skip empty or invalid lines
                 }
-                else if (type > 0 && type < 7)
+
+                if (trimmedLine.StartsWith("<section name=\"", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (inp.StartsWith("</section>", StringComparison.OrdinalIgnoreCase))
+                    currentSectionType = GetSectionType(trimmedLine);
+                }
+                else if (currentSectionType > 0 && currentSectionType < 7)
+                {
+                    if (trimmedLine.StartsWith("</section>", StringComparison.OrdinalIgnoreCase))
                     {
-                        type = 0;
+                        currentSectionType = 0; // Reset section type at the end of a section
                         continue;
                     }
-
-                    var formattedString = FormatStrings(inp, inp);
-                    DetermineType(type, formattedString, zoneName);
+                    var formattedString = FormatStrings(trimmedLine);
+                    DetermineType(currentSectionType, formattedString, zoneName);
                 }
             }
         }
 
-        private int GetSectionType(string input, Dictionary<string, int> sectionTypes)
+        private int GetSectionType(string line)
         {
-            foreach (var entry in sectionTypes)
-            {
-                if (input.StartsWith($"<section name=\"{entry.Key}\"", StringComparison.OrdinalIgnoreCase))
-                {
-                    return entry.Value;
-                }
-            }
-            return 0;
+            var sectionName = line.Split('"')[1];
+            return SectionTypes.TryGetValue(sectionName, out int type) ? type : 0;
         }
 
-        private static string FormatStrings(string inp, string inputstring)
+        private static string FormatStrings(string inp)
         {
-            if (inp.StartsWith("<oldfilter>"))
-            {
-                inputstring = inp.Remove(0, 11);
-            }
-            if (inputstring.StartsWith("<regex>"))
-            {
-                inputstring = inputstring.Remove(0, 7);
-            }
-            if (inputstring.EndsWith("</oldfilter>"))
-            {
-                inputstring = inputstring.Remove(inputstring.Length - 12, 12);
-            }
-            if (inputstring.EndsWith("</regex>"))
-            {
-                inputstring = inputstring.Remove(inputstring.Length - 8, 8);
-            }
-            if (inputstring.StartsWith("name:"))
-            {
-                inputstring = inputstring.Remove(0, 5);
-            }
-
-            return inputstring;
+            var match = Regex.Match(inp, @"name:\s*(?<name>.*?)<\/", RegexOptions.IgnoreCase);
+            return match.Success ? match.Groups["name"].Value.Trim() : string.Empty;
         }
 
         private void DetermineType(int type, string inputstring, string zoneName)
         {
-            if (zoneName == "global")
-            {
-                AddGlobalFilter(type, inputstring);
-            }
-            else
-            {
-                AddZoneFilter(type, inputstring);
-            }
+            // Determine whether it's a global or zone-specific filter and add it to the appropriate list.
+            AddFilter(type, inputstring, isGlobal: zoneName.Equals("global", StringComparison.OrdinalIgnoreCase));
         }
 
-        private void AddGlobalFilter(int type, string inputstring)
+        private void AddFilter(int type, string inputstring, bool isGlobal)
         {
+            List<string> alertList = null;
+
+            // Select the appropriate list based on the type and whether it's a global or zone-specific filter.
             switch (type)
             {
                 case 1:
-                    AddToAlerts(GlobalHunt, inputstring);
+                    alertList = isGlobal ? GlobalHunt : Hunt;
                     break;
 
                 case 2:
-                    AddToAlerts(GlobalCaution, inputstring);
+                    alertList = isGlobal ? GlobalCaution : Caution;
                     break;
 
                 case 3:
-                    AddToAlerts(GlobalDanger, inputstring);
+                    alertList = isGlobal ? GlobalDanger : Danger;
                     break;
 
                 case 4:
-                    AddToAlerts(GlobalAlert, inputstring);
-                    break;
-            }
-        }
-
-        private void AddZoneFilter(int type, string inputstring)
-        {
-            switch (type)
-            {
-                case 1:
-                    AddToAlerts(Hunt, inputstring);
-                    break;
-
-                case 2:
-                    AddToAlerts(Caution, inputstring);
-                    break;
-
-                case 3:
-                    AddToAlerts(Danger, inputstring);
-                    break;
-
-                case 4:
-                    AddToAlerts(Alert, inputstring);
+                    alertList = isGlobal ? GlobalAlert : Alert;
                     break;
 
                 case 5:
-                    AddToAlerts(EmailAlert, inputstring);
+                    if (!isGlobal) alertList = EmailAlert;
                     break;
 
                 case 6:
-                    AddToAlerts(WieldedItems, inputstring);
+                    if (!isGlobal) alertList = WieldedItems;
                     break;
+            }
+
+            // Add the input string to the selected list if the alertList is not null.
+            if (alertList != null)
+            {
+                AddToAlerts(alertList, inputstring);
             }
         }
 
@@ -236,68 +194,60 @@ namespace Structures
 
         private void WriteZoneFile(string filterFile)
         {
-            List<string> lines = ListHeader();
-            AddNameFromList(lines, Hunt);
-            lines.Add("    </section>\n    <section name=\"Caution\">");
-            AddNameFromList(lines, Caution);
-            lines.Add("    </section>\n     <section name=\"Danger\">");
-            AddNameFromList(lines, Danger);
-            lines.Add("    </section>\n    <section name=\"Alert\">");  // Rares
-            AddNameFromList(lines, Alert);
-            lines.Add("    </section>");
-            lines.Add("    <section name=\"Email\">");  // Email Alerts - zone only
-            AddNameFromList(lines, EmailAlert);
-            lines.Add("    <section name=\"Primary\">");  // Item In Primary Hand Alerts - zone only
-            AddNameFromList(lines, WieldedItems);
-            lines.Add("    </section>");
-            lines.Add("    <section name=\"Offhand\">");  // Item In Offhand Hand Alerts - zone only
-            AddNameFromList(lines, WieldedItems);
-            ListFooter(lines);
+            List<string> lines = new List<string>();
+            AddHeader(lines);
+
+            AddSection(lines, "Hunt", Hunt);
+            AddSection(lines, "Caution", Caution);
+            AddSection(lines, "Danger", Danger);
+            AddSection(lines, "Alert", Alert);
+            AddSection(lines, "Email", EmailAlert);
+            AddSection(lines, "Primary", WieldedItems);
+            AddSection(lines, "Offhand", WieldedItems);
+            lines.Add("</seqfilters>");
 
             File.WriteAllLines(filterFile, lines);
         }
 
         private void WriteGlobalFile(string filterFile)
         {
-            List<string> lines = ListHeader();
-            AddNameFromList(lines, GlobalHunt);
-            lines.Add("    </section>\n    <section name=\"Caution\">");
-            AddNameFromList(lines, GlobalCaution);
-            lines.Add("    </section>\n     <section name=\"Danger\">");
-            AddNameFromList(lines, GlobalDanger);
-            lines.Add("    </section>\n    <section name=\"Alert\">");
-            AddNameFromList(lines, GlobalAlert);
-            ListFooter(lines);
+            List<string> lines = new List<string>();
+            AddHeader(lines);
+            // Add all the predefined sections to the lines dynamically
+            AddSection(lines, "Hunt", GlobalHunt);
+            AddSection(lines, "Caution", GlobalCaution);
+            AddSection(lines, "Danger", GlobalDanger);
+            AddSection(lines, "Alert", GlobalAlert);
+            lines.Add("</seqfilters>");
 
             File.WriteAllLines(filterFile, lines);
         }
 
-        private static List<string> ListHeader() => new List<string>
-                {
-                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-                    "<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">",
-                    "<seqfilters>",
-                    "    <section name=\"Hunt\">"
-                };
-
-        private static void ListFooter(List<string> lines)
+        // Adds the header section to the lines
+        private static void AddHeader(List<string> lines)
         {
-            lines.Add("    </section>");
-            lines.Add("</seqfilters>");
+            lines.AddRange(new[]
+            {
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+        "<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">",
+        "<seqfilters>"
+    });
         }
 
-        private void AddNameFromList(List<string> lines, List<string> alertlist)
+        // Adds a named section and its content to the lines
+        private static void AddSection(List<string> lines, string sectionName, List<string> contentList)
+        {
+            lines.Add($"    <section name=\"{sectionName}\">");
+            AddNameFromList(lines, contentList);
+            lines.Add("    </section>");
+        }
+
+        private static void AddNameFromList(List<string> lines, List<string> alertlist)
         {
             foreach (var str in alertlist)
             {
                 lines.Add(str);
             }
-        }
-
-        private static void PurgeFilters(string zoneName)
-        {
-            DeleteFile(CombineFilter($"custom_{zoneName}.conf"));
-            DeleteFile(CombineFilter($"filters_{zoneName}.conf"));
         }
 
         public void LoadAlerts(string zoneName)
@@ -306,36 +256,6 @@ namespace Structures
             {
                 ReadNewAlertFile(zoneName);
                 ReadNewAlertFile("global");
-            }
-        }
-
-        public void EditAlertFile(string zoneName)
-        {
-            if (string.IsNullOrWhiteSpace(zoneName)) return;
-
-            // Convert zone name to lowercase
-            zoneName = zoneName.Trim().ToLower();
-
-            // Combine zone name with the .xml extension to get the filter file path
-            var filterFile = CombineFilter($"{zoneName}.xml");
-
-            // Create the filter file if it doesn't already exist
-            MakeFilter(filterFile);
-
-            // Open the filter file in Notepad
-            OpenInNotepad(filterFile);
-        }
-
-        private void OpenInNotepad(string filePath)
-        {
-            try
-            {
-                Process.Start("notepad.exe", filePath);
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions (e.g., Notepad not found, file path issues)
-                LogLib.WriteLine($"Failed to open file in Notepad: {filePath}", ex);
             }
         }
     }

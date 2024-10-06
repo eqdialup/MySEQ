@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -18,13 +17,9 @@ namespace myseq
 
             ZoneSpawnLoc = si.ZoneSpawnLoc;
 
-            zone = "";
+            Zone = "";
 
-            X = si.X;
-
-            Y = si.Y;
-
-            Z = si.Z;
+            Location = new Point3D(si.X, si.Y, si.Z);
 
             SpawnTimeDT = dt;
 
@@ -66,11 +61,7 @@ namespace myseq
             // split up the All Names, and parse out spawn numbers in parenthesis
             _ = AllNames.Split(',').GetUpperBound(0);
 
-            X = float.Parse(parts[8]);
-
-            Y = float.Parse(parts[9]);
-
-            Z = float.Parse(parts[10]);
+            Location = Point3D.Parse(parts, 8);
         }
 
         private DateTime GetDateTime(string input)
@@ -80,7 +71,7 @@ namespace myseq
 
         // Returns the data in a format which can be used with the (string) constructor.
 
-        public string GetAsString() => $"{SpawnLoc};{SpawnCount};{SpawnTimer};{SpawnTimeStr};{KillTimeStr};{NextSpawnStr};{LastSpawnName};{AllNames};{X};{Y};{Z}";
+        public string GetAsString() => $"{SpawnLoc};{SpawnCount};{SpawnTimer};{SpawnTimeStr};{KillTimeStr};{NextSpawnStr};{LastSpawnName};{AllNames};{Location.ToString()}";
 
         // st has been loaded from a file, and is the same spawn as "this" one.
         // Glean all useful information.
@@ -117,19 +108,21 @@ namespace myseq
 
         private void MergeNames(string newNames)
         {
-            var nameCount = 1;
-            StringBuilder builder = new StringBuilder(AllNames);
-            var existingNames = new HashSet<string>(AllNames.Split(',').Select(n => n.TrimName()));
+            var builder = new StringBuilder(AllNames);
+            var existingNames = AllNames.Split(',')
+                                        .Select(n => n.TrimName())
+                                        .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
+            var addedCount = existingNames.Count;
             foreach (var name in newNames.Split(',').Select(n => n.TrimName()))
             {
-                if (!existingNames.Contains(name) && nameCount < 11)
+                if (!existingNames.Contains(name) && addedCount < 10)  // Limit to 10 names
                 {
-                    builder.Append(", ").Append(name);
-                    nameCount++;
+                    builder.Append($", {name}");
+                    addedCount++;
+                    existingNames.Add(name);
                 }
             }
-
             AllNames = builder.ToString();
         }
 
@@ -149,31 +142,22 @@ namespace myseq
         {
             if (st.SpawnTimer <= 10) return;
 
-            TimeSpan diff = new TimeSpan(0, 0, st.SpawnTimer);
+            var diff = TimeSpan.FromSeconds(st.SpawnTimer);
 
-            // Check if the spawn time is still valid
+            // Check if spawn time is still valid
             if (DateTime.Now.Subtract(diff) < st.SpawnTimeDT)
             {
                 SpawnTimeDT = st.SpawnTimeDT;
                 SpawnTimeStr = st.SpawnTimeStr;
             }
 
-            // Check if the kill time has expired
+            // Update kill time
             KillTimeDT = DateTime.Now.Subtract(diff) > st.KillTimeDT ? DateTime.MinValue : st.KillTimeDT;
-            KillTimeStr = KillTimeDT == DateTime.MinValue ? "" : st.KillTimeStr;
+            KillTimeStr = KillTimeDT == DateTime.MinValue ? string.Empty : st.KillTimeStr;
 
-            // Check if the next spawn time has passed
-            if (DateTime.Now > st.NextSpawnDT)
-            {
-                NextSpawnDT = DateTime.MinValue;
-                NextSpawnStr = "";
-            }
-            else
-            {
-                NextSpawnDT = st.NextSpawnDT;
-                NextSpawnStr = st.NextSpawnStr;
-                KillTimeDT = st.KillTimeDT.Subtract(diff);
-            }
+            // Update next spawn time if not passed
+            NextSpawnDT = DateTime.Now > st.NextSpawnDT ? DateTime.MinValue : st.NextSpawnDT;
+            NextSpawnStr = NextSpawnDT == DateTime.MinValue ? string.Empty : st.NextSpawnStr;
         }
 
         public int SecondsUntilSpawn(DateTime now)
@@ -201,7 +185,7 @@ namespace myseq
                       .AppendFormat("Spawn Timer: {0} secs\n", SpawnTimer)
                       .AppendFormat("Spawning In: {0}\n", countTimer)
                       .AppendFormat("Spawn Count: {0}\n", SpawnCount)
-                      .AppendFormat("Y: {0:f3}  X: {1:f3}  Z: {2:f3}", Y, X, Z);
+                      .AppendFormat(Location.ToString());
 
             return spawnTimer.ToString();
         }
@@ -396,54 +380,27 @@ namespace myseq
 
         private void UpdateList()
         {
-            if (listNeedsUpdate)
+            if (!listNeedsUpdate) return;
+
+            string[] subItems = { SpawnTimeRemaining.ToString(), SpawnTimer.ToString(), Zone, Location.ToString(), SpawnCount.ToString(), SpawnTimeStr, KillTimeStr, NextSpawnStr };
+            for (int i = 0; i < subItems.Length; i++)
             {
-                ItmSpawnTimerList.SubItems[1].Text = SpawnTimeRemaining.ToString();
-
-                ItmSpawnTimerList.SubItems[2].Text = SpawnTimer.ToString();
-
-                ItmSpawnTimerList.SubItems[3].Text = zone;
-
-                ItmSpawnTimerList.SubItems[4].Text = X.ToString();
-
-                ItmSpawnTimerList.SubItems[5].Text = Y.ToString();
-
-                ItmSpawnTimerList.SubItems[6].Text = Z.ToString();
-
-                ItmSpawnTimerList.SubItems[7].Text = SpawnCount.ToString();
-
-                ItmSpawnTimerList.SubItems[8].Text = SpawnTimeStr;
-
-                ItmSpawnTimerList.SubItems[9].Text = KillTimeStr;
-
-                ItmSpawnTimerList.SubItems[10].Text = NextSpawnStr;
-
-                listNeedsUpdate = false;
+                ItmSpawnTimerList.SubItems[i + 1].Text = subItems[i];
             }
-            else
-            {
-                if (SpawnTimeRemaining.ToString() != ItmSpawnTimerList.SubItems[1].Text)
-                {
-                    ItmSpawnTimerList.SubItems[1].Text = SpawnTimeRemaining.ToString();
-                }
-            }
+
+            listNeedsUpdate = false;
         }
 
         public string ZoneSpawnLoc { get; set; }
 
         public string SpawnLoc { get; set; }            // x,y = primary key, set on first spawn
 
-        public string zone { get; set; }
+        public string Zone { get; set; }
 
-        public bool sticky { get; set; }
+        public bool Sticky { get; set; }
+        public Point3D Location { get; set; } // Using Point3D for X, Y, Z coordinates
 
-        public float Y { get; set; }
-
-        public float X { get; set; }
-
-        public float Z { get; set; }
-
-        public bool filtered { get; set; }
+        public bool Filtered { get; set; }
 
         public int SpawnCount { get; set; } = 0;          // Updated on true re-spawn
 

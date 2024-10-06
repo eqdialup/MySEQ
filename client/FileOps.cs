@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -24,7 +25,7 @@ namespace Structures
             }
         }
 
-        public void MakeFilter(string filterFile)
+        public static void MakeFilter(string filterFile)
         {
             if (!File.Exists(filterFile))
             {
@@ -36,20 +37,29 @@ namespace Structures
         {
             var filePath = CombineCfgDir(file);
 
-            // Check if the file exists before processing
+            // Return an empty array if the file does not exist
             if (!File.Exists(filePath))
             {
                 return Array.Empty<string>();
             }
 
-            // Read all lines, filter out comments and return the result
-            return File.ReadAllLines(filePath)
-                .Select(line => line.Trim())
-                .Where(trimmedLine => !string.IsNullOrEmpty(trimmedLine) && !trimmedLine.StartsWith("#"))
-                .ToArray();
+            try
+            {
+                // Read all lines, trim, filter out comments and empty lines, and return the result as an array
+                return File.ReadLines(filePath)
+                           .Select(line => line.Trim())
+                           .Where(line => !string.IsNullOrEmpty(line) && !line.StartsWith("#"))
+                           .ToArray();
+            }
+            catch (Exception ex)
+            {
+                // Log error or handle it accordingly
+                Console.WriteLine($"Failed to read the file: {filePath}. Error: {ex.Message}");
+                return Array.Empty<string>();
+            }
         }
 
-        public void ReadItemList(string file, myseq.EQData eq)
+        public void ReadIniFile(string file, myseq.EQData eq)
         {
             var filePath = CombineCfgDir(file);
             if (!File.Exists(filePath))
@@ -75,41 +85,38 @@ namespace Structures
             }
         }
 
-        private void CreateAlertFile(string fileName)
+        private static void CreateAlertFile(string fileName)
         {
             using (StreamWriter sw = new StreamWriter(fileName))
             {
-                var isglobal = false;
-
-                if (fileName.EndsWith("global.xml"))
-                {
-                    isglobal = true;
-                }
+                var isGlobal = fileName.EndsWith("global.xml", StringComparison.OrdinalIgnoreCase);
 
                 sw.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 sw.WriteLine("<!DOCTYPE seqfilters SYSTEM \"seqfilters.dtd\">");
                 sw.WriteLine("<seqfilters>");
-                sw.WriteLine("    <section name=\"Hunt\">");
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Caution\">");
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Danger\">");
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Locate\">"); // Not Used in MySEQ
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Alert\">");  // Rares
-                sw.WriteLine("    </section>");
-                sw.WriteLine("    <section name=\"Filtered\">");
-                sw.WriteLine("    </section>");
-                if (!isglobal)
+                // Write each alert section
+                WriteSection(sw, "Hunt");
+                WriteSection(sw, "Caution");
+                WriteSection(sw, "Danger");
+                WriteSection(sw, "Locate");   // Not used in MySEQ
+                WriteSection(sw, "Alert");    // Rares
+                WriteSection(sw, "Filtered");
+
+                // Write additional sections if the file is not global
+                if (!isGlobal)
                 {
-                    sw.WriteLine("    <section name=\"Email\">");
-                    sw.WriteLine("    <section name=\"Primary\">");
-                    sw.WriteLine("    <section name=\"Offhand\">");
-                    sw.WriteLine("    </section>");
+                    WriteSection(sw, "Email");
+                    WriteSection(sw, "Primary");
+                    WriteSection(sw, "Offhand");
                 }
                 sw.WriteLine("</seqfilters>");
             }
+        }
+
+        private static void WriteSection(StreamWriter sw, string sectionName)
+        {
+            sw.WriteLine($"    <section name=\"{sectionName}\">");
+            sw.WriteLine("    </section>");
         }
 
         public static void CreateFolders()
@@ -142,5 +149,41 @@ namespace Structures
         }
 
         public static string StartPath(string folder) => Path.Combine(Application.StartupPath, folder);
+
+        public static void PurgeFilters(string zoneName)
+        {
+            DeleteFile(CombineFilter($"custom_{zoneName}.conf"));
+            DeleteFile(CombineFilter($"filters_{zoneName}.conf"));
+        }
+
+        private static void OpenInNotepad(string filePath)
+        {
+            try
+            {
+                Process.Start("notepad.exe", filePath);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., Notepad not found, file path issues)
+                LogLib.WriteLine($"Failed to open file in Notepad: {filePath}", ex);
+            }
+        }
+
+        public static void EditAlertFile(string zoneName)
+        {
+            if (string.IsNullOrWhiteSpace(zoneName)) return;
+
+            // Convert zone name to lowercase
+            zoneName = zoneName.Trim().ToLower();
+
+            // Combine zone name with the .xml extension to get the filter file path
+            var filterFile = CombineFilter($"{zoneName}.xml");
+
+            // Create the filter file if it doesn't already exist
+            MakeFilter(filterFile);
+
+            // Open the filter file in Notepad
+            OpenInNotepad(filterFile);
+        }
     }
 }

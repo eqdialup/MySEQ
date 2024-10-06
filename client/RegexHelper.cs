@@ -4,33 +4,52 @@ using System.Text.RegularExpressions;
 namespace Structures
 {
     /// <summary>
-    /// This class contains a limited set of pre-compiled Regex expressions to be used for various filtering capabilities
-    /// (until such time as we get enough information from the server not to need them anymore)
-    ///
-    /// The need for it's own class is because we're re-using the same expressions over and over and
-    /// it's not efficient to re-instantiate them for every spawn packet.
+    /// This class contains a set of pre-compiled regular expressions for various string processing operations related to mob names.
+    /// Using pre-compiled expressions improves performance by avoiding re-instantiation of the same expressions.
     /// </summary>
     public static class RegexHelper
     {
+        // Pre-compiled regular expressions used throughout the class
+        private static readonly Regex RemoveUnderscoreRegex = new Regex("_", RegexOptions.Compiled);
+        private static readonly Regex FixMobNameMatchRegex = new Regex("^[^a-zA-Z #]", RegexOptions.Compiled);
+        private static readonly Regex FilterMobNameRegex = new Regex("^[^a-zA-Z_ #]", RegexOptions.Compiled);
+        private static readonly Regex RemoveNumbersRegex = new Regex("[0-9]", RegexOptions.Compiled);
+        private static readonly Regex RemoveNumbersAndHashRegex = new Regex("[0-9#]", RegexOptions.Compiled);
+        private static readonly Regex UppercaseOrHashRegex = new Regex("^[A-Z#]", RegexOptions.Compiled);
+
+        /// Fixes a mob name by replacing underscores with spaces, unless it starts with an underscore.
+        /// <returns>The modified name with underscores replaced by spaces, or the original if it starts with an underscore.</returns>
         public static string FixMobName(this string name)
-            => name?.IndexOf("_", StringComparison.OrdinalIgnoreCase) == 0 ? name : name?.Replace("_", " ").Trim();
+            => name?.StartsWith("_", StringComparison.OrdinalIgnoreCase) == true ? name : RemoveUnderscoreRegex.Replace(name ?? string.Empty, " ").Trim();
 
-        public static string FixMobNameMatch(this string name) => Regex.Replace(name, "^*[^a-zA-Z #]", "");
+        /// Removes all characters from the beginning of the name until an alphabetic character or '#' is encountered.
+        /// <returns>The modified name after removing unwanted characters from the start.</returns>
+        public static string FixMobNameMatch(this string name)
+            => FixMobNameMatchRegex.Replace(name ?? string.Empty, "");
 
-        public static string FilterMobName(this string name) => Regex.Replace(name, "^*[^a-zA-Z_ #]", "").Trim();
+        /// Filters out unwanted characters at the beginning of the mob name, keeping only alphabetic, underscore, or '#' characters.
+        /// <returns>The modified name after filtering out unwanted characters.</returns>
+        public static string FilterMobName(this string name)
+            => FilterMobNameRegex.Replace(name ?? string.Empty, "").Trim();
 
-        public static string TrimName(this string name) => Regex.Replace(name?.Replace("_", " "), "[0-9]", "").Trim();
+        /// Trims the name by replacing underscores with spaces and removing all numeric characters.
+        /// <returns>The modified name with underscores replaced and numbers removed.</returns>
+        public static string TrimName(this string name)
+            => RemoveNumbersRegex.Replace(RemoveUnderscoreRegex.Replace(name ?? string.Empty, " "), "").Trim();
 
-        internal static string SearchName(this string name) => Regex.Replace(name.Replace("_", " "), "[0-9#]", "").Trim();
+        /// Searches a name by replacing underscores with spaces and removing all numeric characters and '#' characters.
+        /// <returns>The modified name suitable for search operations.</returns>
+        internal static string SearchName(this string name)
+            => RemoveNumbersAndHashRegex.Replace(RemoveUnderscoreRegex.Replace(name ?? string.Empty, " "), "").Trim();
 
-        public static bool RegexMatch(this string name) => Regex.IsMatch(name, "^[A-Z#]");
+        /// Checks if a name matches a pattern where it starts with an uppercase letter or a '#' character.
+        /// <returns>True if the name matches the pattern; otherwise, false.</returns>
+        public static bool RegexMatch(this string name)
+            => UppercaseOrHashRegex.IsMatch(name ?? string.Empty);
 
-        public static Regex GetRegex(this string name) => new Regex($".*{name}.*", RegexOptions.IgnoreCase);
-
-        public static bool IsSubstring(string toSearch, string forSearch)
-        {
-            Regex regex = GetRegex(forSearch);
-            return regex.Match(toSearch).Success;
-        }
+        /// Creates a case-insensitive regex pattern that searches for the specified string anywhere within another string.
+        /// <returns>A compiled regex pattern.</returns>
+        public static Regex GetRegex(this string name)
+            => new Regex($".*{Regex.Escape(name)}.*", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     }
 }

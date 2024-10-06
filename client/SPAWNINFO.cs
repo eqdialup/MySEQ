@@ -21,7 +21,6 @@ namespace Structures
         public float Y { get; set; }
 
         public float Z { get; set; }
-
         public byte Class { get; set; }
 
         public byte Level { get; set; }
@@ -125,6 +124,10 @@ namespace Structures
 
         private string BytesToString(byte[] b, int start, int maxlen)
         {
+            if (b == null || b.Length == 0 || start >= b.Length)
+            {
+                return string.Empty;
+            }
             var length = 0;
 
             // look for a null
