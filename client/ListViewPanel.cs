@@ -808,9 +808,9 @@ namespace myseq
             }
         }
 
-        private void MnuEditGlobalFilters_Click(object sender, EventArgs e) => filters.EditAlertFile("global");
+        private void MnuEditGlobalFilters_Click(object sender, EventArgs e) => FileOps.EditAlertFile("global");
 
-        private void MnuEditZoneFilters_Click(object sender, EventArgs e) => filters.EditAlertFile(f1.CurZone);
+        private void MnuEditZoneFilters_Click(object sender, EventArgs e) => FileOps.EditAlertFile(f1.CurZone);
 
         private void MnuReloadFilters_Click(object sender, EventArgs e) =>
             f1.ReloadAlertFiles();

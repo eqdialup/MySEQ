@@ -1203,7 +1203,7 @@ namespace myseq
             }
         }
 
-        private void MnuAddEditAlerts_Click(object sender, EventArgs e) => filters.EditAlertFile(CurZone);
+        private void MnuAddEditAlerts_Click(object sender, EventArgs e) => FileOps.EditAlertFile(CurZone);
 
         private void MnuSpawnListFont_Click(object sender, EventArgs e)
 
@@ -1330,7 +1330,7 @@ namespace myseq
             mnuAutoSelectEQTarget2.Checked = Settings.Default.AutoSelectEQTarget;
         }
 
-        private void MnuGlobalAlerts_Click(object sender, EventArgs e) => filters.EditAlertFile("global");
+        private void MnuGlobalAlerts_Click(object sender, EventArgs e) => FileOps.EditAlertFile("global");
 
         private void MnuShowNPCs_Click(object sender, EventArgs e)
         {
