@@ -85,8 +85,8 @@ namespace myseq
         public float MaxMapY { get; set; } = 1000;
 
         private int filterpos;
-
         private int filterneg;
+        private int fpsCount;
 
         private PointF selectedPoint = new PointF(-1, -1);// [42!] Mark an arbitrary spot on the map
 
@@ -100,33 +100,31 @@ namespace myseq
 
         private bool flash; // used for flashing warning lights
 
-        private SolidBrush textBrush;
-
+        private readonly SolidBrush textBrush = new SolidBrush(Color.LightGray);
+        private readonly SolidBrush WhiteBrush = new SolidBrush(Color.White);
+        private readonly Pen WhitePen = new Pen(new SolidBrush(Color.White));
+        private readonly Pen GreenPen = new Pen(new SolidBrush(Color.Green));
+        private readonly Pen RedPen = new Pen(new SolidBrush(Color.Red));
+        private readonly Pen BluePen = new Pen(new SolidBrush(Color.Blue));
+        private readonly Pen YellowPen = new Pen(new SolidBrush(Color.Yellow));
+        private readonly Pen PurplePen = new Pen(new SolidBrush(Color.Purple));
+        private readonly Pen PinkPen = new Pen(new SolidBrush(Color.Fuchsia));
         private readonly Pen PCBorder = new Pen(new SolidBrush(Settings.Default.PCBorderColor));
 
         private MainForm f1;          // Caution: this may be null
-
         private MapPane mapPane;     // Caution: this may be null
-
         private EQData eq;
         private EQMap map;
         private MapData mapData;
         private SpawnColors conColor;
-
-        private int fpsCount;
-
         private TableLayoutPanel tableLayoutPanel1;
-
-        public Label lblGameClock;
-
         private bool ShowPCName = Settings.Default.ShowPCNames;
 
         private float[] xSin = new float[512];
-
         private float[] xCos = new float[512];
 
+        public Label lblGameClock;
         public int UpdateSteps { get; set; } = 5;
-
         public int UpdateTicks { get; set; } = 1;
         public float PanOffsetX { get; set; }
         public float PanOffsetY { get; set; }
@@ -192,6 +190,16 @@ namespace myseq
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && components != null)
+            {
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         public void Tick()
         {
             // Increment animation and flash counters
@@ -245,16 +253,6 @@ namespace myseq
                 // Increment frame count
                 fpsCount++;
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && components != null)
-            {
-                components.Dispose();
-            }
-
-            base.Dispose(disposing);
         }
 
         #region Component Designer generated code
@@ -349,88 +347,79 @@ namespace myseq
 
         private void MapCon_Paint(object sender, PaintEventArgs pe)
         {
-            if (mapPane != null && f1 != null)
+            if (mapPane == null || f1 == null) return;
+
+            try
             {
-                try
+                // Skip rendering if the window is minimized
+                if (f1.WindowState == FormWindowState.Minimized) return;
+
+                DrawOptions drawOpts = f1.DrawOpts;
+
+                // Clear the map and update the game clock
+                bkgBuffer.Graphics.Clear(Settings.Default.BackColor);
+                lblGameClock.Text = $"{eq.Gametime:MMM d, yyyy} {eq.Gametime:t}";
+
+                // Update spawn sizes if settings changed
+                if (SettingsSpawnSize != Settings.Default.SpawnDrawSize)
                 {
-                    // Check if the Window is not minimized
-                    if (f1.WindowState != FormWindowState.Minimized)
-                    {
-                        DrawOptions DrawOpts = f1.DrawOpts;
-
-                        // Clear Map
-                        bkgBuffer.Graphics.Clear(Settings.Default.BackColor);
-
-                        lblGameClock.Text = $"{eq.Gametime:MMM d, yyyy} {eq.Gametime:t}";
-
-                        // Set the Spawn Size
-
-                        if (SettingsSpawnSize != Settings.Default.SpawnDrawSize)
-                        {
-                            SetSpawnSizes();
-                        }
-
-                        // Used to help reduce the number of calls to improve speed
-
-                        var pX = eq.GamerInfo.X;
-
-                        var pY = eq.GamerInfo.Y;
-
-                        var pZ = eq.GamerInfo.Z;
-
-                        PointF playerF = new PointF
-                        {
-                            X = CalcScreenCoordX(pX),
-                            Y = CalcScreenCoordY(pY)
-                        };
-
-                        var dx = ((PanOffsetX + screenCenter.X) / -Ratio) - mapCenter.X;
-
-                        var dy = ((PanOffsetY + screenCenter.Y) / -Ratio) - mapCenter.Y;
-                        GraphicsState tState = bkgBuffer.Graphics.Save();
-
-                        bkgBuffer.Graphics.ScaleTransform(-Ratio, -Ratio);
-
-                        bkgBuffer.Graphics.TranslateTransform(dx, dy);
-
-                        DrawMapLines(DrawOpts);
-
-                        bkgBuffer.Graphics.Restore(tState);
-
-                        DrawMap(DrawOpts);
-
-                        if ((DrawOpts & DrawOptions.SpawnTrails) != DrawOptions.None)
-                        {
-                            DrawSpawnTrails();
-                        }
-
-                        if (!eq.Zoning)
-                        {
-                            if ((DrawOpts & DrawOptions.Player) != DrawOptions.None)
-                            {
-                                DrawGamer(playerF, SpawnSize, SpawnSizeOffset, DrawOpts);
-                            }
-                            DrawSpawns(DrawOpts, pX, pY, pZ, playerF);
-                            DrawGroundItems(DrawOpts, pZ);
-                            DrawSpawntimers(DrawOpts);
-                            SmoothMode();
-                            DrawCorpses(DrawOpts, pZ);
-                        }
-                        else
-                        {
-                            DrawGamer(playerF, SpawnSize, SpawnSizeOffset, DrawOpts);
-                        }
-
-                        bkgBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-                        // [42!] Draw a line to an arbitrary spot.
-                        DrawDashLine(DrawOpts, playerF);
-
-                        // Setup GDI Drawing
-                        bkgBuffer.Render(pe.Graphics);
-                    }
+                    SetSpawnSizes();
                 }
-                catch (Exception ex) { LogLib.WriteLine("Error in MapCon_Paint(): ", ex); }
+
+                // Get player coordinates for reference in rendering
+                float pX = eq.GamerInfo.X;
+                float pY = eq.GamerInfo.Y;
+                float pZ = eq.GamerInfo.Z;
+                PointF playerF = new PointF(CalcScreenCoordX(pX), CalcScreenCoordY(pY));
+
+                // Calculate translation offsets for the map
+                float dx = ((PanOffsetX + screenCenter.X) / -Ratio) - mapCenter.X;
+                float dy = ((PanOffsetY + screenCenter.Y) / -Ratio) - mapCenter.Y;
+
+                // Save graphics state, set transformations for drawing
+                GraphicsState originalState = bkgBuffer.Graphics.Save();
+                bkgBuffer.Graphics.ScaleTransform(-Ratio, -Ratio);
+                bkgBuffer.Graphics.TranslateTransform(dx, dy);
+
+                // Draw static map elements
+                DrawMapLines(drawOpts);
+                bkgBuffer.Graphics.Restore(originalState);
+
+                // Dynamic map elements
+                DrawMap(drawOpts);
+
+                // Additional elements like trails, spawns, and items
+                if ((drawOpts & DrawOptions.SpawnTrails) != DrawOptions.None) DrawSpawnTrails();
+
+                if (!eq.Zoning)
+                {
+                    if ((drawOpts & DrawOptions.Player) != DrawOptions.None)
+                    {
+                        DrawGamer(playerF, SpawnSize, SpawnSizeOffset, drawOpts);
+                    }
+                    DrawSpawns(drawOpts, pX, pY, pZ, playerF);
+                    DrawGroundItems(drawOpts, pZ);
+                    DrawSpawntimers(drawOpts);
+                    SmoothMode();
+                    DrawCorpses(drawOpts, pZ);
+                }
+                else
+                {
+                    DrawGamer(playerF, SpawnSize, SpawnSizeOffset, drawOpts);
+                }
+
+                // Restore default smoothing mode after drawing
+                bkgBuffer.Graphics.SmoothingMode = SmoothingMode.Default;
+
+                // Draw a debug line for reference
+                DrawDashLine(drawOpts, playerF);
+
+                // Render everything to the actual graphics context
+                bkgBuffer.Render(pe.Graphics);
+            }
+            catch (Exception ex)
+            {
+                LogLib.WriteLine("Error in MapCon_Paint(): ", ex);
             }
         }
 
@@ -465,7 +454,7 @@ namespace myseq
                 xSin[p] = (float)Math.Sin(p / 512.0f * 2.0f * Math.PI);
             }
 
-            textBrush = new SolidBrush(Color.LightGray);
+            //            textBrush = new SolidBrush(Color.LightGray);
         }
 
         private void ResetDragState()
@@ -501,7 +490,7 @@ namespace myseq
             Invalidate();
         }
 
-        #region mouseops
+        #region MouseOps
 
         private void MapCon_MouseScroll(object sender, MouseEventArgs me)
         {
@@ -782,7 +771,7 @@ namespace myseq
             }
         }
 
-        #endregion mouseops
+        #endregion MouseOps
 
         #region MapMath
 
@@ -1028,11 +1017,11 @@ namespace myseq
             bkgBuffer.Graphics.DrawLine(pen, top, bottom);
         }
 
-        private void DrawBigX(Pen pen, PointF drawPoint, float offset)
+        private void DrawBigX(PointF drawPoint, float offset)
         {
             // Diagonal lines forming the "X"
-            bkgBuffer.Graphics.DrawLine(pen, drawPoint.X - offset, drawPoint.Y - offset, drawPoint.X + offset, drawPoint.Y + offset);
-            bkgBuffer.Graphics.DrawLine(pen, drawPoint.X - offset, drawPoint.Y + offset, drawPoint.X + offset, drawPoint.Y - offset);
+            bkgBuffer.Graphics.DrawLine(YellowPen, drawPoint.X - offset, drawPoint.Y - offset, drawPoint.X + offset, drawPoint.Y + offset);
+            bkgBuffer.Graphics.DrawLine(YellowPen, drawPoint.X - offset, drawPoint.Y + offset, drawPoint.X + offset, drawPoint.Y - offset);
         }
 
         private void DrawLine(Pen pen, float x1, float y1, float x2, float y2)
@@ -1507,7 +1496,6 @@ namespace myseq
         {
             if ((DrawOpts & DrawOptions.Spawns) != DrawOptions.None)
             {
-                SolidBrush WhiteBrush = new SolidBrush(Color.White);
                 //            string gName;
                 var ShowRings = (DrawOpts & DrawOptions.SpawnRings) != DrawOptions.None;
 
@@ -1528,8 +1516,8 @@ namespace myseq
                     (float)Math.Round(CalcScreenCoordX(sp.X), 0),
                     (float)Math.Round(CalcScreenCoordY(sp.Y), 0));
                     //                gName = eq.GuildNumToString(sp.Guild);
-                    // Draw Line from Gamer to the Selected Spawn
 
+                    // Draw Line from Gamer to the Selected Spawn
                     if (eq.SelectedID == sp.SpawnID)
                     {
                         LineGamerToSelected(player.X, player.Y, sp, sPoint.X, sPoint.Y);
@@ -1571,7 +1559,7 @@ namespace myseq
                             DrawNPCs(pZ, DrawDirection, sp, sPoint.X, sPoint.Y);
                         }
                         DrawRings(sPoint.X, sPoint.Y, sp);
-                        DrawFlashes(pZ,sPoint.X, sPoint.Y, sp);
+                        DrawFlashes(pZ, sPoint.X, sPoint.Y, sp);
                         MarkSpecial(pZ, sPoint.X, sPoint.Y, ShowRings, sp);
                     }
                 }
@@ -1594,8 +1582,6 @@ namespace myseq
         {
             if ((!Settings.Default.DepthFilter && Settings.Default.FilterNPCs) || IsWithinDepthFilter(sp.Z, pZ))
             {
-                SolidBrush GrayBrush = new SolidBrush(Color.Gray);
-                Pen purplePen = new Pen(new SolidBrush(Color.Purple));
                 sp.filtered = false;
 
                 if (sp.Name.Length > 0)
@@ -1606,7 +1592,8 @@ namespace myseq
                     }
                     if (Settings.Default.ShowNPCLevels)
                     {
-                        DrawSpawnNames(textBrush, sp.Level.ToString(), sp.X, sp.Y);//, gName);
+                        // Adjusting the Y-coordinate to prevent overlap with the name, placing level below spawnpoint
+                        DrawSpawnNames(textBrush, sp.Level.ToString(), sp.X, sp.Y - 15);//, gName);
                     }
                 }
                 if (DrawDirection)
@@ -1617,7 +1604,7 @@ namespace myseq
                 // Draw NPCs
                 if ((sp.isPet && !Settings.Default.ShowPVP) || sp.isFamiliar || sp.isMount)
                 {
-                    FillEllipse(GrayBrush, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
+                    FillEllipse(new SolidBrush(Color.Gray), x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
                 }
                 else if (SpawnColors.ConColors[sp.Level] != null)
                 {
@@ -1633,7 +1620,7 @@ namespace myseq
 
                 // Draw Purple border around invis mobs
 
-                PurpleBorder(sp, x, y, purplePen);
+                PurpleBorder(sp, x, y);
             }
             else
             {
@@ -1641,7 +1628,7 @@ namespace myseq
             }
         }
 
-        private void PurpleBorder(Spawninfo sp, float x, float y, Pen purplePen)
+        private void PurpleBorder(Spawninfo sp, float x, float y)
         {
             if (sp.Hide != 0)
             {
@@ -1651,12 +1638,12 @@ namespace myseq
                 {
                     if (flash)
                     {
-                        DrawEllipse(new Pen(new SolidBrush(Color.White)), x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
+                        DrawEllipse(WhitePen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
                     }
                 }
                 else
                 {
-                    DrawEllipse(purplePen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
+                    DrawEllipse(PurplePen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
                 }
             }
         }
@@ -1716,21 +1703,20 @@ namespace myseq
         {
             if (sp.Hide != 0)
             {
-                Pen purplePen = new Pen(new SolidBrush(Color.Purple));
                 if (sp.Hide == 2)
                 {
                     // SoS Players
 
                     if (flash)
                     {
-                        DrawRectangle(new Pen(new SolidBrush(Color.White)), x - PlusSzOZ - 0.5f, y - PlusSzOZ - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
+                        DrawRectangle(WhitePen, x - PlusSzOZ - 0.5f, y - PlusSzOZ - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
                     }
                 }
                 else
                 {
                     // Player is invis
 
-                    DrawRectangle(purplePen, x - PlusSzOZ - 0.5f, y - PlusSzOZ - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
+                    DrawRectangle(PurplePen, x - PlusSzOZ - 0.5f, y - PlusSzOZ - 0.5f, SpawnPlusSize + 2.0f, SpawnPlusSize + 2.0f);
                 }
             }
         }
@@ -1854,8 +1840,7 @@ namespace myseq
 
         private void LineGamerToSelected(float playerx, float playery, Spawninfo sp, float x, float y)
         {
-            Pen pinkPen = new Pen(new SolidBrush(Color.Fuchsia));
-            DrawEllipse(pinkPen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
+            DrawEllipse(PinkPen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
 
             // Update the Spawn Information Window if not based on selected timer
 
@@ -1863,7 +1848,7 @@ namespace myseq
             {
                 MobInfoLabel.Text = MobInfo(sp, true, true);
 
-                DrawLine(pinkPen, playerx, playery, x, y);
+                DrawLine(PinkPen, playerx, playery, x, y);
             }
 
             sp.proxAlert = false;
@@ -1948,26 +1933,24 @@ namespace myseq
         {
             if (ShowRings && (!NPCDepthFilter || !IsWithinDepthFilter(sp.Z, pZ)))
             {
-                Pen WhitePen = new Pen(new SolidBrush(Color.White));
-
                 if (sp.Class == 40)// Draw Ring around Bankers
                 {
                     DrawEllipse(WhitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
-                    DrawEllipse(new Pen(new SolidBrush(Color.Green)), x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(GreenPen, x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
                 }
                 if (sp.Class > 19 && sp.Class < 35)                // Draw Ring around Guild Master
                 {
                     DrawEllipse(WhitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
-                    DrawEllipse(new Pen(new SolidBrush(Color.Red)), x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(RedPen, x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
                 }
 
                 if (sp.Class == 41)                // Draw Ring around Shopkeepers
                 {
                     DrawEllipse(WhitePen, x - SpawnSizeOffset, y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
-                    DrawEllipse(new Pen(new SolidBrush(Color.Blue)), x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
+                    DrawEllipse(BluePen, x - PlusSzOZ, y - PlusSzOZ, SpawnPlusSize, SpawnPlusSize);
                 }
             }
         }
@@ -1994,21 +1977,21 @@ namespace myseq
 
                     if (sp.isCaution)
                     {
-                        DrawEllipse(new Pen(new SolidBrush(Color.Yellow), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                        DrawEllipse(YellowPen, x1, y1, SpawnPlusSize, SpawnPlusSize);
                     }
 
                     // Draw Ring around Danger Mobs
 
                     if (sp.isDanger)
                     {
-                        DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                        DrawEllipse(RedPen, x1, y1, SpawnPlusSize, SpawnPlusSize);
                     }
 
                     // Draw Ring around Rare Mobs
 
                     if (sp.isAlert)
                     {
-                        DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x1, y1, SpawnPlusSize, SpawnPlusSize);
+                        DrawEllipse(WhitePen, x1, y1, SpawnPlusSize, SpawnPlusSize);
                     }
                 }
             }
@@ -2023,7 +2006,7 @@ namespace myseq
             }
 
             float lookupRingSize = SpawnPlusSize + (skittle / (float)UpdateSteps * SelectSize);
-            DrawEllipse(new Pen(new SolidBrush(Color.White)), x - lookupRingSize / 2.0f, y - lookupRingSize / 2.0f, lookupRingSize, lookupRingSize);
+            DrawEllipse(WhitePen, x - lookupRingSize / 2.0f, y - lookupRingSize / 2.0f, lookupRingSize, lookupRingSize);
 
             if (Settings.Default.ShowLookupText)
             {
@@ -2041,7 +2024,7 @@ namespace myseq
                 {
                     foreach (MobTrailPoint mtp in map.trails.GetMobTrailsReadonly())
                     {
-                        FillEllipse(new SolidBrush(Color.White), CalcScreenCoordX(mtp.X) - 2, CalcScreenCoordY(mtp.Y) - 2, 2, 2);
+                        FillEllipse(WhiteBrush, CalcScreenCoordX(mtp.X) - 2, CalcScreenCoordY(mtp.Y) - 2, 2, 2);
                     }
                 }
             }
@@ -2343,10 +2326,10 @@ namespace myseq
 
                         var x1 = -(xSin[xHead] * (eq.GamerInfo.SpeedRun * Ratio * 100));
 
-                        DrawLine(new Pen(new SolidBrush(Color.White)), gamer.X, gamer.Y, gamer.X + x1, gamer.Y + y1);
+                        DrawLine(WhitePen, gamer.X, gamer.Y, gamer.X + x1, gamer.Y + y1);
                     }
 
-                    FillRectangle(new SolidBrush(Color.White), gamer.X - SpawnSizeOffset, gamer.Y - SpawnSizeOffset, SpawnSize, SpawnSize);
+                    FillRectangle(WhiteBrush, gamer.X - SpawnSizeOffset, gamer.Y - SpawnSizeOffset, SpawnSize, SpawnSize);
 
                     DrawRectangle(PCBorder, gamer.X - SpawnSizeOffset - 0.5f, gamer.Y - SpawnSizeOffset - 0.5f, SpawnSize + 1.0f, SpawnSize + 1.0f);
                 }
@@ -2370,7 +2353,7 @@ namespace myseq
                 x = -(float)(xSin[xHead + 64 - 512] * rCircleRadius * 1.05);
             }
 
-            DrawLine(new Pen(new SolidBrush(Color.Red)), gamerX, gamerY, gamerX + x, gamerY + y);
+            DrawLine(RedPen, gamerX, gamerY, gamerX + x, gamerY + y);
 
             if (xHead >= 64)
 
@@ -2386,7 +2369,7 @@ namespace myseq
                 x = -(xSin[xHead - 64 + 512] * rCircleRadius * 1.05f);
             }
 
-            DrawLine(new Pen(new SolidBrush(Color.Red)), gamerX, gamerY, gamerX + x, gamerY + y);
+            DrawLine(RedPen, gamerX, gamerY, gamerX + x, gamerY + y);
 
             // Draw Heading Line
 
@@ -2394,7 +2377,7 @@ namespace myseq
 
             x = -(xSin[xHead] * rCircleRadius);
 
-            DrawLine(new Pen(new SolidBrush(Color.Yellow)), gamerX, gamerY, gamerX + x, gamerY + y);
+            DrawLine(YellowPen, gamerX, gamerY, gamerX + x, gamerY + y);
         }
 
         private void MakeRangeCircle(float gamerx, float gamery, float rCircleRadius)
@@ -2457,9 +2440,7 @@ namespace myseq
                             {
                                 GetGamerPoint();
 
-                                pen = new Pen(new SolidBrush(Color.Blue));
-
-                                bkgBuffer.Graphics.DrawLine(pen, gamerPos, timerPoint);
+                                bkgBuffer.Graphics.DrawLine(BluePen, gamerPos, timerPoint);
 
                                 // Update the Spawn Information Window
 
@@ -2521,7 +2502,6 @@ namespace myseq
 
         private void CheckTimer(ref Pen pen, int checkTimer, ref bool canDraw)
         {
-            Pen redPen = new Pen(new SolidBrush(Color.Red));
             if (checkTimer == 0)
                 canDraw = true;
 
@@ -2534,13 +2514,13 @@ namespace myseq
                 {
                     if (flash)
                     {
-                        pen = redPen;
+                        pen = RedPen;
                     }
                 }
                 else if (checkTimer < 60)
 
                 {
-                    pen = redPen;
+                    pen = RedPen;
                 }
                 else if (checkTimer < 90)
 
@@ -2550,7 +2530,7 @@ namespace myseq
                 else if (checkTimer < 120)
 
                 {
-                    pen = new Pen(new SolidBrush(Color.Yellow));
+                    pen = YellowPen;
                 }
             }
         }
@@ -2584,10 +2564,9 @@ namespace myseq
 
                     if (!GroundItemDepthFilter || IsWithinDepthFilter(gi.ItemLocation.Z, pZ))
                     {
-                        Pen yellowPen = new Pen(new SolidBrush(Color.Yellow));
                         gi.Filtered = false;
                         PointF giPoint = new PointF(x, y);
-                        DrawBigX(yellowPen, giPoint, PlusSzOZ);
+                        DrawBigX(giPoint, PlusSzOZ);
                     }
                     else
                     {
@@ -2611,9 +2590,9 @@ namespace myseq
             {
                 GetGamerPoint();
 
-                DrawLine(new Pen(new SolidBrush(Color.Yellow)), gamerPos.X, gamerPos.Y, x, y);
+                DrawLine(YellowPen, gamerPos.X, gamerPos.Y, x, y);
 
-                DrawEllipse(new Pen(new SolidBrush(Color.Fuchsia)), x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
+                DrawEllipse(PinkPen, x - SelectSizeOffset, y - SelectSizeOffset, SelectSize, SelectSize);
 
                 // Update the Spawn Information Window
 
@@ -2633,24 +2612,24 @@ namespace myseq
             {
                 if (gi.IsCaution)
                 {
-                    DrawEllipse(new Pen(new SolidBrush(Color.Yellow), 2), x1, y1, width, height);
+                    DrawEllipse(YellowPen, x1, y1, width, height);
                 }
                 // Draw Red Ring around Danger Ground Items
                 if (gi.IsDanger)
                 {
-                    DrawEllipse(new Pen(new SolidBrush(Color.Red), 2), x1, y1, width, height);
+                    DrawEllipse(RedPen, x1, y1, width, height);
                 }
 
                 // Draw White Ring around Rare Ground Items
                 if (gi.IsAlert)
                 {
-                    DrawEllipse(new Pen(new SolidBrush(Color.White), 2), x1, y1, width, height);
+                    DrawEllipse(WhitePen, x1, y1, width, height);
                 }
 
                 // Draw Cyan Ring around Hunt Ground Items
                 if (gi.IsHunt)
                 {
-                    DrawEllipse(new Pen(new SolidBrush(Color.Green), 2), x1, y1, width, height);
+                    DrawEllipse(GreenPen, x1, y1, width, height);
                 }
             }
         }
@@ -2661,21 +2640,19 @@ namespace myseq
 
         public void DrawDirectionLines(Spawninfo sp, float x, float y)
         {
-            try
+            // Ensure heading is within bounds
+            if (sp.Heading >= 0 && sp.Heading < 512)
             {
-                float x1, y1;
+                // Calculate line length based on speed and ratio
+                float lineLength = sp.SpeedRun * Ratio * 150;
 
-                // Draw NPCs Direction Lines if heading > 0
-                if (sp.Heading >= 0 && sp.Heading < 512)
-                {
-                    y1 = -(xCos[(int)sp.Heading] * (sp.SpeedRun * Ratio * 150));
+                // Determine the end-point using heading direction
+                float y1 = -(xCos[(int)sp.Heading] * lineLength);
+                float x1 = -(xSin[(int)sp.Heading] * lineLength);
 
-                    x1 = -(xSin[(int)sp.Heading] * (sp.SpeedRun * Ratio * 150));
-
-                    DrawLine(new Pen(new SolidBrush(Color.White)), x, y, x + x1, y + y1);
-                }
+                // Draw the direction line
+                DrawLine(WhitePen, x, y, x + x1, y + y1);
             }
-            catch (Exception ex) { LogLib.WriteLine("Error in DrawDirectionLines(): ", ex); }
         }
 
         #endregion DrawDirectionLines

@@ -1,9 +1,9 @@
 // Class Files
 
+using myseq;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using myseq;
 
 namespace Structures
 
@@ -12,7 +12,7 @@ namespace Structures
     {
         private const string ServConErr = "Server Connection Error";
 
-         // Variables to store any incomplete packets till the next chunk arrives.
+        // Variables to store any incomplete packets till the next chunk arrives.
         private int incompleteCount = 0;
 
         private bool RequestPending;

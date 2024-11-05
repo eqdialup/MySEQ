@@ -13,11 +13,9 @@ namespace myseq
 
         #region Designer components
         public NumericUpDown offsetx;
-
         public NumericUpDown offsety;
         public static NumericUpDown scale;
         public NumericUpDown filterzneg;
-
         public NumericUpDown filterzpos;
 
         private readonly System.ComponentModel.Container components;

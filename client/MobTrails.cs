@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Structures;
 using System.Collections.Generic;
-using Structures;
 
 namespace myseq
 {

@@ -1,8 +1,8 @@
 ﻿// Class Files
-using System.Drawing;
-using System.Globalization;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 
 namespace myseq
@@ -174,13 +174,12 @@ namespace myseq
 
         public void Update()
         {
-            var bounds = GetBounds();
-            MinX = bounds.minX;
-            MaxX = bounds.maxX;
-            MinY = bounds.minY;
-            MaxY = bounds.maxY;
-            MinZ = bounds.minZ;
-            MaxZ = bounds.maxZ;
+            MinX = GetBounds().minX;
+            MaxX = GetBounds().maxX;
+            MinY = GetBounds().minY;
+            MaxY = GetBounds().maxY;
+            MinZ = GetBounds().minZ;
+            MaxZ = GetBounds().maxZ;
         }
 
         public void RemoveDuplicateLineSegments()

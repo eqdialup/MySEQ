@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Structures;
+using System;
 using System.Windows.Forms;
-using Structures;
 
 namespace myseq
 {

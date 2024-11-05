@@ -59,8 +59,6 @@ namespace myseq
 
         private int moblevel = 1;
 
-        //private int moblevel = 1;
-
         private readonly int ListType;
         private int lastSortedColumn = -1;
 
@@ -75,23 +73,23 @@ namespace myseq
 
             if (listType == 0) // Add Columns to Spawnlist window
             {
-                ColumnsAdd("Name", Settings.Default.c1w, HorizontalAlignment.Left);
-                ColumnsAdd("Level", Settings.Default.c2w, HorizontalAlignment.Left);
-                ColumnsAdd("Class", Settings.Default.c3w, HorizontalAlignment.Left);
-                ColumnsAdd("Primary", Settings.Default.c3w, HorizontalAlignment.Left);
-                ColumnsAdd("Offhand", Settings.Default.c3w, HorizontalAlignment.Left);
-                ColumnsAdd("Race", Settings.Default.c4w, HorizontalAlignment.Left);
-                ColumnsAdd("Owner", Settings.Default.c4w, HorizontalAlignment.Left);
-                ColumnsAdd("Last Name", Settings.Default.c5w, HorizontalAlignment.Left);
-                ColumnsAdd("Type", Settings.Default.c6w, HorizontalAlignment.Left);
-                ColumnsAdd("Invis", Settings.Default.c7w, HorizontalAlignment.Left);
-                ColumnsAdd("Run Speed", Settings.Default.c8w, HorizontalAlignment.Left);
-                ColumnsAdd("SpawnID", Settings.Default.c9w, HorizontalAlignment.Left);
-                ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);
-                ColumnsAdd("X", Settings.Default.c11w, HorizontalAlignment.Left);
-                ColumnsAdd("Y", Settings.Default.c12w, HorizontalAlignment.Left);
-                ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);
-                ColumnsAdd("Distance", Settings.Default.c14w, HorizontalAlignment.Left);
+                ColumnsAdd("Name", Settings.Default.c1w, HorizontalAlignment.Left);         //0
+                ColumnsAdd("Level", Settings.Default.c2w, HorizontalAlignment.Left);        //1
+                ColumnsAdd("Class", Settings.Default.c3w, HorizontalAlignment.Left);        //2
+                ColumnsAdd("Primary", Settings.Default.c3w, HorizontalAlignment.Left);      //3
+                ColumnsAdd("Offhand", Settings.Default.c3w, HorizontalAlignment.Left);      //4
+                ColumnsAdd("Race", Settings.Default.c4w, HorizontalAlignment.Left);         //5
+                ColumnsAdd("Owner", Settings.Default.c4w, HorizontalAlignment.Left);        //6
+                ColumnsAdd("Last Name", Settings.Default.c5w, HorizontalAlignment.Left);    //7
+                ColumnsAdd("Type", Settings.Default.c6w, HorizontalAlignment.Left);         //8
+                ColumnsAdd("Invis", Settings.Default.c7w, HorizontalAlignment.Left);        //9
+                ColumnsAdd("Run Speed", Settings.Default.c8w, HorizontalAlignment.Left);    //10
+                ColumnsAdd("SpawnID", Settings.Default.c9w, HorizontalAlignment.Left);      //11
+                ColumnsAdd("Spawn Time", Settings.Default.c10w, HorizontalAlignment.Left);  //12
+                ColumnsAdd("X", Settings.Default.c11w, HorizontalAlignment.Left);           //13
+                ColumnsAdd("Y", Settings.Default.c12w, HorizontalAlignment.Left);           //14
+                ColumnsAdd("Z", Settings.Default.c13w, HorizontalAlignment.Left);           //15
+                ColumnsAdd("Distance", Settings.Default.c14w, HorizontalAlignment.Left);    //16
                 //            SpawnList.ColumnsAdd("Guild", Settings.Default.c14w, HorizontalAlignment.Left); //17
             }
             else if (listType == 1)     // Add the Columns to the Spawn Timer Window

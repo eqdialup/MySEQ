@@ -1,11 +1,11 @@
-﻿using System;
+﻿using myseq.Properties;
+using Structures;
+using System;
 using System.ComponentModel;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using myseq.Properties;
-using Structures;
 
 namespace myseq
 {
@@ -63,9 +63,9 @@ namespace myseq
             string errorMessage = ValidateEmailSettings();
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                MessageBox.Show($"{errorMessage}\r\nSending Test Email Aborted.", 
-                                "Some Email Settings Missing.", 
-                                MessageBoxButtons.OK, 
+                MessageBox.Show($"{errorMessage}\r\nSending Test Email Aborted.",
+                                "Some Email Settings Missing.",
+                                MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
                 return;
             }
@@ -76,9 +76,9 @@ namespace myseq
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Send Mail Error: {ex.Message}", 
-                                "Mail Message Failed to Send.", 
-                                MessageBoxButtons.OK, 
+                MessageBox.Show($"Send Mail Error: {ex.Message}",
+                                "Mail Message Failed to Send.",
+                                MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
             }
         }
@@ -249,16 +249,14 @@ namespace myseq
                 textSMTPPort.Text = SmtpSettings.Instance.SmtpPort.ToString();
             }
         }
-
+        private const string emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
         private string UpdateEmailAddress(string email)
         {
-            const string emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
             return IsValidEmail(email, emailPattern) ? email : string.Empty;
         }
 
         private string UpdateEmailList(string emailList)
         {
-            const string emailPattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
             var result = PostSplitString(new StringBuilder(), new Regex(emailPattern), emailList);
             return string.IsNullOrWhiteSpace(result) ? string.Empty : result;
         }

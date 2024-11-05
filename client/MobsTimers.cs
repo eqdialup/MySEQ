@@ -135,10 +135,10 @@ namespace myseq
             }
             catch (Exception ex) { LogLib.WriteLine($"Error creating new SPAWNTIMER for {si.Name}: ", ex); }
         }
-       private bool IsIgnoredMob(Spawninfo si)
+        private bool IsIgnoredMob(Spawninfo si)
         {
             return si.Race == 141 || si.Race == 533 || si.Race == 376 || si.Type == 2 || si.Type == 3 ||
-                   si.isLDONObject || si.isEventController || si.isPet || si.isMerc || si.isFamiliar || 
+                   si.isLDONObject || si.isEventController || si.isPet || si.isMerc || si.isFamiliar ||
                    si.isMount || si.Name.StartsWith("_");
         }
 

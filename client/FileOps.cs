@@ -1,9 +1,9 @@
-﻿using System;
+﻿using myseq.Properties;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using myseq.Properties;
 
 namespace Structures
 {
@@ -33,7 +33,7 @@ namespace Structures
             }
         }
 
-        public string[] GetStrArrayFromTextFile(string file)
+        public static string[] GetStrArrayFromTextFile(string file)
         {
             var filePath = CombineCfgDir(file);
 
@@ -59,7 +59,7 @@ namespace Structures
             }
         }
 
-        public void ReadIniFile(string file, myseq.EQData eq)
+        public static void ReadIniFile(string file, myseq.EQData eq)
         {
             var filePath = CombineCfgDir(file);
             if (!File.Exists(filePath))
@@ -185,5 +185,74 @@ namespace Structures
             // Open the filter file in Notepad
             OpenInNotepad(filterFile);
         }
+
+        //public static void ReadGuildList(string file)
+        //{
+        //   var filePath = CombineCfgDir(file);
+        //    string line = "";
+
+        //    IFormatProvider NumFormat = new CultureInfo("en-US");
+
+        //    if (!File.Exists(filePath))
+        //    {
+        //        // we did not find the Guild file
+        //        LogLib.WriteLine("Guild file not found", LogLevel.Warning);
+        //        return;
+        //    }
+
+        //    FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        //    StreamReader sr = new StreamReader(fs);
+
+        //    while (line != null)
+        //    {
+        //        line = sr.ReadLine();
+
+        //        if (line != null)
+        //        {
+        //            line = line.Trim();
+
+        //            if (line.Length > 0 && (!line.StartsWith("[") && !line.StartsWith("#")))
+        //            {
+        //                ListItem thisitem = new ListItem();
+
+        //                string tok;
+        //                if ((tok = Getnexttoken(ref line, '=')) != null)
+        //                {
+        //                    thisitem.ActorDef = tok.ToUpper();
+
+        //                    if ((tok = Getnexttoken(ref line, ',')) != null)
+        //                    {
+        //                        thisitem.Name = tok;
+
+        //                        if ((tok = Getnexttoken(ref thisitem.ActorDef, '_')) != null)
+        //                        {
+        //                            thisitem.ID = int.Parse(tok, NumFormat);
+
+        //                            // We got this far, so we have a valid item to add
+
+        //                            if (!guildList.ContainsKey(thisitem.ID))
+        //                            {
+        //                                try { guildList.Add(thisitem.ID, thisitem); }
+        //                                catch (Exception ex) { LogLib.WriteLine("Error adding " + thisitem.ID + " to Guilds hashtable: ", ex); }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    sr.Close();
+        //    fs.Close();
+        //}
+        //public string GetGuildDescription(string guildDef)
+        //{
+        //    // I know - ## NEEDS CLEANUP
+        //    // Get description from list made using Guildlist.txt
+        //    string tok;
+        //    return (tok = Getnexttoken(ref guildDef, '_')) != null
+        //        && guildList.ContainsKey(int.Parse(tok, new CultureInfo("en-US")))
+        //        ? ((ListItem)guildList[int.Parse(tok, new CultureInfo("en-US"))]).Name
+        //        : guildDef;
+        //}
     }
 }

@@ -1,7 +1,5 @@
-﻿using System.IO;
+﻿using myseq;
 using System.Text;
-using myseq;
-using myseq.Properties;
 
 namespace Structures
 {

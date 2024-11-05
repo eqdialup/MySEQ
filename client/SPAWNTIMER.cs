@@ -1,10 +1,10 @@
-﻿using System;
+﻿using myseq.Properties;
+using Structures;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using myseq.Properties;
-using Structures;
 
 namespace myseq
 {
